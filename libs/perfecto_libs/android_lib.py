@@ -21,6 +21,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support import expected_conditions as EC
 from appium import webdriver
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
+import time
+
 
 import allure
 
@@ -586,8 +591,13 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
         report.step_start("Google Home Page")
         driver.get(connData["webURL"])
         print("Enter Search Text")
-        elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
+        # elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
+        # elementFindTxt.send_keys("Internet Speed Test")
+        elementFindTxt = driver.find_element_by_xpath("//*[@resource-id='com.google.android.googlequicksearchbox:id/search_edit_frame']")
+        elementFindTxt.click()
         elementFindTxt.send_keys("Internet Speed Test")
+
+
     except Exception as e:
         print("Launching Chrome Failed")
         print (e)
@@ -8679,28 +8689,6 @@ def get_ip_address_maverick_and(request, WifiName, WifiPass, setup_perfectoMobil
                             except:
                                 print("Couldn't find auto reconnect element")
 
-                            # ------------------------------- Forget SSID ----------------
-                            # try:
-                            #     check_if_no_internet_popup(driver)
-                            #     forget_ssid = driver.find_element_by_xpath(
-                            #         "//*[@resource-id='com.android.settings:id/forget_button']//*[@resource-id='com.android.settings:id/icon']")
-                            #     forget_ssid.click()
-                            #     print("Forgetting ssid")
-                            #
-                            #     # ------------------------------- Wifi Switch ----------------
-                            #     # try:
-                            #     #     print("clicking on wifi switch")
-                            #     #     get_switch_element = driver.find_element_by_xpath(
-                            #     #         "//*[@resource-id='com.android.settings:id/switch_widget']")
-                            #     #     driver.implicitly_wait(2)
-                            #     #     get_switch_element.click()
-                            #     # except:
-                            #     #     print("couldn't click on wifi switch")
-                            #     #    #allure.attach(name= body=str("couldn't click on wifi switch"))
-                            # except:
-                            #     print("Couldn't forget ssid")
-                            #     # closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            #     # return ip_address_element_text, ssid_with_internet
                         except:
                             print("Couldn't get into Additional settings")
                         # -------------------------------------------------------
@@ -8771,29 +8759,6 @@ def get_ip_address_maverick_and(request, WifiName, WifiPass, setup_perfectoMobil
                                 print("Unable to get IP address")
                                 pass
 
-                            # report.step_start("Forget SSID")
-                            #
-                            # try:
-                            #     check_if_no_internet_popup(driver)
-                            #     forget_ssid = driver.find_element_by_xpath(
-                            #         "//*[@text='Forget']")
-                            #     forget_ssid.click()
-                            #     print("Forgetting ssid")
-                            #
-                            #     # ------------------------------- Wifi Switch ----------------
-                            #     # try:
-                            #     #     print("clicking on wifi switch")
-                            #     #     get_switch_element = driver.find_element_by_xpath(
-                            #     #         "//*[@resource-id='com.android.settings:id/switch_widget']")
-                            #     #     driver.implicitly_wait(2)
-                            #     #     get_switch_element.click()
-                            #     # except:
-                            #     #     print("couldn't click on wifi switch")
-                            #     #    #allure.attach(name= body=str("couldn't click on wifi switch"))
-                            # except:
-                            #     print("Couldn't forget ssid")
-                            #     closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            #     return ip_address_element_text, ssid_with_internet
                         except:
                             print("Couldn't get into Additional settings")
                         # -------------------------------------------------------
@@ -9149,128 +9114,109 @@ def get_ip_address_maverick_and(request, WifiName, WifiPass, setup_perfectoMobil
 
 def return_open_maverickpage_android(request, setup_perfectoMobile_android, get_APToMobileDevice_data):
     print("\n-------------------------------------")
-    print("Verify Upload & Download Speed")
+    print("OPEN TIP MAVERICK PAGE...........!!!!")
     print("-------------------------------------")
-
     report = setup_perfectoMobile_android[1]
     driver = setup_perfectoMobile_android[0]
     connData = get_APToMobileDevice_data
-
     currentResult=False
-
     driver.switch_to.context('WEBVIEW_1')
-
     try:
-        print("Launching Chrome")
-        report.step_start("Google Home Page")
-        driver.get(connData["webURL"])
-        print("Enter Search Text")
-        elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
-        elementFindTxt.send_keys("192.168.1.1")
+        contexts = driver.contexts
+        print("Printing Context")
+        print(contexts)
+        driver.get("http://192.168.1.1")
+        print(driver.get("http://192.168.1.1"))
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!@#$")
+        try:
+            # password_maverick = driver.find_element_by_xpath("//*[@class='cbi-value cbi-value-last']//*[@class='cbi-value-field']")
+            # password_maverick.click()
+            # driver.getKeyboard().sendKeys("openwifi")
+            # # print(password_maverick.send_keys(password))
+            # print("keys entered successfully")
+            # # button_maverick = driver.find_element_by_xpath("//*[@class='btn cbi-button cbi-button-apply']")
+            # # button_maverick.click()
+            # # print("Login button clicked successfully")
+            Pass = "openwifi"
+            Password = driver.find_element_by_xpath("//*[@name='luci_password']")
+            # Password.click()
+            Password.send_keys(Pass)
+            print("keys entered successfully!!!!!!!!!!!!!!!!")
+            button_maverick = driver.find_element_by_xpath("//*[@class='btn cbi-button cbi-button-apply']")
+            button_maverick.click()
+            print("Login button clicked successfully")
+
+            # popup_maverick = driver.find_element_by_xpath("//*[@resource-id='com.android.chrome:id/button_secondary']")
+            # popup_maverick.click()
+            # try:
+            #     popup_maverick = driver.find_element_by_xpath("//*[@resource-id='com.android.chrome:id/infobar_close_button']")
+            #     popup_maverick.click()
+            # except:
+            #     print("uanble to close popup")
+
+            reboot_btn = driver.find_element_by_xpath("//a[text()='System']")
+            reboot_btn.click()
+            print("reboot button clicked successfully")
+
+
+        except:
+            print("unable to click Password feild")
+
     except Exception as e:
         print("Launching Chrome Failed")
         print (e)
-        # allure.attach(name="Speed Test logs: ", body=str("Launching Safari Failed"))
-        # allure.attach(name="Speed Test logs: ", body=str("Error log: " + e))
 
-    # try:
-    #     print("Click Search Button")
-    #     report.step_start("Click Search Button")
-    #     time.sleep(2)
-    #     driver.implicitly_wait(2)
-    #     elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
-    #     elelSearch.click()
-    # except:
-    #     try:
-    #         time.sleep(2)
-    #         driver.implicitly_wait(2)
-    #         elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
-    #         elelSearch.click()
-    #     except:
-    #         print("Search Drop Down not active...")
-    #         return False
-    #
-    # try:
-    #     print("Click Run Speed Test Button...")
-    #     report.step_start("Click Run Speed Test Button")
-    #     driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
-    # except NoSuchElementException:
-    #     print("Error in speed test element ", NoSuchElementException)
-    #     # allure.attach(name="Speed Test logs: ", body=str("Search Run Speed Test not active..." + NoSuchElementException))
-    #     return False
-    #
-    # #Get upload/Download Speed
-    # try:
-    #     print("Get Download Speed")
-    #     report.step_start("Get upload/Download Speed")
-    #     time.sleep(60)
-    #     downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
-    #     downloadSpeed = downloadMbps.text
-    #     print("Download: " + downloadSpeed + " Mbps")
-    #
-    #     print("Get Upload Speed")
-    #     report.step_start("Get Upload Speed")
-    #     UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
-    #     uploadSpeed = UploadMbps.text
-    #     print("Upload: " + uploadSpeed + " Mbps")
-    #     allure.attach(name="Speed Test logs: ", body=str("Upload: " + uploadSpeed + " Mbps" + "  Download: " + downloadSpeed + " Mbps"))
-    #     print("Access Point Verification Completed Successfully")
-    #     currentResult = True
-    # except NoSuchElementException:
-    #     print("Access Point Verification NOT Completed, checking Connection....")
-    #
-    return currentResult
-
-
-def verify_open_mav_android(request, setup_perfectoMobile_android, get_APToMobileDevice_data):
+def return_open_maverickpage_android1(request, setup_perfectoMobile_android, get_APToMobileDevice_data):
     print("\n-------------------------------------")
-    print("Verify Upload & Download Speed")
+    print("OPEN TIP MAVERICK PAGE...........!!!!")
     print("-------------------------------------")
-
     report = setup_perfectoMobile_android[1]
     driver = setup_perfectoMobile_android[0]
     connData = get_APToMobileDevice_data
-
     currentResult=False
-
     driver.switch_to.context('WEBVIEW_1')
-
     try:
-        print("Launching Chrome")
+        contexts = driver.contexts
+        print("Printing Context")
+        print(contexts)
+        driver.get("http://192.168.1.1")
+        print(driver.get("http://192.168.1.1"))
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!@#$")
+        try:
+            report.step_start("Entering Password")
+            Pass = "openwifi"
+            Password = driver.find_element_by_xpath("//*[@name='luci_password']")
+            Password.send_keys(Pass)
+            print("keys entered successfully!!!!!!!!!!!!!!!!")
+            report.step_start("Clicking Login button")
 
-        report.step_start("Google Home Page")
-        driver.get(connData["webURL"])
-        print("Enter Search Text")
-        elementFindTxt = driver.find_element_by_xpath(connData["// *[ @ resource - id = 'com.google.android.googlequicksearchbox:id/googleapp_search_box']"])
-        elementFindTxt.send_text("192.168.1.1")
-        print("type something")
+            button_maverick = driver.find_element_by_xpath("//*[@class='btn cbi-button cbi-button-apply']")
+            button_maverick.click()
+            print("Login button clicked successfully")
+
+            report.step_start("PopUp")
+            popup_maverick = driver.find_element_by_xpath("//*[@resource-id='com.android.chrome:id/button_secondary']")
+            popup_maverick.click()
+            report.step_start("Clicking Reboot button")
+
+            reboot_btn = driver.find_element_by_xpath("//a[text()='System']")
+            reboot_btn.click()
+            print("reboot button clicked successfully")
+
+        except:
+            print("unable to enter credentials")
+
     except Exception as e:
         print("Launching Chrome Failed")
         print (e)
-        # allure.attach(name="Speed Test logs: ", body=str("Launching Safari Failed"))
-        # allure.attach(name="Speed Test logs: ", body=str("Error log: " + e))
-        return False
 
-    #Get upload/Download Speed
-    # try:
-    #     print("Get Download Speed")
-    #     report.step_start("Get upload/Download Speed")
-    #     time.sleep(60)
-    #     downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
-    #     downloadSpeed = downloadMbps.text
-    #     print("Download: " + downloadSpeed + " Mbps")
-    #
-    #     print("Get Upload Speed")
-    #     report.step_start("Get Upload Speed")
-    #     UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
-    #     uploadSpeed = UploadMbps.text
-    #     print("Upload: " + uploadSpeed + " Mbps")
-    #     allure.attach(name="Speed Test logs: ", body=str("Upload: " + uploadSpeed + " Mbps" + "  Download: " + downloadSpeed + " Mbps"))
-    #     print("Access Point Verification Completed Successfully")
-    #     currentResult = True
-    # except NoSuchElementException:
-    #     print("Access Point Verification NOT Completed, checking Connection....")
-    #
-    return currentResult
+
+
+
+
+
+
+
+
 
 

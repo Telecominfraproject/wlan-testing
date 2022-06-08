@@ -284,8 +284,6 @@ def get_device_configuration(device, request):
 def get_apnos():
     """yields the LIBRARY for APNOS, Reduces the use of imports across files"""
     yield APNOS
-
-
 @pytest.fixture(scope="session")
 def get_equipment_ref(request, setup_controller, testbed, get_configuration):
     """"""
