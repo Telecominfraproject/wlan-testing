@@ -814,6 +814,47 @@ class ProvUtils(ConfigureController):
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
         return resp
 
+    def get_configuration(self):
+        uri = self.build_url_prov("configuration/")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_configuration_by_id(self, configuration_id):
+        uri = self.build_url_prov("configuration/" + configuration_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_configuration(self, payload):
+        uri = self.build_url_prov("configuration/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_configuration(self, configuration_id):
+        uri = self.build_url_prov("configuration/" + configuration_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_configuration(self, payload, configuration_id):
+        uri = self.build_url_prov("configuration/" + configuration_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
 class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
