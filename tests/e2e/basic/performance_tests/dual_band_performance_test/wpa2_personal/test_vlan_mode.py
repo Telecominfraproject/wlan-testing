@@ -42,6 +42,7 @@ class TestDualbandPerformanceVLAN(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
+    @pytest.mark.dual_band
     def test_client_wpa2_personal_vlan(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
