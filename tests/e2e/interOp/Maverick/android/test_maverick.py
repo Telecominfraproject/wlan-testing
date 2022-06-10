@@ -1,84 +1,60 @@
 import pytest
-import sys
-import sys
 import allure
+import sys
+
+
 
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.client_connectivity
-              ,pytest.mark.interop_uc_sanity, pytest.mark.nat]
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and,
+              pytest.mark.client_connectivity
+    , pytest.mark.interop_uc_sanity, pytest.mark.nat]
 
-from android_lib import closeApp,return_open_maverickpage_android, set_APconnMobileDevice_android, verify_open_mav_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, \
-    get_ip_address_maverick_and,verify_open_mav_android, wifi_disconnect_and_forget
+from android_lib import closeApp, return_open_maverickpage_android, set_APconnMobileDevice_android, \
+    Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, \
+    get_ip_address_maverick_and, wifi_disconnect_and_forget
 
-class TestNatModeConnectivitySuiteOne(object):
+
+class TestMaverickAndroid(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4536", name="WIFI-4536")
-    @pytest.mark.fiveg
-    @pytest.mark.wpa2_personal
+    @pytest.mark.maverickAnd
     @pytest.mark.destroy
-    def test_maverick_android(self, request, get_vif_state, get_apnos, get_configuration, get_ap_logs,
-                                                     get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    def test_maverick_android(self, request, get_vif_state, get_ap_logs, currentmav,
+                              get_ToggleAirplaneMode_data,get_configuration, setup_perfectoMobile_android):
+        ssidName = currentmav
+        ssidPassword = "[BLANK]"
+        print("SSID_NAME: " + ssidName)
+        print("SSID_PASS: " + ssidPassword)
+        get_vif_state.append(ssidName)
 
-        for ap in get_configuration['access_point']:
-            cmd = "uci show ucentral"
-            print(get_configuration['access_point'])
-            ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
-            gw = ap_ssh.run_generic_command(cmd)
-            print("Status:")
-            print(gw)
-            connected, latest, active = ap_ssh.get_ucentral_status()
-            print("Connected:")
-            print(connected)
-            iwinfo = ap_ssh.get_iwinfo()
-            print("iwinfo:")
-            print(iwinfo)
-            maverick = ap_ssh.set_maverick()
-            print("maverick:")
-            print(maverick)
-
-            iwinfo = ap_ssh.get_iwinfo()
-            print("iwinfo:")
-            print(iwinfo)
-            # reboot = ap_ssh.reboot()
-            # print("reboot:")
-            # print(reboot)
-            for key, value in iwinfo.items():
-                print(key, ' : ', value[0])
-                ssidName = "Maverick-6AE4A3"
-                ssidPassword = "[BLANK]"
-                print("SSID_NAME: " + ssidName)
-                print("SSID_PASS: " + ssidPassword)
-                get_vif_state.append(ssidName)
-
-
-            report = setup_perfectoMobile_android[1]
-            driver = setup_perfectoMobile_android[0]
-            connData = get_ToggleAirplaneMode_data
-
-        # Set Wifi/AP Mode
-            ip, is_internet = get_ip_address_maverick_and(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-            #
-            if is_internet:
-                if ip:
-                    text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
-                else:
-                    text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
-                print(text_body)
-                allure.attach(name="Connection Status: ", body=str(text_body))
-
-                return_open_maverickpage_android(request, setup_perfectoMobile_android, connData)
-
-            else:
-                allure.attach(name="Connection Status: ", body=str("No Internet access"))
-                assert True
-    @pytest.mark.Mavtra
-    def test_maverick_trail(self, request, get_vif_state, get_apnos, get_configuration, get_ap_logs,
-                                                     get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         report = setup_perfectoMobile_android[1]
         driver = setup_perfectoMobile_android[0]
         connData = get_ToggleAirplaneMode_data
 
-        return_open_maverickpage_android(request, setup_perfectoMobile_android, connData)
-        assert True
+        # Set Wifi/AP Mode
+        ip, is_internet = get_ip_address_maverick_and(request, ssidName, ssidPassword, setup_perfectoMobile_android,
+                                                      connData)
+        #
+        if is_internet:
+            if ip:
+                text_body = ("connected to " + ssidName + " (" + ip + ") " + "with internet")
+            else:
+                text_body = ("connected to " + ssidName + "with Internet, couldn't get IP address")
+            print(text_body)
+            allure.attach(name="Connection Status: ", body=str(text_body))
 
+            return_open_maverickpage_android(request, setup_perfectoMobile_android, connData)
+        else:
+            allure.attach(name="Connection Status: ", body=str("No Internet access"))
+            assert True
+
+    # @pytest.mark.Mavtra
+    # def test_maverick_trail(self, request, get_vif_state, get_apnos, get_configuration, get_ap_logs,
+    #                         get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
+    #     report = setup_perfectoMobile_android[1]
+    #     driver = setup_perfectoMobile_android[0]
+    #     connData = get_ToggleAirplaneMode_data
+    #
+    #     return_open_maverickpage_android(request, setup_perfectoMobile_android, connData)
+    #     assert True

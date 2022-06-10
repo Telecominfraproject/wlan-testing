@@ -9058,41 +9058,18 @@ def get_ip_address_maverick_and(request, WifiName, WifiPass, setup_perfectoMobil
                             print("Device IP address is :", ip_address_element_text)
                         except:
                             print("IP address element not found")
-                            # try:
-                            #     print("Launching Chrome")
-                            #     report.step_start("Google Home Page")
-                            #     driver.get(connData["webURL"])
-                            #     print("Enter Search Text")
-                            #     elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
-                            #     elementFindTxt.send_keys("192.168.1.1")
-                            # except Exception as e:
-                            #     print("Launching Chrome Failed")
-                            #     print(e)
-                            #     # allure.attach(name="Speed Test logs: ", body=str("Launching Safari Failed"))
-                            #     # allure.attach(name="Speed Test logs: ", body=str("Error log: " + e))
 
-                        #------------------------------- Forget SSID ----------------
+
+                        # ------------------------------- Wifi Switch ----------------
                         try:
-                            check_if_no_internet_popup(driver)
-                            forget_ssid = driver.find_element_by_xpath(
-                                "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
-                            forget_ssid.click()
-                            print("Forgetting ssid")
-
-                            # ------------------------------- Wifi Switch ----------------
-                            try:
-                                print("clicking on wifi switch")
-                                get_switch_element = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/switch_widget']")
-                                driver.implicitly_wait(2)
-                                get_switch_element.click()
-                            except:
-                                print("couldn't click on wifi switch")
-                            # allure.attach(name= body=str("couldn't click on wifi switch"))
+                            print("clicking on wifi switch")
+                            get_switch_element = driver.find_element_by_xpath(
+                                "//*[@resource-id='com.android.settings:id/switch_widget']")
+                            driver.implicitly_wait(2)
+                            get_switch_element.click()
                         except:
-                            print("Couldn't forget ssid")
-                            # closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            # return ip_address_element_text, ssid_with_internet
+                            print("couldn't click on wifi switch")
+                        # allure.attach(name= body=str("couldn't click on wifi switch"))
                     except:
                         print("Couldn't get into Additional settings")
                     # -------------------------------------------------------
@@ -9122,93 +9099,45 @@ def return_open_maverickpage_android(request, setup_perfectoMobile_android, get_
     currentResult=False
     driver.switch_to.context('WEBVIEW_1')
     try:
+        driver.switch_to.context('WEBVIEW_1')
         contexts = driver.contexts
         print("Printing Context")
         print(contexts)
         driver.get("http://192.168.1.1")
         print(driver.get("http://192.168.1.1"))
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!@#$")
-        try:
-            # password_maverick = driver.find_element_by_xpath("//*[@class='cbi-value cbi-value-last']//*[@class='cbi-value-field']")
-            # password_maverick.click()
-            # driver.getKeyboard().sendKeys("openwifi")
-            # # print(password_maverick.send_keys(password))
-            # print("keys entered successfully")
-            # # button_maverick = driver.find_element_by_xpath("//*[@class='btn cbi-button cbi-button-apply']")
-            # # button_maverick.click()
-            # # print("Login button clicked successfully")
-            Pass = "openwifi"
-            Password = driver.find_element_by_xpath("//*[@name='luci_password']")
-            # Password.click()
-            Password.send_keys(Pass)
-            print("keys entered successfully!!!!!!!!!!!!!!!!")
-            button_maverick = driver.find_element_by_xpath("//*[@class='btn cbi-button cbi-button-apply']")
-            button_maverick.click()
-            print("Login button clicked successfully")
-
-            # popup_maverick = driver.find_element_by_xpath("//*[@resource-id='com.android.chrome:id/button_secondary']")
-            # popup_maverick.click()
-            # try:
-            #     popup_maverick = driver.find_element_by_xpath("//*[@resource-id='com.android.chrome:id/infobar_close_button']")
-            #     popup_maverick.click()
-            # except:
-            #     print("uanble to close popup")
-
-            reboot_btn = driver.find_element_by_xpath("//a[text()='System']")
-            reboot_btn.click()
-            print("reboot button clicked successfully")
-
-
-        except:
-            print("unable to click Password feild")
-
-    except Exception as e:
-        print("Launching Chrome Failed")
-        print (e)
-
-def return_open_maverickpage_android1(request, setup_perfectoMobile_android, get_APToMobileDevice_data):
-    print("\n-------------------------------------")
-    print("OPEN TIP MAVERICK PAGE...........!!!!")
-    print("-------------------------------------")
-    report = setup_perfectoMobile_android[1]
-    driver = setup_perfectoMobile_android[0]
-    connData = get_APToMobileDevice_data
-    currentResult=False
-    driver.switch_to.context('WEBVIEW_1')
-    try:
-        contexts = driver.contexts
-        print("Printing Context")
-        print(contexts)
-        driver.get("http://192.168.1.1")
-        print(driver.get("http://192.168.1.1"))
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!@#$")
+        print("successfully connected to the gateway")
         try:
             report.step_start("Entering Password")
             Pass = "openwifi"
             Password = driver.find_element_by_xpath("//*[@name='luci_password']")
             Password.send_keys(Pass)
-            print("keys entered successfully!!!!!!!!!!!!!!!!")
-            report.step_start("Clicking Login button")
-
-            button_maverick = driver.find_element_by_xpath("//*[@class='btn cbi-button cbi-button-apply']")
-            button_maverick.click()
-            print("Login button clicked successfully")
-
-            report.step_start("PopUp")
-            popup_maverick = driver.find_element_by_xpath("//*[@resource-id='com.android.chrome:id/button_secondary']")
-            popup_maverick.click()
-            report.step_start("Clicking Reboot button")
-
-            reboot_btn = driver.find_element_by_xpath("//a[text()='System']")
-            reboot_btn.click()
-            print("reboot button clicked successfully")
-
+            print("Password entered successfully")
+            try:
+                report.step_start("Clicking Login btn ")
+                button_maverick = driver.find_element_by_xpath("//*[@class='btn cbi-button cbi-button-apply']")
+                button_maverick.click()
+                print("Login button clicked successfully")
+                try:
+                    report.step_start("Clicking System btn ")
+                    system = driver.find_element_by_xpath("//a[text()='System']")
+                    system.click()
+                    print("clicked System Button")
+                    try:
+                        report.step_start("Clicking Reboot btn ")
+                        reboot = driver.find_element_by_xpath("//*[text()='Reboot']")
+                        reboot.click()
+                        print("Reboot Button clicked")
+                    except:
+                        print("unable to click Reboot Button")
+                except:
+                    print("unable to click System Button")
+            except:
+                print("unable to click Login Button")
         except:
-            print("unable to enter credentials")
-
+            print("unable to click Password feild")
     except Exception as e:
-        print("Launching Chrome Failed")
-        print (e)
+        print("Launching Safari Failed")
+        print(e)
 
 
 

@@ -106,6 +106,7 @@ def get_ToggleAirplaneMode_data(request, get_device_configuration):
     }
     yield passPoint_data
 
+
 @pytest.fixture(scope="function")
 def get_maverick_google_search_data(request, get_device_configuration):
     passPoint_data = {
@@ -124,10 +125,8 @@ def get_maverick_google_search_data(request, get_device_configuration):
     yield passPoint_data
 
 
-
-
 @pytest.fixture(scope="function")
-def get_ToggleWifiMode_data(request,get_device_configuration):
+def get_ToggleWifiMode_data(request, get_device_configuration):
     passPoint_data = {
         # iOS
         "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
@@ -164,7 +163,6 @@ def instantiate_profile(request):
         yield ProfileUtility
     else:
         yield UProfileUtility
-
 
 
 @pytest.fixture(scope="session")
@@ -222,11 +220,10 @@ def setup_vlan():
 def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, skip_lf, get_openflow, run_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools,
                    get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info):
-
     param = dict(request.param)
     if not skip_lf:
         lf_tools.reset_scenario()
-    # VLAN Setup
+        # VLAN Setup
         if request.param["mode"] == "VLAN":
 
             vlan_list = list()
@@ -252,7 +249,8 @@ def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtur
                                              instantiate_profile,
                                              get_markers, create_lanforge_chamberview_dut, lf_tools,
                                              get_security_flags, get_configuration, radius_info, get_apnos,
-                                             radius_accounting_info, skip_lf=skip_lf, open_flow=get_openflow, run_lf=run_lf)
+                                             radius_accounting_info, skip_lf=skip_lf, open_flow=get_openflow,
+                                             run_lf=run_lf)
     print("sleeping for 120 sec.")
     time.sleep(180)
     print("Done sleeping")
@@ -284,8 +282,8 @@ def failure_tracking_fixture(request):
     yield tests_failed_during_module
 
 
-
 empty_get_vif_state_list = []
+
 
 @pytest.fixture(scope="class")
 def get_vif_state(get_apnos, get_configuration, request, lf_tools, skip_lf):
@@ -299,6 +297,8 @@ def get_vif_state(get_apnos, get_configuration, request, lf_tools, skip_lf):
             yield lf_tools.ssid_list
     else:
         yield empty_get_vif_state_list
+
+
 @pytest.fixture(scope="class")
 def set_maverick(get_apnos, get_configuration, request, lf_tools, skip_lf, self):
     client = self.ssh_cli_connect()
@@ -392,7 +392,6 @@ def pytest_runtest_makereport(item, call):
 
 
 def pytest_sessionfinish(session, exitstatus):
-
     try:
         if reporting_client is not None:
             print()
@@ -690,6 +689,8 @@ def setup_perfectoMobile_iOS(request, get_device_configuration):
         yield -1
     else:
         yield driver, reporting_client
+
+
 # Does a HTTP GET request to Perfecto cloud and gets response and information related to a headset
 def response_device(request, model):
     securityToken = PERFECTO_DETAILS["securityToken"]
@@ -698,6 +699,7 @@ def response_device(request, model):
     resp = requests.get(url=url)
     return ET.fromstring(resp.content)
 
+
 # Get an attribute value from the handset response
 def get_attribute_device(responseXml, attribute):
     try:
@@ -705,6 +707,7 @@ def get_attribute_device(responseXml, attribute):
     except:
         print(f"Unable to get value of {attribute} from response")
         return ""
+
 
 # Checks to see if a particular handset is available
 def is_device_available(request, model):
@@ -722,6 +725,7 @@ def is_device_available(request, model):
         print("The device is currently allocated to:" + allocated_to)
         return False
 
+
 # Checks whether the device is available or not.If the device is not available rechecks depending upon the
 
 # Checks whether the device is available or not.If the device is not available rechecks depending upon the
@@ -731,23 +735,24 @@ def is_device_Available_timeout(request, model):
     timerValue = 5
     timerThreshold = 80
     if not device_available:
-        while(timerValue <= timerThreshold):
+        while (timerValue <= timerThreshold):
             print("Last checked at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
             print(f"Waiting for: {timerValue} min(s)")
-            time.sleep(timerValue*60)
+            time.sleep(timerValue * 60)
             print("Checking now at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
             device_available = is_device_available(request, model)
-            if(device_available):
+            if (device_available):
                 return True
             else:
                 timerValue = timerValue + 5
 
-        if(timerValue > timerThreshold):
+        if (timerValue > timerThreshold):
             return False
         else:
             return True
     else:
         return True
+
 
 def get_device_attribuites(request, model, attribute):
     try:
@@ -760,3 +765,30 @@ def get_device_attribuites(request, model, attribute):
     except:
         attribute_value = False
     return attribute_value
+
+
+@pytest.fixture(scope="class")
+def currentmav(request, get_apnos, get_configuration):
+    for access_point in get_configuration['access_point']:
+        cmd = "uci show ucentral"
+        print(get_configuration['access_point'])
+        ap_ssh = get_apnos(access_point, pwd="../libs/apnos/", sdk="2.x")
+        gw = ap_ssh.run_generic_command(cmd)
+        print("Status:")
+        print(gw)
+        connected, latest, active = ap_ssh.get_ucentral_status()
+        print("Connected:")
+        print(connected)
+        iwinfo = ap_ssh.get_iwinfo()
+        print("iwinfo:")
+        print(iwinfo)
+        maverick = ap_ssh.set_maverick()
+        print("maverick:")
+        print(maverick)
+        iwinfo = ap_ssh.get_iwinfo()
+        print("iwinfo:")
+        print(iwinfo)
+        for key, value in iwinfo.items():
+            print(key, ' : ', value[0])
+            aayu = value[0]
+        return aayu
