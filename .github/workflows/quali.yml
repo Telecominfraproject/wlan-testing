@@ -59,7 +59,13 @@ jobs:
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'ow_sanity_lf' }}")
           echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || 'qa01' }}")
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xe,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196' }}"
+          DOW=$(date +%u)
+          SLOT=$(( 10#$MIN % 2 )) # 1 - slot 1, 0 - slot 2
+          if [[ "0" -eq "$SLOT" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4,indio_um-305ac,hfcl_ion4xe,cig_wf188n,edgecore_ecw5211,edgecore_eap101,udaya_a5-id2' }}"
+          else
+            AP_MODELS="${{ github.event.inputs.ap_models || 'wallys_dr40x9,hfcl_ion4xi,tp-link_ec420-g1,edgecore_eap102,cig_wf194c,cig_wf196' }}"
+          fi
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "::set-output name=ap_models::${AP_MODELS}"
 
