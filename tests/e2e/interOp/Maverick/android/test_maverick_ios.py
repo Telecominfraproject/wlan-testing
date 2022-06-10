@@ -15,7 +15,6 @@ from iOS_lib import closeApp, set_APconnMobileDevice_iOS, Toggle_AirplaneMode_iO
 class TestMaverickIOS(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4536", name="WIFI-4536")
     @pytest.mark.maverickIOS
-    @pytest.mark.destroyios
     def test_maverick_ios(self, request, get_vif_state, get_ap_logs,currentmav,
                                                      get_ToggleAirplaneMode_data, get_configuration, setup_perfectoMobile_iOS):
 

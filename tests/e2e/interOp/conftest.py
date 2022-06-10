@@ -779,9 +779,6 @@ def currentmav(request, get_apnos, get_configuration):
         connected, latest, active = ap_ssh.get_ucentral_status()
         print("Connected:")
         print(connected)
-        iwinfo = ap_ssh.get_iwinfo()
-        print("iwinfo:")
-        print(iwinfo)
         maverick = ap_ssh.set_maverick()
         print("maverick:")
         print(maverick)
@@ -790,5 +787,5 @@ def currentmav(request, get_apnos, get_configuration):
         print(iwinfo)
         for key, value in iwinfo.items():
             print(key, ' : ', value[0])
-            aayu = value[0]
-        return aayu
+            final = value[0]
+        return final

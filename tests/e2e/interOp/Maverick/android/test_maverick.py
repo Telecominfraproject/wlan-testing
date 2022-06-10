@@ -19,7 +19,6 @@ from android_lib import closeApp, return_open_maverickpage_android, set_APconnMo
 class TestMaverickAndroid(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4536", name="WIFI-4536")
     @pytest.mark.maverickAnd
-    @pytest.mark.destroy
     def test_maverick_android(self, request, get_vif_state, get_ap_logs, currentmav,
                               get_ToggleAirplaneMode_data,get_configuration, setup_perfectoMobile_android):
         ssidName = currentmav
