@@ -95,7 +95,7 @@ jobs:
   test-galaxy-s9:
 
     runs-on: ubuntu-latest
-    needs: [vars, quali_reservation]
+    needs: [vars, quali-reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
       - uses: actions/checkout@v2
