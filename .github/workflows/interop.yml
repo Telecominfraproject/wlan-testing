@@ -136,13 +136,6 @@ jobs:
           additional_args: "--device='Galaxy S9' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s9
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-#        env:
-#          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 #
 #      # necessary because if conditionals in composite actions are currently not respected
 #      - name: delete namespace
