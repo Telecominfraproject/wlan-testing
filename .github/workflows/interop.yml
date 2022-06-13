@@ -65,10 +65,10 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   # interop-01
-  test-galaxy-s9:
+  quali-reservation:
     runs-on: ubuntu-latest
     needs: [vars, build]
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
+    if: "!cancelled()"
     steps:
       - uses: actions/checkout@v2
 
@@ -92,6 +92,13 @@ jobs:
           echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
           echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
 
+  test-galaxy-s9:
+
+    runs-on: ubuntu-latest
+    needs: [vars, quali_reservation]
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
+    steps:
+      - uses: actions/checkout@v2
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
