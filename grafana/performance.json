@@ -1,0 +1,332 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "id": 8,
+  "iteration": 1652708244261,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": "${source}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 19,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [
+            "last"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"${bucket}\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"Test Tag\"] == \"${test_tag}\")\n  |> filter(fn: (r) => r[\"Graph-Group\"] == \"${graph_group}\")\n  |> filter(fn: (r) => r[\"DUT-Model-Num\"] =~ /${model:pipe}/)\n  |> filter(fn: (r) => r[\"DUT-HW-version\"] =~ /${hw_version:pipe}/)\n  |> filter(fn: (r) => r[\"DUT-SW-version\"] =~ /${sw_version:pipe}/)\n  |> filter(fn: (r) => r[\"DUT-Serial-Num\"] =~ /${serial:pipe}/)\n  |> drop(columns: [\"Graph-Group\", \"script\", \"short-description\", \"test_details\", \"Test Tag\", \"testbed\",])\n  |> group(columns: [\"_measurement\", \"DUT-Model-Num\", \"DUT-HW-version\", \"DUT-SW-version\", \"DUT-Serial-Num\", \"Units\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Performance metrics",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 31,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "InfluxDB",
+          "value": "InfluxDB"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "source",
+        "options": [],
+        "query": "influxdb",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "tip-cicd",
+          "value": "tip-cicd"
+        },
+        "datasource": "${source}",
+        "definition": "buckets()",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "bucket",
+        "options": [],
+        "query": "buckets()",
+        "refresh": 1,
+        "regex": "[^_].+",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "tcp-bidirectional-bridge-wpa2-2.4G-5G",
+          "value": "tcp-bidirectional-bridge-wpa2-2.4G-5G"
+        },
+        "datasource": "${source}",
+        "definition": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"Test Tag\",\n    predicate: (r) => true,\n    start: -180d\n)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "test_tag",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"Test Tag\",\n    predicate: (r) => true,\n    start: -180d\n)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "Per Stations Rate DL",
+          "value": "Per Stations Rate DL"
+        },
+        "datasource": "${source}",
+        "definition": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"Graph-Group\",\n    predicate: (r) => r[\"Test Tag\"] == \"${test_tag}\",\n    start: -180d\n)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "graph_group",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"Graph-Group\",\n    predicate: (r) => r[\"Test Tag\"] == \"${test_tag}\",\n    start: -180d\n)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "${source}",
+        "definition": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"DUT-Model-Num\",\n    predicate: (r) => r[\"Graph-Group\"] == \"${graph_group}\",\n    start: -180d\n)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "model",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"DUT-Model-Num\",\n    predicate: (r) => r[\"Graph-Group\"] == \"${graph_group}\",\n    start: -180d\n)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "${source}",
+        "definition": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"DUT-HW-version\",\n    predicate: (r) => r[\"Graph-Group\"] == \"${graph_group}\" and r[\"DUT-Model-Num\"] =~ /${model:pipe}/,\n    start: -180d\n)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "hw_version",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"DUT-HW-version\",\n    predicate: (r) => r[\"Graph-Group\"] == \"${graph_group}\" and r[\"DUT-Model-Num\"] =~ /${model:pipe}/,\n    start: -180d\n)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "${source}",
+        "definition": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"DUT-SW-version\",\n    predicate: (r) => r[\"Graph-Group\"] == \"${graph_group}\" and r[\"DUT-Model-Num\"] =~ /${model:pipe}/ and r[\"DUT-HW-version\"] =~ /${hw_version:pipe}/,\n    start: -180d\n)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "sw_version",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"DUT-SW-version\",\n    predicate: (r) => r[\"Graph-Group\"] == \"${graph_group}\" and r[\"DUT-Model-Num\"] =~ /${model:pipe}/ and r[\"DUT-HW-version\"] =~ /${hw_version:pipe}/,\n    start: -180d\n)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "${source}",
+        "definition": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"DUT-Serial-Num\",\n    predicate: (r) => r[\"Graph-Group\"] == \"${graph_group}\" and r[\"DUT-Model-Num\"] =~ /${model:pipe}/ and r[\"DUT-HW-version\"] =~ /${hw_version:pipe}/ and r[\"DUT-SW-version\"] =~ /${sw_version:pipe}/,\n    start: -180d\n)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "serial",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(\n    bucket: v.bucket,\n    tag: \"DUT-Serial-Num\",\n    predicate: (r) => r[\"Graph-Group\"] == \"${graph_group}\" and r[\"DUT-Model-Num\"] =~ /${model:pipe}/ and r[\"DUT-HW-version\"] =~ /${hw_version:pipe}/ and r[\"DUT-SW-version\"] =~ /${sw_version:pipe}/,\n    start: -180d\n)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Performance metrics (serial granularity)",
+  "uid": "0esmvvX7k",
+  "version": 5
+}

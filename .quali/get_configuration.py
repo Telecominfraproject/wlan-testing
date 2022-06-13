@@ -57,7 +57,9 @@ def main():
                 key = 'username' if key == 'uname' else key
                 key = 'password' if key == 'passkey' else key
 
-                ap_config[key] = get_attribute_value(session, attribute)
+                if get_attribute_value(session, attribute) != "":
+                    ap_config[key] = get_attribute_value(session, attribute)
+                #ap_config[key] = get_attribute_value(session, attribute)
 
             config['access_point'].append(ap_config)
 

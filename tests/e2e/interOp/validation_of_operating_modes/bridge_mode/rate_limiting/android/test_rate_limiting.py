@@ -105,6 +105,7 @@ class TestRateLimitingBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.ow_sanity_interop
     def test_rate_limiting_wpa2_2g(self, request, get_vif_state, get_ap_logs,
                                get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -137,6 +138,7 @@ class TestRateLimitingBridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.ow_sanity_interop
     def test_rate_limiting_wpa2_5g(self, request, get_vif_state, get_ap_logs,
                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]

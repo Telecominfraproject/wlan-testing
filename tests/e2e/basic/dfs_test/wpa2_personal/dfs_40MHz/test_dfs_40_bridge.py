@@ -4,7 +4,9 @@ import os
 import time
 import pandas as pd
 
-pytestmark = [pytest.mark.regression, pytest.mark.dfs, pytest.mark.bridge]
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.ow_dfs_tests_lf,
+              pytest.mark.bandwidth_40MHz]
 
 setup_params_general1 = {
     "mode": "BRIDGE",

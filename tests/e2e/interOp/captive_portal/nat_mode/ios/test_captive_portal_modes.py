@@ -10,7 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-
+import random
+import string
 import sys
 import allure
 
@@ -22,7 +23,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     verifyUploadDownloadSpeediOS, get_ip_address_ios, captive_portal_ios, wifi_connect, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.captive_portal, pytest.mark.regression_interop, pytest.mark.nat]
+              pytest.mark.internal_captive_portal, pytest.mark.regression_interop, pytest.mark.nat, pytest.mark.ow_sanity_interop]
 
 setup_params_general = {
     "mode": "NAT",
@@ -44,6 +45,13 @@ setup_params_general = {
     "captive_portal": True
 
 }
+
+for sec_modes in setup_params_general['ssid_modes'].keys():
+    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 
 @allure.suite(suite_name="interop sanity")
@@ -92,6 +100,7 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
@@ -127,6 +136,7 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
@@ -162,6 +172,7 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
@@ -197,6 +208,7 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
@@ -233,6 +245,7 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
@@ -270,6 +283,7 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
@@ -307,6 +321,7 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:
@@ -344,6 +359,7 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
             assert verifyUploadDownloadSpeediOS(request, setup_perfectoMobile_iOS, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         else:

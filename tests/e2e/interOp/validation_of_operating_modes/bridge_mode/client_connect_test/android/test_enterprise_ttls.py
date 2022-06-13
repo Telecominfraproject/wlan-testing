@@ -18,7 +18,7 @@ if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.client_connect
-              ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise]
+              ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ow_sanity_interop]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, get_ip_address_eap_and
 
@@ -38,18 +38,18 @@ setup_params_enterprise = {
     "rf": {},
     "radius": True
 }
-class TestUniqueSSIDBridgeAnd(object):
-
-    @pytest.mark.unique_ssid_enterprise_bridge_and
-    def test_unique_ssid_bridge_and(self):
-        for sec_modes in setup_params_enterprise['ssid_modes'].keys():
-            for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
-                N = 3
-                rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
-                setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = \
-                    setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
-            assert True
+# class TestUniqueSSIDBridgeAnd(object):
+#
+#     @pytest.mark.unique_ssid_enterprise_bridge_and
+#     def test_unique_ssid_bridge_and(self):
+for sec_modes in setup_params_enterprise['ssid_modes'].keys():
+    for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+        setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = \
+            setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+            # assert True
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Bridge Mode EAP Client Connect : Suite-A")
@@ -306,18 +306,18 @@ setup_params_enterprise_two = {
     "rf": {},
     "radius": True
 }
-class TestUniqueSSIDBridgeEnterpriseTwoAnd(object):
-
-    @pytest.mark.unique_ssid_enterprise_two_bridge_and
-    def test_unique_ssid_bridge_and(self):
-        for sec_modes in setup_params_enterprise_two['ssid_modes'].keys():
-            for i in range(len(setup_params_enterprise_two['ssid_modes'][sec_modes])):
-                N = 3
-                rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
-                setup_params_enterprise_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
-                    setup_params_enterprise_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
-            assert True
+# class TestUniqueSSIDBridgeEnterpriseTwoAnd(object):
+#
+#     @pytest.mark.unique_ssid_enterprise_two_bridge_and
+#     def test_unique_ssid_bridge_and(self):
+for sec_modes in setup_params_enterprise_two['ssid_modes'].keys():
+    for i in range(len(setup_params_enterprise_two['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+        setup_params_enterprise_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
+            setup_params_enterprise_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+            # assert True
 
 
 @allure.suite(suite_name="interop sanity")

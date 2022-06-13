@@ -10,7 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from appium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-
+import random
+import string
 import sys
 import allure
 
@@ -20,8 +21,8 @@ if 'perfecto_libs' not in sys.path:
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, \
     get_ip_address_and, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, captive_portal_and
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.captive_portal
-              ,pytest.mark.regression_interop, pytest.mark.nat]
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.internal_captive_portal
+              ,pytest.mark.regression_interop, pytest.mark.nat, pytest.mark.ow_sanity_interop]
 
 setup_params_general = {
     "mode": "NAT",
@@ -43,6 +44,12 @@ setup_params_general = {
     "captive_portal": True
 }
 
+for sec_modes in setup_params_general['ssid_modes'].keys():
+    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
 @allure.suite(suite_name="interop sanity")
 @allure.sub_suite(sub_suite_name="Nat Mode Captive Portal : Suite-A")
@@ -89,8 +96,10 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -124,8 +133,10 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -160,8 +171,10 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -195,8 +208,10 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -232,8 +247,10 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -269,8 +286,10 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -306,8 +325,10 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
@@ -343,8 +364,10 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
             assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
             wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
