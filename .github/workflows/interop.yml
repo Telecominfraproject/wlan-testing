@@ -89,18 +89,18 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo "reservation_id=$(cat ./reservation_id.txt)" >> $GITHUB_ENV
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_ENV
-          echo "${{ env.reservation_id}}"
-          echo "${{ env.namespace}}"
-#          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-#          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+#          echo "reservation_id=$(cat ./reservation_id.txt)" >> $GITHUB_ENV
+#          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_ENV
+#          echo "${{ env.reservation_id}}"
+#          echo "${{ env.namespace}}"
 
 
 
   test-galaxy-s9:
 
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, "${{needs.steps.reservation.outputs.identifier}}"]
     needs: [vars, quali-reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
@@ -130,7 +130,7 @@ jobs:
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
 
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ env.reservation_id}})"
+          DYN_CONFIG="$(python .quali/get_configuration.py --json "${{needs.steps.reservation.outputs.identifier}}")"
 
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           
