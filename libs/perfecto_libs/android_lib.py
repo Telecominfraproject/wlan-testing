@@ -9127,6 +9127,7 @@ def return_open_maverickpage_android(request, setup_perfectoMobile_android, get_
                         reboot = driver.find_element_by_xpath("//*[text()='Reboot']")
                         reboot.click()
                         print("Reboot Button clicked")
+                        time.sleep(120)
                     except:
                         print("unable to click Reboot Button")
                 except:

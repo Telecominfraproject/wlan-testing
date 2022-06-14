@@ -7,7 +7,7 @@ import sys
 if 'perfecto_libs' not in sys.path:
     sys.path.append(f'../libs/perfecto_libs')
 
-pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and,
+pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.MaverickAndroid, pytest.mark.android, pytest.mark.interop_and,
               pytest.mark.client_connectivity
     , pytest.mark.interop_uc_sanity, pytest.mark.nat]
 
@@ -43,17 +43,21 @@ class TestMaverickAndroid(object):
             print(text_body)
             allure.attach(name="Connection Status: ", body=str(text_body))
 
-            return_open_maverickpage_android(request, setup_perfectoMobile_android, connData)
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert True
 
-    # @pytest.mark.Mavtra
-    # def test_maverick_trail(self, request, get_vif_state, get_apnos, get_configuration, get_ap_logs,
-    #                         get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
-    #     report = setup_perfectoMobile_android[1]
-    #     driver = setup_perfectoMobile_android[0]
-    #     connData = get_ToggleAirplaneMode_data
-    #
-    #     return_open_maverickpage_android(request, setup_perfectoMobile_android, connData)
-    #     assert True
+
+    @pytest.mark.Mavtra
+    def test_maverick_trail(self, request, setup_perfectoMobile_android, get_ToggleAirplaneMode_data, get_configuration, get_apnos):
+        report = setup_perfectoMobile_android[1]
+        driver = setup_perfectoMobile_android[0]
+        connData = get_ToggleAirplaneMode_data
+
+        return_open_maverickpage_android(request, setup_perfectoMobile_android, connData)
+        for access_point in get_configuration['access_point']:
+            ap_ssh = get_apnos(access_point, pwd="../libs/apnos/", sdk="2.x")
+            iwinfo = ap_ssh.get_iwinfo()
+            print("iwinfo:")
+            print(iwinfo)
+        assert True

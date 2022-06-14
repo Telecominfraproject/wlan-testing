@@ -639,7 +639,7 @@ def setup_perfectoMobile_iOS(request, get_device_configuration):
     except Exception as e:
         TestCaseName = nCurrentTestMethodNameSplit
         print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        # print("https://www.anhttps://docs.google.com/spreadsheets/d/1hBCZ8MrTPt1CsZkhGVorWTayfAQgR8LpZ6l7aUc7EHM/edit?usp=sharingdreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
     projectname = PERFECTO_DETAILS["projectName"]
     projectversion = PERFECTO_DETAILS["projectVersion"]
@@ -789,3 +789,11 @@ def currentmav(request, get_apnos, get_configuration):
             print(key, ' : ', value[0])
             final = value[0]
         return final
+
+
+
+
+
+
+
+
