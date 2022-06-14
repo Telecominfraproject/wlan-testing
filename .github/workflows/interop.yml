@@ -95,9 +95,9 @@ jobs:
 #          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_ENV
 #          echo "${{ env.reservation_id}}"
 #          echo "${{ env.namespace}}"
-      outputs:
-        identifier: ${{steps.reservation.outputs.identifier}}
-        namespace: ${{steps.reservation.outputs.identifier}}
+    outputs:
+      identifier: ${{steps.reservation.outputs.identifier}}
+      namespace: ${{steps.reservation.outputs.identifier}}
 
 
 
