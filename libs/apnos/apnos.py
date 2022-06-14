@@ -483,6 +483,18 @@ class APNOS:
         client.close()
         return o
 
+    def get_memory_profile(self):
+        client = self.ssh_cli_connect()
+        cmd = "ucode /usr/share/ucentral/sysinfo.uc"
+        if self.mode:
+            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                  f"cmd --value \"{cmd}\" "
+        stdin, stdout, stderr = client.exec_command(cmd)
+        output = stdout.read().replace(b":~# iwinfo", b"").decode('utf-8')
+        o = output
+        client.close()
+        return o
+
     def gettxpower(self):
         client = self.ssh_cli_connect()
         cmd = "iw dev | grep txpower"
@@ -606,13 +618,22 @@ class APNOS:
         return status
 
     def dfs(self):
-        if self.type == "wifi5":
-            cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
-            print("cmd: ", cmd)
+        if self.type.lower() == "wifi5":
+            #cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+            #print("cmd: ", cmd)
             if self.mode:
+                client = self.ssh_cli_connect()
+                cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
+                stdin, stdout, stderr = client.exec_command(cmd1)
+                output = str(stdout.read())
+                if output.__contains__("False"):
+                    cmd = "cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
+                else:
+                    cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+                client.close()
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                           f"cmd --value \"{cmd}\" "
-        elif self.type == "wifi6":
+        elif self.type.lower() == "wifi6":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
             print("cmd: ", cmd)
             if self.mode:
@@ -621,17 +642,27 @@ class APNOS:
         client = self.ssh_cli_connect()
         stdin, stdout, stderr = client.exec_command(command)
         output = stdout.read()
-        print("hey", output)
+        print("Output", output)
         client.close()
 
     def dfs_logread(self):
-        if self.type == "wifi5":
-            cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
-            print("cmd: ", cmd)
+        if self.type.lower() == "wifi5":
+            client = self.ssh_cli_connect()
+            cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
+            stdin, stdout, stderr = client.exec_command(cmd1)
+            output = str(stdout.read())
+            print("Output", output)
+            if output.__contains__("False"):
+                cmd = "cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && logread | grep DFS"
+            else:
+                cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
+            client.close()
+            #cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
+            #print("cmd: ", cmd)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
-        elif self.type == "wifi6":
+        elif self.type.lower() == "wifi6":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
             print("cmd: ", cmd)
             if self.mode:
@@ -655,18 +686,16 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-                "model": "edgecore_eap101",
+                "model": "cig_wf188n",
                 "mode": "wifi6",
-                "serial": "903cb36ae223",
+                "serial": "0000c1018812",
                 "jumphost": True,
                 "ip": "10.28.3.103",
                 "username": "lanforge",
                 "password": "pumpkin77",
                 "port": 22,
-                "jumphost_tty": "/dev/ttyAP3",
-                "version": "release-latest"
+                "jumphost_tty": "/dev/ttyAP1",
+                "version": "next-latest"
             }
     var = APNOS(credentials=obj, sdk="2.x")
-    var.run_generic_command(cmd="chmod +x /usr/share/ucentral/wifi_max_user.uc")
-    a = var.run_generic_command(cmd="/usr/share/ucentral/wifi_max_user.uc")
-    print(a)
+    print(var.get_memory_profile())

@@ -8,8 +8,15 @@ import pytest
 import requests
 import json
 
-pytestmark = [pytest.mark.test_resources, pytest.mark.sanity, pytest.mark.uc_sanity,
-              pytest.mark.sanity_55, pytest.mark.interop_uc_sanity, pytest.mark.android, pytest.mark.ios,
+pytestmark = [pytest.mark.test_resources,
+              pytest.mark.ow_sanity_lf,
+              pytest.mark.ow_sanity_interop,
+              pytest.mark.sanity,
+              pytest.mark.uc_sanity,
+              pytest.mark.sanity_55,
+              pytest.mark.interop_uc_sanity,
+              pytest.mark.android,
+              pytest.mark.ios,
               pytest.mark.client_connect]
 
 state = True
@@ -62,6 +69,18 @@ class TestResources(object):
                                                                        str(fms_system_status_json))
         if fms_system_status != 200:
             pytest.exit("fms_status_check response from fms: " + str(fms_system_status))
+
+        # Provisioning system info
+        prov_system_info = setup_controller.get_system_prov()
+        request_url = prov_system_info.request.url
+        allure.attach(name="get_system_prov_request: ", body=str(request_url))
+        prov_system_status = prov_system_info.status_code
+        prov_system_status_json = prov_system_info.json()
+        print("prov_status_check response from fms: ", prov_system_status)
+        allure.attach(name="prov_status_check response from Prov:", body=str(prov_system_status) +
+                                                                       str(prov_system_status_json))
+        if prov_system_status != 200:
+            pytest.exit("Prov_status_check response from Prov: " + str(prov_system_status))
 
         # if gw_status_check != 200:
         #     for i in range(10):
@@ -152,6 +171,7 @@ class TestResources(object):
         allure.attach(name="SDK Pointed by AP: ", body=str(get_uci_show.split("=")[1]))
         for ap in get_configuration["access_point"]:
             out = setup_controller.get_device_by_serial_number(serial_number=ap["serial"])
+            out = out.json()
             if "ErrorCode" in out.keys():
                 print(out)
                 allure.attach(name="Error Device not found in Gateway: ", body=str(out))
@@ -300,6 +320,7 @@ class TestFMS(object):
             ap_version = ap_ssh.get_ap_version_ucentral()
             current_version_ap = str(ap_version).split()
             data = setup_controller.get_device_by_serial_number(serial_number=ap['serial'])
+            data = data.json()
             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
             status.append(current_version_ap == data['firmware'].split())
         assert False not in status

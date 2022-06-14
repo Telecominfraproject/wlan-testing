@@ -42,13 +42,13 @@ LOGGER.addHandler(stdout_handler)
 
 
 class ChamberView:
-
-    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None, ap_version=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None,  cc_1=False, ap_version=None):
         print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
         self.access_point_data = access_point_data
         self.run_lf = run_lf
+        self.cc_1 = cc_1
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "Non-mesh":
@@ -83,6 +83,7 @@ class ChamberView:
                 self.delete_old_scenario = True
                 if access_point_data:
                     print(len(access_point_data))
+
                     for ap in range(len(access_point_data)):
                         print(access_point_data[ap])
                         self.dut_name = access_point_data[ap]["model"]
@@ -316,7 +317,7 @@ class ChamberView:
                     flag = 1
         if flag == 1:
             for vlans in vlan_ids:
-                self.raw_line.append(["profile_link 1.1 " + "vlan-100 1 " + self.upstream_port
+                self.raw_line.append(["profile_link " + self.upstream_resources + " vlan-100 1 " + self.upstream_port
                                       + " NA " + self.upstream_port.split(".")[2] + ",AUTO -1 " + str(vlans)])
             self.Chamber_View()
 
@@ -327,11 +328,13 @@ class ChamberView:
             LOGGER.warning("0 Stations")
             return
         idx = idx
-        if self.run_lf:
+        if self.run_lf or self.cc_1:
             if band == "2G":
                 idx = 0
             if band == "5G":
                 idx = 1
+
+
         for i in self.dut_idx_mapping:
             if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
                 idx = i
@@ -559,7 +562,7 @@ class ChamberView:
     def read_csv_individual_station_throughput(self, dir_name, option):
         try:
             df = pd.read_csv(
-                "../reports/" + str(dir_name) + "/csv-data/data-Combined_Mbps__60_second_running_average-1.csv",
+                "../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
                 sep=r'\t', engine='python')
             print("csv file opened")
         except FileNotFoundError:
@@ -583,6 +586,13 @@ class ChamberView:
             dict_data[sta_list[i]] = th_list[i]
 
         return dict_data
+
+    def attach_report_kpi(self, report_name=None, file_name="kpi_file"):
+        path = "../reports/" + str(report_name) + "/kpi.csv"
+        if os.path.exists(path):
+            allure.attach.file(source=path,
+                               name=file_name, attachment_type="CSV")
+        return os.path.exists(path)
 
     def attach_report_graphs(self, report_name=None, pdf_name="WIFI Capacity Test PDF Report"):
         relevant_path = "../reports/" + report_name + "/"
@@ -698,6 +708,31 @@ class ChamberView:
             self.Create_Dut()
             # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
             self.update_ssid(ssid_data=ssid_data[ssid])
+
+
+    def create_non_meh_dut(self, ssid_data=[]):
+        # print("hi")
+        for ap, ssid in zip(self.access_point_data, range(len(ssid_data))):
+            print("ap", ap)
+            print(ssid_data[ssid])
+            self.dut_name = ap["model"]
+            print(self.dut_name)
+            self.ap_model = ap["model"]
+            self.version = ap["version"].split("/")[-1]
+            self.serial = ap["serial"]
+            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                 port=self.lanforge_port,
+                                 dut_name=self.dut_name,
+                                 sw_version=self.version,
+                                 hw_version=self.ap_model,
+                                 model_num=self.ap_model,
+                                 serial_num=self.serial
+                                 )
+            self.Create_Dut()
+            # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
+            self.update_ssid(ssid_data=ssid_data[ssid])
+
+
 
     def set_radio_antenna(self, req_url, shelf, resources, radio, antenna):
         data = {

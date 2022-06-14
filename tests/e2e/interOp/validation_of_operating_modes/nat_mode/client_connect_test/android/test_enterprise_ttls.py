@@ -40,18 +40,18 @@ setup_params_enterprise = {
     "radius": True
 }
 
-class TestUniqueSSIDEnterpriseNatAnd(object):
-
-    @pytest.mark.unique_ssid_enterprise_nat_and
-    def test_unique_ssid_enterprise_nat_and(self):
-        for sec_modes in setup_params_enterprise['ssid_modes'].keys():
-            for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
-                N = 3
-                rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
-                setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = \
-                    setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
-            assert True
+# class TestUniqueSSIDEnterpriseNatAnd(object):
+#
+#     @pytest.mark.unique_ssid_enterprise_nat_and
+#     def test_unique_ssid_enterprise_nat_and(self):
+for sec_modes in setup_params_enterprise['ssid_modes'].keys():
+    for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+        setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = \
+            setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+            # assert True
 
 
 @allure.suite(suite_name="interop sanity")
@@ -310,18 +310,18 @@ setup_params_enterprise_two = {
     "rf": {},
     "radius": True
 }
-class TestUniqueSSIDNatEnterpriseTwoAnd(object):
-
-    @pytest.mark.unique_ssid_enterprise_two_nat_and
-    def test_unique_ssid_nat_and(self):
-        for sec_modes in setup_params_enterprise_two['ssid_modes'].keys():
-            for i in range(len(setup_params_enterprise_two['ssid_modes'][sec_modes])):
-                N = 3
-                rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                                      string.digits, k=N))) + str(int(time.time_ns()) % 10000)
-                setup_params_enterprise_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
-                    setup_params_enterprise_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
-            assert True
+# class TestUniqueSSIDNatEnterpriseTwoAnd(object):
+#
+#     @pytest.mark.unique_ssid_enterprise_two_nat_and
+#     def test_unique_ssid_nat_and(self):
+for sec_modes in setup_params_enterprise_two['ssid_modes'].keys():
+    for i in range(len(setup_params_enterprise_two['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+        setup_params_enterprise_two['ssid_modes'][sec_modes][i]['ssid_name'] = \
+            setup_params_enterprise_two['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+            # assert True
 
 
 @allure.suite(suite_name="interop sanity")
