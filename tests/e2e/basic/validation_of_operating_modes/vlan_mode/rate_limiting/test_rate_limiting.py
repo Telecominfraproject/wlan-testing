@@ -5,9 +5,7 @@ Rate LImiting Vlan Mode Scenario
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_regression_lf,
-              pytest.mark.ow_rate_limiting_tests_lf,
-              pytest.mark.vlan]
+pytestmark = [pytest.mark.ow_regression_lf, pytest.mark.vlan]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -16,6 +14,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_2g_br",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 100,
                  "egress-rate": 100
@@ -24,6 +23,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_5g_br",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 100,
                  "egress-rate": 100
@@ -49,7 +49,7 @@ class TestRateLimitingVlan(object):
     @pytest.mark.up
     @pytest.mark.batch_size_125
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
-    def test_wpa2_personal_vlan_ssid_up_batch_size_125_2g(self, lf_test, get_vif_state, lf_tools):
+    def test_wpa2_personal_vlan_ssid_up_batch_size_125_2g(self, lf_test, lf_tools):
         """
             Test Rate Limiting Scenario
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and up and batch_size_125"
@@ -58,12 +58,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_125", mode=mode, vlan_id=vlan,
@@ -81,7 +77,7 @@ class TestRateLimitingVlan(object):
     @pytest.mark.dw
     @pytest.mark.batch_size_125
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
-    def test_wpa2_personal_vlan_ssid_dw_batch_size_125_2g(self, lf_test, get_vif_state, lf_tools):
+    def test_wpa2_personal_vlan_ssid_dw_batch_size_125_2g(self, lf_test, lf_tools):
         """
             Test Rate Limiting Scenario
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and dw and batch_size_125"
@@ -90,12 +86,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_dw_125", mode=mode, vlan_id=vlan,
@@ -123,12 +115,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_125", mode=mode, vlan_id=vlan,
@@ -155,12 +143,8 @@ class TestRateLimitingVlan(object):
         profile_data["rate-limit"][0] = 0
         profile_data["rate-limit"][1] = 0
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_dis", mode=mode, vlan_id=vlan,
@@ -185,13 +169,9 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         raw_lines = [["dl_rate_sel: Per-Station Download Rate:"], ["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_per_client", mode=mode, vlan_id=vlan,
@@ -216,13 +196,9 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         raw_lines = [["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_per_cl", mode=mode, vlan_id=vlan,
@@ -247,13 +223,9 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         raw_lines = [["dw_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_dw_per_cl", mode=mode, vlan_id=vlan,
@@ -280,12 +252,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_125_5g", mode=mode, vlan_id=vlan,
@@ -312,12 +280,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_dw_125_5g", mode=mode, vlan_id=vlan,
@@ -344,12 +308,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_125_5g", mode=mode, vlan_id=vlan,
@@ -376,12 +336,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_1_5g", mode=mode, vlan_id=vlan,
@@ -408,12 +364,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_dw_1_5g", mode=mode, vlan_id=vlan,
@@ -440,12 +392,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="2G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_5g", mode=mode, vlan_id=vlan,
@@ -472,12 +420,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_1_5g", mode=mode, vlan_id=vlan,
@@ -504,12 +448,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_dw_1_5g", mode=mode, vlan_id=vlan,
@@ -536,12 +476,8 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_1_5g", mode=mode, vlan_id=vlan,
@@ -568,12 +504,8 @@ class TestRateLimitingVlan(object):
         profile_data["rate-limit"][0] = 0
         profile_data["rate-limit"][1] = 0
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_di_5g", mode=mode, vlan_id=vlan,
@@ -598,13 +530,9 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         raw_lines = [["dl_rate_sel: Per-Station Download Rate:"], ["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_per_cl", mode=mode, vlan_id=vlan,
@@ -629,13 +557,9 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         raw_lines = [["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_per_cl_5g", mode=mode, vlan_id=vlan,
@@ -660,13 +584,9 @@ class TestRateLimitingVlan(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 1
+        vlan = 100
         raw_lines = [["dw_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_vif_state.append(ssid_name)
-        if ssid_name not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
         lf_tools.add_stations(band="5G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_dw_per_cl_5g", mode=mode, vlan_id=vlan,
