@@ -610,8 +610,8 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
             elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
             elelSearch.click()
         except:
-                print("Search Drop Down not active...")
-                return False
+            print("Search Drop Down not active...")
+            return False
 
     try:
         print("Click Run Speed Test Button...")
