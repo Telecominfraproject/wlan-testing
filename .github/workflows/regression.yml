@@ -2905,7 +2905,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-wallys-dr40x9, test-hfcl-ion4xe, test-edgecore-eap101, test-tp-link-ec420-g1, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2, test-cig_wf196]
+    needs: [vars, test-wallys-dr40x9, test-hfcl-ion4xe, test-edgecore-eap101, test-tp-link-ec420-g1, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2, test-cig-wf196]
     strategy:
       fail-fast: false
       matrix:
