@@ -559,31 +559,45 @@ class ChamberView:
                 result = df[column_name].values.tolist()
                 return result
 
-    def read_csv_individual_station_throughput(self, dir_name, option):
+    def read_csv_individual_station_throughput(self, dir_name, option, individual_station_throughput=True, kpi_csv=False,
+                                               file_name="/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                                               batch_size="0"):
         try:
             df = pd.read_csv(
-                "../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                "../reports/" + str(dir_name) + file_name,
                 sep=r'\t', engine='python')
             print("csv file opened")
         except FileNotFoundError:
             print("csv file does not exist")
             return False
 
-        dict_data = {}
-        if option == "download":
-            csv_sta_names = df.iloc[[0]].values.tolist()
-            csv_throughput_values = df.iloc[[1]].values.tolist()
-        elif option == "upload":
-            csv_sta_names = df.iloc[[0]].values.tolist()
-            csv_throughput_values = df.iloc[[2]].values.tolist()
-        else:
-            print("Provide proper option: download or upload")
-            return
+        if kpi_csv:
+            count = 0
+            dict_data = {"Down": {}, "Up": {}, "Both": {}}
+            csv_short_dis = df.loc[:,"short-description"]
+            csv_num_score = df.loc[:,"numeric-score"]
+            for i in range(len(batch_size.split(","))):
+                dict_data["Down"][csv_short_dis[count + 0]] = csv_num_score[count + 0]
+                dict_data["Up"][csv_short_dis[count + 1]] = csv_num_score[count + 1]
+                dict_data["Both"][csv_short_dis[count + 2]] = csv_num_score[count + 2]
+                count += 3
 
-        sta_list = csv_sta_names[0][0][:-1].replace('"', '').split(",")
-        th_list = list(map(float, csv_throughput_values[0][0].split(",")))
-        for i in range(len(sta_list)):
-            dict_data[sta_list[i]] = th_list[i]
+        if individual_station_throughput:
+            dict_data = {}
+            if option == "download":
+                csv_sta_names = df.iloc[[0]].values.tolist()
+                csv_throughput_values = df.iloc[[1]].values.tolist()
+            elif option == "upload":
+                csv_sta_names = df.iloc[[0]].values.tolist()
+                csv_throughput_values = df.iloc[[2]].values.tolist()
+            else:
+                print("Provide proper option: download or upload")
+                return
+
+            sta_list = csv_sta_names[0][0][:-1].replace('"', '').split(",")
+            th_list = list(map(float, csv_throughput_values[0][0].split(",")))
+            for i in range(len(sta_list)):
+                dict_data[sta_list[i]] = th_list[i]
 
         return dict_data
 
