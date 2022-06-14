@@ -601,15 +601,22 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
         driver.implicitly_wait(2)
         elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
         elelSearch.click()
+        print("Keyboard enter")
+        driver.press_keycode(66)
     except:
         try:
+            print("Click Search Button-2")
             time.sleep(2)
             driver.implicitly_wait(2)
             elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
             elelSearch.click()
         except:
-            print("Search Drop Down not active...")
-            return False
+            try:
+                print("Trying enter from keyboard")
+                driver.press_keycode(66)
+            except:
+                print("Search Drop Down not active...")
+                return False
 
     try:
         print("Click Run Speed Test Button...")
@@ -7504,6 +7511,8 @@ def return_upload_download_speed_android(request, setup_perfectoMobile, get_APTo
         driver.implicitly_wait(2)
         elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
         elelSearch.click()
+        print("Keyboard enter")
+        driver.press_keycode(66)
     except:
         try:
             time.sleep(2)
