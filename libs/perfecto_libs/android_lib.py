@@ -601,6 +601,8 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
         driver.implicitly_wait(2)
         elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
         elelSearch.click()
+        print("Keyboard enter")
+        driver.press_keycode(66)
     except:
         try:
             time.sleep(2)
@@ -7504,6 +7506,8 @@ def return_upload_download_speed_android(request, setup_perfectoMobile, get_APTo
         driver.implicitly_wait(2)
         elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
         elelSearch.click()
+        print("Keyboard enter")
+        driver.press_keycode(66)
     except:
         try:
             time.sleep(2)
