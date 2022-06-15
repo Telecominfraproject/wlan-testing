@@ -3277,23 +3277,24 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
         report.step_start("Google Home Page")
         driver.get(connData["webURL"])
         print("Enter Search Text")
-        elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
-        elementFindTxt.send_keys("Internet Speed Test")
+        driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
+        time.sleep(2)
+        driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
     except Exception as e:
         print("Launching Safari Failed")
         print(e)
 
-    try:
-        print("Click Search Button")
-        report.step_start("Click Search Button")
-        time.sleep(2)
-        driver.implicitly_wait(2)
-        # elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")
-        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
-        elelSearch.click()
-    except NoSuchElementException:
-        currentResult = False
-        print("Search Drop Down not active...")
+    # try:
+    #     print("Click Search Button")
+    #     report.step_start("Click Search Button")
+    #     time.sleep(2)
+    #     driver.implicitly_wait(2)
+    #     # elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")
+    #     elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
+    #     elelSearch.click()
+    # except NoSuchElementException:
+    #     currentResult = False
+    #     print("Search Drop Down not active...")
 
     try:
         print("Click Run Speed Test Button...")
