@@ -57,6 +57,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4665", name="WIFI-4665")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_enterprise
+    @pytest.mark.subbu
     def test_ClientConnectivity_5g_WPA2_enterprise_Bridge(self, request, get_vif_state, get_ToggleAirplaneMode_data
                                               , setup_perfectoMobile_android, radius_info, get_ap_logs):
 
@@ -64,6 +65,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         ssidName = profile_data["ssid_name"]
         ssidPassword = ["BLANK"]
         print ("SSID_NAME: " + ssidName)
+        result = verifyUploadDownloadSpeed_android
         #print ("SSID_PASS: " + ssidPassword)
         ttls_passwd = radius_info["password"]
         identity = radius_info['user']
@@ -92,7 +94,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
-            assert False
+            assert False, f"Expected action not done, i.e, {result}."
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4664", name="WIFI-4664")
     @pytest.mark.twog

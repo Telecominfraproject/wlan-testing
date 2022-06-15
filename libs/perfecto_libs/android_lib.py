@@ -591,6 +591,8 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
     except Exception as e:
         print("Launching Chrome Failed")
         print (e)
+        result = "Launching Chrome Failed"
+        return result
         # allure.attach(name="Speed Test logs: ", body=str("Launching Safari Failed"))
         # allure.attach(name="Speed Test logs: ", body=str("Error log: " + e))
 
@@ -602,6 +604,7 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
         elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
         elelSearch.click()
     except:
+
         try:
             time.sleep(2)
             driver.implicitly_wait(2)
@@ -609,7 +612,9 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
             elelSearch.click()
         except:
             print("Search Drop Down not active...")
-            return False
+            # return False
+            result = "Search Drop Down not active..."
+            return result
 
     try:
         print("Click Run Speed Test Button...")
@@ -618,7 +623,11 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
     except NoSuchElementException:
         print("Error in speed test element ", NoSuchElementException)
         # allure.attach(name="Speed Test logs: ", body=str("Search Run Speed Test not active..." + NoSuchElementException))
-        return False
+        result = "Error in speed test element "
+        return result
+
+        # return False
+
 
     #Get upload/Download Speed
     try:
@@ -639,6 +648,9 @@ def verifyUploadDownloadSpeed_android(request, setup_perfectoMobile, get_APToMob
         currentResult = True
     except NoSuchElementException:
         print("Access Point Verification NOT Completed, checking Connection....")
+        result = "Access Point Verification NOT Completed, checking Connection...."
+        return result
+
 
     return currentResult
 
@@ -1119,7 +1131,7 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                 print("Clicking WIFI")
                 time.sleep(3)
                 wifiElement = WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((MobileBy.XPATH,"//*[@text='Wi-Fi']")))
+                            EC.presence_of_element_located((MobileBy.XPATH,"//*[@text='Wii-Fi']")))
                 wifiElement.click()
 
 
@@ -1562,6 +1574,8 @@ def get_ip_address_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
             except:
                 print("Couldn't find wifi Button")
+                result = "Couldn't find wifi Button"
+                return result
             # ------------------Open WIFI page----------------------------------
 
         except:
