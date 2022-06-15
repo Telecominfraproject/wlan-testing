@@ -165,7 +165,7 @@ jobs:
 
   test-iphone-11:
     runs-on: ubuntu-latest
-    needs: [vars, test-galaxy-s9]
+    needs: [vars, quali_reservation, test-galaxy-s9]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
       - uses: actions/checkout@v2
@@ -295,7 +295,7 @@ jobs:
 
   test-iphone-7:
     runs-on: ubuntu-latest
-    needs: [vars, test-galaxy-s10]
+    needs: [vars, quali_reservation, test-galaxy-s10]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
       - uses: actions/checkout@v2
@@ -424,7 +424,7 @@ jobs:
 
   test-iphone-xr:
     runs-on: ubuntu-latest
-    needs: [vars, test-galaxy-s20]
+    needs: [vars, quali_reservation, test-galaxy-s20]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
       - uses: actions/checkout@v2
@@ -487,7 +487,7 @@ jobs:
   #interop-04
   test-pixel-4:
     runs-on: ubuntu-latest
-    needs: [vars, quali_reservation]
+    needs: [vars,  quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
       - uses: actions/checkout@v2
@@ -551,7 +551,7 @@ jobs:
 
   test-iphone-12:
     runs-on: ubuntu-latest
-    needs: [vars, test-pixel-4]
+    needs: [vars, quali_reservation, test-pixel-4]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
       - uses: actions/checkout@v2
@@ -622,17 +622,6 @@ jobs:
 
     steps:
 
-      - name: install dependencies
-        run: |
-          pip install -r .quali/requirements.txt
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ needs.quali_reservation.outputs.identifier}}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       - name: checkout testing repo
         uses: actions/checkout@v2
@@ -677,7 +666,7 @@ jobs:
           s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
-    needs: [test-iphone-11, test-iphone-xr, test-iphone-12, test-iphone-7]
+    needs: [quali_reservation, test-iphone-11, test-iphone-xr, test-iphone-12, test-iphone-7]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -687,3 +676,25 @@ jobs:
         with:
           registry_user: wlan-testing-cicd
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
+
+
+      - name: install dependencies
+        run: |
+          pip install -r .quali/requirements.txt
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: stop reservation
+        if: always()
+        run: python .quali/stop_reservation.py ${{ needs.quali_reservation.outputs.identifier}}
+        env:
+          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
