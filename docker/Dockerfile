@@ -5,7 +5,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 RUN mkdir ~/.pip
 RUN echo "[global]" > ~/.pip/pip.conf
 RUN echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
-RUN echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple/" >> ~/.pip/pip.conf
+RUN echo "extra-index-url = https://tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple/" >> ~/.pip/pip.conf
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 COPY lanforge /wlan-testing/lanforge

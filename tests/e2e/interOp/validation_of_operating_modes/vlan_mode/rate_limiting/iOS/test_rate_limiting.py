@@ -31,6 +31,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -39,6 +40,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -49,6 +51,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -57,6 +60,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -67,6 +71,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa3_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -75,6 +80,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa3_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
