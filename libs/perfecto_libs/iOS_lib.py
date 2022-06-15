@@ -4017,6 +4017,8 @@ def return_open_maverickpage_iOS(request, setup_perfectoMobile_iOS, get_APToMobi
                         reboot = driver.find_element_by_xpath("//*[text()='Reboot']")
                         reboot.click()
                         print("Reboot Button clicked")
+                        print("Waiting 120 sec for AP to Reboot")
+                        time.sleep(120)
                     except:
                         print("unable to click Reboot Button")
                 except:

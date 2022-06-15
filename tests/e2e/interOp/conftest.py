@@ -74,8 +74,8 @@ def get_APToMobileDevice_data(request, get_device_configuration):
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         # Android
-        "platformName-android": get_device_configuration["platformName-android"],
-        "appPackage-android": get_device_configuration["appPackage-android"]
+        "platformName-android & iOS": get_device_configuration["platformName-android & iOS"],
+        "appPackage-android & iOS": get_device_configuration["appPackage-android & iOS"]
     }
     yield passPoint_data
 
@@ -101,8 +101,8 @@ def get_ToggleAirplaneMode_data(request, get_device_configuration):
         "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         # Android
-        "platformName-android": get_device_configuration["platformName-android"],
-        "appPackage-android": get_device_configuration["appPackage-android"]
+        "platformName-android & iOS": get_device_configuration["platformName-android & iOS"],
+        "appPackage-android & iOS": get_device_configuration["appPackage-android & iOS"]
     }
     yield passPoint_data
 
@@ -119,8 +119,8 @@ def get_maverick_google_search_data(request, get_device_configuration):
         # "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
         # "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         # Android
-        "platformName-android": get_device_configuration["platformName-android"],
-        "appPackage-android": get_device_configuration["appPackage-android"]
+        "platformName-android & iOS": get_device_configuration["platformName-android & iOS"],
+        "appPackage-android & iOS": get_device_configuration["appPackage-android & iOS"]
     }
     yield passPoint_data
 
@@ -131,8 +131,8 @@ def get_ToggleWifiMode_data(request, get_device_configuration):
         # iOS
         "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
         # Android
-        "platformName-android": get_device_configuration["platformName-android"],
-        "appPackage-android": get_device_configuration["appPackage-android"]
+        "platformName-android & iOS": get_device_configuration["platformName-android & iOS"],
+        "appPackage-android & iOS": get_device_configuration["appPackage-android & iOS"]
     }
     yield passPoint_data
 
@@ -435,14 +435,14 @@ def setup_perfectoMobile_android(request, get_device_configuration):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     capabilities = {
-        'platformName': get_device_configuration["platformName-android"],
-        'model': get_device_configuration["model-android"],
+        'platformName': get_device_configuration["platformName-android & iOS"],
+        'model': get_device_configuration["model-android & iOS"],
         'browserName': 'mobileOS',
         # 'automationName' : 'Appium',
         'securityToken': PERFECTO_DETAILS["securityToken"],
         'useAppiumForWeb': 'false',
         'useAppiumForHybrid': 'false',
-        # 'bundleId' : request.config.getini("appPackage-android"),
+        # 'bundleId' : request.config.getini("appPackage-android & iOS"),
     }
 
     if not is_device_Available_timeout(request, capabilities['model']):
