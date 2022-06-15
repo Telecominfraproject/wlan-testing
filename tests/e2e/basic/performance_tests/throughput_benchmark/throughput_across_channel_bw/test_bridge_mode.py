@@ -23,9 +23,13 @@ setup_params_general_20Mhz = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"],
              "security_key": "something"}]},
     "rf": {
-        "is5GHz": {"channelBandwidth": "is20MHz"},
-        "is5GHzL": {"channelBandwidth": "is20MHz"},
-        "is5GHzU": {"channelBandwidth": "is20MHz"}},
+        "5G": {
+                "channel-width": 20,
+                },
+        "2G": {
+                "channel-width": 20,
+                },
+        },
     "radius": False
 }
 
@@ -122,6 +126,40 @@ class TestThroughputAcrossBw20MhzBRIDGE(object):
             assert station
         else:
             assert False
+
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
+    @pytest.mark.tcp_download
+    def test_client_wpa2_BRIDGE_tcp_dl_ac(self, lf_tools, get_apnos_max_clients,
+                                       lf_test, station_names_twog, create_lanforge_chamberview_dut,
+                                       get_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+        """
+        LOGGER.info('test_client_wpa2_BRIDGE_tcp_dl Test Setup Finished, Starting test now...')
+        lf_tools.reset_scenario()
+        profile_data = setup_params_general_dual_band["ssid_modes"]["wpa2_personal"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        max = int(get_apnos_max_clients[0])
+        sets = [["DUT_NAME", lf_tools.dut_name]]
+        print("sets", sets)
+        #lf_tools.add_stations(band="2G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        influx_tags = "wifi-capacity-tcp-download-bridge-wpa2-5G"
+        wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
+                                        download_rate="1.5Gbps", batch_size="1",
+                                        influx_tags=influx_tags, sets=sets,
+                                        upload_rate="0", protocol="TCP-IPv4", duration="60000", move_to_influx=False)
+
+        report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+        lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
+        LOGGER.info('test_client_wpa2_BRIDGE_tcp_dl Test Finished')
+        assert True
 
 
 setup_params_general_40Mhz = {
