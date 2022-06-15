@@ -62,8 +62,8 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         max = int(get_apnos_max_clients[0])
         sets = [["DUT_NAME", lf_tools.dut_name]]
         print("sets", sets)
-        lf_tools.add_stations(band="2G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         influx_tags = "wifi-capacity-tcp-download-bridge-wpa2-2.4G-5G"
