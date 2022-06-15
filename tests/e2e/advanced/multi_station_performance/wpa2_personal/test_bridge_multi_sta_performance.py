@@ -14,7 +14,12 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "rf": {},
+    "rf": {
+        "5G":{
+            "channel-width": 80},
+        "2G":{
+            "channel-width": 20}
+    },
     "radius": False
 }
 @pytest.mark.parametrize(
