@@ -633,7 +633,7 @@ class APNOS:
                 client.close()
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                           f"cmd --value \"{cmd}\" "
-        elif self.type.lower() == "wifi6":
+        elif self.type.lower() == "wifi6" or self.type.lower() == "wifi6e":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
             print("cmd: ", cmd)
             if self.mode:
@@ -662,7 +662,7 @@ class APNOS:
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
-        elif self.type.lower() == "wifi6":
+        elif self.type.lower() == "wifi6" or self.type.lower() == "wifi6e":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
             print("cmd: ", cmd)
             if self.mode:
