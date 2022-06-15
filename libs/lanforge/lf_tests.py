@@ -537,7 +537,7 @@ class RunTest:
         self.client_connect = CreateStation(_host=self.lanforge_ip, _port=self.lanforge_port,
                                             _sta_list=station_name, _password=passkey, _ssid=ssid, _security=security)
         self.client_connect.station_profile.sta_mode = 0
-        self.client_connect.upstream_resource = 1
+        self.client_connect.upstream_resource = self.upstream_resource
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
