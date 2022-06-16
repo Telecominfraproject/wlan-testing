@@ -211,8 +211,11 @@ class ChamberView:
                 self.dut_name = testbed
                 self.ap_model = access_point_data[0]["model"]
                 self.ap_hw_info = access_point_data[0]["mode"]
-                self.version = self.ap_version[0].split(" / ")[1].split("\r\n\n")[0]
-                print("AP version", self.version)
+                try:
+                    self.version = self.ap_version[0].split(" / ")[1].split("\r\n\n")[0]
+                    print("AP version", self.version)
+                except Exception as e:
+                    print(e)
                 self.serial = access_point_data[0]["serial"]
                 self.ssid_data = None
                 if self.run_lf:
@@ -532,8 +535,9 @@ class ChamberView:
         return cli_base.json_post(req_url, data)
 
     def station_data_query(self, station_name="wlan0", query="channel"):
-        x = self.upstream_port.split(".")
+        x = self.twog_radios[0].split(".")
         url = f"/port/{x[0]}/{x[1]}/{station_name}?fields={query}"
+        print("url", url)
         response = self.json_get(_req_url=url)
         print("response: ", response)
         if (response is None) or ("interface" not in response):
