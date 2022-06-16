@@ -171,6 +171,7 @@ class TestVlanConfigFivegRadio(object):
         lanforge_data = get_configuration["traffic_generator"]["details"]
         upstream_port = lanforge_data["upstream"]
         port_resources = upstream_port.split(".")
+        sta_resource = lanforge_data["2.4G-Radio"][0].split(".")
 
         vlan_alias = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
                                        port_resources[2] + "." + str(vlan))["interface"]["alias"]
@@ -192,7 +193,7 @@ class TestVlanConfigFivegRadio(object):
                                         station_name=station_names_fiveg, vlan_id=vlan)
 
         if not passes:
-            sta_info = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] + "/" +
+            sta_info = lf_tools.json_get("/port/" + sta_resource[0] + "/" + sta_resource[1] + "/" +
                               station_names_fiveg[0])["interface"]
             lf_test.allure_report_table_format(dict_data=sta_info, key="Interface", value="Value", name=station_names_fiveg[0])
             station_ip = sta_info["ip"]
