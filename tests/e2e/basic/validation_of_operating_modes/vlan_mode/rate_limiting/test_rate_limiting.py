@@ -56,7 +56,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and up and batch_size_125"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -86,7 +86,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and dw and batch_size_125"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -117,7 +117,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and up_dw and batch_size_125"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -145,7 +145,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and disable_up_dw"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         profile_data["rate-limit"][0] = 0
@@ -175,7 +175,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and up_dw_per_client"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -204,7 +204,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and up_per_client"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -233,7 +233,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and dw_per_client"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -263,7 +263,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and up and batch_size_125"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -292,7 +292,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and dw and batch_size_125"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -321,7 +321,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and up_dw and batch_size_125"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -350,7 +350,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and up and batch_size_1"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -379,7 +379,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and dw and batch_size_1"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -408,7 +408,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and twog and up_dw and batch_size_1"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -437,7 +437,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and up and batch_size_1"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -466,7 +466,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and dw and batch_size_1"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -495,7 +495,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and up_dw and batch_size_1"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -522,7 +522,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and disable_up_dw"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         profile_data["rate-limit"][0] = 0
@@ -551,7 +551,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and up_dw_per_client"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -579,7 +579,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and up_per_client"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
@@ -607,7 +607,7 @@ class TestRateLimitingVlan(object):
             pytest -m "rate_limiting and vlan and wpa2_personal and fiveg and dw_per_client"
         """
         # run wifi capacity test here
-        lf_tools.reset_scenario()
+        #lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
