@@ -973,7 +973,8 @@ class RunTest:
                                   port=self.lanforge_port,
                                   ssid=ssid,
                                   input=input_data,
-                                  security=security, )
+                                  security=security,
+                                  upstream_resource=self.upstream_resource)
         self.sta_url_map = None
         self.multi_obj.build()
         self.multi_obj.start()
