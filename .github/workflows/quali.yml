@@ -61,6 +61,7 @@ jobs:
 
           DOW=$(date +%u)
           SLOT=$(( 10#$DOW % 2 )) # 1 - slot 1, 0 - slot 2
+          echo "Current slot is $SLOT"
           if [[ "1" -eq "$SLOT" ]]; then
             AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4,indio_um-305ac,hfcl_ion4xe,cig_wf188n,edgecore_ecw5211,edgecore_eap101,udaya_a5-id2' }}"
           else
