@@ -21,7 +21,7 @@ on:
         default: "main"
         description: "revision of the Open Wifi Helm chart"
       ap_models:
-        required: false
+        required: true
         default: "wallys_dr40x9,hfcl_ion4xe,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196"
         description: "the AP models to test"
       ap_version:
