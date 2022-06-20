@@ -217,7 +217,6 @@ class TestNatModeCaptivePortalSuiteOneNAT(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5186", name="WIFI-5186")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    @pytest.mark.sg123
     def test_Captive_Portal_WPA2_2g_Personal_NAT(self, request, get_vif_state, get_ap_logs,
                                                    get_APToMobileDevice_data,
                                                    setup_perfectoMobile_iOS):
