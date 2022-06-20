@@ -66,15 +66,16 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = "tcp-download-bridge-wpa2-2.4G-5G"
+        influx_tags = "wifi-capacity-tcp-download-bridge-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="0", protocol="TCP-IPv4", duration="60000")
+                                        upload_rate="0", protocol="TCP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         LOGGER.info('test_client_wpa2_BRIDGE_tcp_dl Test Finished')
         assert True
 
@@ -98,15 +99,16 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = "udp-download-bridge-wpa2-2.4G-5G"
+        influx_tags = "wifi-capacity-udp-download-bridge-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="0", protocol="UDP-IPv4", duration="60000")
+                                        upload_rate="0", protocol="UDP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -130,15 +132,16 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = "tcp-bidirectional-bridge-wpa2-2.4G-5G"
+        influx_tags = "wifi-capacity-tcp-bidirectional-bridge-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -162,15 +165,16 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = "udp-bidirectional-bridge-wpa2-2.4G-5G"
+        influx_tags = "wifi-capacity-udp-bidirectional-bridge-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -194,15 +198,16 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = "tcp-upload-bridge-wpa2-2.4G-5G"
+        influx_tags = "wifi-capacity-tcp-upload-bridge-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -226,15 +231,16 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
-        influx_tags = "udp-upload-bridge-wpa2-2.4G-5G"
+        influx_tags = "wifi-capacity-udp-upload-bridge-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
         lf_tools.attach_report_graphs(report_name=report_name)
+        lf_tools.attach_report_kpi(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
 

@@ -4,7 +4,10 @@ import os
 import time
 import pandas as pd
 
-pytestmark = [pytest.mark.regression, pytest.mark.dfs, pytest.mark.bridge]
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.ow_sanity_lf,
+              pytest.mark.ow_dfs_tests_lf,
+              pytest.mark.bandwidth_80MHz]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
@@ -25,6 +28,8 @@ setup_params_general1 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general1],
@@ -32,7 +37,6 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel52Bw80(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6376", name="WIFI-6376")
     @pytest.mark.wpa2_personal
@@ -76,14 +80,22 @@ class TestDFSChannel52Bw80(object):
             dfs_fail = False
         dfs_start.reboot()
         time.sleep(200)
+        count = 0
         while True:
             connected, latest, active = dfs_start.get_ucentral_status()
             if connected is True:
                 print("status is connected after reboot: ", connected)
                 break
-            time.sleep(1)
+            else:
+                count = count + 1
+                if count > 5:
+                    break
+            time.sleep(5)
+        if count > 5:
+            assert False, "AP is disconnected"
         if not dfs_fail:
             assert False
+
 
 setup_params_general2 = {
     "mode": "BRIDGE",
@@ -104,6 +116,8 @@ setup_params_general2 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general2],
@@ -111,7 +125,6 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel100Bw80(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6311", name="WIFI-6311")
     @pytest.mark.wpa2_personal
@@ -155,14 +168,22 @@ class TestDFSChannel100Bw80(object):
             dfs_fail = False
         dfs_start.reboot()
         time.sleep(200)
+        count = 0
         while True:
             connected, latest, active = dfs_start.get_ucentral_status()
             if connected is True:
                 print("status is connected after reboot: ", connected)
                 break
-            time.sleep(1)
+            else:
+                count = count + 1
+                if count > 5:
+                    break
+            time.sleep(5)
+        if count > 5:
+            assert False, "AP is disconnected"
         if not dfs_fail:
             assert False
+
 
 # setup_params_general3 = {
 #     "mode": "BRIDGE",
@@ -775,6 +796,8 @@ setup_params_general11 = {
     },
     "radius": False
 }
+
+
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general11],
@@ -782,7 +805,6 @@ setup_params_general11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-
 class TestDFSChannel132Bw80(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6384", name="WIFI-6384")
     @pytest.mark.wpa2_personal
@@ -826,12 +848,19 @@ class TestDFSChannel132Bw80(object):
             dfs_fail = False
         dfs_start.reboot()
         time.sleep(200)
+        count = 0
         while True:
             connected, latest, active = dfs_start.get_ucentral_status()
             if connected is True:
                 print("status is connected after reboot: ", connected)
                 break
-            time.sleep(1)
+            else:
+                count = count + 1
+                if count > 5:
+                    break
+            time.sleep(5)
+        if count > 5:
+            assert False, "AP is disconnected"
         if not dfs_fail:
             assert False
 

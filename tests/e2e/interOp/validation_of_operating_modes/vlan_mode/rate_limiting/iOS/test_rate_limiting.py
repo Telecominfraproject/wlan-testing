@@ -31,6 +31,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -39,6 +40,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -49,6 +51,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -57,6 +60,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -67,6 +71,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa3_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -75,6 +80,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa3_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -107,6 +113,7 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.ow_sanity_interop
     def test_rate_limiting_wpa2_2g(self, request, get_vif_state, get_ap_logs,
                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -139,6 +146,7 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.ow_sanity_interop
     def test_rate_limiting_wpa2_5g(self, request, get_vif_state, get_ap_logs,
                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_iOS):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
