@@ -626,6 +626,7 @@ class APNOS:
                 cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
                 stdin, stdout, stderr = client.exec_command(cmd1)
                 output = str(stdout.read())
+                print("Path", output)
                 if output.__contains__("False"):
                     cmd = "cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
                 else:
