@@ -566,9 +566,10 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
         report.step_start("Click Search Button")
         time.sleep(2)
         driver.implicitly_wait(2)
-        # elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")
-        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
-        elelSearch.click()
+        driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
+        time.sleep(4)
+        driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
+        time.sleep(2)
     except NoSuchElementException:
         currentResult = False
         print("Search Drop Down not active...")
@@ -983,6 +984,16 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         return ip_address_element_text, is_internet
 
     # ---------------------This is to Forget current connected SSID-------------------------------
+    # ---------------------This to Avoid any popup page from captive portal--------------------#
+    try:
+        element4 = driver.find_element_by_xpath("//*[@label='Cancel']")
+        element4.click()
+        time.sleep(2)
+        element4 = driver.find_element_by_xpath("//*[@label='Use Other Network']")
+        element4.click()
+        time.sleep(2)
+    except:
+        print("No Captive Portal Popup Found")
 
     try:
         time.sleep(4)
@@ -2311,6 +2322,18 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------This is to Forget current connected SSID-------------------------------
 
+    # ---------------------This to Avoid any popup page from captive portal--------------------#
+
+    try:
+        element4 = driver.find_element_by_xpath("//*[@label='Cancel']")
+        element4.click()
+        time.sleep(2)
+        element4 = driver.find_element_by_xpath("//*[@label='Use Other Network']")
+        element4.click()
+        time.sleep(2)
+    except:
+        print("No Captive Portal Popup Found")
+
     try:
         time.sleep(4)
         print("getting in to Additional details")
@@ -2540,7 +2563,6 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             driver.implicitly_wait(3)
             try:
                 report.step_start("Forget Network popup")
-                print("-----------------------------------------------------------------------------------------Forget popup")
                 time.sleep(2)
                 forget_ssid_popup = WebDriverWait(driver, 30).until(
                     EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
@@ -2552,13 +2574,11 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("error on ssid element")
 
     except Exception as e:
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         request.config.cache.set(key="select additional info failed", value=str(e))
     # ---------------------Additional INFO-------------------------------
 
     # --------------------- close app-------------------------------
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-    print(ip_address_element_text,"-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=",is_internet)
     return ip_address_element_text, is_internet
 
 # Returns whether the ssid is currently visible
