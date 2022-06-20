@@ -551,8 +551,10 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
     try:
         print("Launching Safari")
         report.step_start("Google Home Page")
+        driver.implicitly_wait(4)
         driver.get(connData["webURL"])
         print("Enter Search Text")
+        driver.implicitly_wait(4)
         elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
         elementFindTxt.send_keys("Internet Speed Test")
     except Exception as e:
@@ -564,9 +566,10 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
         report.step_start("Click Search Button")
         time.sleep(2)
         driver.implicitly_wait(2)
-        # elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']/li[1]/div[1]")
-        elelSearch = driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[2]")
-        elelSearch.click()
+        driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
+        time.sleep(4)
+        driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
+        time.sleep(2)
     except NoSuchElementException:
         currentResult = False
         print("Search Drop Down not active...")
@@ -574,6 +577,7 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
     try:
         print("Click Run Speed Test Button...")
         report.step_start("Click Run Speed Test Button")
+        driver.implicitly_wait(4)
         driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
     except NoSuchElementException:
         currentResult = False
@@ -980,6 +984,16 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         return ip_address_element_text, is_internet
 
     # ---------------------This is to Forget current connected SSID-------------------------------
+    # ---------------------This to Avoid any popup page from captive portal--------------------#
+    try:
+        element4 = driver.find_element_by_xpath("//*[@label='Cancel']")
+        element4.click()
+        time.sleep(2)
+        element4 = driver.find_element_by_xpath("//*[@label='Use Other Network']")
+        element4.click()
+        time.sleep(2)
+    except:
+        print("No Captive Portal Popup Found")
 
     try:
         time.sleep(4)
@@ -2308,6 +2322,18 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------This is to Forget current connected SSID-------------------------------
 
+    # ---------------------This to Avoid any popup page from captive portal--------------------#
+
+    try:
+        element4 = driver.find_element_by_xpath("//*[@label='Cancel']")
+        element4.click()
+        time.sleep(2)
+        element4 = driver.find_element_by_xpath("//*[@label='Use Other Network']")
+        element4.click()
+        time.sleep(2)
+    except:
+        print("No Captive Portal Popup Found")
+
     try:
         time.sleep(4)
         print("getting in to Additional details")
@@ -2428,7 +2454,7 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         time.sleep(8)
         try:
             time.sleep(8)
-            print("Acceptiong terms and Services")
+            print("Accepting terms and Services")
             report.step_start("loading Terms Page")
             element = WebDriverWait(driver,40).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Accept Terms of Service']")))
             element.click()
@@ -2532,11 +2558,12 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             forget_ssid = WebDriverWait(driver, 30).until(
                 EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
-            print("Forget old ssid")
-            # time.sleep(2)
-            # driver.implicitly_wait(3)
+            print("Forget connected ssid")
+            time.sleep(2)
+            driver.implicitly_wait(3)
             try:
                 report.step_start("Forget Network popup")
+                time.sleep(2)
                 forget_ssid_popup = WebDriverWait(driver, 30).until(
                     EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
@@ -3265,20 +3292,23 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
     connData = get_APToMobileDevice_data
+    time.sleep(5)
 
     contexts = driver.contexts
     # print("Printing Context")
     # print(contexts)
 
     driver.switch_to.context('WEBVIEW_1')
-
+    time.sleep(5)
     try:
         print("Launching Safari")
         report.step_start("Google Home Page")
+        time.sleep(4)
         driver.get(connData["webURL"])
         print("Enter Search Text")
+        time.sleep(4)
         driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
-        time.sleep(2)
+        time.sleep(4)
         driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
     except Exception as e:
         print("Launching Safari Failed")
@@ -3299,6 +3329,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     try:
         print("Click Run Speed Test Button...")
         report.step_start("Click Run Speed Test Button")
+        time.sleep(4)
         driver.find_element_by_xpath(connData["BtnRunSpeedTest"]).click()
     except NoSuchElementException:
         currentResult = False
