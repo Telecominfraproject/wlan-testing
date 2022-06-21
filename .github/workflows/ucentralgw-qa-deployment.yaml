@@ -33,7 +33,7 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "v2.6.0-RC3",
+      "chart_version": "main",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
