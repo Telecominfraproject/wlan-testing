@@ -1097,7 +1097,6 @@ class ProvUtils:
         return resp
 
 
-<<<<<<< HEAD
 class AnalyticUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):
@@ -1214,44 +1213,6 @@ class AnalyticUtils:
         return resp
 
 
-=======
-class AnalyticUtils(ConfigureController):
-
-    def __init__(self, controller_data=None):
-        super().__init__(controller_data)
-
-    def get_boards(self):
-        uri = self.build_url_prov("boards")
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
-        return resp
-
-    def get_board_by_id(self, board_id):
-        uri = self.build_url_prov("board/" + board_id)
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
-        return resp
-
-    def add_board(self, payload):
-        uri = self.build_url_prov("board/1")
-        print(uri)
-        print(payload)
-        payload = json.dumps(payload)
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("POST", resp, self.make_headers(), payload, uri)
-        return resp
-
-    def delete_board(self, board_id):
-        uri = self.build_url_prov("board/" + board_id)
-        print(uri)
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("DELETE", resp, self.make_headers(), "", uri)
-        return resp
-
->>>>>>> 981bd792 (added analytic service)
 class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
@@ -1619,6 +1580,8 @@ if __name__ == '__main__':
     # obj_ana.get_board_by_id(board_id='005ddb54-246b-41a7-b004-d0318f7b8633')
     # po = ProvUtils(sdk_client=obj)
     # print(po.get_inventory())
+    obj_ana = AnalyticUtils(sdk_client=obj)
+    obj_ana.get_boards()
     # up = UProfileUtility(sdk_client=obj, controller_data=controller)
     # up.set_mode(mode="BRIDGE")
     # up.set_radio_config()
