@@ -316,7 +316,7 @@ class TestThroughputAcrossBw80MhzNAT(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.mmm
     @pytest.mark.tcp_download
-    def test_client_wpa2_NAT_tcp_dl(self, lf_tools, get_apnos_max_clients,
+    def test_client_wpa2_NAT_tcp_dl_80Mhz(self, lf_tools, get_apnos_max_clients,
                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                     get_configuration):
         """ Wifi Capacity Test NAT mode
