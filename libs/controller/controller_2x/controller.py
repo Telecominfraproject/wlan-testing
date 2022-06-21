@@ -67,8 +67,6 @@ class ConfigureController:
         print(new_uri)
         return new_uri
 
-
-
     def request(self, service, command, method, params, payload):
         if service == "sec":
             uri = self.build_uri_sec(command)
@@ -468,6 +466,7 @@ class FMSUtils:
 
         return "error"
 
+
 class ProvUtils(ConfigureController):
 
     def __init__(self, controller_data=None):
@@ -523,7 +522,7 @@ class ProvUtils(ConfigureController):
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
-    def get_entity_by_id(self,entity_id):
+    def get_entity_by_id(self, entity_id):
         uri = self.build_url_prov("entity/" + entity_id)
         print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
@@ -649,7 +648,6 @@ class ProvUtils(ConfigureController):
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
         return resp
 
-
     def get_venue(self):
         uri = self.build_url_prov("venue/")
         print(uri)
@@ -689,6 +687,43 @@ class ProvUtils(ConfigureController):
         resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         print(resp)
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+
+class AnalyticUtils(ConfigureController):
+
+    def __init__(self, controller_data=None):
+        super().__init__(controller_data)
+
+    def get_boards(self):
+        uri = self.build_url_prov("boards")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_board_by_id(self, board_id):
+        uri = self.build_url_prov("board/" + board_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_board(self, payload):
+        uri = self.build_url_prov("board/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_board(self, board_id):
+        uri = self.build_url_prov("board/" + board_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
 
 class UProfileUtility:
@@ -899,7 +934,6 @@ class UProfileUtility:
             # if band == "6G":
             #     for keys in radio_config[band]:
             #         base_radio_config_6g[keys] = radio_config[band][keys]
-
 
         self.base_profile_config["radios"].append(base_radio_config_2g)
         self.base_profile_config["radios"].append(base_radio_config_5g)
