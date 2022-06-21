@@ -2732,7 +2732,7 @@ jobs:
         #if: github.ref == 'refs/heads/master'
         uses: ./.github/actions/allure-report-to-s3
         with:
-          test_type: regression_${{ matrix.marker }}
+          test_type: regression/${{ matrix.marker }}
           testbed: ${{ matrix.model }}
           report_path: allure-report
           s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
