@@ -36,7 +36,7 @@ class ConfigureController:
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
-        self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
+        self.gw_host, self.fms_host, self.prov_host ,self.analytics_host = self.get_gw_endpoint()
         if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
             time.sleep(60)
             self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
@@ -64,6 +64,11 @@ class ConfigureController:
 
     def build_url_prov(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
+        print(new_uri)
+        return new_uri
+
+    def build_url_analytics(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.analytics_host.hostname, self.analytics_host.port, path)
         print(new_uri)
         return new_uri
 
@@ -129,7 +134,9 @@ class ConfigureController:
                 fms_host = urlparse(service["uri"])
             if service['type'] == "owprov":
                 prov_host = urlparse(service["uri"])
-        return gw_host, fms_host, prov_host
+            if service['type'] == "owanalytics":
+                analytics_host = urlparse(service["uri"])
+        return gw_host, fms_host, prov_host, analytics_host
 
     def logout(self):
         uri = self.build_uri_sec('oauth2/%s' % self.access_token)
@@ -690,33 +697,36 @@ class ProvUtils(ConfigureController):
         return resp
 
 
-class AnalyticUtils(ConfigureController):
+class AnalyticUtils:
 
-    def __init__(self, controller_data=None):
-        super().__init__(controller_data)
+    def __init__(self, sdk_client=None, controller_data=None):
+        if sdk_client is None:
+            self.sdk_client = Controller(controller_data=controller_data)
+        self.sdk_client = sdk_client
 
     def get_boards(self):
-        uri = self.build_url_prov("boards")
+        uri = self.sdk_client.build_url_analytics("boards")
         print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        print(resp.json())
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_board_by_id(self, board_id):
-        uri = self.build_url_prov("board/" + board_id)
+        uri = self.build_url_analytics("board/" + board_id)
         print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_board(self, payload):
-        uri = self.build_url_prov("board/1")
+        uri = self.build_url_analytics("board/1")
         print(uri)
         print(payload)
         payload = json.dumps(payload)
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         print(resp)
-        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_board(self, board_id):
@@ -1087,6 +1097,8 @@ if __name__ == '__main__':
         'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
+    obj_ana = AnalyticUtils(sdk_client=obj)
+    obj_ana.get_boards()
     # up = UProfileUtility(sdk_client=obj, controller_data=controller)
     # up.set_mode(mode="BRIDGE")
     # up.set_radio_config()
