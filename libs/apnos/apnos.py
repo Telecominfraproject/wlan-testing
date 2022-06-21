@@ -619,19 +619,22 @@ class APNOS:
 
     def dfs(self):
         if self.type.lower() == "wifi5":
-            #cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
-            #print("cmd: ", cmd)
+            client = self.ssh_cli_connect()
+            cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
             if self.mode:
-                client = self.ssh_cli_connect()
-                cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
-                stdin, stdout, stderr = client.exec_command(cmd1)
-                output = str(stdout.read())
-                print("Path", output)
-                if output.__contains__("False"):
-                    cmd = "cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
-                else:
-                    cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                      f"cmd --value \"{cmd1}\" "
+                stdin, stdout, stderr = client.exec_command(cmd)
+                output = stdout.read()
+                status = output.decode('utf-8')
+                status_count = int(status.count("True"))
+                print("status", status)
+                print("count", status_count)
                 client.close()
+                if status_count == 1:
+                    cmd = "cd && cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
+                else:
+                    cmd = "cd && cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                           f"cmd --value \"{cmd}\" "
         elif self.type.lower() == "wifi6" or self.type.lower() == "wifi6e":
