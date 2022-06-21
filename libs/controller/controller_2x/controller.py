@@ -1097,6 +1097,7 @@ class ProvUtils:
         return resp
 
 
+<<<<<<< HEAD
 class AnalyticUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):
@@ -1213,6 +1214,44 @@ class AnalyticUtils:
         return resp
 
 
+=======
+class AnalyticUtils(ConfigureController):
+
+    def __init__(self, controller_data=None):
+        super().__init__(controller_data)
+
+    def get_boards(self):
+        uri = self.build_url_prov("boards")
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_board_by_id(self, board_id):
+        uri = self.build_url_prov("board/" + board_id)
+        print(uri)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def add_board(self, payload):
+        uri = self.build_url_prov("board/1")
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_board(self, board_id):
+        uri = self.build_url_prov("board/" + board_id)
+        print(uri)
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+>>>>>>> 981bd792 (added analytic service)
 class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
