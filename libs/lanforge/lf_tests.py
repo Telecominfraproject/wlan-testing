@@ -2076,8 +2076,6 @@ class RunTest:
         self.staConnect.stop()
         self.staConnect.cleanup()
 
-    def radio_max_antenna(self):
-
 
 
 if __name__ == '__main__':
