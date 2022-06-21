@@ -985,15 +985,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------This is to Forget current connected SSID-------------------------------
     # ---------------------This to Avoid any popup page from captive portal--------------------#
-    try:
-        element4 = driver.find_element_by_xpath("//*[@label='Cancel']")
-        element4.click()
-        time.sleep(2)
-        element4 = driver.find_element_by_xpath("//*[@label='Use Other Network']")
-        element4.click()
-        time.sleep(2)
-    except:
-        print("No Captive Portal Popup Found")
+
 
     try:
         time.sleep(4)
@@ -1020,6 +1012,43 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("couldn't find forget ssid element")
     except:
         print("No connected SSID")
+        try:
+            captive_portal_cancel_element = driver.find_element_by_xpath("//*[@label='Cancel']")
+            captive_portal_cancel_element.click()
+            time.sleep(2)
+            use_other_network_element = driver.find_element_by_xpath("//*[@label='Use Other Network']")
+            use_other_network_element.click()
+            time.sleep(2)
+        except:
+            print("No Captive Portal Popup Found")
+            try:
+                time.sleep(4)
+                print("getting in to Additional details")
+                report.step_start("Clicking More Info")
+                additional_details_element = driver.find_element_by_xpath(
+                    "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+                additional_details_element.click()
+                try:
+                    time.sleep(2)
+                    print("Forget Connected Network")
+                    forget_ssid = WebDriverWait(driver, 30).until(
+                        EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+                    forget_ssid.click()
+                    print("Forget old ssid")
+                    try:
+                        time.sleep(2)
+                        report.step_start("Forget SSID popup1")
+                        forget_ssid_popup = WebDriverWait(driver, 30).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+                        forget_ssid_popup.click()
+
+                        print("**alert** Forget SSID popup killed **alert**")
+                    except:
+                        print("Forget SSID popup not found")
+                except:
+                    print("couldn't find forget ssid element")
+            except:
+                print("No connected SSID")
 
     # ---------------------This is to Forget current connected SSID-------------------------------
 
@@ -2324,15 +2353,7 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
     # ---------------------This to Avoid any popup page from captive portal--------------------#
 
-    try:
-        element4 = driver.find_element_by_xpath("//*[@label='Cancel']")
-        element4.click()
-        time.sleep(2)
-        element4 = driver.find_element_by_xpath("//*[@label='Use Other Network']")
-        element4.click()
-        time.sleep(2)
-    except:
-        print("No Captive Portal Popup Found")
+
 
     try:
         time.sleep(4)
@@ -2361,7 +2382,45 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         except:
             print("couldn't find forget ssid element")
     except:
-        print("No connected SSID")
+        print("No connected SSID found")
+        print("Trying to Avoid Captive Portal page")
+        try:
+            captive_portal_cancel_element = driver.find_element_by_xpath("//*[@label='Cancel']")
+            captive_portal_cancel_element.click()
+            time.sleep(2)
+            use_other_network_element = driver.find_element_by_xpath("//*[@label='Use Other Network']")
+            use_other_network_element.click()
+            time.sleep(2)
+            try:
+                time.sleep(4)
+                print("getting in to Additional details")
+                report.step_start("Clicking More Info")
+                additional_details_element = driver.find_element_by_xpath(
+                    "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+                additional_details_element.click()
+                try:
+                    time.sleep(2)
+                    print("Forget Connected Network")
+                    forget_ssid = WebDriverWait(driver, 30).until(
+                        EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+                    forget_ssid.click()
+                    print("Forget old ssid")
+                    try:
+                        time.sleep(2)
+                        report.step_start("Forget SSID pocancel_element_for_captive_poppup1")
+                        forget_ssid_popup = WebDriverWait(driver, 30).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+                        forget_ssid_popup.click()
+
+                        print("**alert** Forget SSID popup killed **alert**")
+                    except:
+                        print("Forget SSID popup not found")
+                except:
+                    print("couldn't find forget ssid element")
+            except:
+                print("No connected SSID")
+        except:
+            print("No Captive Portal Popup Found")
 
     # ---------------------This is to Forget current connected SSID-------------------------------
 
