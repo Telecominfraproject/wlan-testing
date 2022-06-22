@@ -61,7 +61,7 @@ class TestMultipskNAT(object):
     def test_client_wpa_2g_vlan1(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
-        print(profile_data)
+        lf_tools.reset_scenario()
         ssid_name = profile_data["ssid_name"]
         print(ssid_name)
         security_key = profile_data["security_key"]
@@ -94,7 +94,7 @@ class TestMultipskNAT(object):
     def test_client_wpa_2g_vlan2(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
-        print(profile_data)
+        lf_tools.reset_scenario()
         ssid_name = profile_data["ssid_name"]
         print(ssid_name)
         security_key = profile_data["security_key"]
