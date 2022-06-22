@@ -170,6 +170,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
+        export OWRRM_VERSION=main
         export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -435,6 +436,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
+        export OWRRM_VERSION=main
         export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -627,6 +629,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
+        export OWRRM_VERSION=main
         export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -792,6 +795,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=main
         export OWSUB_VERSION=main
+        export OWRRM_VERSION=main
         export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.test-nodes.yaml,values.openwifi-qa.owls-enabled.yaml,values.openwifi-qa.external-db.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
