@@ -58,9 +58,8 @@ class TestAtfBridge(object):
         wct_obj = lf_test.wifi_capacity(instance_name="atf_sta1_greenfieldmode_sta2_atten30dB_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", sort="linear")
-
+        lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6395", name="WIFI-6395")
@@ -90,9 +89,8 @@ class TestAtfBridge(object):
         wct_obj = lf_test.wifi_capacity(instance_name="atf_sta1_greenfieldmode_sta2_legacymode_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", sort="linear")
-
+        lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6396", name="WIFI-6396")
@@ -129,9 +127,8 @@ class TestAtfBridge(object):
                                         vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", sort="linear")
-
+        lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6397", name="WIFI-6397")
@@ -162,7 +159,6 @@ class TestAtfBridge(object):
                                         vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,2",
                                         upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", sort="linear")
-
+        lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
