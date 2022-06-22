@@ -547,20 +547,7 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
     # print(contexts)
 
     driver.switch_to.context('WEBVIEW_1')
-
-    try:
-        print("Launching Safari")
-        report.step_start("Google Home Page")
-        driver.implicitly_wait(4)
-        driver.get(connData["webURL"])
-        print("Enter Search Text")
-        driver.implicitly_wait(4)
-        elementFindTxt = driver.find_element_by_xpath(connData["lblSearch"])
-        elementFindTxt.send_keys("Internet Speed Test")
-    except Exception as e:
-        print("Launching Safari Failed")
-        print(e)
-
+    time.sleep(5)
     try:
         print("Click Search Button")
         report.step_start("Click Search Button")
@@ -570,9 +557,9 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
         time.sleep(4)
         driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
         time.sleep(2)
-    except NoSuchElementException:
-        currentResult = False
-        print("Search Drop Down not active...")
+    except Exception as e:
+        print("Launching Safari Failed")
+        print(e)
 
     try:
         print("Click Run Speed Test Button...")
