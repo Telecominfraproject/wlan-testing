@@ -1373,7 +1373,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(2):
+        for check_for_all_ssids in range(9):
             available_ssids = get_all_available_ssids(driver)
             try:
                 if WifiName not in available_ssids:
