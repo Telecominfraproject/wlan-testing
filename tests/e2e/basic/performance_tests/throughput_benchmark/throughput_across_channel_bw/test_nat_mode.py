@@ -336,7 +336,7 @@ class TestThroughputAcrossBw80MhzNAT(object):
         lf_tools.Chamber_View()
         influx_tags = "wifi-capacity-tcp-download-nat-wpa2-80Mhz-AX"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_NAT_tcp_dl", mode=mode, vlan_id=vlan,
-                                        download_rate="1.5Gbps", batch_size="1,5,10,20,40,64,128,256",
+                                        download_rate="1.5Gbps", batch_size="1",
                                         influx_tags=influx_tags, sets=sets,
                                         upload_rate="0", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
 
