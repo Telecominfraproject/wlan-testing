@@ -174,6 +174,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -192,6 +199,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -210,6 +224,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -228,6 +249,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -246,6 +274,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -264,6 +299,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -392,6 +434,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -410,6 +459,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -428,6 +484,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -446,6 +509,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -464,6 +534,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -482,6 +559,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -610,6 +694,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -628,6 +719,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -646,6 +744,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -664,6 +769,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -682,6 +794,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -700,6 +819,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -828,6 +954,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -846,6 +979,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -864,6 +1004,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -882,6 +1029,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -900,6 +1054,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -918,6 +1079,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1046,6 +1214,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1064,6 +1239,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1082,6 +1264,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1100,6 +1289,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1118,6 +1314,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1136,6 +1339,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1264,6 +1474,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1282,6 +1499,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1300,6 +1524,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1318,6 +1549,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1336,6 +1574,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1354,6 +1599,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1482,6 +1734,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1500,6 +1759,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1518,6 +1784,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1536,6 +1809,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1554,6 +1834,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1572,6 +1859,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1700,6 +1994,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1718,6 +2019,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1736,6 +2044,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1754,6 +2069,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1772,6 +2094,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1790,6 +2119,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1918,6 +2254,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1936,6 +2279,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1954,6 +2304,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1972,6 +2329,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -1990,6 +2354,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2008,6 +2379,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2136,6 +2514,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2154,6 +2539,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2172,6 +2564,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2190,6 +2589,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2208,6 +2614,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2226,6 +2639,13 @@ jobs:
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2353,6 +2773,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_dfs_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2370,6 +2797,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_multipsk_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2387,6 +2821,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_rate_limiting_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2404,6 +2845,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_dynamic_qos_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2421,6 +2869,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_dvlan_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2438,6 +2893,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_multi_vlan_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2565,6 +3027,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_dfs_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2582,6 +3051,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_multipsk_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2599,6 +3075,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_rate_limiting_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2616,6 +3099,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_dynamic_qos_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-qos --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-qos $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2633,6 +3123,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_dvlan_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -2650,6 +3147,13 @@ jobs:
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-ow_multi_vlan_tests_lf
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
