@@ -2010,8 +2010,10 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                     # This is To get all available ssids
                     # ------------------------------------------------------
                     try:
-                        for check_for_all_ssids in range(2):
+                        for k in range(9):
                             available_ssids = get_all_available_ssids(driver, deviceModelName)
+                            print("active_ssid_list: ", available_ssids)
+                            allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
                                 if WifiName not in available_ssids:
                                     scrollDown(setup_perfectoMobile)
@@ -2019,14 +2021,13 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                                 else:
                                     ssid_found = True
                                     print(WifiName + " : Found in Device")
-                                   #allure.attach(name= body=str(WifiName + " : Found in Device"))
+                                    # allure.attach(name= body=str(WifiName+" : Found in Device"))
                                     break
                             except:
-                                print("1538")
-                                pass
+                                print("couldn't find wifi in available ssid")
                         if not ssid_found:
-                            print("could not found" + WifiName + " in device")
-                           #allure.attach(name= body=str("could not found" + WifiName + " in device"))
+                            print("could not found " + WifiName + " in device")
+                            # allure.attach(name= body=str("could not found" + WifiName + " in device"))
                             closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             return ssid_with_internet
                     except:
