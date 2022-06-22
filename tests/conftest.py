@@ -806,7 +806,7 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 
 
 @fixture(scope='session')
-def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_ver,
+def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_ver, cc_1,
                        add_allure_environment_property: Callable) -> None:
     if cc_1:
         for i in range(len(get_configuration["access_point"])):
