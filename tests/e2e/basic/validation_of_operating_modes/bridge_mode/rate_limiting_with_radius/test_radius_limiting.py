@@ -785,7 +785,7 @@ class TestRateLimitingWithRadiusBridge(object):
         eap = "TTLS"
         ttls_passwd = 'password'
         identity = 'user3'
-        configured = 50
+        configured = 10
         allure.attach(name="Max-Upload-User3", body=str(profile_data["rate-limit"]))
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
@@ -832,7 +832,7 @@ class TestRateLimitingWithRadiusBridge(object):
         eap = "TTLS"
         ttls_passwd = 'password'
         identity = 'user3'
-        configured = 10
+        configured = 50
         allure.attach(name="Max-Download-User3", body=str(profile_data["rate-limit"]))
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
