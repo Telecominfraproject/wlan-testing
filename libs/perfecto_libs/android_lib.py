@@ -5074,7 +5074,7 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                     except Exception as e:
                         print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                     try:
-                        time.sleep(2)
+                        time.sleep(20)
                         report.step_start("Click Accept Terms Button")
                         print("Click Accept Terms Button")
                         join_btn_element = driver.find_element_by_xpath("//*[@text='Accept Terms of Service']")
