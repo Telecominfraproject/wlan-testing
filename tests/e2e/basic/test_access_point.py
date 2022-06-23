@@ -33,7 +33,7 @@ class TestAP(object):
                   "when": 0
                 }
         resp = setup_controller.ap_reboot(device_name, payload)
-        time.sleep(120)
+        time.sleep(150)
         print(resp.json())
         allure.attach(name="Reboot", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
         for ap in get_configuration['access_point']:
@@ -78,7 +78,7 @@ class TestAP(object):
                   "keepRedirector": True
                 }
         resp = setup_controller.ap_factory_reset(device_name, payload)
-        time.sleep(150)
+        time.sleep(200)
         print(resp.json())
         allure.attach(name="Factory Reset", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
         for ap in get_configuration['access_point']:
