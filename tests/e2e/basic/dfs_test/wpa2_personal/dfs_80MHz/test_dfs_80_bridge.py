@@ -44,7 +44,7 @@ class TestDFSChannel52Bw80(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_52_bw_80
-    @allure.title("Channel 52 bandwidth 80")
+    @allure.title("Test for Channel 52 and bandwidth 80")
     def test_dfs_channel_52_bw_80(self, lf_test, lf_tools, station_names_fiveg, dfs_start):
         lf_tools.reset_scenario()
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
@@ -127,12 +127,14 @@ setup_params_general2 = {
     indirect=True,
     scope="class"
 )
+@allure.sub_suite("Channel-100")
 @pytest.mark.usefixtures("setup_profiles")
 class TestDFSChannel100Bw80(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6311", name="WIFI-6311")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_100_bw_80
+    @allure.title("Test for Channel 100 and bandwidth 80")
     def test_dfs_channel_100_bw_80(self, lf_test, lf_tools, station_names_fiveg, dfs_start):
         lf_tools.reset_scenario()
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
@@ -807,12 +809,14 @@ setup_params_general11 = {
     indirect=True,
     scope="class"
 )
+@allure.sub_suite("Channel-132")
 @pytest.mark.usefixtures("setup_profiles")
 class TestDFSChannel132Bw80(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6384", name="WIFI-6384")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_132_bw_80
+    @allure.title("Test for Channel 132 and bandwidth 80")
     def test_dfs_channel_132_bw_80(self, lf_test, lf_tools, station_names_fiveg, dfs_start):
         lf_tools.reset_scenario()
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
