@@ -29,7 +29,9 @@ setup_params_general1 = {
     "radius": False
 }
 
-
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(80 MHz)")
+@allure.sub_suite("Channel-52")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general1],
@@ -42,6 +44,7 @@ class TestDFSChannel52Bw80(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_52_bw_80
+    @allure.title("Channel 52 bandwidth 80")
     def test_dfs_channel_52_bw_80(self, lf_test, lf_tools, station_names_fiveg, dfs_start):
         lf_tools.reset_scenario()
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
