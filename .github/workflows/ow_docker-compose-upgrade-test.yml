@@ -136,7 +136,9 @@ jobs:
             sudo -i;
             cd wlan-cloud-ucentral-deploy/docker-compose;
             docker-compose down;
+            git stash;
             git checkout ${{ github.event.inputs.deployment_upgrade_version }};
+            git stash apply;
             docker-compose up -d;
           EOF
 
