@@ -180,7 +180,10 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
+          kubectl get pods -n ${{ steps.namespace.outputs.name }}
+          kubectl get pods -n ${{ steps.namespace.outputs.name }} --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///"
           podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }} --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          echo $podname
           kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }} $podname || true
 
       - name: delete namespace
