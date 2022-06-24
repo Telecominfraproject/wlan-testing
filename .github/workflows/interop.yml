@@ -139,7 +139,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android and not wpa3_personal' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S9' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='Galaxy S9' --skip-lanforge -o firmware='${{ needs.vars.outputs.firmware }}'"
           allure_results_artifact_name: allure-results-galaxy-s9
 
       - name: stop reservation
