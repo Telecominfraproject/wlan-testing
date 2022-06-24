@@ -233,7 +233,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-11' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='iPhone-11' --skip-lanforge -o firmware='${{ needs.vars.outputs.firmware }}'"
           allure_results_artifact_name: allure-results-iphone-11
 
       - name: stop reservation
@@ -328,7 +328,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S10.*' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='Galaxy S10.*' --skip-lanforge -o firmware='${{ needs.vars.outputs.firmware }}'"
           allure_results_artifact_name: allure-results-galaxy-s10
 
       - name: stop reservation
@@ -424,7 +424,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-7' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='iPhone-7' --skip-lanforge -o firmware='${{ needs.vars.outputs.firmware }}'"
           allure_results_artifact_name: allure-results-iphone-7
 
       - name: stop reservation
@@ -518,7 +518,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S20' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='Galaxy S20' --skip-lanforge -o firmware='${{ needs.vars.outputs.firmware }}'"
           allure_results_artifact_name: allure-results-galaxy-s20
 
       - name: stop reservation
@@ -611,7 +611,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-XR' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='iPhone-XR' --skip-lanforge -o firmware='${{ needs.vars.outputs.firmware }}'"
           allure_results_artifact_name: allure-results-iphone-xr
 
       - name: stop reservation
@@ -706,7 +706,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Pixel 4' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='Pixel 4' --skip-lanforge -o firmware='${{ needs.vars.outputs.firmware }}'"
           allure_results_artifact_name: allure-results-pixel-4
 
       - name: stop reservation
@@ -798,7 +798,7 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-12' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='iPhone-12' --skip-lanforge -o firmware='${{ needs.vars.outputs.firmware }}'"
           allure_results_artifact_name: allure-results-iphone-12
 
       - name: stop reservation
