@@ -149,9 +149,3 @@ runs:
       with:
         name: ${{ inputs.allure_results_artifact_name }}
         path: allure-results
-
-    - name: cleanup
-      if: always()
-      shell: bash
-      run: |
-        kubectl delete ns "${{ inputs.namespace }}" --wait=true
