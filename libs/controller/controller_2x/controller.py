@@ -180,7 +180,7 @@ class Controller(ConfigureController):
         super().__init__(controller_data)
 
     def get_devices(self):
-        uri = self.build_uri("devices/")
+        uri = self.build_uri("devices")
         print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
@@ -665,7 +665,7 @@ class ProvUtils(ConfigureController):
         return resp
 
     def get_venue(self):
-        uri = self.build_url_prov("venue/")
+        uri = self.build_url_prov("venue")
         print(uri)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
