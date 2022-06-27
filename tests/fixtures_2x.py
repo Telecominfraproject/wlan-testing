@@ -36,6 +36,7 @@ from apnos.apnos import APNOS
 from controller.controller_2x.controller import Controller
 from controller.controller_2x.controller import FMSUtils
 from controller.controller_2x.controller import ProvUtils
+from controler.controller_2x.controller import AnalyticUtils
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
@@ -54,6 +55,7 @@ class Fixtures_2x:
                 self.controller_obj = Controller(controller_data=self.lab_info["controller"])
                 self.prov_controller_obj = ProvUtils(controller_data=self.lab_info["controller"])
                 self.fw_client = FMSUtils(sdk_client=self.controller_obj)
+                self.analytics_client = AnalyticUtils(sdk_client=self.controller_obj)
             except Exception as e:
                 print(e)
                 allure.attach(body=str(e), name="Controller Instantiation Failed: ")

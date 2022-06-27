@@ -221,6 +221,13 @@ class Controller(ConfigureController):
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
+    def get_system_analytics(self):
+        uri = self.build_url_analytics("system/?command=info")
+        allure.attach(name="Info of Analytics Service:", body=str(uri))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
     def get_device_uuid(self, serial_number):
         device_info = self.get_device_by_serial_number(serial_number=serial_number)
         device_info = device_info.json()
@@ -722,7 +729,7 @@ class AnalyticUtils:
         return resp
 
     def add_board(self, payload):
-        uri = self.sdk_client.build_url_analytics("board/1")
+        uri = self.sdk_client.build_url_analytics("board/0")
         print(uri)
         print(payload)
         payload = json.dumps(payload)
@@ -731,11 +738,86 @@ class AnalyticUtils:
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
+    def edit_board(self, board_id, payload):
+        uri = self.sdk_client.build_url_analytics("board/" + board_id)
+        print(uri)
+        print(payload)
+        payload = json.dumps(payload)
+        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
+        return resp
+
     def delete_board(self, board_id):
-        uri = self.sdk_client.build_url_prov("board/" + board_id)
+        uri = self.sdk_client.build_url_analytics("board/" + board_id)
         print(uri)
         resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def get_board_devices(self, board_id):
+        uri = self.sdk_client.build_url_analytics("board/" + board_id + "/devices")
+        print(uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def get_board_data_bytime(self, board_id, from_date, to_date):
+        uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&" +to_date)
+        print(uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def delete_board_data_bytime(self, board_id, from_date, to_date):
+        uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&" +to_date)
+        print(uri)
+        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def get_country_code_for_ip(self, ip_list):
+        uri = self.sdk_client.build_url_analytics("/iptocountry?iplist=" +ip_list)
+        print(uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def get_wificlients_history(self, venue):
+        uri = self.sdk_client.build_url_analytics("/wifiClientHistory?macsOnly=true" +venue)
+        print(uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def get_wifi_client_history(self, venue, client_mac):
+        uri = self.sdk_client.build_url_analytics("/wifiClientHistory/"+client_mac+"?orderSpec=true")
+        print(uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def delete_wifi_client_history(self, venue, client_mac):
+        uri = self.sdk_client.build_url_analytics("/wifiClientHistory/" + client_mac + "?orderSpec=true")
+        print(uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def get_system_info(self, command):
+        uri = self.sdk_client.build_url_analytics("/system?command="+command)
+        print(uri)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        return resp
+
+    def post_system_info(self, command):
+        uri = self.sdk_client.build_url_analytics("/system")
+        print(uri)
+        payload = json.dumps({command: f"{command}"})
+        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        print(resp)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
 class UProfileUtility:
