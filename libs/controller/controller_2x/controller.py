@@ -713,14 +713,14 @@ class AnalyticUtils:
         return resp
 
     def get_board_by_id(self, board_id):
-        uri = self.build_url_analytics("board/" + board_id)
+        uri = self.sdk_client.build_url_analytics("board/" + board_id)
         print(uri)
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_board(self, payload):
-        uri = self.build_url_analytics("board/1")
+        uri = self.sdk_client.build_url_analytics("board/1")
         print(uri)
         print(payload)
         payload = json.dumps(payload)
@@ -730,10 +730,10 @@ class AnalyticUtils:
         return resp
 
     def delete_board(self, board_id):
-        uri = self.build_url_prov("board/" + board_id)
+        uri = self.sdk_client.build_url_prov("board/" + board_id)
         print(uri)
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
 class UProfileUtility:
@@ -1097,8 +1097,11 @@ if __name__ == '__main__':
         'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
+    print('get devices:\n')
+    obj.get_devices()
     obj_ana = AnalyticUtils(sdk_client=obj)
-    obj_ana.get_boards()
+    # obj_ana.get_boards()
+    # obj_ana.get_board_by_id(board_id='005ddb54-246b-41a7-b004-d0318f7b8633')
     # up = UProfileUtility(sdk_client=obj, controller_data=controller)
     # up.set_mode(mode="BRIDGE")
     # up.set_radio_config()
