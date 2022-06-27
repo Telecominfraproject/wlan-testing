@@ -127,6 +127,8 @@ class ConfigureController:
         print(services)
         gw_host = ""
         fms_host = ""
+        prov_host = ""
+        analytics_host = ""
         for service in services['endpoints']:
             if service['type'] == "owgw":
                 gw_host = urlparse(service["uri"])
