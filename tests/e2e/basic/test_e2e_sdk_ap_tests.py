@@ -138,13 +138,13 @@ class TestBulkConfigTest(object):
             status = profile_obj.push_config(serial_number=SERIAL)
             if status.status_code != 200:
                 allure.attach("Configure command Failed: ", SERIAL, " Time: " + str(datetime.utcnow()))
-                print(status.status_code + ":\t" + status.json())
-                allure.attach(name=status.status_code, body=status.json())
+                print(str(status.status_code) + ":\t" + str(status.json()))
+                allure.attach(name=str(status.status_code), body=str(status.json()))
                 print("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
                 PASS.append(False)
             if status.status_code == 200:
-                print(status.status_code + ":\t" + status.json())
-                allure.attach(name=status.status_code, body=status.json())
+                print(str(status.status_code) + ":\t" + str(status.json()))
+                allure.attach(name=str(status.status_code), body=str(status.json()))
                 allure.attach("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
                 print("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
                 PASS.append(True)
