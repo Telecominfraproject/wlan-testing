@@ -4,16 +4,14 @@
 
 """
 
-import string
-import random
-
-import pytest
-import json
 import allure
+import pytest
 
 
 @pytest.mark.uc_sanity
-@allure.feature("SDK REST API")
+@pytest.mark.ow_sdk_load_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.parent_suite("OpenWifi FMS Service Tests")
 class TestUcentralFMSService(object):
 
     @pytest.mark.system_info_fms
