@@ -38,7 +38,7 @@ jobs:
       marker_overwrite: ${{ steps.vars.outputs.marker_overwrite }}
       openwifi_revision: ${{ steps.vars.outputs.openwifi }}
       ap_models: ${{ steps.vars.outputs.ap_models }}
-      firmware: ${{ steps.vars.outputs.ap_version }}
+      firmware: ${{ steps.vars.outputs.firmware }}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
       existing_controller: ${{ steps.vars.outputs.existing_controller }}
 
