@@ -4,20 +4,21 @@
 
 """
 
-import string
+import json
 import random
 
-import pytest
-import json
 import allure
+import pytest
 
 
 @pytest.mark.ow_sanity_lf
 @pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.feature("SDK PROV REST API")
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.parent_suite("OpenWifi Provisioning Service Tests")
 class TestUcentralProvisionService(object):
-
 
     @pytest.mark.sdk_restapi
     @pytest.mark.prov_api
@@ -28,7 +29,7 @@ class TestUcentralProvisionService(object):
         device_name = get_configuration['access_point'][0]['serial']
         resp = setup_prov_controller.get_inventory_by_device(device_name)
         print(resp.json())
-        allure.attach(name="Inventory", body=str(resp.json()),attachment_type=allure.attachment_type.JSON)
+        allure.attach(name="Inventory", body=str(resp.json()), attachment_type=allure.attachment_type.JSON)
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_test
@@ -37,8 +38,8 @@ class TestUcentralProvisionService(object):
             Test the create device in provision Inventory
         """
         device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
-                                     random.randint(0, 255),
-                                     random.randint(0, 255))
+                                                  random.randint(0, 255),
+                                                  random.randint(0, 255))
         device_name = device_mac.replace(":", "")
         # device_name = "deadbeef0011" + testbed.replace("-","")
         payload = {"serialNumber": device_name,
@@ -77,15 +78,15 @@ class TestUcentralProvisionService(object):
 
         # This is for Edititng the information fo device in Inventory
         editing_payload = {
-                          "description": "For testing API through automation after editing",
-                          "devClass": "any",
-                          "deviceType": "edgecore_eap101",
-                          "entity": "",
-                          "name": "Testing_to_add_device_through_automation",
-                          "notes": [],
-                          "rrm": "inherit",
-                          "venue": ""
-                        }
+            "description": "For testing API through automation after editing",
+            "devClass": "any",
+            "deviceType": "edgecore_eap101",
+            "entity": "",
+            "name": "Testing_to_add_device_through_automation",
+            "notes": [],
+            "rrm": "inherit",
+            "venue": ""
+        }
         print(json.dumps(editing_payload))
         resp = setup_prov_controller.edit_device_from_inventory(device_name, editing_payload)
         allure.attach(name="response: ", body=str(resp.json()))
@@ -121,10 +122,10 @@ class TestUcentralProvisionService(object):
             Test the create Entity in provision Inventory
         """
         payload = {"name": "Testing_prov",
-                    "rrm": "inherit",
-                    "description": "For testing Purposes through Automation",
-                    "notes": [{"note": "For testing Purposes through Automation"}],
-                    "parent": "0000-0000-0000"
+                   "rrm": "inherit",
+                   "description": "For testing Purposes through Automation",
+                   "notes": [{"note": "For testing Purposes through Automation"}],
+                   "parent": "0000-0000-0000"
                    }
         print(json.dumps(payload))
         resp = setup_prov_controller.add_entity(payload)
@@ -145,14 +146,14 @@ class TestUcentralProvisionService(object):
 
         # This to edit Entity
         editing_payload = {
-                          "description": "For testing Purposes through Automation after edit",
-                          "deviceConfiguration": [],
-                          "name": "Testing_prov",
-                          "notes": [],
-                          "rrm": "inherit",
-                          "sourceIP": [],
-                          "uuid": entity_id
-                        }
+            "description": "For testing Purposes through Automation after edit",
+            "deviceConfiguration": [],
+            "name": "Testing_prov",
+            "notes": [],
+            "rrm": "inherit",
+            "sourceIP": [],
+            "uuid": entity_id
+        }
         print(json.dumps(editing_payload))
         resp = setup_prov_controller.edit_entity(editing_payload, entity_id)
         allure.attach(name="response: ", body=str(resp.json()))
@@ -196,24 +197,24 @@ class TestUcentralProvisionService(object):
             Test the create Contact in provision Inventory
         """
         payload = {
-                    "name": "Prov-Testing-through-Automation",
-                    "type": "USER",
-                    "title": "Testing_contact",
-                    "salutation": "",
-                    "firstname": "ProvTesting",
-                    "lastname": "Through Automation",
-                    "initials": "",
-                    "visual": "",
-                    "phones": [],
-                    "mobiles": [],
-                    "primaryEmail": "tip@ucentral.com",
-                    "secondaryEmail": "",
-                    "accessPIN": "",
-                    "description": "",
-                    "initialNote": "",
-                    "entity": "0000-0000-0000",
-                    "notes": [{"note": ""}]
-                }
+            "name": "Prov-Testing-through-Automation",
+            "type": "USER",
+            "title": "Testing_contact",
+            "salutation": "",
+            "firstname": "ProvTesting",
+            "lastname": "Through Automation",
+            "initials": "",
+            "visual": "",
+            "phones": [],
+            "mobiles": [],
+            "primaryEmail": "tip@ucentral.com",
+            "secondaryEmail": "",
+            "accessPIN": "",
+            "description": "",
+            "initialNote": "",
+            "entity": "0000-0000-0000",
+            "notes": [{"note": ""}]
+        }
         print(json.dumps(payload))
         resp = setup_prov_controller.add_contact(payload)
         allure.attach(name="response: ", body=str(resp.json()))
@@ -233,22 +234,22 @@ class TestUcentralProvisionService(object):
 
         # This to edit Entity
         editing_payload = {
-                          "accessPIN": "",
-                          "description": "",
-                          "entity": "0000-0000-0000",
-                          "firstname": "ProvTesting",
-                          "initials": "",
-                          "lastname": "Through Automation",
-                          "mobiles": [],
-                          "name": "Prov-Testing-Automation API's",
-                          "notes": [],
-                          "phones": [],
-                          "primaryEmail": "tip@ucentral.com",
-                          "salutation": "",
-                          "secondaryEmail": "",
-                          "title": "Testing_contact",
-                          "type": "USER"
-                        }
+            "accessPIN": "",
+            "description": "",
+            "entity": "0000-0000-0000",
+            "firstname": "ProvTesting",
+            "initials": "",
+            "lastname": "Through Automation",
+            "mobiles": [],
+            "name": "Prov-Testing-Automation API's",
+            "notes": [],
+            "phones": [],
+            "primaryEmail": "tip@ucentral.com",
+            "salutation": "",
+            "secondaryEmail": "",
+            "title": "Testing_contact",
+            "type": "USER"
+        }
         print(json.dumps(editing_payload))
         resp = setup_prov_controller.edit_contact(editing_payload, contact_id)
         allure.attach(name="response: ", body=str(resp.json()))
@@ -285,22 +286,22 @@ class TestUcentralProvisionService(object):
             Test the create location in provision Inventory
         """
         payload = {
-                    "name": "TIP",
-                    "type": "AUTO",
-                    "buildingName": "",
-                    "addressLines": ["Pedda Rushikonda"],
-                    "city": "Visakhapatnam",
-                    "state": "Andhra pradesh",
-                    "postal": "530045",
-                    "country": "IN",
-                    "phones": [],
-                    "mobiles": [],
-                    "geoCode": "",
-                    "description": "For Testing through Automation",
-                    "initialNote": "Testing purposes through Automation",
-                    "entity": "0000-0000-0000",
-                    "notes": [{"note": "Testing purposes"}]
-                }
+            "name": "TIP",
+            "type": "AUTO",
+            "buildingName": "",
+            "addressLines": ["Pedda Rushikonda"],
+            "city": "Visakhapatnam",
+            "state": "Andhra pradesh",
+            "postal": "530045",
+            "country": "IN",
+            "phones": [],
+            "mobiles": [],
+            "geoCode": "",
+            "description": "For Testing through Automation",
+            "initialNote": "Testing purposes through Automation",
+            "entity": "0000-0000-0000",
+            "notes": [{"note": "Testing purposes"}]
+        }
         print(json.dumps(payload))
         resp = setup_prov_controller.add_location(payload)
         allure.attach(name="response: ", body=str(resp.json()))
@@ -320,24 +321,24 @@ class TestUcentralProvisionService(object):
 
         # This to edit Entity
         editing_payload = {
-                          "addressLines": [
-                            "Madhurawada",
-                            ""
-                          ],
-                          "buildingName": "",
-                          "city": "Visakhapatnam",
-                          "country": "IN",
-                          "description": "Candela Testing",
-                          "entity": "0000-0000-0000",
-                          "geoCode": "",
-                          "mobiles": [],
-                          "name": "Candela IND",
-                          "notes": [],
-                          "phones": [],
-                          "postal": "530048",
-                          "state": "Andhra Pradesh",
-                          "type": "SERVICE"
-                        }
+            "addressLines": [
+                "Madhurawada",
+                ""
+            ],
+            "buildingName": "",
+            "city": "Visakhapatnam",
+            "country": "IN",
+            "description": "Candela Testing",
+            "entity": "0000-0000-0000",
+            "geoCode": "",
+            "mobiles": [],
+            "name": "Candela IND",
+            "notes": [],
+            "phones": [],
+            "postal": "530048",
+            "state": "Andhra Pradesh",
+            "type": "SERVICE"
+        }
         print(json.dumps(editing_payload))
         resp = setup_prov_controller.edit_location(editing_payload, location_id)
         allure.attach(name="response: ", body=str(resp.json()))
@@ -374,18 +375,18 @@ class TestUcentralProvisionService(object):
             Test the create venue in provision Inventory
         """
         payload = {
-                      "description": "For testing Purposes",
-                      "entity": "6a657863-9940-4303-ac68-4cc10d3078ec",
-                      "location": "",
-                      "name": "Testing Prov",
-                      "notes": [
-                        {
-                          "note": "For testing Purposes"
-                        }
-                      ],
-                      "parent": "",
-                      "rrm": "inherit"
-                    }
+            "description": "For testing Purposes",
+            "entity": "6a657863-9940-4303-ac68-4cc10d3078ec",
+            "location": "",
+            "name": "Testing Prov",
+            "notes": [
+                {
+                    "note": "For testing Purposes"
+                }
+            ],
+            "parent": "",
+            "rrm": "inherit"
+        }
         print(json.dumps(payload))
         resp = setup_prov_controller.add_venue(payload)
         allure.attach(name="response: ", body=str(resp.json()))
@@ -405,13 +406,13 @@ class TestUcentralProvisionService(object):
 
         # This to edit venue
         editing_payload = {
-                          "description": "For testing Purposes through Automation",
-                          "location": "",
-                          "name": "Testing Prov",
-                          "notes": [],
-                          "rrm": "inherit",
-                          "sourceIP": []
-                        }
+            "description": "For testing Purposes through Automation",
+            "location": "",
+            "name": "Testing Prov",
+            "notes": [],
+            "rrm": "inherit",
+            "sourceIP": []
+        }
         print(json.dumps(editing_payload))
         resp = setup_prov_controller.edit_venue(editing_payload, venue_id)
         allure.attach(name="response: ", body=str(resp.json()))

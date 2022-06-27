@@ -10,8 +10,11 @@ import allure
 
 @pytest.mark.uc_sanity
 @pytest.mark.ow_sanity_lf
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
 @pytest.mark.owsec_api_tests
-@allure.feature("SDK REST API")
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.parent_suite("OpenWifi Security Service Tests")
 class TestUcentralSecService(object):
     """
         Test the oauth endpoint
