@@ -94,6 +94,12 @@ def pytest_addoption(parser):
         default=False,
         help="skip updating firmware on the AP (useful for local testing)"
     )
+    parser.addoption(
+        "--skip-env",
+        action="store_true",
+        default=False,
+        help="skip adding to env data"
+    )
 
     parser.addoption(
         "--skip-lanforge",
@@ -739,9 +745,9 @@ def create_lanforge_chamberview_dut(lf_tools, skip_lf, run_lf):
 def lf_tools(get_configuration, testbed, skip_lf, run_lf, get_ap_version, cc_1):
     """ Create a DUT on LANforge"""
     if not skip_lf:
-        obj=ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                        testbed=testbed, run_lf=run_lf, access_point_data=get_configuration["access_point"], cc_1=cc_1,
-                        ap_version=get_ap_version)
+        obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
+                          testbed=testbed, run_lf=run_lf, access_point_data=get_configuration["access_point"],
+                          cc_1=cc_1, ap_version=get_ap_version)
     else:
         obj=False
     yield obj
@@ -806,8 +812,11 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 
 
 @fixture(scope='session')
-def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_ver, cc_1,
+def add_env_properties(request, get_configuration, get_sdk_version, get_apnos, fixtures_ver, cc_1,
                        add_allure_environment_property: Callable) -> None:
+    if request.config.getoption("--skip-env"):
+        add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+        return
     if cc_1:
         for i in range(len(get_configuration["access_point"])):
             add_allure_environment_property(str('Access-Point-Model' + str(i + 1)),
@@ -1003,10 +1012,8 @@ def get_ap_channel(get_apnos, get_configuration):
 
 @pytest.fixture(scope="function")
 def disable_band5ghz(get_configuration):
-    obj=CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
-    shut=obj.ap_5ghz_shutdown()
-    print(shut)
-
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    shut = obj.ap_5ghz_shutdown()
 
 @pytest.fixture(scope="function")
 def disable_band2ghz(get_configuration):

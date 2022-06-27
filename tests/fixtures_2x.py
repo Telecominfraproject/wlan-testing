@@ -53,7 +53,7 @@ class Fixtures_2x:
         if not run_lf:
             try:
                 self.controller_obj = Controller(controller_data=self.lab_info["controller"])
-                self.prov_controller_obj = ProvUtils(controller_data=self.lab_info["controller"])
+                self.prov_controller_obj = ProvUtils(sdk_client=self.controller_obj)
                 self.fw_client = FMSUtils(sdk_client=self.controller_obj)
                 self.analytics_client = AnalyticUtils(sdk_client=self.controller_obj)
             except Exception as e:
