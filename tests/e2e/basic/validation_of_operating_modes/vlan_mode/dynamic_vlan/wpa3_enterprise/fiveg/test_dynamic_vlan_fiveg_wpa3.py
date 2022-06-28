@@ -331,7 +331,11 @@ class TestDynamicVlan5GWpa3(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @allure.testcase(name="test_dynamic_unsupported_vlan",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6102")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5710")
+>>>>>>> Created testcases for WAP3_eap security
     def test_dynamic_unsupported_vlan(self, get_vif_state, lf_tools,
                                       create_lanforge_chamberview_dut, lf_test, get_configuration,
                                       station_names_fiveg):

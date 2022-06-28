@@ -15,7 +15,6 @@ from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_dvlan_tests_lf,
               pytest.mark.wpa3_enterprise,
-              pytest.mark.twog]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -645,4 +644,3 @@ class TestDynamicVlan2GWpa3(object):
                 assert False
             lf_tools.admin_up_down([station_list[sta]], option="up")
             time.sleep(5)
-
