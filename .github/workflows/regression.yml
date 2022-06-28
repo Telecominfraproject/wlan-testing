@@ -369,7 +369,7 @@ jobs:
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' --reservation-duration 720 "Basic Lab"
-          else
+          elst e
             python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' --reservation-duration 720 "Basic Lab"
           fi
 
@@ -3210,8 +3210,8 @@ jobs:
       - name: download history of previous run
         continue-on-error: true
         run: |
-          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key regression_${{ matrix.marker }}/${{ matrix.model }}/latest/index.html | jq -r .Metadata.latest)
-          aws s3 cp --recursive s3://openwifi-allure-reports/regression_${{ matrix.marker }}/${{ matrix.model }}/$LAST_RUN_ID/history history
+          LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key regression/${{ matrix.marker }}/${{ matrix.model }}/latest/index.html | jq -r .Metadata.latest)
+          aws s3 cp --recursive s3://openwifi-allure-reports/regression/${{ matrix.marker }}/${{ matrix.model }}/$LAST_RUN_ID/history history
 
       - name: generate Allure report
         uses: ./.github/actions/generate-allure-report
