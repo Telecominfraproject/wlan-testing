@@ -124,31 +124,32 @@ class TestBulkConfigTest(object):
         """
         PASS = []
         SERIAL = get_configuration["access_point"][0]["serial"]
-        for config in setup_params:
-            profile_obj = instantiate_profile(sdk_client=setup_controller)
-            profile_obj.set_mode(config["mode"])
-            profile_obj.set_radio_config()
-            radius = config["radius"]
-            for ssid in config["ssids"]:
-                if radius:
-                    profile_obj.add_ssid(ssid_data=ssid, radius=radius, radius_auth_data=radius_info,
-                                         radius_accounting_data=radius_accounting_info)
-                else:
-                    profile_obj.add_ssid(ssid_data=ssid)
-            status = profile_obj.push_config(serial_number=SERIAL)
-            if status.status_code != 200:
-                allure.attach("Configure command Failed: ", SERIAL, " Time: " + str(datetime.utcnow()))
-                print(str(status.status_code) + ":\t" + str(status.json()))
-                allure.attach(name=str(status.status_code), body=str(status.json()))
-                print("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
-                PASS.append(False)
-            if status.status_code == 200:
-                print(str(status.status_code) + ":\t" + str(status.json()))
-                allure.attach(name=str(status.status_code), body=str(status.json()))
-                allure.attach("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
-                print("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
-                PASS.append(True)
-            print("Sleeping 30 Sec before Next Config")
-            time.sleep(30)
+        for i in range(0, 100):
+            for config in setup_params:
+                profile_obj = instantiate_profile(sdk_client=setup_controller)
+                profile_obj.set_mode(config["mode"])
+                profile_obj.set_radio_config()
+                radius = config["radius"]
+                for ssid in config["ssids"]:
+                    if radius:
+                        profile_obj.add_ssid(ssid_data=ssid, radius=radius, radius_auth_data=radius_info,
+                                             radius_accounting_data=radius_accounting_info)
+                    else:
+                        profile_obj.add_ssid(ssid_data=ssid)
+                status = profile_obj.push_config(serial_number=SERIAL)
+                if status.status_code != 200:
+                    allure.attach("Configure command Failed: ", SERIAL, " Time: " + str(datetime.utcnow()))
+                    print(str(status.status_code) + ":\t" + str(status.json()))
+                    allure.attach(name=str(status.status_code), body=str(status.json()))
+                    print("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
+                    PASS.append(False)
+                if status.status_code == 200:
+                    print(str(status.status_code) + ":\t" + str(status.json()))
+                    allure.attach(name=str(status.status_code), body=str(status.json()))
+                    allure.attach("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
+                    print("Configure command success: ", SERIAL, " Time: " + str(datetime.utcnow()))
+                    PASS.append(True)
+                print("Sleeping 30 Sec before Next Config")
+                time.sleep(30)
 
         assert False not in PASS
