@@ -3420,6 +3420,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     # except Exception as e:
     #     print("Launching Safari Failed")
     #     print(e)
+<<<<<<< WIFI-9971
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
     print("Selected Device Model: " + deviceModelName)
     try:
@@ -3444,6 +3445,18 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
             time.sleep(4)
             driver.find_element_by_xpath("//*[@label='go']").click()
 
+=======
+    try:
+        print("Launching Safari")
+        report.step_start("Google Home Page")
+        time.sleep(4)
+        driver.get(connData["webURL"])
+        print("Enter Search Text")
+        time.sleep(4)
+        driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
+        time.sleep(4)
+        driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
+>>>>>>> master
     except:
         try:
             report.step_start("Other Option For Search")

@@ -136,10 +136,25 @@ jobs:
             sudo -i;
             cd wlan-cloud-ucentral-deploy/docker-compose;
             docker-compose down;
-            git stash;
+            git reset --hard;
             git checkout ${{ github.event.inputs.deployment_upgrade_version }};
-            git stash apply;
-            docker-compose up -d;
+            export DEFAULT_UCENTRALSEC_URL="https://${{ needs.deploy-controller.outputs.sec_url }}:16001";
+            export SYSTEM_URI_UI="https://${{ needs.deploy-controller.outputs.gateway_url }}";
+            export RTTY_TOKEN="${{ secrets.RTTY_TOKEN }}";
+            export OWGW_FILEUPLOADER_HOST_NAME="${{ needs.deploy-controller.outputs.gateway_url }}";
+            export OWGW_FILEUPLOADER_URI="https://${{ needs.deploy-controller.outputs.gateway_url }}:16003";
+            export OWGW_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16002";
+            export OWGW_RTTY_SERVER="${{ needs.deploy-controller.outputs.gateway_url }}";
+            export OWSEC_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.sec_url }}:16001";
+            export OWSEC_AUTHENTICATION_DEFAULT_USERNAME="${{ secrets.OWSEC_DEFAULT_USERNAME }}";
+            export OWSEC_AUTHENTICATION_DEFAULT_PASSWORD="${{ secrets.UCENTRALGW_AUTH_PASSWORD }}";
+            export OWFMS_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16004";
+            export OWFMS_S3_SECRET="${{ secrets.UCENTRALFMS_S3_SECRET }}";
+            export OWFMS_S3_KEY="${{ secrets.UCENTRALFMS_S3_KEY }}";
+            export OWPROV_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16005";
+            export OWANALYTICS_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16009";
+            export OWSUB_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16006";
+            ./deploy.sh
           EOF
 
   test-after-upgrade:
