@@ -3483,7 +3483,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     # Get upload/Download Speed
     try:
         report.step_start("Get upload/Download Speed")
-        time.sleep(60)
+        time.sleep(80)
         downloadMbps = driver.find_element_by_xpath(connData["downloadMbps"])
         downloadSpeed = downloadMbps.text
         print("Download: " + downloadSpeed + " Mbps")
