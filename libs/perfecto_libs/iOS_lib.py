@@ -1631,40 +1631,37 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
         try:
             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
             get_wifi_switch_element_text = get_wifi_switch_element.text
-            try:
-                if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
-                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
-                    driver.implicitly_wait(1)
-                    get_wifi_switch_element.click()
-                    driver.implicitly_wait(1)
-                    i = 0
-                    for i in range(5):
+            if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+                get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+                driver.implicitly_wait(1)
+                get_wifi_switch_element.click()
+                driver.implicitly_wait(1)
+                i = 0
+                for i in range(5):
+                    try:
+                        get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+                        get_wifi_switch_element_text = get_wifi_switch_element.text
+                    except:
+                        print("switch is OFF")
+
+                    if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+                        print("WIFI Switch is ON")
+                        break
+                    else:
                         try:
-                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+                            get_wifi_switch_element = driver.find_element_by_xpath(
+                                "//*[@label='Wi-Fi' and @value='0']")
                             get_wifi_switch_element_text = get_wifi_switch_element.text
                         except:
-                            print("switch is OFF")
-
-                        if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
-                            print("WIFI Switch is ON")
-                            break
-                        else:
-                            try:
-                                get_wifi_switch_element = driver.find_element_by_xpath(
-                                    "//*[@label='Wi-Fi' and @value='0']")
-                                get_wifi_switch_element_text = get_wifi_switch_element.text
-                            except:
-                                print("WIFi switch is ON")
-                    if (get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0):
-                        print("switch is still OFF")
-                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                        return is_internet
-                else:
-                    print("Switch is Still OFF")
+                            print("WIFi switch is ON")
+                if (get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0):
+                    print("switch is still OFF")
                     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
                     return is_internet
-            except:
-                print("No switch element found")
+            else:
+                print("Switch is Still OFF")
+                closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                return is_internet
         except:
             print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
@@ -3423,7 +3420,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
     print("Selected Device Model: " + deviceModelName)
     try:
-        if (deviceModelName!="iphone7"):
+        if (deviceModelName!="iPhone7"):
             print("Launching Safari")
             report.step_start("Google Home Page")
             time.sleep(4)
