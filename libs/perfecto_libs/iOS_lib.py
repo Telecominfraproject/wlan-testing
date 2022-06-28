@@ -1323,40 +1323,38 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
         try:
             get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
             get_wifi_switch_element_text = get_wifi_switch_element.text
-            try:
-                if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
-                    get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
-                    driver.implicitly_wait(1)
-                    get_wifi_switch_element.click()
-                    driver.implicitly_wait(1)
-                    i = 0
-                    for i in range(5):
+            if get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0:
+                get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+                driver.implicitly_wait(1)
+                get_wifi_switch_element.click()
+                driver.implicitly_wait(1)
+                i = 0
+                for i in range(5):
+                    try:
+                        get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+                        get_wifi_switch_element_text = get_wifi_switch_element.text
+                    except:
+                        print("switch is OFF")
+
+                    if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
+                        print("WIFI Switch is ON")
+                        break
+                    else:
                         try:
-                            get_wifi_switch_element = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+                            get_wifi_switch_element = driver.find_element_by_xpath(
+                                "//*[@label='Wi-Fi' and @value='0']")
                             get_wifi_switch_element_text = get_wifi_switch_element.text
                         except:
-                            print("switch is OFF")
-
-                        if get_wifi_switch_element_text == "1" or get_wifi_switch_element_text == 1:
-                            print("WIFI Switch is ON")
-                            break
-                        else:
-                            try:
-                                get_wifi_switch_element = driver.find_element_by_xpath(
-                                    "//*[@label='Wi-Fi' and @value='0']")
-                                get_wifi_switch_element_text = get_wifi_switch_element.text
-                            except:
-                                print("WIFi switch is ON")
-                    if (get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0):
-                        print("switch is still OFF")
-                        closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                        return is_internet
-                else:
-                    print("Switch is Still OFF")
+                            print("WIFi switch is ON")
+                if (get_wifi_switch_element_text == "0" or get_wifi_switch_element_text == 0):
+                    print("switch is still OFF")
                     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
                     return is_internet
-            except:
-                print("No switch element found")
+            else:
+                print("Switch is Still OFF")
+                closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+                return is_internet
+
         except:
             print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
@@ -3381,6 +3379,15 @@ def gets_ip_add_for_checking_and_forgets_ssid_ios(request, WifiName, WifiPass, s
     # --------------------- close app-------------------------------
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
+def getDeviceModelName(setup_perfectoMobile):
+    report = setup_perfectoMobile[1]
+    driver = setup_perfectoMobile[0]
+
+    report.step_start("Device Model Name")
+    params = {'property': 'model'}
+    deviceModel = driver.execute_script('mobile:handset:info', params)
+    print("ModelName: " + deviceModel)
+    return deviceModel
 
 def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
     print("\n-------------------------------------")
@@ -3411,16 +3418,30 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     # except Exception as e:
     #     print("Launching Safari Failed")
     #     print(e)
+    deviceModelName = getDeviceModelName(setup_perfectoMobile)
+    print("Selected Device Model: " + deviceModelName)
     try:
-        print("Launching Safari")
-        report.step_start("Google Home Page")
-        time.sleep(4)
-        driver.get(connData["webURL"])
-        print("Enter Search Text")
-        time.sleep(4)
-        driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
-        time.sleep(4)
-        driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
+        if (deviceModelName!="iphone7"):
+            print("Launching Safari")
+            report.step_start("Google Home Page")
+            time.sleep(4)
+            driver.get(connData["webURL"])
+            print("Enter Search Text")
+            time.sleep(4)
+            driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
+            time.sleep(4)
+            driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
+        else:
+            print("Launching Safari")
+            report.step_start("Google Home Page")
+            time.sleep(4)
+            driver.get(connData["webURL"])
+            print("Enter Search Text")
+            time.sleep(4)
+            driver.find_element_by_xpath("//*[@label='Address']").send_keys("Internet speed test")
+            time.sleep(4)
+            driver.find_element_by_xpath("//*[@label='go']").click()
+
     except:
         try:
             report.step_start("Other Option For Search")
