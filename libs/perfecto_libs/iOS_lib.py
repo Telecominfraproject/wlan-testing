@@ -3393,6 +3393,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     print("\n-------------------------------------")
     print("Verify Upload & Download Speed")
     print("-------------------------------------")
+    time.sleep(5)
 
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
