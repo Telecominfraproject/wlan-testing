@@ -15,7 +15,6 @@ from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_dvlan_tests_lf,
               pytest.mark.wpa3_enterprise,
-              pytest.mark.twog]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -331,7 +330,11 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_unsupported_vlan",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6102")
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5710")
+>>>>>>> Created testcases for WAP3_eap security
     def test_dynamic_unsupported_vlan(self, get_vif_state, lf_tools,
                                       create_lanforge_chamberview_dut, lf_test, get_configuration,
                                       station_names_twog):
@@ -352,7 +355,11 @@ class TestDynamicVlan2GWpa3(object):
 
         lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa2", extra_securities=[],
                             mode=mode, band="twog", vlan_id=100,
+<<<<<<< HEAD
                             station_name=station_names_twog, key_mgmt="WPA-EAP-SHA256",
+=======
+                            station_name=station_names_twog, key_mgmt="WPA-EAP",
+>>>>>>> Created testcases for WAP3_eap security
                             pairwise="NA", group="NA", wpa_psk="DEFAULT",
                             ttls_passwd="passwordinvalidvlanuser", ieee80211w=0,
                             wep_key="NA", ca_cert="NA", eap="TTLS", identity="invalidvlanuser", d_vlan=True)
@@ -385,8 +392,13 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_outof_bound_vlanid",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6103")
     def test_out_of_bound_vlanid_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5711")
+    def test_out_of_bound_vlanid(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+>>>>>>> Created testcases for WAP3_eap security
                                 create_lanforge_chamberview_dut, lf_test, get_configuration,
                                 station_names_twog):
         """
@@ -431,8 +443,13 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_client_association_ap_with_dynamic_vlan",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6104")
     def test_client_association_ap_with_dynamic_vlan_2g_wpa3(self, get_vif_state, lf_tools, get_ap_logs, get_lf_logs,
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5712")
+    def test_client_association_ap_with_dynamic_vlan(self, get_vif_state, lf_tools, get_ap_logs, get_lf_logs,
+>>>>>>> Created testcases for WAP3_eap security
                                                      create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                      station_names_twog):
         """
@@ -501,8 +518,13 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_subsequent_user_for_same_user_account",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6105")
     def test_subsequent_user_for_same_user_account_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5713")
+    def test_subsequent_user_for_same_user_account(self, get_vif_state, lf_tools, get_lf_logs,
+>>>>>>> Created testcases for WAP3_eap security
                                                         get_ap_logs,
                                                         create_lanforge_chamberview_dut, lf_test,
                                                         get_configuration,
@@ -533,7 +555,11 @@ class TestDynamicVlan2GWpa3(object):
         for m in range(0, len(station_list)):
             lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                                 mode=mode, band="twog", vlan_id=100,
+<<<<<<< HEAD
                                 station_name=[station_list[m]], key_mgmt="WPA-EAP-SHA256",
+=======
+                                station_name=[station_list[m]], key_mgmt="WPA-EAP",
+>>>>>>> Created testcases for WAP3_eap security
                                 pairwise="NA", group="NA", wpa_psk="DEFAULT",
                                 ttls_passwd="passwordA", ieee80211w=0,
                                 wep_key="NA", ca_cert="NA", eap="TTLS", identity="userA", d_vlan=True, cleanup=False)
@@ -576,8 +602,13 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_subsequent_user_for_different_user_account_vlan",
+<<<<<<< HEAD
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6106")
     def test_subsequent_user_for_different_user_account_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
+=======
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5714")
+    def test_subsequent_user_for_different_user_account(self, get_vif_state, lf_tools, get_lf_logs,
+>>>>>>> Created testcases for WAP3_eap security
                                                         get_ap_logs,
                                                         create_lanforge_chamberview_dut, lf_test,
                                                         get_configuration,
@@ -608,7 +639,11 @@ class TestDynamicVlan2GWpa3(object):
         for user_id, user_pass, sta in zip(dynamic_vlan_user, dynamic_vlan_pass, range(0, len(station_list))):
             lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa3", extra_securities=[],
                                 mode=mode, band="twog", vlan_id=vlan[sta],
+<<<<<<< HEAD
                                 station_name=[station_list[sta]], key_mgmt="WPA-EAP-SHA256",
+=======
+                                station_name=[station_list[sta]], key_mgmt="WPA-EAP",
+>>>>>>> Created testcases for WAP3_eap security
                                 pairwise="NA", group="NA", wpa_psk="DEFAULT",
                                 ttls_passwd=user_pass, ieee80211w=0,
                                 wep_key="NA", ca_cert="NA", eap="TTLS", identity=user_id, d_vlan=True, cleanup=False)
@@ -647,4 +682,3 @@ class TestDynamicVlan2GWpa3(object):
                 assert False
             lf_tools.admin_up_down([station_list[sta]], option="up")
             time.sleep(5)
-
