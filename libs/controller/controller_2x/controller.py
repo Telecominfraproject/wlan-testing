@@ -763,19 +763,20 @@ class AnalyticUtils:
         return resp
 
     def get_board_data_bytime(self, board_id, from_date, to_date):
-        uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&" +to_date)
+        uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&endDate=" +to_date)
         print(uri)
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def delete_board_data_bytime(self, board_id, from_date, to_date):
-        uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&" +to_date)
+        uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&endDate" +to_date)
         print(uri)
         resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
+    # need to test this method
     def get_country_code_for_ip(self, ip_list):
         uri = self.sdk_client.build_url_analytics("/iptocountry?iplist=" +ip_list)
         print(uri)
@@ -783,14 +784,14 @@ class AnalyticUtils:
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
-    def get_wificlients_history(self, venue):
-        uri = self.sdk_client.build_url_analytics("/wifiClientHistory?macsOnly=true" +venue)
+    def get_wificlients_history(self, venue_id):
+        uri = self.sdk_client.build_url_analytics("/wifiClientHistory?macsOnly=true" +venue_id)
         print(uri)
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
-    def get_wifi_client_history(self, venue, client_mac):
+    def get_wifi_client_history(self, client_mac):
         uri = self.sdk_client.build_url_analytics("/wifiClientHistory/"+client_mac+"?orderSpec=true")
         print(uri)
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
@@ -819,6 +820,7 @@ class AnalyticUtils:
         print(resp)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
+
 
 class UProfileUtility:
 
@@ -1181,9 +1183,9 @@ if __name__ == '__main__':
         'password': 'OpenWifi%123',
     }
     obj = Controller(controller_data=controller)
-    print('get devices:\n')
-    obj.get_devices()
     obj_ana = AnalyticUtils(sdk_client=obj)
+    print('GET Boards API \n ', obj_ana.get_boards())
+    print('GET Board by ID API \n ', obj_ana.get_board_by_id('c5d273cd-a025-4107-ae11-0dd8160a3bb0'))
     # obj_ana.get_boards()
     # obj_ana.get_board_by_id(board_id='005ddb54-246b-41a7-b004-d0318f7b8633')
     # up = UProfileUtility(sdk_client=obj, controller_data=controller)

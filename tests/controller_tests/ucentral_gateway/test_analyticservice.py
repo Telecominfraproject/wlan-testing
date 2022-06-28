@@ -12,11 +12,11 @@ import json
 import allure
 
 
-# @pytest.mark.ow_sanity_lf
-# @pytest.mark.uc_sanity
-# @pytest.mark.owa_api_tests
-# @allure.feature("SDK ANALYTICS REST API")
-class TestUcentralAnalyticsisionService(object):
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.owa_api_tests
+@allure.feature("SDK ANALYTICS REST API")
+class TestUcentralAnalyticsService(object):
 
     @pytest.mark.owa_get_boards
     def test_analytics_service_boards(self, setup_owan_controller):
@@ -121,12 +121,98 @@ class TestUcentralAnalyticsisionService(object):
 
         resp = setup_owan_controller.get_board_by_id(board_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Analytics edited board-verify", body=body)
+        allure.attach(name="Verify GET Board", body=body)
         if resp.status_code != 200:
             assert False
 
         resp = setup_owan_controller.delete_board(board_id)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        allure.attach(name="Analytics created board-delete", body=body)
+        allure.attach(name="Verify DELETE board", body=body)
         if resp.status_code != 200:
             assert False
+
+    @pytest.mark.owa_get_board_devices
+    def test_analytics_service_get_board_devices(self, setup_owan_controller):
+        """
+            Test Retrieved Devices from the Board
+        """
+        resp=setup_owan_controller.get_board_devices()
+        print(resp.json())
+        allure.attach(name="Verify Devices Retrieved from the Board", body=str(resp.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.owa_get_board_data_bytime
+    def test_analytics_service_get_board_data_bytime(self, setup_owan_controller):
+        """
+            Test Retrieving of Board Data from timestamp
+        """
+        resp=setup_owan_controller.get_board_data_bytime(board_id='', from_date=1656433571, to_date=1656437971)
+        print(resp.json())
+        allure.attach(name="Verify GET Board Data Retrieved as per time period ", body=str(resp.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.owa_delete_board_data_bytime
+    def test_analytics_service_get_board_data_bytime(self, setup_owan_controller):
+        """
+            Test Retrieving of Board Data from timestamp
+        """
+        resp=setup_owan_controller.delete_board_data_bytime(board_id='', from_date=1656433571, to_date=1656437971)
+        print(resp.json())
+        allure.attach(name="Verify DELETE Board Data as per time period ", body=str(resp.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.owa_get_wificlients_history
+    def test_analytics_service_get_wificlients_history(self, setup_owan_controller):
+        """
+            Test Retrieving of Wifi Clients from a Venue
+        """
+        resp=setup_owan_controller.get_wificlients_history(venue_id="")
+        print(resp.json())
+        allure.attach(name="Verify GET Wifi clients from the Venue ", body=str(resp.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.owa_get_wifi_client_history
+    def test_analytics_service_get_wifi_client_history(self, setup_owan_controller):
+        """
+            Test Retrieveing a Wifi Client from a Venue
+        """
+        resp=setup_owan_controller.get_wifi_client_history(client_mac="")
+        print(resp.json())
+        allure.attach(name="Verify GET Wifi clients from the Venue ", body=str(resp.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.owa_delete_wifi_client_history
+    def test_analytics_service_delete_wifi_client_history(self, setup_owan_controller):
+        """
+            Test Removing of a Wifi Client from a Venue
+        """
+        resp=setup_owan_controller.delete_wifi_client_history(client_mac="")
+        print(resp.json())
+        allure.attach(name="Verify DELETE a Wifi client from the Venue ", body=str(resp.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        assert resp.status_code == 200
+
+    @pytest.mark.owa_get_system_info
+    def test_analytics_service_get_system_info(self, setup_owan_controller):
+        """
+            Test System Command
+        """
+        system_info=setup_owan_controller.get_system_info(command="info")
+        print(system_info.json())
+        allure.attach(name="system info", body=str(system_info.json()), attachment_type=allure.attachment_type.JSON)
+        assert system_info.status_code == 200
+
+    @pytest.mark.owa_post_system_info
+    def test_analytics_service_post_system_info(self, setup_owan_controller):
+        """
+            Test System command
+        """
+        system_info=setup_owan_controller.post_system_info(command="getsubsystemnames")
+        print(system_info.json())
+        allure.attach(name="Verify a system command: getsubsystemnames", body=str(system_info.json()), attachment_type=allure.attachment_type.JSON)
+        assert system_info.status_code == 200
