@@ -590,6 +590,7 @@ def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDe
         downloadSpeed = downloadMbps.text
         print("Download: " + downloadSpeed + " Mbps")
 
+        time.sleep(30)
         UploadMbps = driver.find_element_by_xpath(connData["UploadMbps"])
         uploadSpeed = UploadMbps.text
         print("Upload: " + uploadSpeed + " Mbps")
