@@ -369,7 +369,7 @@ jobs:
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' --reservation-duration 720 "Basic Lab"
-          elst e
+          else
             python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' --reservation-duration 720 "Basic Lab"
           fi
 
