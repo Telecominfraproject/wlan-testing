@@ -3532,14 +3532,19 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
                 driver.find_element_by_xpath("//*[@label='go']").click()
             except Exception as e:
                 print("Launching Safari Failed")
-                print(e)
+                try:
+                    driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
+                    time.sleep(4)
+                    driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
+                except Exception as e:
+                    print("Launching Safari Failed")
+                    print(e)
 
 
     except:
         try:
             report.step_start("Other Option For Search")
             print("Finding search option")
-            report.step_start("Input For Search")
             driver.implicitly_wait(4)
             driver.get(connData["webURL"])
             print("Enter Search Text")
