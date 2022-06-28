@@ -3419,6 +3419,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     # except Exception as e:
     #     print("Launching Safari Failed")
     #     print(e)
+
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
     print("Selected Device Model: " + deviceModelName)
     try:
@@ -3442,6 +3443,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
             driver.find_element_by_xpath("//*[@label='Address']").send_keys("Internet speed test")
             time.sleep(4)
             driver.find_element_by_xpath("//*[@label='go']").click()
+
 
     except:
         try:
