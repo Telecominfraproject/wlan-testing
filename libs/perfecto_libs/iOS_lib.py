@@ -3420,7 +3420,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
     print("Selected Device Model: " + deviceModelName)
     try:
-        if (deviceModelName!="iPhone7"):
+        if (deviceModelName!="iPhone-7"):
             print("Launching Safari")
             report.step_start("Google Home Page")
             time.sleep(4)
