@@ -26,6 +26,7 @@ on:
   schedule:
     - cron: "45 18 * * *"
 
+
 defaults:
   run:
     shell: bash
