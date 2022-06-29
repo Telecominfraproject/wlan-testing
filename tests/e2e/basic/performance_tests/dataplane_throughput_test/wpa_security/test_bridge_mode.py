@@ -36,7 +36,7 @@ class TestDataplaneThroughputBRIDGE(object):
        pytest -m "dataplane_throughput_test and wpa_personal and bridge"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3675", name="WIFI-3675")
-    @pytest.mark.wpa_personal
+    @pytest.mark.wpa
     @pytest.mark.twog
     def test_tcp_upd_wpa_personal_bridge_2g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -71,7 +71,7 @@ class TestDataplaneThroughputBRIDGE(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3676", name="WIFI-3676")
-    @pytest.mark.wpa_personal
+    @pytest.mark.wpa
     @pytest.mark.fiveg
     def test_tcp_upd_wpa_personal_bridge_5g_band(self, get_vif_state, lf_tools,
                              lf_test, station_names_fiveg, create_lanforge_chamberview_dut, get_configuration):

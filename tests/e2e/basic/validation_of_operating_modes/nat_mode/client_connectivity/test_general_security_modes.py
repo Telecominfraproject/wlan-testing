@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.nat, pytest.mark.general, pytest.mark.sanity,
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.nat, pytest.mark.general, pytest.mark.sanity,
               pytest.mark.uc_sanity, pytest.mark.ucentral]
 
 setup_params_general = {
