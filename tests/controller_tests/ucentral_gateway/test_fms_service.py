@@ -11,10 +11,11 @@ import pytest
 @pytest.mark.uc_sanity
 @pytest.mark.ow_sdk_load_tests
 @allure.parent_suite("OpenWifi SDK Tests")
-@allure.parent_suite("OpenWifi FMS Service Tests")
+@allure.suite("OpenWifi FMS Service Tests")
 class TestUcentralFMSService(object):
 
     @pytest.mark.system_info_fms
+    @allure.title("Get System Info FMS")
     def test_system_info_fms(self, setup_controller):
         system_info = setup_controller.get_system_fms()
         print(system_info.json())
