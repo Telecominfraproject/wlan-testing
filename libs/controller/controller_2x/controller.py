@@ -1546,24 +1546,21 @@ class UProfileUtility:
 
     def push_config(self, serial_number):
         payload = {"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 1}
-
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
-        allure.attach(name="ucentral_config: ",
-                      body=str(basic_cfg_str),
-                      attachment_type=allure.attachment_type.JSON)
-        print("JSON Post Configure: " + str(basic_cfg_str))
-        allure.attach(name="Sending Configure Command:", body="TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-                                                              "URI: " + uri + "\n" +
-                                                              "Data: " + basic_cfg_str + "\n" +
-                                                              "Data: " + self.sdk_client.make_headers())
-        print("Sending Configure Command: ", datetime.datetime.utcnow())
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
                              verify=False, timeout=100)
-        print(resp.json())
-        print(resp.status_code)
-        allure.attach(name="/configure response: " + str(resp.status_code), body=str(resp.json()),
-                      attachment_type=allure.attachment_type.JSON)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
         resp.close()
         return resp

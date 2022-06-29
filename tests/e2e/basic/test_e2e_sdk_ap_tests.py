@@ -105,6 +105,56 @@ setup_params = [
              "security": "wpa3"}],
         "radius": True
     },
+    ##########
+{
+        "mode": "VLAN",
+        "ssids": [
+            {"ssid_name": "ssid_psk_2g", "appliedRadios": ["2G"], "security_key": "something", "security": "psk", "vlan": 100},
+            {"ssid_name": "ssid_psk_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "psk", "vlan": 100}],
+        "radius": False
+    },
+
+    {
+        "mode": "VLAN",
+        "ssids": [
+            {"ssid_name": "ssid_psk2_2g", "appliedRadios": ["2G"], "security_key": "something", "security": "psk2", "vlan": 100},
+            {"ssid_name": "ssid_psk2_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "psk2", "vlan": 100}],
+        "radius": False
+    },
+
+    {
+        "mode": "VLAN",
+        "ssids": [
+            {"ssid_name": "ssid_sae_2g", "appliedRadios": ["2G"], "security_key": "something", "security": "sae", "vlan": 100},
+            {"ssid_name": "ssid_sae_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "sae", "vlan": 100}],
+        "radius": False
+    },
+
+    {
+        "mode": "VLAN",
+        "ssids": [
+            {"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "security_key": "something", "security": "none", "vlan": 100},
+            {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "security_key": "something", "security": "none", "vlan": 100}],
+        "radius": False
+    },
+
+    {
+        "mode": "VLAN",
+        "ssids": [
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "security_key": "something", "security": "wpa2", "vlan": 100},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something",
+             "security": "wpa2", "vlan": 100}],
+        "radius": True
+    },
+
+    {
+        "mode": "VLAN",
+        "ssids": [
+            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something", "security": "wpa3", "vlan": 100},
+            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something",
+             "security": "wpa3", "vlan": 100}],
+        "radius": True
+    },
 
 ]
 
