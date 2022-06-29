@@ -9,7 +9,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance,pytest.mark.dataplane_throughput_test,
+pytestmark = [pytest.mark.performance,
               pytest.mark.vlan]
 
 
