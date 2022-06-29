@@ -8,11 +8,8 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_sanity_lf,
-              pytest.mark.ow_client_connectivity_lf,
-              pytest.mark.vlan,
-              pytest.mark.general,
-              pytest.mark.sanity]
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.general, pytest.mark.ucentral,
+              pytest.mark.sanity]  # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -33,7 +30,7 @@ setup_params_general = {
 
 @pytest.mark.uc_sanity
 @pytest.mark.suiteA
-@allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.feature("vlan MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
