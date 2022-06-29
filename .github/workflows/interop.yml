@@ -24,7 +24,7 @@ on:
         description: overwrite the Pytest markers that will be selected, will disable report uploading
         required: false
   schedule:
-    - cron: "45 18 * * *"
+    - cron: "30 19 * * *"
 
 defaults:
   run:
