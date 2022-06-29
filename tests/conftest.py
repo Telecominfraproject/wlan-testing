@@ -49,6 +49,7 @@ from lanforge.scp_util import SCP_File
 from testrails.testrail_api import APIClient
 from testrails.reporting import Reporting
 from lf_tools import ChamberView
+from libs.lanforge.pull_report import Report
 from os import path
 from typing import Any, Callable, Optional
 
@@ -57,6 +58,8 @@ from pytest import fixture
 
 from fixtures_1x import Fixtures_1x
 from fixtures_2x import Fixtures_2x
+from fixtures_3x import Fixtures_3x
+from controller.controller_3x.controller import CController
 
 ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
 ALLUREDIR_OPTION = '--alluredir'
@@ -90,6 +93,12 @@ def pytest_addoption(parser):
         action="store_true",
         default=False,
         help="skip updating firmware on the AP (useful for local testing)"
+    )
+    parser.addoption(
+        "--skip-env",
+        action="store_true",
+        default=False,
+        help="skip adding to env data"
     )
 
     parser.addoption(
@@ -149,6 +158,33 @@ def pytest_addoption(parser):
         help="skip cloud controller and AP, run only lanforge tests on a ssid preconfigured"
     )
     parser.addoption(
+        "--cc.1",
+        action="store_true",
+        default=False,
+        help="Option to run Test Cases on cc version 1"
+
+    )
+    parser.addoption(
+        "--roaming_delay",
+        default=1,
+        help="Roaming delay interval"
+    )
+    parser.addoption(
+        "--iteration",
+        default=1,
+        help="Roaming iterations"
+    )
+    parser.addoption(
+        "--duration",
+        default=1,
+        help="Roaming duration in minutes"
+    )
+    parser.addoption(
+        "--client",
+        default=1,
+        help="Number of clients to be created"
+    )
+    parser.addoption(
         "--skip-pcap",
         action="store_true",
         default=False,
@@ -159,7 +195,6 @@ def pytest_addoption(parser):
         default="iPhone-11",
         help="Device Model which is needed to test"
     )
-
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -207,13 +242,16 @@ def test_cases():
 def testbed(request):
     """yields the testbed option selection"""
     var = request.config.getoption("--testbed")
+    allure.attach(name="testbed name", body=var)
     yield var
+
 
 @pytest.fixture(scope="session")
 def device(request):
     """yields the device option selection"""
     var = request.config.getoption("--device")
     yield var
+
 
 @pytest.fixture(scope="session")
 def should_upload_firmware(request):
@@ -227,11 +265,52 @@ def run_lf(request):
     var = request.config.getoption("--run-lf")
     yield var
 
+
+@pytest.fixture(scope="session")
+def cc_1(request):
+    """yields the --cc.1 option for skipping configuration on AP and using Cloud controller of available framework"""
+    var = request.config.getoption("--cc.1")
+    yield var
+
+
+@pytest.fixture(scope="session")
+def roaming_delay(request):
+    """yields the --roaming_delay  option """
+    var = request.config.getoption("--roaming_delay")
+    allure.attach(name="roaming delay provided in seconds", body=str(var))
+    yield var
+
+
+@pytest.fixture(scope="session")
+def iteration(request):
+    """yields the --iteration  option for a test to provide how frequenty roam should happen """
+    var = request.config.getoption("--iteration")
+    allure.attach(name="iteration", body=var)
+    yield var
+
+
+@pytest.fixture(scope="session")
+def duration(request):
+    """yields the --duration  option for a test to provide how long roam should happen """
+    var = request.config.getoption("--duration")
+    allure.attach(name="duration in minutes", body=str(var))
+    yield var
+
+
+@pytest.fixture(scope="session")
+def client(request):
+    """yields the --client  option for getting user specified client number"""
+    var = request.config.getoption("--client")
+    allure.attach(name="number of clients", body=var)
+    yield var
+
+
 @pytest.fixture(scope="session")
 def skip_pcap(request):
     """yields the --skip-pcap option for skipping the packet capture for sanity"""
     var = request.config.getoption("--skip-pcap")
     yield var
+
 
 @pytest.fixture(scope="session")
 def should_upgrade_firmware(request):
@@ -282,6 +361,7 @@ def get_configuration(testbed, request):
     LOGGER.info("Selected the lab Info data: " + str((CONFIGURATION[testbed])))
     yield CONFIGURATION[testbed]
 
+
 @pytest.fixture(scope="session")
 def get_device_configuration(device, request):
     """yields the selected device information from lab info file (configuration.py)"""
@@ -313,10 +393,11 @@ def get_equipment_ref(request, setup_controller, testbed, get_configuration):
 
 
 @pytest.fixture(scope="session")
-def get_sdk_version(fixtures_ver, run_lf):
+def get_sdk_version(fixtures_ver, run_lf, cc_1):
     version = ""
-    if not run_lf:
+    if not run_lf and not cc_1:
         version = fixtures_ver.get_sdk_version()
+        print(version)
     yield version
 
 
@@ -325,10 +406,15 @@ def get_uci_show(fixtures_ver, get_apnos, get_configuration):
     uci_show = fixtures_ver.get_uci_show(get_apnos, get_configuration)
     yield uci_show
 
+
 @pytest.fixture(scope="session")
-def get_ap_version(fixtures_ver, get_apnos, get_configuration):
-    ap_version = fixtures_ver.get_ap_version(get_apnos, get_configuration)
-    yield ap_version
+def get_ap_version(fixtures_ver, get_apnos, get_configuration, cc_1):
+    if not cc_1:
+        ap_version = fixtures_ver.get_ap_version(get_apnos, get_configuration)
+        yield ap_version
+    else:
+        yield True
+
 
 @pytest.fixture(scope="session")
 def skip_lf(request):
@@ -345,8 +431,10 @@ def get_openflow():
 def setup_controller(request, get_configuration, add_env_properties, fixtures_ver):
     """sets up the controller connection and yields the sdk_client object"""
     sdk_client = fixtures_ver.controller_obj
-    request.addfinalizer(fixtures_ver.disconnect)
+    if not cc_1:
+        request.addfinalizer(fixtures_ver.disconnect)
     yield sdk_client
+
 
 # Prov Controller Fixture
 @pytest.fixture(scope="session")
@@ -645,14 +733,20 @@ def create_lanforge_chamberview_dut(lf_tools, skip_lf, run_lf):
 
 
 @pytest.fixture(scope="session")
-def lf_tools(get_configuration, testbed, skip_lf, run_lf, get_ap_version):
+def lf_tools(get_configuration, testbed, skip_lf, run_lf, get_ap_version, cc_1):
     """ Create a DUT on LANforge"""
     if not skip_lf:
         obj = ChamberView(lanforge_data=get_configuration["traffic_generator"]["details"],
-                          testbed=testbed, run_lf=run_lf,
-                          access_point_data=get_configuration["access_point"], ap_version=get_ap_version)
+                          testbed=testbed, run_lf=run_lf, access_point_data=get_configuration["access_point"],
+                          cc_1=cc_1, ap_version=get_ap_version)
     else:
         obj = False
+    yield obj
+
+
+@pytest.fixture(scope="session")
+def lf_reports():
+    obj = Report()
     yield obj
 
 
@@ -709,18 +803,43 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 
 
 @fixture(scope='session')
-def add_env_properties(get_configuration, get_sdk_version, get_apnos, fixtures_ver,
+def add_env_properties(request, get_configuration, get_sdk_version, get_apnos, fixtures_ver, cc_1,
                        add_allure_environment_property: Callable) -> None:
-    add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
-    add_allure_environment_property('SDK-Version', get_sdk_version)
+    if request.config.getoption("--skip-env"):
+        add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+        return
+    if cc_1:
+        for i in range(len(get_configuration["access_point"])):
+            add_allure_environment_property(str('Access-Point-Model' + str(i + 1)),
+                                            get_configuration["access_point"][i]["model"])
+    else:
+        add_allure_environment_property('Access-Point-Model', get_configuration["access_point"][0]["model"])
+        add_allure_environment_property('SDK-Version', get_sdk_version)
     try:
-        add_allure_environment_property('Access-Point-Firmware-Version',
-                                        fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
+        if not cc_1:
+            add_allure_environment_property('Access-Point-Firmware-Version',
+                                            fixtures_ver.get_ap_version(get_apnos, get_configuration)[0].split("\n")[1])
     except Exception as e:
         print(e)
         pass
-    add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
-    add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
+    if cc_1:
+        listkey = list(get_configuration["controller"].keys())
+        if "version" in listkey:
+            add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+            add_allure_environment_property('Controller-Version', get_configuration["controller"]["version"])
+            for i in range(len(get_configuration["access_point"])):
+                add_allure_environment_property(str('AP-Name-' + str(i + 1)),
+                                                get_configuration["access_point"][i]["ap_name"])
+            for i in range(len(get_configuration["access_point"])):
+                add_allure_environment_property(str('AP-Serial-Number-' + str(i + 1)),
+                                                get_configuration["access_point"][i]["serial"])
+            add_allure_environment_property('LANforge-Chipset-Info',
+                                            get_configuration["traffic_generator"]["details"]["Chip-set-info"])
+        else:
+            pass
+    else:
+        add_allure_environment_property('Cloud-Controller-SDK-URL', get_configuration["controller"]["url"])
+        add_allure_environment_property('AP-Serial-Number', get_configuration["access_point"][0]["serial"] + "\n")
 
 
 @fixture(scope="session")
@@ -735,13 +854,16 @@ def add_firmware_property_after_upgrade(add_allure_environment_property, fixture
 
 
 @pytest.fixture(scope="session")
-def fixtures_ver(request, get_configuration, run_lf):
-    if request.config.getoption("1.x") is False:
+def fixtures_ver(request, get_configuration, run_lf, cc_1):
+    if request.config.getoption("1.x") is False and request.config.getoption("cc.1") is False:
         print("2.x")
         obj = Fixtures_2x(configuration=get_configuration, run_lf=run_lf)
     if request.config.getoption("1.x"):
         print("1.x")
         obj = Fixtures_1x(configuration=get_configuration)
+    if request.config.getoption("cc.1"):
+        print(" fixture version cc.1")
+        obj = Fixtures_3x(configuration=get_configuration, run_lf=run_lf, cc_1=cc_1)
     yield obj
 
 
@@ -766,7 +888,7 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
             ap_ssh.run_generic_command(cmd="logger start testcase: " + instance_name)
 
         # Adding memory Profile code before every test start
-        output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+        output = ap_ssh.get_memory_profile()
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         def collect_logs():
@@ -778,7 +900,7 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
                 allure.attach(name='logread', body=str(ap_logs))
 
             # Adding memory Profile code after every test completion
-            output = ap_ssh.run_generic_command(cmd="ucode /usr/share/ucentral/sysinfo.uc")
+            output = ap_ssh.get_memory_profile()
             allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         request.addfinalizer(collect_logs)
@@ -816,6 +938,22 @@ def get_apnos_logs(get_apnos, get_configuration):
     yield all_logs
 
 
+@pytest.fixture(scope="function")
+def get_controller_logs(get_configuration, ):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    summary = obj.show_ap_summary()
+    print(summary)
+    allure.attach(name='show ap summary', body=str(summary))
+
+
+@pytest.fixture(scope="function")
+def get_ap_config_slots(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    slot = obj.show_ap_config_slots()
+    # print(slot)
+    allure.attach(name="ap_slots", body=str(slot))
+
+
 @pytest.fixture(scope="session")
 def get_apnos_max_clients(get_apnos, get_configuration):
     all_logs = []
@@ -828,6 +966,7 @@ def get_apnos_max_clients(get_apnos, get_configuration):
         except Exception as e:
             pass
     yield all_logs
+
 
 @pytest.fixture(scope="function")
 def get_ap_channel(get_apnos, get_configuration):
@@ -860,3 +999,32 @@ def get_ap_channel(get_apnos, get_configuration):
             pass
     print(all_data)
     yield all_data
+
+
+@pytest.fixture(scope="function")
+def disable_band5ghz(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    shut = obj.ap_5ghz_shutdown()
+    print(shut)
+
+
+@pytest.fixture(scope="function")
+def disable_band2ghz(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    shut = obj.ap_2ghz_shutdown()
+    print(shut)
+
+
+@pytest.fixture(scope="function")
+def disable_band6ghz(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    shut = obj.ap_6ghz_shutdown()
+    print(shut)
+
+
+@pytest.fixture(scope="function")
+def enable_all_bands(get_configuration):
+    obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
+    obj.no_ap_5ghz_shutdown()
+    obj.no_ap_2ghz_shutdown()
+    obj.no_ap_6ghz_shutdown()

@@ -4,19 +4,18 @@
 
 """
 
-import string
-import random
-
-import pytest
-import json
 import allure
+import pytest
 
 
 @pytest.mark.uc_sanity
-@allure.feature("SDK REST API")
+@pytest.mark.ow_sdk_load_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi FMS Service Tests")
 class TestUcentralFMSService(object):
 
     @pytest.mark.system_info_fms
+    @allure.title("Get System Info FMS")
     def test_system_info_fms(self, setup_controller):
         system_info = setup_controller.get_system_fms()
         print(system_info.json())

@@ -76,6 +76,11 @@ jobs:
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
+      - name: save time for logs gathering
+        id: logs_start_time
+        run: |
+          echo ::set-output name=time::$(date --iso-8601=s)
+
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -87,7 +92,38 @@ jobs:
           additional_args: "-o firmware=${{ github.event.inputs.firmware }} ${{ github.event.inputs.additional_args }}"
           allure_results_artifact_name: allure-results
 
+      - name: show gw logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owgw --since-time ${{ steps.logs_start_time.outputs.time }}
+
+      - name: show fms logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owfms --since-time ${{ steps.logs_start_time.outputs.time }}
+
+      - name: show prov logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owprov --since-time ${{ steps.logs_start_time.outputs.time }}
+
+      - name: show analytics logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owanalytics --since-time ${{ steps.logs_start_time.outputs.time }}
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owsub --since-time ${{ steps.logs_start_time.outputs.time }}
+
+      - name: show sec logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owsec --since-time ${{ steps.logs_start_time.outputs.time }}
+
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n manual-${{ github.run_id }}-${{ github.event.inputs.testbed }} --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n manual-${{ github.run_id }}-${{ github.event.inputs.testbed }} $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true

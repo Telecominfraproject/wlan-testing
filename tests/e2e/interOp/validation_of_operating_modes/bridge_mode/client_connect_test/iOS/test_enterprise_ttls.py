@@ -23,7 +23,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     verifyUploadDownloadSpeediOS, get_ip_address_eap_ios
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.client_connect
-              ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise]
+              ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ow_sanity_interop]
 
 setup_params_enterprise = {
     "mode": "BRIDGE",

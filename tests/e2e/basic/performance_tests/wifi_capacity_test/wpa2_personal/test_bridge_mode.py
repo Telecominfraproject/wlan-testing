@@ -62,15 +62,15 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         max = int(get_apnos_max_clients[0])
         sets = [["DUT_NAME", lf_tools.dut_name]]
         print("sets", sets)
-        lf_tools.add_stations(band="2G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.add_stations(band="5G", num_stations=1, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="2G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.add_stations(band="5G", num_stations=max, dut=lf_tools.dut_name, ssid_name=ssid_name)
         # lf_tools.add_stations(band="ax", num_stations="max", dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         influx_tags = "wifi-capacity-tcp-download-bridge-wpa2-2.4G-5G"
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="0", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
+                                        upload_rate="0", protocol="TCP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -103,7 +103,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_dl", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="0", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
+                                        upload_rate="0", protocol="UDP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -136,7 +136,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -169,7 +169,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_bi", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -202,7 +202,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_tcp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=True)
+                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -235,7 +235,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_BRIDGE_udp_ul", mode=mode, vlan_id=vlan,
                                         download_rate="0", batch_size="1,5,10,20,40,64,128,256",
                                         influx_tags=influx_tags, sets=sets,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=True)
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000", move_to_influx=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 

@@ -42,13 +42,13 @@ LOGGER.addHandler(stdout_handler)
 
 
 class ChamberView:
-
-    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None, ap_version=None):
+    def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None,  cc_1=False, ap_version=None):
         print("lanforge data", lanforge_data)
         print("access point data", access_point_data)
         self.access_point_data = access_point_data
         self.access_point_data = access_point_data
         self.run_lf = run_lf
+        self.cc_1 = cc_1
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "Non-mesh":
@@ -83,6 +83,7 @@ class ChamberView:
                 self.delete_old_scenario = True
                 if access_point_data:
                     print(len(access_point_data))
+
                     for ap in range(len(access_point_data)):
                         print(access_point_data[ap])
                         self.dut_name = access_point_data[ap]["model"]
@@ -210,8 +211,11 @@ class ChamberView:
                 self.dut_name = testbed
                 self.ap_model = access_point_data[0]["model"]
                 self.ap_hw_info = access_point_data[0]["mode"]
-                self.version = self.ap_version[0].split(" / ")[1].split("\r\n\n")[0]
-                print("AP version", self.version)
+                try:
+                    self.version = self.ap_version[0].split(" / ")[1].split("\r\n\n")[0]
+                    print("AP version", self.version)
+                except Exception as e:
+                    print(e)
                 self.serial = access_point_data[0]["serial"]
                 self.ssid_data = None
                 if self.run_lf:
@@ -327,11 +331,13 @@ class ChamberView:
             LOGGER.warning("0 Stations")
             return
         idx = idx
-        if self.run_lf:
+        if self.run_lf or self.cc_1:
             if band == "2G":
                 idx = 0
             if band == "5G":
                 idx = 1
+
+
         for i in self.dut_idx_mapping:
             if self.dut_idx_mapping[i][0] == ssid_name and self.dut_idx_mapping[i][3] == band:
                 idx = i
@@ -529,8 +535,9 @@ class ChamberView:
         return cli_base.json_post(req_url, data)
 
     def station_data_query(self, station_name="wlan0", query="channel"):
-        x = self.upstream_port.split(".")
+        x = self.twog_radios[0].split(".")
         url = f"/port/{x[0]}/{x[1]}/{station_name}?fields={query}"
+        print("url", url)
         response = self.json_get(_req_url=url)
         print("response: ", response)
         if (response is None) or ("interface" not in response):
@@ -556,31 +563,45 @@ class ChamberView:
                 result = df[column_name].values.tolist()
                 return result
 
-    def read_csv_individual_station_throughput(self, dir_name, option):
+    def read_csv_individual_station_throughput(self, dir_name, option, individual_station_throughput=True, kpi_csv=False,
+                                               file_name="/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                                               batch_size="0"):
         try:
             df = pd.read_csv(
-                "../reports/" + str(dir_name) + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                "../reports/" + str(dir_name) + file_name,
                 sep=r'\t', engine='python')
             print("csv file opened")
         except FileNotFoundError:
             print("csv file does not exist")
             return False
 
-        dict_data = {}
-        if option == "download":
-            csv_sta_names = df.iloc[[0]].values.tolist()
-            csv_throughput_values = df.iloc[[1]].values.tolist()
-        elif option == "upload":
-            csv_sta_names = df.iloc[[0]].values.tolist()
-            csv_throughput_values = df.iloc[[2]].values.tolist()
-        else:
-            print("Provide proper option: download or upload")
-            return
+        if kpi_csv:
+            count = 0
+            dict_data = {"Down": {}, "Up": {}, "Both": {}}
+            csv_short_dis = df.loc[:,"short-description"]
+            csv_num_score = df.loc[:,"numeric-score"]
+            for i in range(len(batch_size.split(","))):
+                dict_data["Down"][csv_short_dis[count + 0]] = csv_num_score[count + 0]
+                dict_data["Up"][csv_short_dis[count + 1]] = csv_num_score[count + 1]
+                dict_data["Both"][csv_short_dis[count + 2]] = csv_num_score[count + 2]
+                count += 3
 
-        sta_list = csv_sta_names[0][0][:-1].replace('"', '').split(",")
-        th_list = list(map(float, csv_throughput_values[0][0].split(",")))
-        for i in range(len(sta_list)):
-            dict_data[sta_list[i]] = th_list[i]
+        if individual_station_throughput:
+            dict_data = {}
+            if option == "download":
+                csv_sta_names = df.iloc[[0]].values.tolist()
+                csv_throughput_values = df.iloc[[1]].values.tolist()
+            elif option == "upload":
+                csv_sta_names = df.iloc[[0]].values.tolist()
+                csv_throughput_values = df.iloc[[2]].values.tolist()
+            else:
+                print("Provide proper option: download or upload")
+                return
+
+            sta_list = csv_sta_names[0][0][:-1].replace('"', '').split(",")
+            th_list = list(map(float, csv_throughput_values[0][0].split(",")))
+            for i in range(len(sta_list)):
+                dict_data[sta_list[i]] = th_list[i]
 
         return dict_data
 
@@ -705,6 +726,31 @@ class ChamberView:
             self.Create_Dut()
             # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
             self.update_ssid(ssid_data=ssid_data[ssid])
+
+
+    def create_non_meh_dut(self, ssid_data=[]):
+        # print("hi")
+        for ap, ssid in zip(self.access_point_data, range(len(ssid_data))):
+            print("ap", ap)
+            print(ssid_data[ssid])
+            self.dut_name = ap["model"]
+            print(self.dut_name)
+            self.ap_model = ap["model"]
+            self.version = ap["version"].split("/")[-1]
+            self.serial = ap["serial"]
+            self.CreateDut = DUT(lfmgr=self.lanforge_ip,
+                                 port=self.lanforge_port,
+                                 dut_name=self.dut_name,
+                                 sw_version=self.version,
+                                 hw_version=self.ap_model,
+                                 model_num=self.ap_model,
+                                 serial_num=self.serial
+                                 )
+            self.Create_Dut()
+            # [['ssid_idx=0 ssid=Default-SSID-2g security=WPA|WEP| password=12345678 bssid=90:3c:b3:94:48:58']]
+            self.update_ssid(ssid_data=ssid_data[ssid])
+
+
 
     def set_radio_antenna(self, req_url, shelf, resources, radio, antenna):
         data = {

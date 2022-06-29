@@ -7,12 +7,10 @@ import pytest
 from configuration import RATE_LIMITING_RADIUS_SERVER_DATA
 from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
-
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_dynamic_qos_tests_lf,
               pytest.mark.ow_rate_limiting_with_radius_tests_lf,
               pytest.mark.bridge]
-
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -26,7 +24,7 @@ setup_params_general = {
                  "egress-rate": 50
              },
              "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
-             "radius_acc_data" : RATE_LIMITING_RADIUS_ACCOUNTING_DATA
+             "radius_acc_data": RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
              },
             {"ssid_name": "ssid_wpa2_5g_br",
@@ -37,7 +35,7 @@ setup_params_general = {
                  "egress-rate": 50
              },
              "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
-             "radius_acc_data" : RATE_LIMITING_RADIUS_ACCOUNTING_DATA
+             "radius_acc_data": RATE_LIMITING_RADIUS_ACCOUNTING_DATA
              }
         ]
     },
@@ -61,7 +59,8 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.ow_sanity_lf
     @pytest.mark.twog_upload_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
-    def test_radius_server_2g_upload_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info, station_names_twog):
+    def test_radius_server_2g_upload_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
+                                              station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -70,7 +69,7 @@ class TestRateLimitingWithRadiusBridge(object):
         band = "twog"
         eap = "TTLS"
         print("authentication", rate_radius_info)
-        print("accounting",rate_radius_accounting_info )
+        print("accounting", rate_radius_accounting_info)
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
@@ -83,7 +82,8 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
             wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_up_per_ssid", mode=mode, vlan_id=vlan,
                                             download_rate="0bps", batch_size="1",
-                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", raw_lines=raw_lines)
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -96,8 +96,9 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.twog_download_perssid_persta
     @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5850", name="WIFI-5850")
-    def test_radius_server_2g_download_perssid_persta(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                     station_names_twog):
+    def test_radius_server_2g_download_perssid_persta(self, lf_test, lf_tools, rate_radius_info,
+                                                      rate_radius_accounting_info,
+                                                      station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -119,7 +120,8 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
             wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_down_perssid_persta", mode=mode, vlan_id=vlan,
                                             download_rate="1Gbps", batch_size="1",
-                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000", raw_lines=raw_lines)
+                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -131,42 +133,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.twog
     @pytest.mark.twog_upload_persta_perclient
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5851", name="WIFI-5851")
-    def test_radius_server_2g_upload_persta_perclient_rate(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                     station_names_twog):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
-        ssid_name = profile_data["ssid_name"]
-        mode = "BRIDGE"
-        vlan = 1
-        security = "wpa2"
-        band = "twog"
-        eap = "TTLS"
-        print("authentication", rate_radius_info)
-        print("accounting", rate_radius_accounting_info)
-        ttls_passwd = rate_radius_info["password"]
-        identity = rate_radius_info['user']
-        allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
-        print(passes)
-        if passes:
-            raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
-            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_up_per_per_client", mode=mode, vlan_id=vlan,
-                                            download_rate="0bps", batch_size="1",
-                                            upload_rate="2.488Gbps", protocol="TCP-IPv4", duration="60000", raw_lines=raw_lines)
-
-            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
-            lf_tools.attach_report_graphs(report_name=report_name)
-            print("Test Completed... Cleaning up Stations")
-        assert True
-
-    @pytest.mark.wpa2_enterprise
-    @pytest.mark.twog
-    @pytest.mark.twog_upload_download_persta_perclient
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5852", name="WIFI-5852")
-    def test_radius_server_2g_upload_download_persta_perclient_rate(self, lf_test, lf_tools, rate_radius_info,
+    def test_radius_server_2g_upload_persta_perclient_rate(self, lf_test, lf_tools, rate_radius_info,
                                                            rate_radius_accounting_info,
                                                            station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
@@ -188,7 +155,45 @@ class TestRateLimitingWithRadiusBridge(object):
         print(passes)
         if passes:
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
-            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_up_down_per_per_client", mode=mode, vlan_id=vlan,
+            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_up_per_per_client", mode=mode, vlan_id=vlan,
+                                            download_rate="0bps", batch_size="1",
+                                            upload_rate="2.488Gbps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+        assert True
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.twog_upload_download_persta_perclient
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5852", name="WIFI-5852")
+    def test_radius_server_2g_upload_download_persta_perclient_rate(self, lf_test, lf_tools, rate_radius_info,
+                                                                    rate_radius_accounting_info,
+                                                                    station_names_twog):
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        print("authentication", rate_radius_info)
+        print("accounting", rate_radius_accounting_info)
+        ttls_passwd = rate_radius_info["password"]
+        identity = rate_radius_info['user']
+        allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_up_down_per_per_client", mode=mode,
+                                            vlan_id=vlan,
                                             download_rate="1Gbps", batch_size="1",
                                             upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                             raw_lines=raw_lines)
@@ -203,8 +208,9 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.fiveg_download_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5853", name="WIFI-5853")
-    def test_radius_server_fiveg_per_ssid_download(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                                 station_names_fiveg):
+    def test_radius_server_fiveg_per_ssid_download(self, lf_test, lf_tools, rate_radius_info,
+                                                   rate_radius_accounting_info,
+                                                   station_names_fiveg):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -226,7 +232,8 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
             wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_5g_down_per_ssid", mode=mode, vlan_id=vlan,
                                             download_rate="1Gbps", batch_size="1",
-                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",raw_lines=raw_lines)
+                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -239,7 +246,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.fiveg_upload_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5854", name="WIFI-5854")
     def test_radius_server_fiveg_per_ssid_upload(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                          station_names_fiveg):
+                                                 station_names_fiveg):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -261,7 +268,8 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
             wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_5g_up_per_ssid", mode=mode, vlan_id=vlan,
                                             download_rate="0bps", batch_size="1",
-                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000", raw_lines=raw_lines)
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -273,8 +281,9 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.fiveg_download_per_ssid_per_client
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5855", name="WIFI-5855")
-    def test_radius_server_fiveg_per_ssid_perclient_download(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                                 station_names_fiveg):
+    def test_radius_server_fiveg_per_ssid_perclient_download(self, lf_test, lf_tools, rate_radius_info,
+                                                             rate_radius_accounting_info,
+                                                             station_names_fiveg):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -294,7 +303,8 @@ class TestRateLimitingWithRadiusBridge(object):
         print(passes)
         if passes:
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
-            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_5g_down_per_ssid_perclient", mode=mode, vlan_id=vlan,
+            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_5g_down_per_ssid_perclient", mode=mode,
+                                            vlan_id=vlan,
                                             download_rate="1Gbps", batch_size="1",
                                             upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
                                             raw_lines=raw_lines)
@@ -348,8 +358,8 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.fiveg_upstream__downstream_per_ssid_per_client
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5857", name="WIFI-5857")
     def test_radius_server_fiveg_per_ssid_perclient_upstream_downstream(self, lf_test, lf_tools, rate_radius_info,
-                                                             rate_radius_accounting_info,
-                                                             station_names_fiveg):
+                                                                        rate_radius_accounting_info,
+                                                                        station_names_fiveg):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -369,7 +379,8 @@ class TestRateLimitingWithRadiusBridge(object):
         print(passes)
         if passes:
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
-            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_5g_upstream_downstream_per_ssid_perclient", mode=mode,
+            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_5g_upstream_downstream_per_ssid_perclient",
+                                            mode=mode,
                                             vlan_id=vlan,
                                             download_rate="1Gbps", batch_size="1",
                                             upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -386,7 +397,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.twog_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5858", name="WIFI-5858")
     def test_radius_server_2g_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                              station_names_twog):
+                                       station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -422,7 +433,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.fiveg_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5860", name="WIFI-5860")
     def test_radius_server_fiveg_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                                 station_names_fiveg):
+                                          station_names_fiveg):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -457,8 +468,9 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.twog
     @pytest.mark.twog_per_ssid_per_client
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5862", name="WIFI-5862")
-    def test_radius_server_2g_per_ssid_per_client(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                       station_names_twog):
+    def test_radius_server_2g_per_ssid_per_client(self, lf_test, lf_tools, rate_radius_info,
+                                                  rate_radius_accounting_info,
+                                                  station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -493,8 +505,9 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.fiveg_per_ssid_per_client
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5864", name="WIFI-5864")
-    def test_radius_server_fiveg_per_ssid_per_client(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                          station_names_fiveg):
+    def test_radius_server_fiveg_per_ssid_per_client(self, lf_test, lf_tools, rate_radius_info,
+                                                     rate_radius_accounting_info,
+                                                     station_names_fiveg):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -580,6 +593,7 @@ class TestRateLimitingWithRadiusBridge(object):
         eap = "TTLS"
         ttls_passwd = 'password'
         identity = 'user1'
+        configured = 10
         allure.attach(name="Max-Upload-User1", body=str(profile_data["rate-limit"]))
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
@@ -594,13 +608,20 @@ class TestRateLimitingWithRadiusBridge(object):
                                             raw_lines=raw_lines)
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
+            kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
+            print(kpi_data)
+            achieved = float("{:.2f}".format(kpi_data[1][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Upload for "
+                                                                   f"user1: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
-            assert True
+            if float(achieved) != float(0) and (achieved <= configured):
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
         else:
-            assert False
-
+            assert False, "EAP Connect Failed"
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -620,6 +641,7 @@ class TestRateLimitingWithRadiusBridge(object):
         eap = "TTLS"
         ttls_passwd = 'password'
         identity = 'user1'
+        configured = 10
         allure.attach(name="Max-Download-User1", body=str(profile_data["rate-limit"]))
         passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
                                      mode=mode, band=band,
@@ -634,9 +656,304 @@ class TestRateLimitingWithRadiusBridge(object):
                                             raw_lines=raw_lines)
 
             report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
+            kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
+            print(kpi_data)
+            achieved = float("{:.2f}".format(kpi_data[0][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Download for "
+                                                                   f"user1: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
             lf_tools.attach_report_graphs(report_name=report_name)
             print("Test Completed... Cleaning up Stations")
-            assert True
+            if float(achieved) != float(0) and (achieved <= configured):
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
         else:
-            assert False
+            assert False, "EAP Connect Failed"
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.max_upload_user2
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7620", name="WIFI-7620")
+    def test_radius_server_ratelimit_maxupload_groupuser2_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-upload ratelimit of group - user2
+            pytest -m "wpa2_enterprise and twog and max_upload_user2"
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = 'password'
+        identity = 'user2'
+        configured = 20
+        allure.attach(name="Max-Upload-User2", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user1", mode=mode, vlan_id=vlan,
+                                            download_rate="0bps", batch_size="1",
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
+            print(kpi_data)
+            achieved = float("{:.2f}".format(kpi_data[1][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Upload for "
+                                                                   f"user2: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+            if float(achieved) != float(0) and (achieved <= configured):
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
+        else:
+            assert False, "EAP Connect Failed"
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.max_download_user2
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7621", name="WIFI-7621")
+    def test_radius_server_ratelimit_maxdownload_groupuser2_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+                    Test: check max-download ratelimit of group - user2
+                    pytest -m "wpa2_enterprise and twog and max_download_user2"
+                """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = 'password'
+        identity = 'user2'
+        configured = 20
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        allure.attach(name="Max-Download-User2", body=str(profile_data["rate-limit"]))
+        if passes:
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user1", mode=mode, vlan_id=vlan,
+                                            download_rate="1Gbps", batch_size="1",
+                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
+            print(kpi_data)
+            achieved = float("{:.2f}".format(kpi_data[0][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Upload for "
+                                                                   f"user2: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+            if float(achieved) != float(0) and (achieved <= configured):
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
+        else:
+            assert False, "EAP Connect Failed"
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.max_upload_user3
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7622", name="WIFI-7622")
+    def test_radius_server_ratelimit_maxupload_groupuser3_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-download ratelimit of group - user3
+            pytest -m "wpa2_enterprise and twog and max_upload_user3"
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = 'password'
+        identity = 'user3'
+        configured = 10
+        allure.attach(name="Max-Upload-User3", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user3", mode=mode, vlan_id=vlan,
+                                            download_rate="0bps", batch_size="1",
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
+            print(kpi_data)
+            achieved = float("{:.2f}".format(kpi_data[1][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Upload for "
+                                                                   f"user3: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+            if float(achieved) != float(0) and (achieved <= configured):
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
+        else:
+            assert False, "EAP Connect Failed"
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.max_download_user3
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7623", name="WIFI-7623")
+    def test_radius_server_ratelimit_maxdownload_groupuser3_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-download ratelimit of group - user3
+            pytest -m "wpa2_enterprise and twog and max_download_user3"
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = 'password'
+        identity = 'user3'
+        configured = 50
+        allure.attach(name="Max-Download-User3", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user3", mode=mode, vlan_id=vlan,
+                                            download_rate="1Gbps", batch_size="1",
+                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
+            print(kpi_data)
+            achieved = float("{:.2f}".format(kpi_data[0][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Download for "
+                                                                   f"user1: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+            if float(achieved) != float(0) and (achieved <= configured):
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
+        else:
+            assert False, "EAP Connect Failed"
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.max_upload_user4
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7624", name="WIFI-7624")
+    def test_radius_server_ratelimit_maxupload_groupuser4_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-upload ratelimit of group - user4
+            pytest -m "wpa2_enterprise and twog and max_upload_user4"
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = 'password'
+        identity = 'user4'
+        configured = 50
+        allure.attach(name="Max-Upload-User4", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user4", mode=mode, vlan_id=vlan,
+                                            download_rate="0bps", batch_size="1",
+                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
+            print(kpi_data)
+            achieved = float("{:.2f}".format(kpi_data[1][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Upload for "
+                                                                   f"user4: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+            if float(achieved) != float(0) and (achieved <= configured):
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
+        else:
+            assert False, "EAP Connect Failed"
+
+    @pytest.mark.wpa2_enterprise
+    @pytest.mark.twog
+    @pytest.mark.max_download_user4
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7625", name="WIFI-7625")
+    def test_radius_server_ratelimit_maxdownload_groupuser4_2g(self, lf_test, lf_tools, station_names_twog):
+        """
+            Test: check max-download ratelimit of group - user4
+            pytest -m "wpa2_enterprise and twog and max_download_user4"
+        """
+        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        vlan = 1
+        security = "wpa2"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = 'password'
+        identity = 'user4'
+        configured = 10
+        allure.attach(name="Max-Download-User4", body=str(profile_data["rate-limit"]))
+        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
+                                     mode=mode, band=band,
+                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
+                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
+        print(passes)
+        if passes:
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            wct_obj = lf_test.wifi_capacity(instance_name="Ratelimit_Radius_group_user4", mode=mode, vlan_id=vlan,
+                                            download_rate="1Gbps", batch_size="1",
+                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
+                                            raw_lines=raw_lines)
+
+            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
+            print(kpi_data)
+            achieved = float("{:.2f}".format(kpi_data[0][1]))
+            allure.attach(name="Check PASS/FAIL information", body=f"Configured WISPr Bandwidth for Max Download for "
+                                                                   f"user4: {configured} Mbps \nAchieved throughput "
+                                                                   f"via Test: {achieved} Mbps")
+            lf_tools.attach_report_graphs(report_name=report_name)
+            print("Test Completed... Cleaning up Stations")
+            if float(achieved) != float(0) and (achieved <= configured):
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
+        else:
+            assert False, "EAP Connect Failed"

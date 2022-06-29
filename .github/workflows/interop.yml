@@ -16,6 +16,10 @@ on:
         description: comma-separated list of devices to test
         default: galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12
         required: false
+      firmware:
+        default: "release-latest"
+        description: "target firmware version to be specified <branch>-<commit | latest>"
+        required: false
       marker_overwrite:
         description: overwrite the Pytest markers that will be selected, will disable report uploading
         required: false
@@ -32,9 +36,9 @@ jobs:
     outputs:
       devices: ${{ steps.vars.outputs.devices }}
       marker_overwrite: ${{ steps.vars.outputs.marker_overwrite }}
-      openwifi_revision: ${{ steps.vars.outputs.openwifi}}
-      ap_models: ${{ steps.vars.outputs.ap_models}}
-      ap_version: ${{ steps.vars.outputs.ap_version}}
+      openwifi_revision: ${{ steps.vars.outputs.openwifi }}
+      ap_models: ${{ steps.vars.outputs.ap_models }}
+      firmware: ${{ steps.vars.outputs.firmware }}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
       existing_controller: ${{ steps.vars.outputs.existing_controller }}
 
@@ -48,8 +52,8 @@ jobs:
           DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "::set-output name=devices::${DEVICES}"
           echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
+          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
+          echo ::set-output name=firmware::$(echo "${{ github.event.inputs.firmware || 'release-latest' }}")
           echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
           echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || 'qa01' }}")
 
@@ -132,10 +136,10 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s9
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android and not wpa3_personal' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android and not wpa3_personal' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S9' --skip-lanforge"
+          additional_args: "--device='Galaxy S9' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
           allure_results_artifact_name: allure-results-galaxy-s9
 
       - name: stop reservation
@@ -147,6 +151,13 @@ jobs:
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-galaxy-s9 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-galaxy-s9 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -219,10 +230,10 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-iphone-11
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-11' --skip-lanforge"
+          additional_args: "--device='iPhone-11' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
           allure_results_artifact_name: allure-results-iphone-11
 
       - name: stop reservation
@@ -234,6 +245,13 @@ jobs:
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-iphone-11 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-iphone-11 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -307,10 +325,10 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s10
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S10.*' --skip-lanforge"
+          additional_args: "--device='Galaxy S10.*' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
           allure_results_artifact_name: allure-results-galaxy-s10
 
       - name: stop reservation
@@ -322,6 +340,13 @@ jobs:
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-galaxy-s10 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-galaxy-s10 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -396,10 +421,10 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-iphone-7
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-7' --skip-lanforge"
+          additional_args: "--device='iPhone-7' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
           allure_results_artifact_name: allure-results-iphone-7
 
       - name: stop reservation
@@ -411,6 +436,13 @@ jobs:
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-iphone-7 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-iphone-7 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -483,10 +515,10 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-galaxy-s20
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S20' --skip-lanforge"
+          additional_args: "--device='Galaxy S20' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
           allure_results_artifact_name: allure-results-galaxy-s20
 
       - name: stop reservation
@@ -498,6 +530,13 @@ jobs:
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-galaxy-s20 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-galaxy-s20 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -569,10 +608,10 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-iphone-xr
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-XR' --skip-lanforge"
+          additional_args: "--device='iPhone-XR' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
           allure_results_artifact_name: allure-results-iphone-xr
 
       - name: stop reservation
@@ -584,6 +623,13 @@ jobs:
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-iphone-xr --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-iphone-xr $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -657,10 +703,10 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-pixel-4
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and android' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Pixel 4' --skip-lanforge"
+          additional_args: "--device='Pixel 4' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
           allure_results_artifact_name: allure-results-pixel-4
 
       - name: stop reservation
@@ -672,6 +718,13 @@ jobs:
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-pixel-4 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-pixel-4 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -742,10 +795,10 @@ jobs:
         with:
           namespace: interop-${{ github.run_id }}-iphone-12
           testbed: interop
-          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'interop_uc_sanity and client_connect and ios' }}"
+          marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-12' --skip-lanforge"
+          additional_args: "--device='iPhone-12' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
           allure_results_artifact_name: allure-results-iphone-12
 
       - name: stop reservation
@@ -757,6 +810,13 @@ jobs:
           CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-iphone-12 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-iphone-12 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
