@@ -77,6 +77,8 @@ class ConfigureController:
             uri = self.build_url_fms(command)
         elif service == "prov":
             uri = self.build_url_prov(command)
+        elif service == "owa":
+            uri = self.build_url_analytics(command)
         else:
             raise NameError("Invalid service code for request.")
 
@@ -1106,22 +1108,44 @@ class AnalyticUtils:
 
     def get_boards(self):
         uri = self.sdk_client.build_url_analytics("boards")
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
-        print(resp.json())
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_board_by_id(self, board_id):
         uri = self.sdk_client.build_url_analytics("board/" + board_id)
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_board(self, payload):
         uri = self.sdk_client.build_url_analytics("board/0")
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         print(payload)
         payload = json.dumps(payload)
         resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
@@ -1131,7 +1155,16 @@ class AnalyticUtils:
 
     def edit_board(self, board_id, payload):
         uri = self.sdk_client.build_url_analytics("board/" + board_id)
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         print(payload)
         payload = json.dumps(payload)
         resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
@@ -1141,28 +1174,56 @@ class AnalyticUtils:
 
     def delete_board(self, board_id):
         uri = self.sdk_client.build_url_analytics("board/" + board_id)
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_board_devices(self, board_id):
         uri = self.sdk_client.build_url_analytics("board/" + board_id + "/devices")
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_board_data_bytime(self, board_id, from_date, to_date):
         uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&endDate=" +to_date)
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def delete_board_data_bytime(self, board_id, from_date, to_date):
         uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&endDate" +to_date)
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
@@ -1170,42 +1231,86 @@ class AnalyticUtils:
     # need to test this method
     def get_country_code_for_ip(self, ip_list):
         uri = self.sdk_client.build_url_analytics("/iptocountry?iplist=" +ip_list)
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_wificlients_history(self, venue_id):
         uri = self.sdk_client.build_url_analytics("/wifiClientHistory?macsOnly=true" +venue_id)
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
-    def get_wifi_client_history(self, client_mac):
-        uri = self.sdk_client.build_url_analytics("/wifiClientHistory/"+client_mac+"?orderSpec=true")
-        print(uri)
+    def get_wifi_client_history(self, client_mac, venue_id):
+        uri = self.sdk_client.build_url_analytics("/wifiClientHistory/"+client_mac+"?venue="+venue_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
-    def delete_wifi_client_history(self, venue, client_mac):
-        uri = self.sdk_client.build_url_analytics("/wifiClientHistory/" + client_mac + "?orderSpec=true")
-        print(uri)
+    def delete_wifi_client_history(self, client_mac, venue_id):
+        uri = self.sdk_client.build_url_analytics("/wifiClientHistory/" + client_mac + "?venue="+venue_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_system_info(self, command):
         uri = self.sdk_client.build_url_analytics("/system?command="+command)
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def post_system_info(self, command):
         uri = self.sdk_client.build_url_analytics("/system")
-        print(uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(command) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(command) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
         payload = json.dumps({command: f"{command}"})
         resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         print(resp)
@@ -1581,6 +1686,7 @@ if __name__ == '__main__':
     # po = ProvUtils(sdk_client=obj)
     # print(po.get_inventory())
     obj_ana = AnalyticUtils(sdk_client=obj)
+    obj_ana.get_boards()
     # obj_ana.get_boards()
     # obj_ana.get_board_by_id(board_id='005ddb54-246b-41a7-b004-d0318f7b8633')
     # up = UProfileUtility(sdk_client=obj, controller_data=controller)
