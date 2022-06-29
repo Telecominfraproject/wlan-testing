@@ -198,11 +198,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -212,11 +212,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -226,11 +226,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         version = resp.json()
@@ -241,11 +241,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -255,11 +255,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -269,11 +269,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -297,12 +297,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
 
         self.check_response("POST", resp, self.make_headers(), payload, uri)
@@ -313,11 +313,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
@@ -327,11 +327,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -341,11 +341,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -355,11 +355,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -369,11 +369,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -383,11 +383,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -397,11 +397,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -413,12 +413,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
@@ -430,12 +430,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
@@ -447,12 +447,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
@@ -464,12 +464,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
@@ -481,12 +481,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
@@ -498,12 +498,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
@@ -515,12 +515,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
 
         self.check_response("POST", resp, self.make_headers(), payload, uri)
@@ -533,12 +533,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
@@ -550,12 +550,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
@@ -565,11 +565,11 @@ class Controller(ConfigureController):
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
@@ -581,12 +581,12 @@ class Controller(ConfigureController):
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
               "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+              "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                    "Headers: " + str(self.make_headers()))
         resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
 
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
