@@ -190,7 +190,7 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestMultipskBridge(object):
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6920", name="WIFI-6920")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.two_vlan
@@ -259,7 +259,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6921", name="WIFI-6921")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.two_vlan
@@ -330,6 +330,7 @@ class TestMultipskBridge(object):
             assert False
 
     #-------------4 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6924", name="WIFI-6924")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.four_vlan
@@ -446,7 +447,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6925", name="WIFI-6925")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.four_vlan
@@ -567,6 +568,7 @@ class TestMultipskBridge(object):
             assert False
 
     # -------------8 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6926", name="WIFI-6926")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.eight_vlan
@@ -779,7 +781,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6927", name="WIFI-6927")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.eight_vlan
@@ -996,6 +998,7 @@ class TestMultipskBridge(object):
             assert False
 
     # -------------16 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6928", name="WIFI-6928")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.sixteen_vlan
@@ -1401,7 +1404,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6929", name="WIFI-6929")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.sixteen_vlan

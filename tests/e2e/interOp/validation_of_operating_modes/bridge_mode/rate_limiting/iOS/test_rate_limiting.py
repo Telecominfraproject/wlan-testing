@@ -23,7 +23,7 @@ from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnecti
     return_upload_download_speed_iOS, get_ip_address_ios, wifi_connect, wifi_disconnect_and_forget
 
 pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
-              pytest.mark.rate_limiting, pytest.mark.bridge]
+              pytest.mark.rate_limiting, pytest.mark.bridge, pytest.mark.bridg]
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {

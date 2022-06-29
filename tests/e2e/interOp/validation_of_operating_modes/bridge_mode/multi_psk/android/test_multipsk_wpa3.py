@@ -190,7 +190,7 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestMultipskBridge(object):
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7137", name="WIFI-7137")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     def test_multi_psk_wpa3_2g_2vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
@@ -258,7 +258,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7138", name="WIFI-7138")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     def test_multi_psk_wpa3_5g_2vlans(self, request, get_vif_state, get_ap_logs, lf_tools,
@@ -328,6 +328,8 @@ class TestMultipskBridge(object):
             assert False
 
     #-------------4 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7139", name="WIFI-7139")
+
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     def test_multi_psk_wpa3_2g_4vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
@@ -443,7 +445,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7140", name="WIFI-7140")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     def test_multi_psk_wpa3_5g_4vlans(self, request, get_vif_state, get_ap_logs, lf_tools,
@@ -563,6 +565,7 @@ class TestMultipskBridge(object):
             assert False
 
     # -------------8 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7141", name="WIFI-7141")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     def test_multi_psk_wpa3_2g_8vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
@@ -774,7 +777,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7142", name="WIFI-7142")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     def test_multi_psk_wpa3_5g_8vlans(self, request, get_vif_state, get_ap_logs, lf_tools,
@@ -990,6 +993,7 @@ class TestMultipskBridge(object):
             assert False
 
     # -------------16 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7143", name="WIFI-7143")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     def test_multi_psk_wpa3_2g_16vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,
@@ -1394,7 +1398,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7144", name="WIFI-7144")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     def test_multi_psk_wpa3_5g_16vlans(self, request, get_vif_state, get_ap_logs, lf_tools, get_configuration,

@@ -63,7 +63,7 @@ for sec_modes in setup_params_general1['ssid_modes'].keys():
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteOne(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7293", name="WIFI-7293")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8856", name="WIFI-8856")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -98,7 +98,7 @@ class TestBridgeModeConnectSuiteOne(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8818", name="WIFI-8818")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -175,7 +175,7 @@ for sec_modes in setup_params_general2['ssid_modes'].keys():
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteTwo(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7293", name="WIFI-7293")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8857", name="WIFI-8857")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -210,7 +210,7 @@ class TestBridgeModeConnectSuiteTwo(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8819", name="WIFI-8819")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -287,7 +287,7 @@ for sec_modes in setup_params_general3['ssid_modes'].keys():
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteThree(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7293", name="WIFI-7293")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8858", name="WIFI-8858")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -322,7 +322,7 @@ class TestBridgeModeConnectSuiteThree(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8820", name="WIFI-8820")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -397,7 +397,7 @@ for sec_modes in setup_params_general4['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteFour(object):
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7293", name="WIFI-7293")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8859", name="WIFI-8859")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -432,7 +432,7 @@ class TestBridgeModeConnectSuiteFour(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8821", name="WIFI-8821")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -509,7 +509,7 @@ for sec_modes in setup_params_general5['ssid_modes'].keys():
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteFive(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7293", name="WIFI-7293")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8862", name="WIFI-8862")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -544,7 +544,7 @@ class TestBridgeModeConnectSuiteFive(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8822", name="WIFI-8822")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -621,7 +621,7 @@ for sec_modes in setup_params_general6['ssid_modes'].keys():
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteSix(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7293", name="WIFI-7293")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8865", name="WIFI-8865")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -656,7 +656,7 @@ class TestBridgeModeConnectSuiteSix(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8823", name="WIFI-8823")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -735,7 +735,7 @@ class TestBridgeModeConnectSuiteSeven(object):
         pytest -m "client_connect and bridge and InteropsuiteA"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7293", name="WIFI-7293")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8867", name="WIFI-8867")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -770,7 +770,7 @@ class TestBridgeModeConnectSuiteSeven(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8824", name="WIFI-8824")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -845,7 +845,7 @@ for sec_modes in setup_params_general8['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestBridgeModeConnectSuiteEight(object):
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7293", name="WIFI-7293")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8868", name="WIFI-8868")
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -880,7 +880,7 @@ class TestBridgeModeConnectSuiteEight(object):
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8825", name="WIFI-8825")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -958,7 +958,7 @@ for sec_modes in setup_params_general9['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteNine(object):
 
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8826", name="WIFI-8826")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -1037,7 +1037,7 @@ for sec_modes in setup_params_general10['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteTen(object):
 
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8827", name="WIFI-8827")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     @pytest.mark.fourtyMhz
@@ -1115,7 +1115,7 @@ for sec_modes in setup_params_general11['ssid_modes'].keys():
 class TestBridgeModeConnectSuiteEleven(object):
 
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7635", name="WIFI-7635")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-8828", name="WIFI-8828")
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
     def test_ClientConnect_bridge_wpa2_chn11_40Mhz_US_2g(self, request, get_vif_state, get_ap_logs,

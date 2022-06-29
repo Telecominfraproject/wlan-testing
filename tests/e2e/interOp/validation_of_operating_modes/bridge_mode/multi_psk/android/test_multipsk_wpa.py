@@ -190,7 +190,7 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestMultipskBridge(object):
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7000", name="WIFI-7000")
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.two_vlan
@@ -259,7 +259,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7001", name="WIFI-7001")
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @pytest.mark.two_vlan
@@ -330,6 +330,7 @@ class TestMultipskBridge(object):
             assert False
 
     #-------------4 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7002", name="WIFI-7002")
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.four_vlan
@@ -446,7 +447,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7003", name="WIFI-7003")
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @pytest.mark.four_vlan
@@ -567,6 +568,7 @@ class TestMultipskBridge(object):
             assert False
 
     # -------------8 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7004", name="WIFI-7004")
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.eight_vlan
@@ -779,7 +781,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7005", name="WIFI-7005")
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @pytest.mark.eight_vlan
@@ -996,6 +998,7 @@ class TestMultipskBridge(object):
             assert False
 
     # -------------16 Vlans----------------------------------
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7006", name="WIFI-7006")
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.sixteen_vlan
@@ -1401,7 +1404,7 @@ class TestMultipskBridge(object):
         else:
             allure.attach(name="Connection Status: ", body=str("Device is Unable to connect"))
             assert False
-
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7007", name="WIFI-7007")
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @pytest.mark.sixteen_vlan
