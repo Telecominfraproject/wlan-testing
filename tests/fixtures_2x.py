@@ -36,7 +36,7 @@ from apnos.apnos import APNOS
 from controller.controller_2x.controller import Controller
 from controller.controller_2x.controller import FMSUtils
 from controller.controller_2x.controller import ProvUtils
-from controler.controller_2x.controller import AnalyticUtils
+from controller.controller_2x.controller import AnalyticUtils
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA

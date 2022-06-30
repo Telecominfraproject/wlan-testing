@@ -52,7 +52,7 @@ class TestUcentralAnalyticsService(object):
                     "description": "test-create-board-API",
                     "retention": 604800,
                     "interval": 60,
-                    "monitorSubVenues": true
+                    "monitorSubVenues": True
                 }
             ]
         }
@@ -88,7 +88,7 @@ class TestUcentralAnalyticsService(object):
                     "description": "test-create-board-API",
                     "retention": 609600,
                     "interval": 120,
-                    "monitorSubVenues": true
+                    "monitorSubVenues": True
                 }
             ]
         }
@@ -130,22 +130,23 @@ class TestUcentralAnalyticsService(object):
         else:
             assert response.status_code == 200, str(response.text)
 
-    @allure.title("GET Board Data by time")
     @pytest.mark.owa_get_board_data_bytime
+    @allure.title("GET Board Data by time")
     def test_analytics_service_get_board_data_bytime(self, setup_owan_controller):
         """
             Test Retrieving of a Board Data from timestamp
         """
-        from_date = datetime.datetime.now().timestamp()
-        to_date = (datetime.datetime.now() - datetime.timedelta(hours=1)).timestamp()
+        fd=str(datetime.datetime.now().replace(microsecond=0).timestamp())
+        from_date=fd.split(".")[0]
+        td=str((datetime.datetime.now().replace(microsecond=0) - datetime.timedelta(hours=1)).timestamp())
+        to_date=td.split(".")[0]
         response = setup_owan_controller.get_boards()
         if response.status_code == 200:
             res_dict = json.loads(response.text)
             if len(res_dict["boards"]) > 0:
                 boards = res_dict["boards"]
                 board_id = boards[random.randint(0, len(boards))]["id"]
-                response = setup_owan_controller.get_board_data_bytime(board_id=board_id, from_date=int(from_date),
-                                                                 to_date=int(to_date))
+                response = setup_owan_controller.get_board_data_bytime(board_id=board_id, from_date=from_date, to_date=to_date)
             # print(response.json())
             assert response.status_code == 200
         else:
@@ -153,19 +154,21 @@ class TestUcentralAnalyticsService(object):
 
     @pytest.mark.owa_delete_board_data_bytime
     @allure.title("DELETE Board Data by time")
-    def test_analytics_service_get_board_data_bytime(self, setup_owan_controller):
+    def test_analytics_service_delete_board_data_bytime(self, setup_owan_controller):
         """
-            Test Deleting of a Board Data from timestamp
+            Test Deleting a Board Data for given time period
         """
-        from_date = datetime.datetime.now().timestamp()
-        to_date = (datetime.datetime.now() - datetime.timedelta(hours=1)).timestamp()
+        fd = str(datetime.datetime.now().replace(microsecond=0).timestamp())
+        from_date = fd.split(".")[0]
+        td = str((datetime.datetime.now().replace(microsecond=0) - datetime.timedelta(hours=1)).timestamp())
+        to_date = td.split(".")[0]
         response = setup_owan_controller.get_boards()
         if response.status_code == 200:
             res_dict = json.loads(response.text)
             if len(res_dict["boards"]) > 0:
                 boards = res_dict["boards"]
                 board_id = boards[random.randint(0, len(boards))]["id"]
-                response = setup_owan_controller.delete_board_data_bytime(board_id='', from_date=1656433571, to_date=1656437971)
+                response = setup_owan_controller.delete_board_data_bytime(board_id=board_id, from_date=from_date, to_date=to_date)
                 # print(response.json())
             assert response.status_code == 200
         else:

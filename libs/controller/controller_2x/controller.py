@@ -25,17 +25,17 @@ import requests
 class ConfigureController:
 
     def __init__(self, controller_data):
-        self.username = controller_data["username"]
-        self.password = controller_data["password"]
-        self.host = urlparse(controller_data["url"])
+        self.username=controller_data["username"]
+        self.password=controller_data["password"]
+        self.host=urlparse(controller_data["url"])
         print(self.host)
-        self.access_token = ""
+        self.access_token=""
         # self.session = requests.Session()
-        self.login_resp = self.login()
-        self.gw_host, self.fms_host, self.prov_host ,self.analytics_host = self.get_gw_endpoint()
+        self.login_resp=self.login()
+        self.gw_host, self.fms_host, self.prov_host, self.analytics_host=self.get_gw_endpoint()
         if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
             time.sleep(60)
-            self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
+            self.gw_host, self.fms_host, self.prov_host=self.get_gw_endpoint()
             if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
                 self.logout()
                 print(self.gw_host, self.fms_host, self.prov_host)
@@ -43,66 +43,66 @@ class ConfigureController:
                 sys.exit()
 
     def build_uri_sec(self, path):
-        new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
+        new_uri='https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
         print(new_uri)
         return new_uri
 
     def build_url_fms(self, path):
-        new_uri = 'https://%s:%d/api/v1/%s' % (self.fms_host.hostname, self.fms_host.port, path)
+        new_uri='https://%s:%d/api/v1/%s' % (self.fms_host.hostname, self.fms_host.port, path)
         print(new_uri)
         return new_uri
 
     def build_uri(self, path):
 
-        new_uri = 'https://%s:%d/api/v1/%s' % (self.gw_host.hostname, self.gw_host.port, path)
+        new_uri='https://%s:%d/api/v1/%s' % (self.gw_host.hostname, self.gw_host.port, path)
         print(new_uri)
         return new_uri
 
     def build_url_prov(self, path):
-        new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
+        new_uri='https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
         print(new_uri)
         return new_uri
 
     def build_url_analytics(self, path):
-        new_uri = 'https://%s:%d/api/v1/%s' % (self.analytics_host.hostname, self.analytics_host.port, path)
+        new_uri='https://%s:%d/api/v1/%s' % (self.analytics_host.hostname, self.analytics_host.port, path)
         print(new_uri)
         return new_uri
 
     def request(self, service, command, method, params, payload):
         if service == "sec":
-            uri = self.build_uri_sec(command)
+            uri=self.build_uri_sec(command)
         elif service == "gw":
-            uri = self.build_uri(command)
+            uri=self.build_uri(command)
         elif service == "fms":
-            uri = self.build_url_fms(command)
+            uri=self.build_url_fms(command)
         elif service == "prov":
-            uri = self.build_url_prov(command)
+            uri=self.build_url_prov(command)
         elif service == "owa":
-            uri = self.build_url_analytics(command)
+            uri=self.build_url_analytics(command)
         else:
             raise NameError("Invalid service code for request.")
 
         print(uri)
-        params = params
+        params=params
         if method == "GET":
-            resp = requests.get(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
+            resp=requests.get(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
         elif method == "POST":
             print(uri, payload, params)
-            resp = requests.post(uri, params=params, data=payload, headers=self.make_headers(), verify=False,
-                                 timeout=100)
+            resp=requests.post(uri, params=params, data=payload, headers=self.make_headers(), verify=False,
+                               timeout=100)
         elif method == "PUT":
-            resp = requests.put(uri, params=params, data=payload, verify=False, timeout=100)
+            resp=requests.put(uri, params=params, data=payload, verify=False, timeout=100)
         elif method == "DELETE":
-            resp = requests.delete(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
+            resp=requests.delete(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
 
         self.check_response(method, resp, self.make_headers(), payload, uri)
 
         return resp
 
     def login(self):
-        uri = self.build_uri_sec("oauth2")
+        uri=self.build_uri_sec("oauth2")
         # self.session.mount(uri, HTTPAdapter(max_retries=15))
-        payload = json.dumps({"userId": self.username, "password": self.password})
+        payload=json.dumps({"userId": self.username, "password": self.password})
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -113,10 +113,10 @@ class ConfigureController:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, "", payload, uri)
-        token = resp
-        self.access_token = token.json()['access_token']
+        token=resp
+        self.access_token=token.json()['access_token']
         resp.close()
         if resp.status_code != 200:
             pytest.exit(str(resp.json()))
@@ -124,7 +124,7 @@ class ConfigureController:
         return token
 
     def get_gw_endpoint(self):
-        uri = self.build_uri_sec("systemEndpoints")
+        uri=self.build_uri_sec("systemEndpoints")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -133,26 +133,26 @@ class ConfigureController:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
-        services = resp.json()
-        gw_host = ""
-        fms_host = ""
-        prov_host = ""
-        analytics_host = ""
+        services=resp.json()
+        gw_host=""
+        fms_host=""
+        prov_host=""
+        analytics_host=""
         for service in services['endpoints']:
             if service['type'] == "owgw":
-                gw_host = urlparse(service["uri"])
+                gw_host=urlparse(service["uri"])
             if service['type'] == "owfms":
-                fms_host = urlparse(service["uri"])
+                fms_host=urlparse(service["uri"])
             if service['type'] == "owprov":
-                prov_host = urlparse(service["uri"])
+                prov_host=urlparse(service["uri"])
             if service['type'] == "owanalytics":
-                analytics_host = urlparse(service["uri"])
+                analytics_host=urlparse(service["uri"])
         return gw_host, fms_host, prov_host, analytics_host
 
     def logout(self):
-        uri = self.build_uri_sec('oauth2/%s' % self.access_token)
+        uri=self.build_uri_sec('oauth2/%s' % self.access_token)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -161,18 +161,18 @@ class ConfigureController:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
-        r = resp
+        r=resp
         resp.close()
         return r
 
     def make_headers(self):
-        headers = {'Authorization': 'Bearer %s' % self.access_token,
-                   "Connection": "keep-alive",
-                   "Content-Type": "application/json",
-                   "Keep-Alive": "timeout=10, max=1000"
-                   }
+        headers={'Authorization': 'Bearer %s' % self.access_token,
+                 "Connection": "keep-alive",
+                 "Content-Type": "application/json",
+                 "Keep-Alive": "timeout=10, max=1000"
+                 }
         return headers
 
     def check_response(self, cmd, response, headers, data_str, url):
@@ -196,7 +196,7 @@ class Controller(ConfigureController):
         super().__init__(controller_data)
 
     def get_devices(self):
-        uri = self.build_uri("devices")
+        uri=self.build_uri("devices")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -205,12 +205,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_device_by_serial_number(self, serial_number):
-        uri = self.build_uri("device/" + serial_number)
+        uri=self.build_uri("device/" + serial_number)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -219,12 +219,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_sdk_version(self):
-        uri = self.build_uri("system?command=info")
+        uri=self.build_uri("system?command=info")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -233,13 +233,13 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
-        version = resp.json()
+        version=resp.json()
         return version['version']
 
     def get_system_gw(self):
-        uri = self.build_uri("system?command=info")
+        uri=self.build_uri("system?command=info")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -248,12 +248,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_system_fms(self):
-        uri = self.build_url_fms("system?command=info")
+        uri=self.build_url_fms("system?command=info")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -262,12 +262,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_system_prov(self):
-        uri = self.build_url_prov("system?command=info")
+        uri=self.build_url_prov("system?command=info")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -276,25 +276,25 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_system_analytics(self):
-        uri = self.build_url_analytics("system/?command=info")
+        uri=self.build_url_analytics("system/?command=info")
         allure.attach(name="Info of Analytics Service:", body=str(uri))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_device_uuid(self, serial_number):
-        device_info = self.get_device_by_serial_number(serial_number=serial_number)
-        device_info = device_info.json()
+        device_info=self.get_device_by_serial_number(serial_number=serial_number)
+        device_info=device_info.json()
         return device_info["UUID"]
 
     def add_device_to_gw(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number)
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -305,13 +305,13 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
 
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def delete_device_from_gw(self, device_name):
-        uri = self.build_uri("device/" + device_name)
+        uri=self.build_uri("device/" + device_name)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -320,12 +320,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
 
     def get_commands(self):
-        uri = self.build_uri("commands")
+        uri=self.build_uri("commands")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -334,12 +334,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_device_logs(self, serial_number):
-        uri = self.build_uri("device/" + serial_number + "/logs")
+        uri=self.build_uri("device/" + serial_number + "/logs")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -348,12 +348,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_device_health_checks(self, serial_number):
-        uri = self.build_uri("device/" + serial_number + "/healthchecks")
+        uri=self.build_uri("device/" + serial_number + "/healthchecks")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -362,12 +362,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_device_capabilities(self, serial_number):
-        uri = self.build_uri("device/" + serial_number + "/capabilities")
+        uri=self.build_uri("device/" + serial_number + "/capabilities")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -376,12 +376,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_device_statistics(self, serial_number):
-        uri = self.build_uri("device/" + serial_number + "/statistics")
+        uri=self.build_uri("device/" + serial_number + "/statistics")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -390,12 +390,12 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def get_device_status(self, serial_number):
-        uri = self.build_uri("device/" + serial_number + "/status")
+        uri=self.build_uri("device/" + serial_number + "/status")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -404,13 +404,13 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def ap_reboot(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/reboot")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/reboot")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -421,13 +421,13 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def ap_factory_reset(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/factory")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/factory")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -438,13 +438,13 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def ping_device(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/ping")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/ping")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -455,13 +455,13 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def led_blink_device(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/leds")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/leds")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -472,13 +472,13 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def trace_device(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/trace")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/trace")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -489,13 +489,13 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def wifi_scan_device(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/wifiscan")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/wifiscan")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -506,13 +506,13 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def request_specific_msg_from_device(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/request")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/request")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -523,14 +523,14 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
 
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def event_queue(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/eventqueue")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/eventqueue")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -541,13 +541,13 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def telemetry(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number + "/telemetry")
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number + "/telemetry")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -558,12 +558,12 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
     def get_rtty_params(self, serial_number):
-        uri = self.build_uri("device/" + serial_number + "/rtty")
+        uri=self.build_uri("device/" + serial_number + "/rtty")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -572,13 +572,13 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
     def edit_device_on_gw(self, serial_number, payload):
-        uri = self.build_uri("device/" + serial_number)
-        payload = json.dumps(payload)
+        uri=self.build_uri("device/" + serial_number)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -589,7 +589,7 @@ class Controller(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
-        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
+        resp=requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
 
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
         return resp
@@ -599,16 +599,16 @@ class FMSUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):
         if sdk_client is None:
-            self.sdk_client = Controller(controller_data=controller_data)
-        self.sdk_client = sdk_client
+            self.sdk_client=Controller(controller_data=controller_data)
+        self.sdk_client=sdk_client
 
     def upgrade_firmware(self, serial="", url=""):
-        payload = "{ \"serialNumber\" : " + "\"" + \
-                  serial + "\"" + " , \"uri\" : " \
-                  + "\"" + url \
-                  + "\"" + ", \"when\" : 0" \
-                  + " }"
-        command = "device/" + serial + "/upgrade"
+        payload="{ \"serialNumber\" : " + "\"" + \
+                serial + "\"" + " , \"uri\" : " \
+                + "\"" + url \
+                + "\"" + ", \"when\" : 0" \
+                + " }"
+        command="device/" + serial + "/upgrade"
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(command) + "\n" +
@@ -619,23 +619,23 @@ class FMSUtils:
                                                     "URI: " + str(command) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        response = self.sdk_client.request(service="gw", command="device/" + serial + "/upgrade",
-                                           method="POST", params="serialNumber=" + serial,
-                                           payload="{ \"serialNumber\" : " + "\"" + serial + "\"" +
-                                                   " , \"uri\" : " + "\"" + url + "\"" +
-                                                   ", \"when\" : 0" + " }")
+        response=self.sdk_client.request(service="gw", command="device/" + serial + "/upgrade",
+                                         method="POST", params="serialNumber=" + serial,
+                                         payload="{ \"serialNumber\" : " + "\"" + serial + "\"" +
+                                                 " , \"uri\" : " + "\"" + url + "\"" +
+                                                 ", \"when\" : 0" + " }")
 
     def ap_model_lookup(self, model=""):
-        devices = self.get_device_set()
-        model_name = ""
+        devices=self.get_device_set()
+        model_name=""
         for device in devices['deviceTypes']:
             if str(device).__eq__(model):
-                model_name = device
+                model_name=device
         return model_name
 
     def get_revisions(self):
-        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="revisionSet=true",
-                                           payload="")
+        response=self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="revisionSet=true",
+                                         payload="")
         if response.status_code == 200:
             return response.json()
         else:
@@ -643,19 +643,19 @@ class FMSUtils:
 
     def get_latest_fw(self, model=""):
 
-        device_type = self.ap_model_lookup(model=model)
+        device_type=self.ap_model_lookup(model=model)
 
-        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET",
-                                           params="latestOnly=true&deviceType=" + device_type,
-                                           payload="")
+        response=self.sdk_client.request(service="fms", command="firmwares/", method="GET",
+                                         params="latestOnly=true&deviceType=" + device_type,
+                                         payload="")
         if response.status_code == 200:
             return response.json()
         else:
             return {}
 
     def get_device_set(self):
-        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="deviceSet=true",
-                                           payload="")
+        response=self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="deviceSet=true",
+                                         payload="")
         if response.status_code == 200:
             return response.json()
         else:
@@ -663,19 +663,19 @@ class FMSUtils:
 
     def get_firmwares(self, limit="10000", model="", latestonly="", branch="", commit_id="", offset="3000"):
 
-        deviceType = self.ap_model_lookup(model=model)
-        params = "limit=" + limit + \
-                 "&deviceType=" + deviceType + \
-                 "&latestonly=" + latestonly + \
-                 "offset=" + offset
-        command = "firmwares/"
-        response = self.sdk_client.request(service="fms", command=command, method="GET", params=params, payload="")
+        deviceType=self.ap_model_lookup(model=model)
+        params="limit=" + limit + \
+               "&deviceType=" + deviceType + \
+               "&latestonly=" + latestonly + \
+               "offset=" + offset
+        command="firmwares/"
+        response=self.sdk_client.request(service="fms", command=command, method="GET", params=params, payload="")
         allure.attach(name=command + params,
                       body=str(response.status_code) + "\n" + str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         if response.status_code == 200:
-            data = response.json()
-            newlist = sorted(data['firmwares'], key=itemgetter('created'))
+            data=response.json()
+            newlist=sorted(data['firmwares'], key=itemgetter('created'))
             # for i in newlist:
             #     print(i['uri'])
             #     print(i['revision'])
@@ -691,11 +691,11 @@ class ProvUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):
         if sdk_client is None:
-            self.sdk_client = Controller(controller_data=controller_data)
-        self.sdk_client = sdk_client
+            self.sdk_client=Controller(controller_data=controller_data)
+        self.sdk_client=sdk_client
 
     def get_inventory(self):
-        uri = self.sdk_client.build_url_prov("inventory")
+        uri=self.sdk_client.build_url_prov("inventory")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -704,12 +704,12 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_inventory_by_device(self, device_name):
-        uri = self.sdk_client.build_url_prov("inventory/" + device_name)
+        uri=self.sdk_client.build_url_prov("inventory/" + device_name)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -718,12 +718,12 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_system_prov(self):
-        uri = self.sdk_client.build_url_prov("system?command=info")
+        uri=self.sdk_client.build_url_prov("system?command=info")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -732,13 +732,13 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_device_to_inventory(self, device_name, payload):
-        uri = self.sdk_client.build_url_prov("inventory/" + device_name)
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("inventory/" + device_name)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -750,13 +750,13 @@ class ProvUtils:
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
 
-        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
 
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_device_from_inventory(self, device_name):
-        uri = self.sdk_client.build_url_prov("inventory/" + device_name)
+        uri=self.sdk_client.build_url_prov("inventory/" + device_name)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -765,12 +765,12 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_entity(self):
-        uri = self.sdk_client.build_url_prov("entity")
+        uri=self.sdk_client.build_url_prov("entity")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -779,12 +779,12 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_entity_by_id(self, entity_id):
-        uri = self.sdk_client.build_url_prov("entity/" + entity_id)
+        uri=self.sdk_client.build_url_prov("entity/" + entity_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -793,14 +793,14 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_entity(self, payload):
-        uri = self.sdk_client.build_url_prov("entity/1")
+        uri=self.sdk_client.build_url_prov("entity/1")
 
-        payload = json.dumps(payload)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -811,13 +811,13 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
 
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_entity(self, entity_id):
-        uri = self.sdk_client.build_url_prov("entity/" + entity_id)
+        uri=self.sdk_client.build_url_prov("entity/" + entity_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -826,13 +826,13 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_device_from_inventory(self, device_name, payload):
-        uri = self.sdk_client.build_url_prov("inventory/" + device_name)
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("inventory/" + device_name)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -843,14 +843,14 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
 
         self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def edit_entity(self, payload, entity_id):
-        uri = self.sdk_client.build_url_prov("entity/" + entity_id)
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("entity/" + entity_id)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -861,13 +861,13 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
 
         self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def get_contact(self):
-        uri = self.sdk_client.build_url_prov("contact")
+        uri=self.sdk_client.build_url_prov("contact")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -876,12 +876,12 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_contact_by_id(self, contact_id):
-        uri = self.sdk_client.build_url_prov("contact/" + contact_id)
+        uri=self.sdk_client.build_url_prov("contact/" + contact_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -890,13 +890,13 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_contact(self, payload):
-        uri = self.sdk_client.build_url_prov("contact/1")
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("contact/1")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -907,13 +907,13 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
 
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_contact(self, contact_id):
-        uri = self.sdk_client.build_url_prov("contact/" + contact_id)
+        uri=self.sdk_client.build_url_prov("contact/" + contact_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -922,13 +922,13 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_contact(self, payload, contact_id):
-        uri = self.sdk_client.build_url_prov("contact/" + contact_id)
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("contact/" + contact_id)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -939,13 +939,13 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
 
         self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def get_location(self):
-        uri = self.sdk_client.build_url_prov("location")
+        uri=self.sdk_client.build_url_prov("location")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -954,12 +954,12 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_location_by_id(self, location_id):
-        uri = self.sdk_client.build_url_prov("location/" + location_id)
+        uri=self.sdk_client.build_url_prov("location/" + location_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -968,13 +968,13 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_location(self, payload):
-        uri = self.sdk_client.build_url_prov("location/1")
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("location/1")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -985,13 +985,13 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
 
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_location(self, location_id):
-        uri = self.sdk_client.build_url_prov("location/" + location_id)
+        uri=self.sdk_client.build_url_prov("location/" + location_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1000,13 +1000,13 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_location(self, payload, location_id):
-        uri = self.sdk_client.build_url_prov("location/" + location_id)
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("location/" + location_id)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1017,13 +1017,13 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
 
         self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def get_venue(self):
-        uri = self.sdk_client.build_url_prov("venue")
+        uri=self.sdk_client.build_url_prov("venue")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1032,12 +1032,12 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_venue_by_id(self, venue_id):
-        uri = self.sdk_client.build_url_prov("venue/" + venue_id)
+        uri=self.sdk_client.build_url_prov("venue/" + venue_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1046,13 +1046,13 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_venue(self, payload):
-        uri = self.sdk_client.build_url_prov("venue/0")
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("venue/0")
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1063,12 +1063,12 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_venue(self, venue_id):
-        uri = self.sdk_client.build_url_prov("venue/" + venue_id)
+        uri=self.sdk_client.build_url_prov("venue/" + venue_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1077,13 +1077,13 @@ class ProvUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_venue(self, payload, venue_id):
-        uri = self.sdk_client.build_url_prov("venue/" + venue_id)
-        payload = json.dumps(payload)
+        uri=self.sdk_client.build_url_prov("venue/" + venue_id)
+        payload=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1094,7 +1094,7 @@ class ProvUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
@@ -1103,11 +1103,11 @@ class AnalyticUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):
         if sdk_client is None:
-            self.sdk_client = Controller(controller_data=controller_data)
-        self.sdk_client = sdk_client
+            self.sdk_client=Controller(controller_data=controller_data)
+        self.sdk_client=sdk_client
 
     def get_boards(self):
-        uri = self.sdk_client.build_url_analytics("boards")
+        uri=self.sdk_client.build_url_analytics("boards")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1116,12 +1116,12 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_board_by_id(self, board_id):
-        uri = self.sdk_client.build_url_analytics("board/" + board_id)
+        uri=self.sdk_client.build_url_analytics("board/" + board_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1130,12 +1130,12 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_board(self, payload):
-        uri = self.sdk_client.build_url_analytics("board/0")
+        uri=self.sdk_client.build_url_analytics("board/0")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1147,14 +1147,14 @@ class AnalyticUtils:
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
         print(payload)
-        payload = json.dumps(payload)
-        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        payload=json.dumps(payload)
+        resp=requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         print(resp)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def edit_board(self, board_id, payload):
-        uri = self.sdk_client.build_url_analytics("board/" + board_id)
+        uri=self.sdk_client.build_url_analytics("board/" + board_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1166,14 +1166,14 @@ class AnalyticUtils:
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
         print(payload)
-        payload = json.dumps(payload)
-        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        payload=json.dumps(payload)
+        resp=requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         print(resp)
         self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_board(self, board_id):
-        uri = self.sdk_client.build_url_analytics("board/" + board_id)
+        uri=self.sdk_client.build_url_analytics("board/" + board_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1182,12 +1182,12 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_board_devices(self, board_id):
-        uri = self.sdk_client.build_url_analytics("board/" + board_id + "/devices")
+        uri=self.sdk_client.build_url_analytics("board/" + board_id + "/devices")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1196,12 +1196,13 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_board_data_bytime(self, board_id, from_date, to_date):
-        uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&endDate=" +to_date)
+        uri=self.sdk_client.build_url_analytics(
+            "board/" + board_id + "/timepoints?fromDate=" + from_date + "&endDate=" + to_date)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1210,12 +1211,13 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def delete_board_data_bytime(self, board_id, from_date, to_date):
-        uri = self.sdk_client.build_url_analytics("/board/" + board_id + "timepoints/?fromdate=" +from_date+ "&endDate" +to_date)
+        uri=self.sdk_client.build_url_analytics(
+            "board/" + board_id + "/timepoints?fromDate=" + from_date + "&endDate=" + to_date)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1224,13 +1226,13 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     # need to test this method
     def get_country_code_for_ip(self, ip_list):
-        uri = self.sdk_client.build_url_analytics("/iptocountry?iplist=" +ip_list)
+        uri=self.sdk_client.build_url_analytics("iptocountry?iplist=" + ip_list)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1239,12 +1241,12 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_wificlients_history(self, venue_id):
-        uri = self.sdk_client.build_url_analytics("/wifiClientHistory?macsOnly=true" +venue_id)
+        uri=self.sdk_client.build_url_analytics("/wifiClientHistory?macsOnly=true" + venue_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1253,12 +1255,12 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_wifi_client_history(self, client_mac, venue_id):
-        uri = self.sdk_client.build_url_analytics("/wifiClientHistory/"+client_mac+"?venue="+venue_id)
+        uri=self.sdk_client.build_url_analytics("/wifiClientHistory/" + client_mac + "?venue=" + venue_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1267,12 +1269,12 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def delete_wifi_client_history(self, client_mac, venue_id):
-        uri = self.sdk_client.build_url_analytics("/wifiClientHistory/" + client_mac + "?venue="+venue_id)
+        uri=self.sdk_client.build_url_analytics("wifiClientHistory/" + client_mac + "?venue=" + venue_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1281,12 +1283,12 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_system_info(self, command):
-        uri = self.sdk_client.build_url_analytics("/system?command="+command)
+        uri=self.sdk_client.build_url_analytics("system?command=" + command)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1295,12 +1297,12 @@ class AnalyticUtils:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        resp=requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def post_system_info(self, command):
-        uri = self.sdk_client.build_url_analytics("/system")
+        uri=self.sdk_client.build_url_analytics("system")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1311,8 +1313,8 @@ class AnalyticUtils:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(command) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        payload = json.dumps({command: f"{command}"})
-        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        payload=json.dumps({"command": f"{command}"})
+        resp=requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
         print(resp)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
@@ -1322,9 +1324,9 @@ class UProfileUtility:
 
     def __init__(self, sdk_client=None, controller_data=None):
         if sdk_client is None:
-            self.sdk_client = Controller(controller_data=controller_data)
-        self.sdk_client = sdk_client
-        self.base_profile_config = {
+            self.sdk_client=Controller(controller_data=controller_data)
+        self.sdk_client=sdk_client
+        self.base_profile_config={
             "uuid": 1,
             "radios": [],
             "interfaces": [{
@@ -1397,7 +1399,7 @@ class UProfileUtility:
                 }
             }
         }
-        self.vlan_section = {
+        self.vlan_section={
             "name": "WAN100",
             "role": "upstream",
             "vlan": {
@@ -1414,20 +1416,20 @@ class UProfileUtility:
                 "addressing": "dynamic"
             }
         }
-        self.mode = None
+        self.mode=None
 
     def set_mesh_services(self):
-        self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
-        self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
+        self.base_profile_config["interfaces"][1]["ipv4"]["subnet"]="192.168.97.1/24"
+        self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"]=100
         del self.base_profile_config['metrics']['wifi-frames']
         del self.base_profile_config['metrics']['dhcp-snooping']
-        var = {
+        var={
             "filters": ["probe",
                         "auth"]
         }
-        self.base_profile_config["metrics"]['wifi-frames'] = var
+        self.base_profile_config["metrics"]['wifi-frames']=var
         del self.base_profile_config['services']
-        var2 = {
+        var2={
             "lldp": {
                 "describe": "uCentral",
                 "location": "universe"
@@ -1436,28 +1438,28 @@ class UProfileUtility:
                 "port": 22
             }
         }
-        self.base_profile_config['services'] = var2
+        self.base_profile_config['services']=var2
 
     def set_express_wifi(self, open_flow=None):
         if self.mode == "NAT":
-            self.base_profile_config["interfaces"][1]["services"] = ["ssh", "lldp", "open-flow"]
-            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.97.1/24"
-            self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"] = 100
-            self.base_profile_config['services']["open-flow"] = open_flow
-            self.base_profile_config['services']['lldp']['describe'] = "OpenWiFi - expressWiFi"
-            self.base_profile_config['services']['lldp']['location'] = "Hotspot"
+            self.base_profile_config["interfaces"][1]["services"]=["ssh", "lldp", "open-flow"]
+            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"]="192.168.97.1/24"
+            self.base_profile_config["interfaces"][1]["ipv4"]["dhcp"]["lease-count"]=100
+            self.base_profile_config['services']["open-flow"]=open_flow
+            self.base_profile_config['services']['lldp']['describe']="OpenWiFi - expressWiFi"
+            self.base_profile_config['services']['lldp']['location']="Hotspot"
 
     def set_captive_portal(self):
 
         if self.mode == "NAT":
-            max_client = {
+            max_client={
                 "max-clients": 32
             }
             # sourceFile = open('captive_config.py', 'w')
 
-            self.base_profile_config["interfaces"][1]["name"] = "captive"
-            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"] = "192.168.2.1/24"
-            self.base_profile_config["interfaces"][1]["captive"] = max_client
+            self.base_profile_config["interfaces"][1]["name"]="captive"
+            self.base_profile_config["interfaces"][1]["ipv4"]["subnet"]="192.168.2.1/24"
+            self.base_profile_config["interfaces"][1]["captive"]=max_client
             del self.base_profile_config["interfaces"][1]["ethernet"]
             del self.base_profile_config["interfaces"][1]["services"]
             del self.base_profile_config["metrics"]["wifi-frames"]
@@ -1467,7 +1469,7 @@ class UProfileUtility:
             # sourceFile.close()
 
     def encryption_lookup(self, encryption="psk"):
-        encryption_mapping = {
+        encryption_mapping={
             "none": "open",
             "psk": "wpa",
             "psk2": "wpa2",
@@ -1486,12 +1488,12 @@ class UProfileUtility:
             return False
 
     def get_ssid_info(self):
-        ssid_info = []
+        ssid_info=[]
         for interfaces in self.base_profile_config["interfaces"]:
             if "ssids" in interfaces.keys():
                 for ssid_data in interfaces["ssids"]:
                     for band in ssid_data["wifi-bands"]:
-                        temp = [ssid_data["name"]]
+                        temp=[ssid_data["name"]]
                         if ssid_data["encryption"]["proto"] == "none" or "radius" in ssid_data.keys():
                             temp.append(self.encryption_lookup(encryption=ssid_data["encryption"]["proto"]))
                             temp.append('[BLANK]')
@@ -1503,13 +1505,13 @@ class UProfileUtility:
         return ssid_info
 
     def set_radio_config(self, radio_config={}):
-        base_radio_config_2g = {
+        base_radio_config_2g={
             "band": "2G",
             "country": "CA",
             "channel-mode": "HE",
             "channel": "auto"
         }
-        base_radio_config_5g = {
+        base_radio_config_5g={
             "band": "5G",
             "country": "CA",
             "allow-dfs": True,
@@ -1519,10 +1521,10 @@ class UProfileUtility:
         for band in radio_config:
             if band == "2G":
                 for keys in radio_config[band]:
-                    base_radio_config_2g[keys] = radio_config[band][keys]
+                    base_radio_config_2g[keys]=radio_config[band][keys]
             if band == "5G":
                 for keys in radio_config[band]:
-                    base_radio_config_5g[keys] = radio_config[band][keys]
+                    base_radio_config_5g[keys]=radio_config[band][keys]
             # if band == "6G":
             #     for keys in radio_config[band]:
             #         base_radio_config_6g[keys] = radio_config[band][keys]
@@ -1530,32 +1532,32 @@ class UProfileUtility:
         self.base_profile_config["radios"].append(base_radio_config_2g)
         self.base_profile_config["radios"].append(base_radio_config_5g)
         print(self.base_profile_config)
-        self.vlan_section["ssids"] = []
-        self.vlan_ids = []
+        self.vlan_section["ssids"]=[]
+        self.vlan_ids=[]
 
     def set_mode(self, mode, mesh=False):
-        self.mode = mode
+        self.mode=mode
         if mode == "NAT":
             if mesh:
-                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                self.base_profile_config['interfaces'][0]['tunnel']={
                     "proto": "mesh"
                 }
-            self.base_profile_config['interfaces'][1]['ssids'] = []
+            self.base_profile_config['interfaces'][1]['ssids']=[]
         elif mode == "BRIDGE":
             if mesh:
-                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                self.base_profile_config['interfaces'][0]['tunnel']={
                     "proto": "mesh"
                 }
-            self.base_profile_config['interfaces'][0]['ssids'] = []
+            self.base_profile_config['interfaces'][0]['ssids']=[]
         elif mode == "VLAN":
             if mesh:
-                self.base_profile_config['interfaces'][0]['tunnel'] = {
+                self.base_profile_config['interfaces'][0]['tunnel']={
                     "proto": "mesh"
                 }
             del self.base_profile_config['interfaces'][1]
-            self.base_profile_config['interfaces'][0]['ssids'] = []
-            self.base_profile_config['interfaces'] = []
-            wan_section_vlan = {
+            self.base_profile_config['interfaces'][0]['ssids']=[]
+            self.base_profile_config['interfaces']=[]
+            wan_section_vlan={
                 "name": "WAN",
                 "role": "upstream",
                 "services": ["lldp", "ssh", "dhcp-snooping"],
@@ -1577,30 +1579,30 @@ class UProfileUtility:
 
     def add_ssid(self, ssid_data, radius=False, radius_auth_data={}, radius_accounting_data={}):
         print("ssid data : ", ssid_data)
-        ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
+        ssid_info={'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
         for options in ssid_data:
             if options == "multi-psk":
-                ssid_info[options] = ssid_data[options]
+                ssid_info[options]=ssid_data[options]
                 print("hi", ssid_info)
             if options == "rate-limit":
-                ssid_info[options] = ssid_data[options]
+                ssid_info[options]=ssid_data[options]
         for i in ssid_data["appliedRadios"]:
             ssid_info["wifi-bands"].append(i)
-        ssid_info['encryption'] = {}
-        ssid_info['encryption']['proto'] = ssid_data["security"]
+        ssid_info['encryption']={}
+        ssid_info['encryption']['proto']=ssid_data["security"]
         try:
-            ssid_info['encryption']['key'] = ssid_data["security_key"]
+            ssid_info['encryption']['key']=ssid_data["security_key"]
         except Exception as e:
             pass
-        ssid_info['encryption']['ieee80211w'] = "optional"
+        ssid_info['encryption']['ieee80211w']="optional"
         if radius:
-            ssid_info["radius"] = {}
-            ssid_info["radius"]["authentication"] = {
+            ssid_info["radius"]={}
+            ssid_info["radius"]["authentication"]={
                 "host": radius_auth_data["ip"],
                 "port": radius_auth_data["port"],
                 "secret": radius_auth_data["secret"]
             }
-            ssid_info["radius"]["accounting"] = {
+            ssid_info["radius"]["accounting"]={
                 "host": radius_accounting_data["ip"],
                 "port": radius_accounting_data["port"],
                 "secret": radius_accounting_data["secret"]
@@ -1610,8 +1612,8 @@ class UProfileUtility:
         elif self.mode == "BRIDGE":
             self.base_profile_config['interfaces'][0]['ssids'].append(ssid_info)
         elif self.mode == "VLAN":
-            vid = ssid_data["vlan"]
-            self.vlan_section = {
+            vid=ssid_data["vlan"]
+            self.vlan_section={
                 "name": "WAN100",
                 "role": "upstream",
                 "services": ["lldp", "dhcp-snooping"],
@@ -1629,7 +1631,7 @@ class UProfileUtility:
                     "addressing": "dynamic"
                 }
             }
-            vlan_section = self.vlan_section
+            vlan_section=self.vlan_section
             if vid in self.vlan_ids:
                 print("sss", self.vlan_ids)
                 for i in self.base_profile_config['interfaces']:
@@ -1638,21 +1640,21 @@ class UProfileUtility:
             else:
                 print(self.vlan_ids)
                 self.vlan_ids.append(vid)
-                vlan_section['name'] = "WANv%s" % (vid)
-                vlan_section['vlan']['id'] = int(vid)
-                vlan_section["ssids"] = []
+                vlan_section['name']="WANv%s" % (vid)
+                vlan_section['vlan']['id']=int(vid)
+                vlan_section["ssids"]=[]
                 vlan_section["ssids"].append(ssid_info)
                 self.base_profile_config['interfaces'].append(vlan_section)
                 print(vlan_section)
-                vsection = 0
+                vsection=0
         else:
             print("invalid mode")
             pytest.exit("invalid Operating Mode")
 
     def push_config(self, serial_number):
-        payload = {"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 1}
-        uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
-        basic_cfg_str = json.dumps(payload)
+        payload={"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 1}
+        uri=self.sdk_client.build_uri("device/" + serial_number + "/configure")
+        basic_cfg_str=json.dumps(payload)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1664,20 +1666,20 @@ class UProfileUtility:
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
 
-        resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
-                             verify=False, timeout=100)
+        resp=requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
+                           verify=False, timeout=100)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
         resp.close()
         return resp
 
 
 if __name__ == '__main__':
-    controller = {
+    controller={
         'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',  # API base url for the controller
         'username': "tip@ucentral.com",
         'password': 'OpenWifi%123',
     }
-    obj = Controller(controller_data=controller)
+    obj=Controller(controller_data=controller)
     # obj_ana = AnalyticUtils(sdk_client=obj)
     # print('GET Boards API \n ', obj_ana.get_boards())
     # print('GET Board by ID API \n ', obj_ana.get_board_by_id('c5d273cd-a025-4107-ae11-0dd8160a3bb0'))
@@ -1685,7 +1687,7 @@ if __name__ == '__main__':
     # obj_ana.get_board_by_id(board_id='005ddb54-246b-41a7-b004-d0318f7b8633')
     # po = ProvUtils(sdk_client=obj)
     # print(po.get_inventory())
-    obj_ana = AnalyticUtils(sdk_client=obj)
+    obj_ana=AnalyticUtils(sdk_client=obj)
     obj_ana.get_boards()
     # obj_ana.get_boards()
     # obj_ana.get_board_by_id(board_id='005ddb54-246b-41a7-b004-d0318f7b8633')
