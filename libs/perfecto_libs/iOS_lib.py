@@ -3522,26 +3522,37 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
                 print(e)
         else:
             try:
-                print("Launching Safari")
-                report.step_start("Google Home Page")
+                print("Launching Safari for iPhone-7 trial 1")
+                report.step_start("Google Home Page for iPhone7")
                 time.sleep(4)
                 driver.get(connData["webURL"])
                 print("Enter Search Text")
                 time.sleep(4)
-                driver.find_element_by_xpath("//*[@label='Address']").send_keys("Internet speed test")
+                driver.find_element_by_xpath("//*[@label='search']/XCUIElementTypeOther[1]").send_keys(
+                    "Internet speed test")
                 time.sleep(4)
-                driver.find_element_by_xpath("//*[@label='go']").click()
+                driver.find_element_by_xpath("//*[@name='Search']").click()
+
             except Exception as e:
-                print("Launching Safari Failed")
+                print("Launching Safari for iPhone-7 trial 2")
                 try:
                     driver.find_element_by_xpath("//*[@class='gLFyf']").send_keys("Internet speed test")
                     time.sleep(4)
                     driver.find_element_by_xpath("//*[@class='aajZCb']//*[@class='nz2CCf']/li[1]/div[1]/div[1]").click()
                 except Exception as e:
                     print("Launching Safari Failed")
-                    print(e)
-
-
+                    try:
+                        print("Launching Safari")
+                        report.step_start("Launching Safari for iPhone-7 trial 3")
+                        time.sleep(4)
+                        driver.get(connData["webURL"])
+                        print("Enter Search Text")
+                        time.sleep(4)
+                        driver.find_element_by_xpath("//*[@label='Address']").send_keys("Internet speed test")
+                        time.sleep(4)
+                        driver.find_element_by_xpath("//*[@label='go']").click()
+                    except:
+                        print("Launching safari failed for iPhone-7")
     except:
         try:
             report.step_start("Other Option For Search")
