@@ -616,7 +616,7 @@ class FMSUtils:
         return model_name
 
     def get_revisions(self):
-        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="revisionSet=true",
+        response = self.sdk_client.request(service="fms", command="firmwares", method="GET", params="revisionSet=true",
                                            payload="")
         if response.status_code == 200:
             return response.json()
@@ -627,7 +627,7 @@ class FMSUtils:
 
         device_type = self.ap_model_lookup(model=model)
 
-        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET",
+        response = self.sdk_client.request(service="fms", command="firmwares", method="GET",
                                            params="latestOnly=true&deviceType=" + device_type,
                                            payload="")
         if response.status_code == 200:
@@ -636,7 +636,7 @@ class FMSUtils:
             return {}
 
     def get_device_set(self):
-        response = self.sdk_client.request(service="fms", command="firmwares/", method="GET", params="deviceSet=true",
+        response = self.sdk_client.request(service="fms", command="firmwares", method="GET", params="deviceSet=true",
                                            payload="")
         if response.status_code == 200:
             return response.json()
@@ -650,7 +650,7 @@ class FMSUtils:
                  "&deviceType=" + deviceType + \
                  "&latestonly=" + latestonly + \
                  "offset=" + offset
-        command = "firmwares/"
+        command = "firmwares"
         response = self.sdk_client.request(service="fms", command=command, method="GET", params=params, payload="")
         allure.attach(name=command + params,
                       body=str(response.status_code) + "\n" + str(response.json()),
