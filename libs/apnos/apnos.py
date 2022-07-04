@@ -48,7 +48,8 @@ class APNOS:
             stdin, stdout, stderr = client.exec_command(cmd)
             a = str(stdout.read()).split("\\n")
             for i in a:
-                if i.__contains__("minicom ap" + self.tty[-1]):
+                # if i.__contains__("minicom ap" + self.tty[-1]):
+                if i.__contains__("minicom usb0"):
                     temp = i.split("minicom")
                     a = temp[0].replace(" ", "")
                     cmd = "kill " + str(a).replace("b'", "")
