@@ -9,7 +9,7 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.dataplane_throughput_test,
-              pytest.mark.bridge]
+              pytest.mark.bridge,pytest.mark.basic_dataplane_throughput_test]
 
 setup_params_general = {
     "mode": "BRIDGE",

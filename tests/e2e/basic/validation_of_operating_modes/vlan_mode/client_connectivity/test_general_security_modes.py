@@ -9,7 +9,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity, pytest.mark.vlan, pytest.mark.general, pytest.mark.ucentral,
-              pytest.mark.sanity]  # pytest.mark.usefixtures("setup_test_run")]
+              pytest.mark.sanity,pytest.mark.basic_client_connectivity]  # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "VLAN",

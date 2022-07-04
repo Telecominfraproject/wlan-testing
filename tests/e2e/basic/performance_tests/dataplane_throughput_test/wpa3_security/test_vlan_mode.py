@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.dataplane_throughput_test, pytest.mark.vlan]
+pytestmark = [pytest.mark.dataplane_throughput_test, pytest.mark.vlan,pytest.mark.basic_dataplane_throughput_test]
 
 setup_params_general = {
     "mode": "VLAN",
