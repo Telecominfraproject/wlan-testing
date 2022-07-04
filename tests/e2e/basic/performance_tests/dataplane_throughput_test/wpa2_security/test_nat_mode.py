@@ -9,7 +9,7 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test,
-              pytest.mark.nat]
+              pytest.mark.nat,pytest.mark.basic_dataplane_throughput_test]
 
 setup_params_general = {
     "mode": "NAT",
