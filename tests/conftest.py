@@ -77,11 +77,6 @@ def pytest_addoption(parser):
     parser.addini("tr_project_id", "Testrail Project ID")
     parser.addini("milestone", "milestone Id")
 
-    parser.addini("influx_host", "Influx Host", default="influx.cicd.lab.wlan.tip.build")
-    parser.addini("influx_port", "Influx Port", default=80)
-    parser.addini("influx_token", "Influx Token", default="TCkdATXAbHmNbn4QyNaj43WpGBYxFrzV")
-    parser.addini("influx_bucket", "influx bucket", default="tip-cicd")
-    parser.addini("influx_org", "influx organization", default="tip")
     parser.addini(name="firmware", type='string', help="AP Firmware build URL", default="0")
     parser.addini("cloud_ctlr", "AP Firmware build URL", default="0")
 
@@ -763,16 +758,10 @@ def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf, skip_pcap
 
 
 @pytest.fixture(scope="session")
-def setup_influx(request, testbed, get_configuration):
+def setup_influx(testbed, get_configuration):
     """ Setup Influx Parameters: Used in CV Automation"""
-    influx_params = {
-        "influx_host": request.config.getini("influx_host"),
-        "influx_port": request.config.getini("influx_port"),
-        "influx_token": request.config.getini("influx_token"),
-        "influx_bucket": request.config.getini("influx_bucket"),
-        "influx_org": request.config.getini("influx_org"),
-        "influx_tag": [testbed, get_configuration["access_point"][0]["model"]],
-    }
+    influx_params = CONFIGURATION["influx_params"]
+    influx_params["influx_tag"] = [testbed, get_configuration["access_point"][0]["model"]]
     yield influx_params
 
 
