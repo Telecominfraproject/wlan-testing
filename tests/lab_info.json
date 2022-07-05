@@ -1179,13 +1179,7 @@
 },
 "open_flow":{},
 
-"influx_params" : {
-        "influx_host": "influx.cicd.lab.wlan.tip.build",
-        "influx_port": 80,
-        "influx_token": "TCkdATXAbHmNbn4QyNaj43WpGBYxFrzV",
-        "influx_bucket": "tip-cicd",
-        "influx_org": "tip"
-}
+"influx_params" : {}
 
 }
 
