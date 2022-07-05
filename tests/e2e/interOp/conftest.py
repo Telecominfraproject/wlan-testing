@@ -95,11 +95,16 @@ def get_ToggleAirplaneMode_data(request, get_device_configuration):
         "webURL": "https://www.google.com",
         "lblSearch": "//*[@class='gLFyf']",
         "elelSearch": "(//*[@class='sbic sb43'])[1]",
-        "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
+        # "SpeedCheck":""
+        "elelSearch": "(//*[@class='a4bIc'])[1]",
+        "SpeedCheck":"//*[@class='BYM4Nd']//*[@class='q8U8x MBeuO ynAwRc oewGkc LeUQr']",
+        "Go":"//*[@class='js-start-test test-mode-multi']",
+
+        # "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
         "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
         "bundleId-iOS-Safari": get_device_configuration["bundleId-iOS-Safari"],
-        "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
-        "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
+        # "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
+        # "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
         # Android
         "platformName-android & iOS": get_device_configuration["platformName-android & iOS"],
         "appPackage-android & iOS": get_device_configuration["appPackage-android & iOS"]
