@@ -44,6 +44,7 @@ setup_params_general = {
 class TestDynamicVlanOverSsid2GWpa2(object):
 
     @pytest.mark.dynamic_precedence_over_ssid
+    @pytest.mark.basic_dvlan_over_ssid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",

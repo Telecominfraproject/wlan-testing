@@ -6,7 +6,7 @@ import allure
 import pytest
 
 
-pytestmark = [pytest.mark.ow_regression_lf, pytest.mark.nat]
+pytestmark = [pytest.mark.ow_regression_lf, pytest.mark.nat,pytest.mark.basic_rate_limiting]
 
 
 setup_params_general = {
@@ -43,7 +43,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestRateLimitingNat(object):
-
+    @pytest.mark.basic_rate_limiting_batch_125_up
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up
@@ -74,6 +74,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.dw
@@ -104,6 +105,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_dw
@@ -165,6 +167,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_dw_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_dw_per_client
@@ -193,7 +196,7 @@ class TestRateLimitingNat(object):
         lf_tools.attach_report_graphs(report_name=report_name)
         print("Test Completed... Cleaning up Stations")
         assert True
-
+    @pytest.mark.basic_rate_limiting_batch_125_up_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_per_client
@@ -223,6 +226,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_dw_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.dw_per_client
@@ -252,6 +256,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up
@@ -281,6 +286,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dw
@@ -310,6 +316,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up_dw
@@ -339,6 +346,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_up
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up
@@ -368,6 +376,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.dw
@@ -397,6 +406,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_dw
@@ -426,6 +436,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_up
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up
@@ -455,6 +466,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dw
@@ -484,6 +496,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up_dw
@@ -513,6 +526,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_disable_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.disable_up_dw
@@ -542,6 +556,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_dw_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up_dw_per_client
@@ -570,6 +585,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up_per_client
@@ -598,6 +614,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_dw_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dw_per_client

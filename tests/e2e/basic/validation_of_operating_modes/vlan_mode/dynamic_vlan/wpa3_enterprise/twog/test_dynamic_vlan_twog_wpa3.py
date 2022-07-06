@@ -44,6 +44,7 @@ setup_params_general = {
 class TestDynamicVlan2GWpa3(object):
 
     @pytest.mark.absence_of_radius_vlan_identifier
+    @pytest.mark.basic_dvlan_over_rv
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
