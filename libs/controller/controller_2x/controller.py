@@ -1246,7 +1246,7 @@ class AnalyticUtils:
         return resp
 
     def get_wificlients_history(self, venue_id):
-        uri=self.sdk_client.build_url_analytics("/wifiClientHistory?macsOnly=true" + venue_id)
+        uri=self.sdk_client.build_url_analytics("wifiClientHistory?macsOnly=true" + venue_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1260,7 +1260,7 @@ class AnalyticUtils:
         return resp
 
     def get_wifi_client_history(self, client_mac, venue_id):
-        uri=self.sdk_client.build_url_analytics("/wifiClientHistory/" + client_mac + "?venue=" + venue_id)
+        uri=self.sdk_client.build_url_analytics("wifiClientHistory/" + client_mac + "?venue=" + venue_id)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
