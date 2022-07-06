@@ -169,6 +169,7 @@ class TestRateLimitingBridge(object):
 
     @pytest.mark.wpa
     @pytest.mark.twog
+    @pytest.mark.speedcheckk
     def test_rate_limiting_wpa_2g(self, request, get_vif_state, get_ap_logs,
                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
