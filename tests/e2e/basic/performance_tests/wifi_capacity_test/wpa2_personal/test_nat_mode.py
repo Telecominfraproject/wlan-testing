@@ -10,7 +10,7 @@ import pytest
 
 LOGGER = logging.getLogger(__name__)
 
-pytestmark = [pytest.mark.performance, pytest.mark.nat]
+pytestmark = [pytest.mark.performance, pytest.mark.nat,pytest.mark.wifi_capacity_test]
 # """pytest.mark.usefixtures("setup_test_run")"""]
 
 
@@ -46,6 +46,7 @@ class TestWifiCapacityNATModeDualBand(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.tcp_download_wct
     def test_client_wpa2_NAT_tcp_dl(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -80,6 +81,7 @@ class TestWifiCapacityNATModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3927", name="WIFI-3927")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.udp_download
     def test_client_wpa2_NAT_udp_dl(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -113,6 +115,7 @@ class TestWifiCapacityNATModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3932", name="WIFI-3932")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_NAT_tcp_bidirectional(self, lf_tools, get_apnos_max_clients,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -146,6 +149,7 @@ class TestWifiCapacityNATModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3933", name="WIFI-3933")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_NAT_udp_bidirectional(self, lf_tools, get_apnos_max_clients,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -179,6 +183,7 @@ class TestWifiCapacityNATModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
+    @pytest.mark.wifi_capacity_tcp_ul
     @pytest.mark.tcp_upload
     def test_client_wpa2_NAT_tcp_ul(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -212,6 +217,7 @@ class TestWifiCapacityNATModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
+    @pytest.mark.wifi_capacity_udp_ul
     @pytest.mark.udp_upload
     def test_client_wpa2_NAT_udp_ul(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -274,6 +280,7 @@ class TestWifiCapacityNATMode2G(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3928", name="WIFI-3928")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.tcp_download
     def test_client_wpa2_NAT_tcp_dl(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -302,6 +309,7 @@ class TestWifiCapacityNATMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3930", name="WIFI-3930")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.udp_download
     def test_client_wpa2_NAT_udp_dl(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -330,6 +338,7 @@ class TestWifiCapacityNATMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3934", name="WIFI-3934")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_NAT_tcp_bidirectional(self, lf_tools, get_apnos_max_clients,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -358,6 +367,7 @@ class TestWifiCapacityNATMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3935", name="WIFI-3935")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_NAT_udp_bidirectional(self, lf_tools, get_apnos_max_clients,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -386,6 +396,7 @@ class TestWifiCapacityNATMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
+    @pytest.mark.wifi_capacity_tcp_ul
     @pytest.mark.tcp_upload
     def test_client_wpa2_bridge_tcp_ul(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -416,6 +427,7 @@ class TestWifiCapacityNATMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
+    @pytest.mark.wifi_capacity_udp_ul
     @pytest.mark.udp_upload
     def test_client_wpa2_bridge_udp_ul(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -475,6 +487,7 @@ class TestWifiCapacityNATMode5G(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3929", name="WIFI-3929")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.tcp_download
     def test_client_wpa2_NAT_tcp_dl(self, lf_tools, get_apnos_max_clients,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -500,6 +513,7 @@ class TestWifiCapacityNATMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3931", name="WIFI-3931")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.udp_download
     def test_client_wpa2_NAT_udp_dl(self, lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -525,6 +539,7 @@ class TestWifiCapacityNATMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3936", name="WIFI-3936")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_NAT_tcp_bidirectional(self, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -550,6 +565,7 @@ class TestWifiCapacityNATMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3937", name="WIFI-3937")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_NAT_udp_bidirectional(self, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,

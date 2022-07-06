@@ -13,7 +13,8 @@ import allure
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_sanity_lf,
               pytest.mark.ow_multipsk_tests_lf,
-              pytest.mark.nat]
+              pytest.mark.nat,
+              pytest.mark.basic_multi_psk]
 
 
 setup_params_general = {
@@ -53,7 +54,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestMultipskNAT(object):
 
-    @pytest.mark.multipsk
+    @pytest.mark.multipsk_vlan1
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.twogvlan1
@@ -86,7 +87,7 @@ class TestMultipskNAT(object):
         else:
             assert False
 
-    @pytest.mark.multipsk
+    @pytest.mark.multipsk_vlan2
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.twogvlan2

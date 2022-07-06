@@ -42,6 +42,7 @@ class TestWifiCapacityNATModeDualBand(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3695", name="WIFI-3695")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.open
     @pytest.mark.tcp_download
     def test_client_open_nat_tcp_dl(self, lf_tools, setup_profiles,
@@ -69,6 +70,7 @@ class TestWifiCapacityNATModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3696", name="WIFI-3696")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.open
     @pytest.mark.udp_download
     def test_client_open_nat_udp_dl(self, lf_tools,
@@ -96,6 +98,7 @@ class TestWifiCapacityNATModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3698", name="WIFI-3698")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.open
     @pytest.mark.tcp_bidirectional
     def test_client_open_nat_tcp_bidirectional(self, lf_tools,
@@ -123,6 +126,7 @@ class TestWifiCapacityNATModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3697", name="WIFI-3697")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.open
     @pytest.mark.udp_bidirectional
     def test_client_open_nat_udp_bidirectional(self, lf_tools,
@@ -177,6 +181,7 @@ class TestWifiCapacityNATMode2G(object):
            pytest -m "wifi_capacity_test and NAT"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3648", name="WIFI-3648")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.open
     @pytest.mark.tcp_download
     def test_client_open_nat_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
@@ -206,6 +211,7 @@ class TestWifiCapacityNATMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3654", name="WIFI-3654")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.open
     @pytest.mark.udp_download
     def test_client_open_nat_udp_dl(self, get_vif_state, lf_tools,
@@ -235,6 +241,7 @@ class TestWifiCapacityNATMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3670", name="WIFI-3670")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.open
     @pytest.mark.tcp_bidirectional
     def test_client_open_nat_tcp_bidirectional(self, get_vif_state, lf_tools,
@@ -264,6 +271,7 @@ class TestWifiCapacityNATMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3664", name="WIFI-3664")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.open
     @pytest.mark.udp_bidirectional
     def test_client_open_nat_udp_bidirectional(self, get_vif_state, lf_tools,
@@ -320,6 +328,7 @@ class TestWifiCapacityNATMode5G(object):
            pytest -m "wifi_capacity_test and NAT"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3649", name="WIFI-3649")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.open
     @pytest.mark.tcp_download
     def test_client_open_nat_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
@@ -349,6 +358,7 @@ class TestWifiCapacityNATMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3655", name="WIFI-3655")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.open
     @pytest.mark.udp_download
     def test_client_open_nat_udp_dl(self, get_vif_state, lf_tools,
@@ -378,6 +388,7 @@ class TestWifiCapacityNATMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3671", name="WIFI-3671")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.open
     @pytest.mark.tcp_bidirectional
     def test_client_open_nat_tcp_bidirectional(self, get_vif_state, lf_tools,
@@ -407,6 +418,7 @@ class TestWifiCapacityNATMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3665", name="WIFI-3665")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.open
     @pytest.mark.udp_bidirectional
     def test_client_open_nat_udp_bidirectional(self, get_vif_state, lf_tools,

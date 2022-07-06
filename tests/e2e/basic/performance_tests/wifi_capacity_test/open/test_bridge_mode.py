@@ -24,7 +24,7 @@ setup_params_general_dual_band = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("BRIDGE MODE WIFI CAPACITY")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general_dual_band],
@@ -37,15 +37,16 @@ setup_params_general_dual_band = {
 @pytest.mark.fiveg
 @pytest.mark.dual_band
 @pytest.mark.open
-@pytest.mark.wifi_capacity_test
+@pytest.mark.basic_wifi_capacity_test
 class TestWifiCapacityBRIDGEModeDualBand(object):
     """ Wifi Capacity Test BRIDGE mode
            pytest -m "wifi_capacity_test and BRIDGE"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3695", name="WIFI-3695")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.open
-    @pytest.mark.tcp_download
+    @pytest.mark.dual_band_tcp_download
     @pytest.mark.dual_band
     def test_client_open_bridge_tcp_dl(self, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -75,6 +76,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3696", name="WIFI-3696")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.open
     @pytest.mark.udp_download
     def test_client_open_bridge_udp_dl(self, lf_tools,
@@ -104,6 +106,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         print("Test Completed... Cleaning up Stations")
         assert True
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3698", name="WIFI-3698")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.open
     @pytest.mark.tcp_bidirectional
     def test_client_open_bridge_tcp_bidirectional(self, lf_tools,
@@ -133,6 +136,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
         print("Test Completed... Cleaning up Stations")
         assert True
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3697", name="WIFI-3697")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.open
     @pytest.mark.udp_bidirectional
     def test_client_open_bridge_udp_bidirectional(self, lf_tools,
@@ -190,8 +194,9 @@ class TestWifiCapacityBRIDGEMode2G(object):
            pytest -m "wifi_capacity_test and BRIDGE"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3648", name="WIFI-3648")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.open
-    @pytest.mark.tcp_download
+    @pytest.mark.twog_tcp_download
     def test_client_open_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
@@ -219,6 +224,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3654", name="WIFI-3654")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.open
     @pytest.mark.udp_download
     def test_client_open_bridge_udp_dl(self, get_vif_state, lf_tools,
@@ -248,6 +254,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3670", name="WIFI-3670")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.open
     @pytest.mark.tcp_bidirectional
     def test_client_open_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
@@ -277,6 +284,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3664", name="WIFI-3664")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.open
     @pytest.mark.udp_bidirectional
     def test_client_open_bridge_udp_bidirectional(self, get_vif_state, lf_tools,
@@ -335,8 +343,9 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3649", name="WIFI-3649")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.open
-    @pytest.mark.tcp_download
+    @pytest.mark.fiveg_tcp_download
     def test_client_open_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
                                        lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                        get_configuration):
@@ -364,6 +373,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3655", name="WIFI-3655")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.open
     @pytest.mark.udp_download
     def test_client_open_bridge_udp_dl(self, get_vif_state, lf_tools,
@@ -393,6 +403,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3671", name="WIFI-3671")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.open
     @pytest.mark.tcp_bidirectional
     def test_client_open_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
@@ -422,6 +433,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3665", name="WIFI-3665")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.open
     @pytest.mark.udp_bidirectional
     def test_client_open_bridge_udp_bidirectional(self, get_vif_state, lf_tools,
