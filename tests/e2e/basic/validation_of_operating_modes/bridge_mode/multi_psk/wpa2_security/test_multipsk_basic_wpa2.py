@@ -12,7 +12,8 @@ import pytest
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_sanity_lf,
               pytest.mark.ow_multipsk_tests_lf,
-              pytest.mark.bridge]
+              pytest.mark.bridge,
+              pytest.mark.basic_multi_psk]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -51,7 +52,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestMultipskBridge(object):
 
-    @pytest.mark.multipsk
+    @pytest.mark.multipsk_vlan1
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.twogvlan1
@@ -86,7 +87,7 @@ class TestMultipskBridge(object):
         else:
             assert False
 
-    @pytest.mark.multipsk
+    @pytest.mark.multipsk_vlan2
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.twogvlan2

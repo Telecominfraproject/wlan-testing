@@ -41,6 +41,7 @@ class TestWifiCapacityVLANModeDualBand(object):
            pytest -m "wifi_capacity_test and VLAN"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3693", name="WIFI-3693")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_download
     def test_client_wpa3_vlan_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
@@ -70,6 +71,7 @@ class TestWifiCapacityVLANModeDualBand(object):
         assert True
         
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3694", name="WIFI-3694")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_download
     def test_client_wpa3_vlan_udp_dl(self, get_vif_state, lf_tools,
@@ -99,6 +101,7 @@ class TestWifiCapacityVLANModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3691", name="WIFI-3691")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_bidirectional
     def test_client_wpa_vlan_tcp_bidirectional(self, get_vif_state, lf_tools,
@@ -128,6 +131,7 @@ class TestWifiCapacityVLANModeDualBand(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3692", name="WIFI-3692")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_vlan_udp_bidirectional(self, get_vif_state, lf_tools,
@@ -184,6 +188,7 @@ class TestWifiCapacityVLANMode2G(object):
            pytest -m "wifi_capacity_test and VLAN"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3651", name="WIFI-3651")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_download
     def test_client_wpa3_vlan_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
@@ -212,6 +217,7 @@ class TestWifiCapacityVLANMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3658", name="WIFI-3658")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_download
     def test_client_wpa3_vlan_udp_dl(self, get_vif_state, lf_tools,
@@ -240,6 +246,7 @@ class TestWifiCapacityVLANMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3668", name="WIFI-3668")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_vlan_tcp_bidirectional(self, get_vif_state, lf_tools,
@@ -268,6 +275,7 @@ class TestWifiCapacityVLANMode2G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3662", name="WIFI-3662")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_vlan_udp_bidirectional(self, get_vif_state, lf_tools,
@@ -323,6 +331,7 @@ class TestWifiCapacityVLANMode5G(object):
            pytest -m "wifi_capacity_test and VLAN"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3653", name="WIFI-3653")
+    @pytest.mark.wifi_capacity_tcp_dl
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_download
     def test_client_wpa3_vlan_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
@@ -351,6 +360,7 @@ class TestWifiCapacityVLANMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3659", name="WIFI-3659")
+    @pytest.mark.wifi_capacity_udp_dl
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_download
     def test_client_wpa3_vlan_udp_dl(self, get_vif_state, lf_tools,
@@ -379,6 +389,7 @@ class TestWifiCapacityVLANMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3669", name="WIFI-3669")
+    @pytest.mark.wifi_capacity_tcp_bd
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_vlan_tcp_bidirectional(self, get_vif_state, lf_tools,
@@ -407,6 +418,7 @@ class TestWifiCapacityVLANMode5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3663", name="WIFI-3663")
+    @pytest.mark.wifi_capacity_udp_bd
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_vlan_udp_bidirectional(self, get_vif_state, lf_tools,
