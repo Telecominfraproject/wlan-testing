@@ -44,6 +44,7 @@ setup_params_general = {
 class TestDynamicVlan5GWpa2(object):
 
     @pytest.mark.absence_of_radius_vlan_identifier
+    @pytest.mark.basic_dvlan_over_rv
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.ow_sanity_lf
