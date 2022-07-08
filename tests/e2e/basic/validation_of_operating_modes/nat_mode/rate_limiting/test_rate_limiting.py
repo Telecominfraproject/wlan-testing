@@ -137,6 +137,7 @@ class TestRateLimitingNat(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_disable_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.disable_up_dw

@@ -17,10 +17,7 @@ pytestmark = [pytest.mark.test_resources,
               pytest.mark.interop_uc_sanity,
               pytest.mark.android,
               pytest.mark.ios,
-              pytest.mark.client_connect,
-              pytest.mark.basic_client_connectivity,
-              pytest.mark.basic_dataplane_throughput_test,
-              pytest.mark.basic_dual_band_test]
+              pytest.mark.client_connect]
 
 state = True
 sdk_expected = True
