@@ -385,7 +385,7 @@ class TestUcentralProvisionService(object):
         """
         payload = {
             "description": "For testing Purposes",
-            "entity": "6a657863-9940-4303-ac68-4cc10d3078ec",
+            "entity": "b3ed4c95-1568-4854-90c0-9d92e7d5004e",
             "location": "",
             "name": "Testing Prov",
             "notes": [
