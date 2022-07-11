@@ -195,6 +195,12 @@ def pytest_addoption(parser):
         default="iPhone-11",
         help="Device Model which is needed to test"
     )
+    parser.addoption(
+        "--roam_debug",
+        action="store_true",
+        default=False,
+        help="to enable debug logs in roam test"
+    )
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -270,6 +276,12 @@ def run_lf(request):
 def cc_1(request):
     """yields the --cc.1 option for skipping configuration on AP and using Cloud controller of available framework"""
     var = request.config.getoption("--cc.1")
+    yield var
+
+@pytest.fixture(scope="session")
+def roam_debug(request):
+    """yields the --roam_debug  option for enabling controller logs in roam test"""
+    var = request.config.getoption("--roam_debug")
     yield var
 
 
