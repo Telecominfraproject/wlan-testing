@@ -4,7 +4,7 @@ import os
 import time
 import pandas as pd
 
-pytestmark = [pytest.mark.advance, pytest.mark.multistaperf, pytest.mark.nat]
+# pytestmark = [pytest.mark.advance, pytest.mark.multistaperf, pytest.mark.nat]
 
 setup_params_general = {
     "mode": "NAT",
@@ -38,11 +38,7 @@ class TestMultiStaPerfNat(object):
     @pytest.mark.twog
     @pytest.mark.tcp_upload_10dB_dis_nss1_2g
     def test_multi_station_NAT_tcp_upload_10dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
-        skeleton_code = {"Configure AP": "Done", "Reset scenario": None, "Get attenuator info": None, "Set radio antenna": None,
-                         "Create clients": None, "Modify attenuators": None, "Wifi Capacity test": None,
-                         "Generate reports": None}
         lf_tools.reset_scenario()
-        skeleton_code["Reset scenario"] = "Done"
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
@@ -57,7 +53,6 @@ class TestMultiStaPerfNat(object):
         resource = int(values[1])
         print(shelf, resource)
         atten_sr = lf_test.attenuator_serial()
-        skeleton_code["Get attenuator info"] = "Done"
         atten_sr1 = atten_sr[1].split(".")
         print(atten_sr1)
         print(atten_sr)
@@ -66,16 +61,13 @@ class TestMultiStaPerfNat(object):
             sta.append(station_name + str(i))
         print(sta)
         lf_tools.set_radio_antenna("cli-json/set_wifi_radio", shelf, resource, values[2], 1)
-        skeleton_code["Set radio antenna"] = "Done"
         sta_ip = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=profile_data["security_key"], radio=radio_name, station_name=sta)
-        skeleton_code["Create clients"] = "Done"
         if not sta_ip:
             print("test failed due to no station ip")
             assert False
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        skeleton_code["Modify attenuators"] = "Done"
         wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
                                         upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
