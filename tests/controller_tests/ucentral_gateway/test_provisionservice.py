@@ -18,7 +18,8 @@ import pytest
 @pytest.mark.owprov_api_tests
 @allure.parent_suite("OpenWifi SDK Tests")
 @allure.suite("OpenWifi Provisioning Service Tests")
-class TestUcentralProvisionService(object):
+@allure.sub_suite("Provisioning Service Inventory API tests")
+class TestProvAPIInventory(object):
     global device_name, entity_id, contact_id, location_id, venue_id, map_id, operator_id, service_class_id, \
         configuration_id, modified
     device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
@@ -100,6 +101,16 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service System commands API tests")
+class TestProvAPISystemCommands(object):
+
     @pytest.mark.system_info_prov
     @allure.title("System Info OW Prov Service")
     def test_system_info_prov(self, setup_prov_controller):
@@ -108,6 +119,15 @@ class TestUcentralProvisionService(object):
         #allure.attach(name="system info", body=str(system_info.json()), attachment_type=#allure.attachment_type.JSON)
         assert system_info.status_code == 200
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Entity API tests")
+class TestProvAPIEntity(object):
     @pytest.mark.prov_api_entity_test
     @allure.title("Read All Entities")
     def test_read_all_entities(self, setup_prov_controller):
@@ -171,6 +191,15 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Contact API tests")
+class TestProvAPIContact(object):
     # Contact related Test cases
     @pytest.mark.prov_api_contact_test
     @allure.title("Get All Contacts")
@@ -256,6 +285,15 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Location API tests")
+class TestProvAPILocation(object):
     # Location related Test cases
     @pytest.mark.prov_api_location
     @allure.title("Get All Locations")
@@ -342,6 +380,15 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Venue API tests")
+class TestProvAPIVenue(object):
     # Venue related Test cases
     @pytest.mark.prov_api_venue
     @allure.title("Get All Venues")
@@ -414,6 +461,15 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Maps API tests")
+class TestProvAPIMaps(object):
     @pytest.mark.prov_api_maps
     @allure.title("Get All Maps")
     def test_read_all_map(self, setup_prov_controller):
@@ -526,6 +582,15 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Operator API tests")
+class TestProvAPIOperators(object):
     @pytest.mark.prov_api_operator_test
     @allure.title("Get All Operators")
     def test_read_all_operator(self, setup_prov_controller):
@@ -603,6 +668,15 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Service Class API tests")
+class TestProvAPIServiceClass(object):
     @pytest.mark.prov_api_service_class_test
     @allure.title("Get All Service class of an Operator")
     def test_prov_service_read_all_service_class_on_operator(self, setup_prov_controller, testbed):
@@ -705,181 +779,15 @@ class TestUcentralProvisionService(object):
         if resp.status_code != 200:
             assert False
 
-    # configuration = [
-    #     {
-    #                   "name": "Radios",
-    #                   "description": "",
-    #                   "weight": 1,
-    #                   "configuration": {
-    #                     "radios": [
-    #                       {
-    #                         "band": "5G",
-    #                         "channel": 52,
-    #                         "channel-mode": "HE",
-    #                         "channel-width": 80,
-    #                         "country": "CA"
-    #                       },
-    #                       {
-    #                         "band": "2G",
-    #                         "channel": 11,
-    #                         "channel-mode": "HE",
-    #                         "channel-width": 20,
-    #                         "country": "CA"
-    #                       }
-    #                     ]
-    #                   }
-    #                 },
-    #                 {
-    #                   "name": "Interfaces",
-    #                   "description": "",
-    #                   "weight": 1,
-    #                   "configuration": {
-    #                     "interfaces": [
-    #                       {
-    #                         "name": "WAN",
-    #                         "role": "upstream",
-    #                         "services": [
-    #                           "lldp"
-    #                         ],
-    #                         "ethernet": [
-    #                           {
-    #                             "select-ports": [
-    #                               "WAN*"
-    #                             ]
-    #                           }
-    #                         ],
-    #                         "ipv4": {
-    #                           "addressing": "dynamic"
-    #                         },
-    #                         "ssids": [
-    #                           {
-    #                             "name": "OpenWifi",
-    #                             "role": "downstream",
-    #                             "wifi-bands": [
-    #                               "2G",
-    #                               "5G"
-    #                             ],
-    #                             "bss-mode": "ap",
-    #                             "encryption": {
-    #                               "proto": "none",
-    #                               "ieee80211w": "optional"
-    #                             }
-    #                           },
-    #                           {
-    #                             "name": "OpenWifi_wpa",
-    #                             "role": "downstream",
-    #                             "wifi-bands": [
-    #                               "2G",
-    #                               "5G"
-    #                             ],
-    #                             "bss-mode": "ap",
-    #                             "encryption": {
-    #                               "proto": "psk",
-    #                               "key": "OpenWifi",
-    #                               "ieee80211w": "optional"
-    #                             }
-    #                           },
-    #                           {
-    #                             "name": "OpenWifi_wpa2",
-    #                             "role": "downstream",
-    #                             "wifi-bands": [
-    #                               "2G",
-    #                               "5G"
-    #                             ],
-    #                             "bss-mode": "ap",
-    #                             "encryption": {
-    #                               "proto": "psk2",
-    #                               "key": "OpenWifi",
-    #                               "ieee80211w": "optional"
-    #                             }
-    #                           },
-    #                           {
-    #                             "name": "OpenWifi_wpa3",
-    #                             "role": "downstream",
-    #                             "wifi-bands": [
-    #                               "2G",
-    #                               "5G"
-    #                             ],
-    #                             "bss-mode": "ap",
-    #                             "encryption": {
-    #                               "proto": "sae",
-    #                               "key": "OpenWifi",
-    #                               "ieee80211w": "optional"
-    #                             }
-    #                           }
-    #                         ]
-    #                       },
-    #                       {
-    #                         "name": "LAN",
-    #                         "role": "downstream",
-    #                         "services": [
-    #                           "ssh",
-    #                           "lldp"
-    #                         ],
-    #                         "ethernet": [
-    #                           {
-    #                             "select-ports": [
-    #                               "LAN*"
-    #                             ]
-    #                           }
-    #                         ],
-    #                         "ipv4": {
-    #                           "addressing": "static",
-    #                           "subnet": "192.168.1.1/24",
-    #                           "dhcp": {
-    #                             "lease-first": 10,
-    #                             "lease-count": 100,
-    #                             "lease-time": "6h"
-    #                           }
-    #                         }
-    #                       }
-    #                     ]
-    #                   }
-    #                 },
-    #                 {
-    #                   "name": "Metrics",
-    #                   "description": "",
-    #                   "weight": 1,
-    #                   "configuration": {
-    #                     "metrics": {
-    #                       "statistics": {
-    #                         "interval": 120,
-    #                         "types": [
-    #                           "ssids",
-    #                           "lldp",
-    #                           "clients"
-    #                         ]
-    #                       },
-    #                       "health": {
-    #                         "interval": 120
-    #                       },
-    #                       "wifi-frames": {
-    #                         "filters": [
-    #                           "probe",
-    #                           "auth"
-    #                         ]
-    #                       }
-    #                     }
-    #                   }
-    #                 },
-    #                 {
-    #                   "name": "Services",
-    #                   "description": "",
-    #                   "weight": 1,
-    #                   "configuration": {
-    #                     "services": {
-    #                       "lldp": {
-    #                         "describe": "uCentral",
-    #                         "location": "universe"
-    #                       },
-    #                       "ssh": {
-    #                         "port": 22
-    #                       }
-    #                     }
-    #                   }
-    #                 }
-    #                 ]
-
+@pytest.mark.ow_sanity_lf
+@pytest.mark.uc_sanity
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_sdk_load_tests
+@pytest.mark.owprov_api_tests
+@allure.parent_suite("OpenWifi SDK Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Configuration API tests")
+class TestProvAPIConfigurations(object):
     @pytest.mark.prov_api_config
     @allure.title("Get All Configurations")
     def test_read_all_configurations(self, setup_prov_controller):
