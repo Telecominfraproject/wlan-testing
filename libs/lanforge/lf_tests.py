@@ -116,6 +116,42 @@ class RunTest:
                 self.lf_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
                 print("hi", self.lanforge_port)
                 self.local_report_path = local_report_path
+            else:
+                self.lanforge_ip = configuration_data['traffic_generator']['details']["ip"]
+                print("lanforge ip ", self.lanforge_ip)
+                self.lanforge_port = configuration_data['traffic_generator']['details']["port"]
+                self.lanforge_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
+                self.twog_radios = configuration_data['traffic_generator']['details']["2.4G-Radio"]
+                self.fiveg_radios = configuration_data['traffic_generator']['details']["5G-Radio"]
+                self.ax_radios = configuration_data['traffic_generator']['details']["AX-Radio"]
+                self.upstream_port = configuration_data['traffic_generator']['details']["upstream"].split(".")[2]
+                self.upstream = configuration_data['traffic_generator']['details']["upstream"]
+                self.upstream_resource = configuration_data['traffic_generator']['details']["upstream"].split(".")[1]
+                self.twog_prefix = configuration_data['traffic_generator']['details']["2.4G-Station-Name"]
+                self.fiveg_prefix = configuration_data['traffic_generator']['details']["5G-Station-Name"]
+                self.ax_prefix = configuration_data['traffic_generator']['details']["AX-Station-Name"]
+                self.debug = debug
+                self.run_lf = run_lf
+                self.skip_pcap = skip_pcap
+                if self.run_lf:
+                    self.ssid_data = configuration_data['access_point'][0]['ssid']
+                self.lf_ssh_port = configuration_data['traffic_generator']['details']["ssh_port"]
+                self.staConnect = None
+                self.dataplane_obj = None
+                self.rx_sensitivity_obj = None
+                self.dualbandptest_obj = None
+                self.msthpt_obj = None
+                self.cvtest_obj = None
+                self.pcap_obj = None
+                self.influx_params = influx_params
+                # self.influxdb = RecordInflux(_influx_host=influx_params["influx_host"],
+                #                              _influx_port=influx_params["influx_port"],
+                #                              _influx_org=influx_params["influx_org"],
+                #                              _influx_token=influx_params["influx_token"],
+                #                              _influx_bucket=influx_params["influx_bucket"])
+                self.local_report_path = local_report_path
+                if not os.path.exists(self.local_report_path):
+                    os.mkdir(self.local_report_path)
 
         else:
             self.lanforge_ip = configuration_data['traffic_generator']['details']["ip"]
