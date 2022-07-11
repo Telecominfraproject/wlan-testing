@@ -1405,7 +1405,7 @@ class RunTest:
     def hard_roam(self, run_lf, instantiate_profile, lf_tools, lf_reports, get_configuration, test=None, band=None, num_sta=1,
                   security=None, security_key=None,  iteration=1, ssid_name=None,
                   roaming_delay=None, option=None, channel=36, duration=None, duration_based=False,
-                  iteration_based=True, dut_name=None, identity=None, ttls_pass=None):
+                  iteration_based=True, dut_name=None, identity=None, ttls_pass=None, soft_roam=False, debug=False):
         allure.attach(name="Test Procedure", body="This test consists of creating a multiple  client which will be " \
                                                   " connected to the nearest ap, here the test automation will " \
                                                   "do hard roam based on forced roam method" \
@@ -1549,7 +1549,9 @@ class RunTest:
                        band_cc="5g",
                        timeout="40",
                        identity = identity,
-                       ttls_pass = ttls_pass
+                       ttls_pass = ttls_pass,
+                       debug = debug,
+                       soft_roam = soft_roam
                        )
         x = os.getcwd()
         print(x)
