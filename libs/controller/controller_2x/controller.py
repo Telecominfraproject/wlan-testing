@@ -1081,167 +1081,307 @@ class ProvUtils:
         return resp
 
     def get_map(self):
-        uri = self.build_url_prov("map")
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("map")
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_map_by_id(self, map_id):
-        uri = self.build_url_prov("map/" + map_id)
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("map/" + map_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_map(self, payload):
-        uri = self.build_url_prov("map/0")
-        print(uri)
-        print(payload)
+        uri = self.sdk_client.build_url_prov("map/0")
         payload = json.dumps(payload)
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_map(self, map_id):
-        uri = self.build_url_prov("map/" + map_id)
-        print(uri)
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("map/" + map_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_map(self, payload, map_id):
-        uri = self.build_url_prov("map/" + map_id)
-        print(uri)
-        print(payload)
+        uri = self.sdk_client.build_url_prov("map/" + map_id)
         payload = json.dumps(payload)
-        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def get_operator(self):
-        uri = self.build_url_prov("operator")
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("operator")
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_operator_by_id(self, operator_id):
-        uri = self.build_url_prov("operator/" + operator_id)
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("operator/" + operator_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_operator(self, payload):
-        uri = self.build_url_prov("operator/1")
-        print(uri)
-        print(payload)
+        uri = self.sdk_client.build_url_prov("operator/1")
         payload = json.dumps(payload)
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_operator(self, operator_id):
-        uri = self.build_url_prov("operator/" + operator_id)
-        print(uri)
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("operator/" + operator_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_operator(self, payload, operator_id):
-        uri = self.build_url_prov("operator/" + operator_id)
-        print(uri)
-        print(payload)
+        uri = self.sdk_client.build_url_prov("operator/" + operator_id)
         payload = json.dumps(payload)
-        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def get_service_class_by_operator_id(self, operator_id):
-        uri = self.build_url_prov("serviceClass?operatorId=" + operator_id)
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("serviceClass?operatorId=" + operator_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_service_class_by_id(self, service_class_id):
-        uri = self.build_url_prov("serviceClass/" + service_class_id)
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("serviceClass/" + service_class_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_service_class(self, payload):
-        uri = self.build_url_prov("serviceClass/1")
-        print(uri)
-        print(payload)
+        uri = self.sdk_client.build_url_prov("serviceClass/1")
         payload = json.dumps(payload)
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_service_class(self, service_class_id):
-        uri = self.build_url_prov("serviceClass/" + service_class_id)
-        print(uri)
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("serviceClass/" + service_class_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_service_class(self, payload, service_class_id):
-        uri = self.build_url_prov("serviceClass/" + service_class_id)
-        print(uri)
-        print(payload)
+        uri = self.sdk_client.build_url_prov("serviceClass/" + service_class_id)
         payload = json.dumps(payload)
-        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def get_configuration(self):
-        uri = self.build_url_prov("configuration/")
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("configuration")
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_configuration_by_id(self, configuration_id):
-        uri = self.build_url_prov("configuration/" + configuration_id)
-        print(uri)
-        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("GET", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("configuration/" + configuration_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def add_configuration(self, payload):
-        uri = self.build_url_prov("configuration/1")
-        print(uri)
-        print(payload)
+        uri = self.sdk_client.build_url_prov("configuration/1")
         payload = json.dumps(payload)
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_configuration(self, configuration_id):
-        uri = self.build_url_prov("configuration/" + configuration_id)
-        print(uri)
-        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=100)
-        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        uri = self.sdk_client.build_url_prov("configuration/" + configuration_id)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_configuration(self, payload, configuration_id):
-        uri = self.build_url_prov("configuration/" + configuration_id)
-        print(uri)
-        print(payload)
+        uri = self.sdk_client.build_url_prov("configuration/" + configuration_id)
         payload = json.dumps(payload)
-        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=100)
-        print(resp)
-        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        print("Sending Command: " + "\n" +
+              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+              "URI: " + str(uri) + "\n" +
+              "Data: " + str(payload) + "\n" +
+              "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=100)
+        self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
 
