@@ -461,8 +461,7 @@ class TestProvAPIVenue(object):
         if resp.status_code != 200:
             assert False
 
-@pytest.mark.ow_sanity_lf
-@pytest.mark.uc_sanity
+
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
@@ -582,8 +581,7 @@ class TestProvAPIMaps(object):
         if resp.status_code != 200:
             assert False
 
-@pytest.mark.ow_sanity_lf
-@pytest.mark.uc_sanity
+
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
@@ -668,8 +666,7 @@ class TestProvAPIOperators(object):
         if resp.status_code != 200:
             assert False
 
-@pytest.mark.ow_sanity_lf
-@pytest.mark.uc_sanity
+
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
@@ -779,8 +776,7 @@ class TestProvAPIServiceClass(object):
         if resp.status_code != 200:
             assert False
 
-@pytest.mark.ow_sanity_lf
-@pytest.mark.uc_sanity
+
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests

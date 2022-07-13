@@ -12,14 +12,16 @@ import json
 import allure
 
 
-@pytest.mark.ow_sanity_lf
-@pytest.mark.uc_sanity
 @pytest.mark.owprov_api_tests
 @pytest.mark.owprov_api_usecase
 @allure.feature("SDK PROV REST API")
+@allure.parent_suite("OpenWifi SDK Use Case Tests")
+@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.sub_suite("Provisioning Service Use Case API tests")
 class TestProvAPIUseCase(object):
 
     @pytest.mark.prov_api_usecase_test
+    @allure.title("Prov service Use case testcase")
     def test_prov_service_use_case(self, setup_prov_controller, testbed):
         """
             Test to create Entity and then creates child entity under it,
