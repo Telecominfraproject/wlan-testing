@@ -35,8 +35,6 @@ setup_params_general_dual_band = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.bridge
-@pytest.mark.twog
-@pytest.mark.fiveg
 @pytest.mark.dual_band
 @pytest.mark.wpa2_personal
 @pytest.mark.wifi_capacity_test

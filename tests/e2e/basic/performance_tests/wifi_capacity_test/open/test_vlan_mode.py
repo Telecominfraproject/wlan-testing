@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.VLAN]
+pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.vlan]
 # """pytest.mark.usefixtures("setup_test_run")"""]
 
 
@@ -33,8 +33,6 @@ setup_params_general_dual_band = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.open
-@pytest.mark.twog
-@pytest.mark.fiveg
 @pytest.mark.dual_band
 class TestWifiCapacityVLANModeDualBand(object):
     """ Wifi Capacity Test VLAN mode

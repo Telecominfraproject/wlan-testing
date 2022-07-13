@@ -32,8 +32,6 @@ setup_params_general_dual_band = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.wpa2_personal
-@pytest.mark.twog
-@pytest.mark.fiveg
 @pytest.mark.dual_band
 class TestWifiCapacityVLANModeDualBand(object):
     """ Wifi Capacity Test VLAN mode
