@@ -55,7 +55,7 @@
                 "username": "lanforge",
                 "password": "lanforge",
                 "port": 22,
-                "jumphost_tty": "/dev/ttyUSB0",
+                "jumphost_tty": "/dev/ttyAP2",
                 "version": "next-latest"
             }
         ],
