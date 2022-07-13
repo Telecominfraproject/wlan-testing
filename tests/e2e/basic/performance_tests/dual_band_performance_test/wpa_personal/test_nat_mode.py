@@ -39,8 +39,6 @@ class TestDualbandPerformanceNat(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3726", name="WIFI-3726")
     @pytest.mark.wpa
-    @pytest.mark.twog
-    @pytest.mark.fiveg
     @pytest.mark.dual_band
     def test_client_wpa_personal_nat(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):

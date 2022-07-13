@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.VLAN]
+pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.vlan]
 # """pytest.mark.usefixtures("setup_test_run")"""]
 
 
@@ -33,8 +33,6 @@ setup_params_general_dual_band = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 @pytest.mark.wpa3_personal
-@pytest.mark.twog
-@pytest.mark.fiveg
 @pytest.mark.dual_band
 class TestWifiCapacityVLANModeDualBand(object):
     """ Wifi Capacity Test VLAN mode
@@ -180,7 +178,7 @@ setup_params_general_2G = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.wpa_personal
+@pytest.mark.wpa3_personal
 @pytest.mark.twog
 @pytest.mark.twog_band
 class TestWifiCapacityVLANMode2G(object):
@@ -306,7 +304,7 @@ class TestWifiCapacityVLANMode2G(object):
 setup_params_general_5G = {
     "mode": "VLAN",
     "ssid_modes": {
-        "wpa_personal": [
+        "wpa3_personal": [
             {"ssid_name": "ssid_wpa3_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
@@ -323,7 +321,7 @@ setup_params_general_5G = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.wpa_personal
+@pytest.mark.wpa3_personal
 @pytest.mark.fiveg
 @pytest.mark.fiveg_band
 class TestWifiCapacityVLANMode5G(object):

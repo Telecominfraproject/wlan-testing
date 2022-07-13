@@ -39,8 +39,6 @@ class TestDualbandPerformanceBridge(object):
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3724", name="WIFI-3724")
     @pytest.mark.open
-    @pytest.mark.twog
-    @pytest.mark.fiveg
     @pytest.mark.dual_band
     def test_client_open_bridge(self, get_vif_state, lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
