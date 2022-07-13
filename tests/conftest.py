@@ -760,8 +760,12 @@ def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf, skip_pcap
 @pytest.fixture(scope="session")
 def setup_influx(testbed, get_configuration):
     """ Setup Influx Parameters: Used in CV Automation"""
-    influx_params = CONFIGURATION["influx_params"]
-    influx_params["influx_tag"] = [testbed, get_configuration["access_point"][0]["model"]]
+    try:
+        influx_params = CONFIGURATION["influx_params"]
+        influx_params["influx_tag"] = [testbed, get_configuration["access_point"][0]["model"]]
+    except Exception as e:
+        print(e)
+        pass
     yield influx_params
 
 
