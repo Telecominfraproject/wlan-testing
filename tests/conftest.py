@@ -763,6 +763,7 @@ def setup_influx(testbed, get_configuration):
     influx_params = {}
     try:
         influx_params = CONFIGURATION["influx_params"]
+        print("Influx Params", influx_params)
         influx_params["influx_tag"] = [testbed, get_configuration["access_point"][0]["model"]]
     except Exception as e:
         print(e)
