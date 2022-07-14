@@ -21,9 +21,9 @@ setup_params_enterprise = {
     "radius": True
 }
 
-
-@allure.suite(suite_name="OpenWifi Sanity LF")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP TLS Client Connectivity : Suite-A")
+@allure.parent_suite("OpenWifi Client Connectivity")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-A")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_enterprise],
@@ -39,6 +39,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
+    @allure.title("Test for wpa enterprise 2g")
     def test_tls_wpa_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                    station_names_twog, setup_profiles, lf_test, update_report,
                                    test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -71,6 +72,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
+    @allure.title("Test for wpa enterprise 5g")
     def test_tls_wpa_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                    station_names_fiveg, setup_profiles, lf_test,
                                    update_report, exit_on_fail,
@@ -104,6 +106,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
+    @allure.title("Test for wpa2 enterprise 2g")
     def test_tls_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                     station_names_twog, setup_profiles, lf_test, update_report,
                                     test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -134,6 +137,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
+    @allure.title("Test for wpa2 enterprise 5g")
     def test_tls_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                     station_names_fiveg, setup_profiles, lf_test,
                                     update_report, exit_on_fail,
@@ -165,6 +169,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
+    @allure.title("Test for wpa3 enterprise 2g")
     def test_tls_wpa3_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                     station_names_twog, setup_profiles, lf_test, update_report,
                                     test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -195,6 +200,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
+    @allure.title("Test for wpa3 enterprise 5g")
     def test_tls_wpa3_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                     station_names_fiveg, setup_profiles, lf_test,
                                     update_report, exit_on_fail,
@@ -240,8 +246,9 @@ setup_params_enterprise_two = {
 }
 
 
-@allure.suite(suite_name="OpenWifi Sanity LF")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP TLS Client Connectivity : Suite-B")
+@allure.parent_suite("OpenWifi Client Connectivity")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-B")
 @pytest.mark.suiteB
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -257,6 +264,7 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
+    @allure.title("Test for wpa wpa2 enterprise 2g")
     def test_wpa_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                     station_names_twog, setup_profiles, lf_test, update_report,
                                     test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -284,6 +292,7 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
+    @allure.title("Test for wpa wpa2 enterprise 5g")
     def test_wpa_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                     station_names_fiveg, setup_profiles, lf_test,
                                     update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -311,6 +320,7 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
+    @allure.title("Test for wpa3 enterprise mixed 2g")
     def test_wpa3_enterprise_mixed_2g(self, get_ap_logs, get_lf_logs,
                                       station_names_twog, setup_profiles, lf_test,
                                       update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -338,6 +348,7 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
+    @allure.title("Test for wpa3 enterprise mixed 5g")
     def test_wpa3_enterprise_mixed_5g(self, get_ap_logs, get_lf_logs,
                                       station_names_fiveg, setup_profiles, lf_test,
                                       update_report, exit_on_fail,
