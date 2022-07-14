@@ -41,7 +41,9 @@ setup_params_general = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("OpenWifi Multi PSK Test")
+@allure.suite("BRIDGE Mode")
+@allure.sub_suite("wpa2 personal")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -56,6 +58,7 @@ class TestMultipskBridge(object):
     @pytest.mark.twog
     @pytest.mark.twogvlan1
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
+    @allure.title("Test for one SSID with two keys (1 -- vlan 100, 2 -- without vlan id)")
     def test_client_wpa2_2g_vlan1(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -90,6 +93,7 @@ class TestMultipskBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.twogvlan2
+    @allure.title("Test for one SSID with two keys (1 -- vlan 100, 2 -- vlan 200)")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     def test_client_wpa2_2g_vlan2(self, lf_test, lf_tools):
 

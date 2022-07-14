@@ -127,6 +127,8 @@ setup_params_general2 = {
     indirect=True,
     scope="class"
 )
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(80 MHz)")
 @allure.sub_suite("Channel-100")
 @pytest.mark.usefixtures("setup_profiles")
 class TestDFSChannel100Bw80(object):
@@ -809,6 +811,8 @@ setup_params_general11 = {
     indirect=True,
     scope="class"
 )
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(80 MHz)")
 @allure.sub_suite("Channel-132")
 @pytest.mark.usefixtures("setup_profiles")
 class TestDFSChannel132Bw80(object):

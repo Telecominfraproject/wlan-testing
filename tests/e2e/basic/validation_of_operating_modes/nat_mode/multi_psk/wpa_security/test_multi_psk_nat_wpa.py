@@ -44,6 +44,9 @@ setup_params_general = {
 
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("OpenWifi Multi PSK Test")
+@allure.suite("NAT Mode")
+@allure.sub_suite("wpa personal")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -58,6 +61,7 @@ class TestMultipskNAT(object):
     @pytest.mark.twog
     @pytest.mark.twogvlan1
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3494", name="WIFI-3494")
+    @allure.title("Test for one SSID with two keys (1 -- vlan 100, 2 -- without vlan id)")
     def test_client_wpa_2g_vlan1(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -91,6 +95,7 @@ class TestMultipskNAT(object):
     @pytest.mark.twog
     @pytest.mark.twogvlan2
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3494", name="WIFI-3494")
+    @allure.title("Test for one SSID with two keys (1 -- vlan 100, 2 -- vlan 200)")
     def test_client_wpa_2g_vlan2(self, lf_test, lf_tools):
 
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]

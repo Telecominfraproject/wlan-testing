@@ -32,7 +32,10 @@ setup_params_general = {
 }
 
 
-@allure.suite("regression")
+#@allure.suite("regression")
+@allure.parent_suite("OpenWifi Dynamic Vlan Test")
+@allure.suite("wpa2 personal")
+@allure.sub_suite("twog")
 @allure.feature("VLAN MODE wpa2_enterprise Dynamic Vlan")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -48,6 +51,7 @@ class TestDynamicVlanOverSsid2GWpa2(object):
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
+    @allure.title("Test for dynamic precedence over ssid")
     def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_vif_state, lf_tools,get_ap_logs,get_lf_logs,
                                                     create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                     station_names_twog):
