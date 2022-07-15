@@ -510,15 +510,19 @@ class RunTest:
         wificapacity_obj.setup()
         wificapacity_obj.run()
         if move_to_influx:
-            report_name = "../reports/" + wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                                 influx_port=self.influx_params["influx_port"],
-                                 influx_org=self.influx_params["influx_org"],
-                                 influx_token=self.influx_params["influx_token"],
-                                 influx_bucket=self.influx_params["influx_bucket"],
-                                 path=report_name)
+            try:
+                report_name = "../reports/" + wificapacity_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+                influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                     influx_port=self.influx_params["influx_port"],
+                                     influx_org=self.influx_params["influx_org"],
+                                     influx_token=self.influx_params["influx_token"],
+                                     influx_bucket=self.influx_params["influx_bucket"],
+                                     path=report_name)
 
-            influx.glob()
+                influx.glob()
+            except Exception as e:
+                print(e)
+                pass
         return wificapacity_obj
 
     def Client_Connect(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", band="twog",
@@ -720,14 +724,18 @@ class RunTest:
         self.dataplane_obj.run()
         if move_to_influx:
             report_name = "../reports/" + self.dataplane_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                                 influx_port=self.influx_params["influx_port"],
-                                 influx_org=self.influx_params["influx_org"],
-                                 influx_token=self.influx_params["influx_token"],
-                                 influx_bucket=self.influx_params["influx_bucket"],
-                                 path=report_name)
+            try:
+                influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                     influx_port=self.influx_params["influx_port"],
+                                     influx_org=self.influx_params["influx_org"],
+                                     influx_token=self.influx_params["influx_token"],
+                                     influx_bucket=self.influx_params["influx_bucket"],
+                                     path=report_name)
 
-            influx.glob()
+                influx.glob()
+            except Exception as e:
+                print(e)
+                pass
 
         return self.dataplane_obj
 
@@ -773,14 +781,18 @@ class RunTest:
         self.dualbandptest_obj.run()
         if move_to_influx:
             report_name = "../reports/" + self.dualbandptest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                                 influx_port=self.influx_params["influx_port"],
-                                 influx_org=self.influx_params["influx_org"],
-                                 influx_token=self.influx_params["influx_token"],
-                                 influx_bucket=self.influx_params["influx_bucket"],
-                                 path=report_name)
+            try:
+                influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                     influx_port=self.influx_params["influx_port"],
+                                     influx_org=self.influx_params["influx_org"],
+                                     influx_token=self.influx_params["influx_token"],
+                                     influx_bucket=self.influx_params["influx_bucket"],
+                                     path=report_name)
 
-            influx.glob()
+                influx.glob()
+            except Exception as e:
+                print(e)
+                pass
         return self.dualbandptest_obj
 
     def apstabilitytest(self, ssid_5G="[BLANK]", ssid_2G="[BLANK]", mode="BRIDGE", vlan_id=100, dut_name="TIP",
