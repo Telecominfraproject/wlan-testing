@@ -38,6 +38,7 @@ from controller.controller_1x.controller import FirmwareUtility
 import pytest
 from lanforge.lf_tests import RunTest
 from cv_test_manager import cv_test
+from configuration import influx_params
 from configuration import CONFIGURATION
 from configuration import PERFECTO_DETAILS
 from configuration import open_flow
@@ -760,14 +761,7 @@ def lf_test(get_configuration, setup_influx, request, skip_lf, run_lf, skip_pcap
 @pytest.fixture(scope="session")
 def setup_influx(testbed, get_configuration):
     """ Setup Influx Parameters: Used in CV Automation"""
-    influx_params = {}
-    try:
-        influx_params = CONFIGURATION["influx_params"]
-        print("Influx Params", influx_params)
-        influx_params["influx_tag"] = [testbed, get_configuration["access_point"][0]["model"]]
-    except Exception as e:
-        print(e)
-        pass
+    influx_params["influx_tag"] = [testbed, get_configuration["access_point"][0]["model"]]
     yield influx_params
 
 
