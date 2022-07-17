@@ -582,23 +582,6 @@ class RunTest:
         else:
             return False
 
-    def allure_report_table_format(self, dict_data=None, key=None, value=None, name=None):#, value_on_same_table=True):
-        # for i in range(len(name)):
-        report_obj = Report()
-        data_table, dict_table = "", {}
-        # if value_on_same_table:
-        dict_table[key] = list(dict_data.keys())
-        # for i in range(len(dict_data)):
-            # if value_on_same_table == False:
-            # dict_table[key[i]] = list(dict_data[i].keys())
-        dict_table[value] = list(dict_data.values())
-        try:
-            data_table = report_obj.table2(table=dict_table, headers='keys')
-        except Exception as e:
-            print(e)
-        if name != None:
-            allure.attach(name=name, body=str(data_table))
-
     def attach_stationdata_to_allure(self, station_name=[], name=""):
         self.sta_url_map = None
         for sta_name_ in station_name:
@@ -647,9 +630,9 @@ class RunTest:
 
         self.client_connect.radio = radio
         self.client_connect.build()
-        self.client_connect.wait_for_ip(station_name)
-        print(self.client_connect.wait_for_ip(station_name))
-        if self.client_connect.wait_for_ip(station_name):
+        # self.client_connect.wait_for_ip(station_name, timeout_sec=100)
+        # print(self.client_connect.wait_for_ip(station_name))
+        if self.client_connect.wait_for_ip(station_name, timeout_sec=100):
             self.client_connect._pass("ALL Stations got IP's", print_=True)
             return self.client_connect
         else:
