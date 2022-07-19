@@ -162,3 +162,4 @@ class TestMuMimoBridge(object):
             assert True
         else:
             assert False
+
