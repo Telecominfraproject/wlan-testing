@@ -48,6 +48,7 @@ class TestBridgeModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.twog
+    @pytest.mark.basic_client_connectivity
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
     def test_open_ssid_2g(self, get_ap_logs, get_lf_logs, lf_test,
                           update_report,
@@ -73,6 +74,7 @@ class TestBridgeModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
+    @pytest.mark.basic_client_connectivity
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_open_ssid_5g(self, get_ap_logs,  lf_test, test_cases, station_names_fiveg, get_lf_logs,
                           update_report, get_ap_channel):
@@ -97,6 +99,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.twog
+    @pytest.mark.basic_client_connectivity
     @allure.story('wpa 2.4 GHZ Band')
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_wpa_ssid_2g(self, get_ap_logs, update_report, get_lf_logs,
@@ -122,6 +125,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.fiveg
+    @pytest.mark.basic_client_connectivity
     @allure.story('wpa 5 GHZ Band')
     def test_wpa_ssid_5g(self, get_ap_logs, lf_test, update_report, get_lf_logs,
                          test_cases, station_names_fiveg, get_ap_channel):
@@ -146,6 +150,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.basic_client_connectivity
     @allure.story('wpa2_personal 2.4 GHZ Band')
     def test_wpa2_personal_ssid_2g(self, get_ap_logs,  get_lf_logs,
                                    lf_test, update_report, test_cases,
@@ -171,6 +176,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.basic_client_connectivity
     @allure.story('wpa2_personal 5 GHZ Band')
     def test_wpa2_personal_ssid_5g(self, get_ap_logs,  update_report, test_cases,
                                    station_names_fiveg, get_lf_logs,
@@ -233,6 +239,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
+    @pytest.mark.basic_client_connectivity
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_ssid_2g(self, get_ap_logs, station_names_twog,  lf_test,
                                    update_report,
@@ -257,6 +264,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
+    @pytest.mark.basic_client_connectivity
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_ssid_5g(self, get_ap_logs, station_names_fiveg,
                                    lf_test, test_cases, get_lf_logs,
@@ -281,6 +289,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
+    @pytest.mark.basic_client_connectivity
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_mixed_ssid_2g(self, get_ap_logs, station_names_twog,
                                          lf_test, get_lf_logs,
@@ -306,6 +315,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
+    @pytest.mark.basic_client_connectivity
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_mixed_ssid_5g(self, get_ap_logs, station_names_fiveg,  lf_test,
                                          test_cases, get_lf_logs,
@@ -330,6 +340,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
+    @pytest.mark.basic_client_connectivity
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     def test_wpa_wpa2_personal_ssid_2g(self, get_ap_logs, station_names_twog,
                                        lf_test, get_lf_logs,
@@ -356,6 +367,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
+    @pytest.mark.basic_client_connectivity
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     def test_wpa_wpa2_personal_ssid_5g(self, get_ap_logs, station_names_fiveg, get_lf_logs,
                                        lf_test, test_cases,

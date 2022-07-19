@@ -48,6 +48,7 @@ class TestDynamicVlan2GWpa2(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.ow_sanity_lf
+    @pytest.mark.dvlan
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_2g_wpa2(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
