@@ -892,11 +892,11 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
             output = ap_ssh.get_memory_profile()
             allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
             # Adding Ifconfig, ip route show and ip addr show commands info after every test completion
-            output = ap_ssh.get_ifconfig()
+            output = ap_ssh.run_generic_command(cmd="ifconfig")
             allure.attach(name="ifconfig after testcase completion", body=str(output))
-            output = ap_ssh.get_ip_route()
+            output = ap_ssh.run_generic_command(cmd="ip route show")
             allure.attach(name="ip route show after testcase completion", body=str(output))
-            output = ap_ssh.get_ip_addr()
+            output = ap_ssh.run_generic_command(cmd="ip addr show")
             allure.attach(name="ip addr show after testcase completion", body=str(output))
 
         request.addfinalizer(collect_logs)
