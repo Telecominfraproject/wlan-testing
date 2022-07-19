@@ -2053,7 +2053,6 @@ class RunTest:
         self.staConnect.l3_tcp_profile.name_prefix = "tcp"
         self.staConnect.cx_profile.name_prefix = "tcp"
         self.staConnect.pre_cleanup()
-        self.staConnect.pre_cleanup()
         self.staConnect.l3_tcp_profile.create(endp_type="lf_tcp",
                                    side_a=station_name,
                                    side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
