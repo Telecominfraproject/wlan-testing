@@ -49,8 +49,7 @@ class TestMuMimoBridge(object):
     pytest -m downlink_mu_mimo and bridge
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
-                     name="WIFI-6849")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10198", name="WIFI-10198")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     def test_mu_mimo_wpa3_personal_bridge_5g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
@@ -99,8 +98,7 @@ class TestMuMimoBridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
         assert True
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
-                     name="WIFI-6849")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10197", name="WIFI-10197")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     def test_mu_mimo_wpa3_personal_bridge_2g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
