@@ -38,8 +38,7 @@ class TestMuMimoNat(object):
     pytest -m downlink_mu_mimo and vlan
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
-                     name="WIFI-6849")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10202", name="WIFI-10202")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     def test_mu_mimo_wpa2_personal_vlan_5g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
@@ -88,11 +87,10 @@ class TestMuMimoNat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
         assert True
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
-                     name="WIFI-6849")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10204", name="WIFI-10204")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_mu_mimo_wpa2_personal_nat_2g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
+    def test_mu_mimo_wpa2_personal_vlan_2g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
         """
             Downlink MU-MIMO Test: Bridge Mode
             pytest -m downlink_mu_mimo and nat and wpa2_personal and twog

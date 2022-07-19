@@ -38,8 +38,7 @@ class TestMuMimoNat(object):
     pytest -m downlink_mu_mimo and vlan
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
-                     name="WIFI-6849")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10210", name="WIFI-10210")
     @pytest.mark.wpa_personal
     @pytest.mark.fiveg
     def test_mu_mimo_wpa_personal_vlan_5g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
@@ -88,8 +87,7 @@ class TestMuMimoNat(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
         assert True
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
-                     name="WIFI-6849")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10212", name="WIFI-10212")
     @pytest.mark.wpa_personal
     @pytest.mark.twog
     def test_mu_mimo_wpa_personal_vlan_2g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
