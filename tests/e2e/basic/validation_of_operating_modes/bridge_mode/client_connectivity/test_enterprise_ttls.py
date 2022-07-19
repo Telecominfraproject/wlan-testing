@@ -7,7 +7,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ttls,
+pytestmark = [pytest.mark.client_connectivity, pytest.mark.ow_client_connectivity_lf, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ttls,
               pytest.mark.ucentral, pytest.mark.sanity, pytest.mark.uc_sanity,pytest.mark.enterprise_client_connectivity]
 
 setup_params_enterprise = {
@@ -45,6 +45,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                station_names_twog, lf_test, update_report,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -72,6 +73,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa_enterprise_5g(self, station_names_fiveg, get_ap_logs, get_lf_logs,
                                lf_test, update_report,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -99,6 +101,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                 station_names_twog, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -125,6 +128,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                 station_names_fiveg, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -151,6 +155,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa3_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                 station_names_twog, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -177,6 +182,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa3_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                 station_names_fiveg, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -234,6 +240,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                     station_names_twog, lf_test, update_report,
                                     test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -261,6 +268,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                     station_names_fiveg, lf_test,
                                     update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -288,6 +296,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa3_enterprise_mixed_2g(self, get_ap_logs, get_lf_logs,
                                       station_names_twog, lf_test,
                                       update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -314,6 +323,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
+    @pytest.mark.enterprise_client_connectivity
     def test_wpa3_enterprise_mixed_5g(self, get_ap_logs, get_lf_logs,
                                       station_names_fiveg, lf_test,
                                       update_report, exit_on_fail,
