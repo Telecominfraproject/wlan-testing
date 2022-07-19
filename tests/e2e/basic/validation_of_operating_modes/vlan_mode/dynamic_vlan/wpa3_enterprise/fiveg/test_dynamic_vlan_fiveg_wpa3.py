@@ -47,7 +47,7 @@ class TestDynamicVlan5GWpa3(object):
     @pytest.mark.basic_dvlan_over_rv
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    @pytest.mark.dvlan
+    @pytest.mark.dynamic_vlan
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6095")
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_5g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
