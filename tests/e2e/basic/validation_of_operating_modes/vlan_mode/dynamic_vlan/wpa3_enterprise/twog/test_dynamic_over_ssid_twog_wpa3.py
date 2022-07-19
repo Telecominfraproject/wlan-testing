@@ -46,7 +46,7 @@ class TestDynamicVlanOverSsid2GWpa3(object):
     @pytest.mark.basic_dvlan_over_ssid
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    @pytest.mark.dvlan
+    @pytest.mark.dynamic_vlan
     @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6096")
     def test_dynamic_precedence_over_ssid_vlan_2g_wpa3(self, get_vif_state, lf_tools,get_ap_logs,get_lf_logs,
