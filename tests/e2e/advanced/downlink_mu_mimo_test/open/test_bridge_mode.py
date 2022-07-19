@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.downlink_mu_mimo, pytest.mark.bridge, pytest.mark.open]
+pytestmark = [pytest.mark.advance, pytest.mark.downlink_mu_mimo, pytest.mark.bridge, pytest.mark.open]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -49,8 +49,7 @@ class TestMuMimoBridge(object):
     pytest -m downlink_mu_mimo and bridge
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
-                     name="WIFI-6849")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10086", name="WIFI-10086")
     @pytest.mark.open
     @pytest.mark.fiveg
     def test_mu_mimo_open_bridge_5g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
@@ -97,10 +96,10 @@ class TestMuMimoBridge(object):
                                             skip_5g=False)
         report_name = mimo_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
+        result = lf_tools.read_kpi_file(column_name="pass/fail", dir_name=report_name)
         assert True
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
-                     name="WIFI-6849")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10087", name="WIFI-10087")
     @pytest.mark.open
     @pytest.mark.twog
     def test_mu_mimo_open_bridge_2g(self, lf_tools, lf_test, create_lanforge_chamberview_dut):
