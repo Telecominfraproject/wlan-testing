@@ -687,41 +687,6 @@ class APNOS:
             logs = ""
         return logs
 
-    def get_ifconfig(self):
-        client = self.ssh_cli_connect()
-        cmd = "ifconfig"
-        if self.mode:
-            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
-                  f"cmd --value \"{cmd}\" "
-        stdin, stdout, stderr = client.exec_command(cmd)
-        output = stdout.read().replace(b":~# ifconfig", b"").decode('utf-8')
-        o = output
-        client.close()
-        return o
-
-    def get_ip_route(self):
-        client = self.ssh_cli_connect()
-        cmd = "ip route show"
-        if self.mode:
-            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
-                  f"cmd --value \"{cmd}\" "
-        stdin, stdout, stderr = client.exec_command(cmd)
-        output = stdout.read().replace(b":~# ifconfig", b"").decode('utf-8')
-        o = output
-        client.close()
-        return o
-
-    def get_ip_addr(self):
-        client = self.ssh_cli_connect()
-        cmd = "ip addr show"
-        if self.mode:
-            cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
-                  f"cmd --value \"{cmd}\" "
-        stdin, stdout, stderr = client.exec_command(cmd)
-        output = stdout.read().replace(b":~# ifconfig", b"").decode('utf-8')
-        o = output
-        client.close()
-        return o
 
 if __name__ == '__main__':
     obj = {
