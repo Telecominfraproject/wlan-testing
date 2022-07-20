@@ -1676,9 +1676,9 @@ class RunTest:
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
         t1.start()
-        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 30))
+        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 50))
         if t1.is_alive():
-            time.sleep(480)
+            time.sleep(400)
             t2.start()
         while t1.is_alive():
             time.sleep(1)
