@@ -88,7 +88,7 @@ class TestMultiAssoDisassoBridge(object):
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            assert False,"csv file does not exist"
         else:
             for i in csv_val.values():
                 if i >= pass_value:
@@ -100,8 +100,8 @@ class TestMultiAssoDisassoBridge(object):
                 print("Test passed successfully")
                 assert True
             else:
-                print(" valueTest failed due to lesser")
-                assert False
+                print("Test failed due to lesser value")
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5692", name="WIFI-5692")
@@ -165,7 +165,7 @@ class TestMultiAssoDisassoBridge(object):
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            assert False,"csv file does not exist"
         else:
             for i in csv_val.values():
                 if i >= pass_value:
@@ -177,8 +177,8 @@ class TestMultiAssoDisassoBridge(object):
                 print("Test passed successfully")
                 assert True
             else:
-                print(" valueTest failed due to lesser")
-                assert False
+                print("Test failed due to lesser value")
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5693", name="WIFI-5693")
@@ -242,7 +242,7 @@ class TestMultiAssoDisassoBridge(object):
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            assert False, "csv file does not exist"
         else:
             for i in csv_val.values():
                 if i >= pass_value:
@@ -254,8 +254,8 @@ class TestMultiAssoDisassoBridge(object):
                 print("Test passed successfully")
                 assert True
             else:
-                print(" valueTest failed due to lesser")
-                assert False
+                print("Test failed due to lesser value")
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5694", name="WIFI-5694")
@@ -319,7 +319,7 @@ class TestMultiAssoDisassoBridge(object):
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            assert False, "csv file does not exist"
         else:
             for i in csv_val.values():
                 if i >= pass_value:
@@ -331,8 +331,8 @@ class TestMultiAssoDisassoBridge(object):
                 print("Test passed successfully")
                 assert True
             else:
-                print(" valueTest failed due to lesser")
-                assert False
+                print("Test failed due to lesser value")
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
 

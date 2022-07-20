@@ -32,6 +32,16 @@ class TestMultiAssoDisassoVlan(object):
     @pytest.mark.twog
     @pytest.mark.udp_upload_2g
     def test_multi_station_VLAN_udp_upload_2g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
+        allure.attach(name="Definition",
+                      body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
+                           "under a dynamic environment with frequent change of connection status.")
+        allure.attach(name="Procedure",
+                      body="This test case definition states that we Create 16 stations on 2.4Ghz radio and all of these 16 stations should be on same radio." \
+                           " Run Wifi-capacity test for first 8 stations. " \
+                           "8 stations are picked for sending/receiving packets while the other 8 STAs are picked to do a dis-association/re-association process during the test" \
+                           " Enable uplink 4 Mbps UDP flow from DUT to each of the 8 traffic stations" \
+                           "Disassociate the other 8 stations. Wait for 30 seconds, after that Re-associate the 8 stations.")
+
         # run wifi capacity test here
         def thread_fun(station_list):
             print(station_list)
@@ -71,6 +81,10 @@ class TestMultiAssoDisassoVlan(object):
         pass_value = 4 * 0.99
         print("pass value ", pass_value)
         pass_fail = []
+        allure.attach(name="Pass Fail Criteria",
+                      body="UDP traffic rate is at least 99% of the configured rate for each station. Here configured " \
+                           "traffic rate is 4 Mbps so traffic for each station should be 3.96 Mbps ")
+        lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
@@ -96,6 +110,16 @@ class TestMultiAssoDisassoVlan(object):
     @pytest.mark.twog
     @pytest.mark.udp_download_2g
     def test_multi_station_VLAN_udp_download_2g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
+        allure.attach(name="Definition",
+                      body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
+                           "under a dynamic environment with frequent change of connection status.")
+        allure.attach(name="Procedure",
+                      body="This test case definition states that we Create 16 stations on 2.4Ghz radio and all of these 16 stations should be on same radio." \
+                           " Run Wifi-capacity test for first 8 stations. " \
+                           "8 stations are picked for sending/receiving packets while the other 8 STAs are picked to do a dis-association/re-association process during the test" \
+                           " Enable downlink 4 Mbps UDP flow from DUT to each of the 8 traffic stations" \
+                           "Disassociate the other 8 stations. Wait for 30 seconds, after that Re-associate the 8 stations.")
+
         # run wifi capacity test here
         def thread_fun(station_list):
             print(station_list)
@@ -136,6 +160,10 @@ class TestMultiAssoDisassoVlan(object):
         pass_value = 4 * 0.99
         print("pass value ", pass_value)
         pass_fail = []
+        allure.attach(name="Pass Fail Criteria",
+                      body="UDP traffic rate is at least 99% of the configured rate for each station. Here configured " \
+                           "traffic rate is 4 Mbps so traffic for each station should be 3.96 Mbps ")
+        lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
@@ -161,6 +189,16 @@ class TestMultiAssoDisassoVlan(object):
     @pytest.mark.fiveg
     @pytest.mark.udp_upload_5g
     def test_multi_station_VLAN_udp_upload_5g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
+        allure.attach(name="Definition",
+                      body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
+                           "under a dynamic environment with frequent change of connection status.")
+        allure.attach(name="Procedure",
+                      body="This test case definition states that we Create 16 stations on 2.4Ghz radio and all of these 16 stations should be on same radio." \
+                           " Run Wifi-capacity test for first 8 stations. " \
+                           "8 stations are picked for sending/receiving packets while the other 8 STAs are picked to do a dis-association/re-association process during the test" \
+                           " Enable uplink 4 Mbps UDP flow from DUT to each of the 8 traffic stations" \
+                           "Disassociate the other 8 stations. Wait for 30 seconds, after that Re-associate the 8 stations.")
+
         # run wifi capacity test here
         def thread_fun(station_list):
             print(station_list)
@@ -201,6 +239,10 @@ class TestMultiAssoDisassoVlan(object):
         pass_value = 8 * 0.99
         print("pass value ", pass_value)
         pass_fail = []
+        allure.attach(name="Pass Fail Criteria",
+                      body="UDP traffic rate is at least 99% of the configured rate for each station. Here configured " \
+                           "traffic rate is 4 Mbps so traffic for each station should be 3.96 Mbps ")
+        lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
@@ -226,6 +268,16 @@ class TestMultiAssoDisassoVlan(object):
     @pytest.mark.fiveg
     @pytest.mark.udp_download_5g
     def test_multi_station_VLAN_udp_download_5g(self, lf_test, lf_tools, create_lanforge_chamberview_dut):
+        allure.attach(name="Definition",
+                      body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
+                           "under a dynamic environment with frequent change of connection status.")
+        allure.attach(name="Procedure",
+                      body="This test case definition states that we Create 16 stations on 2.4Ghz radio and all of these 16 stations should be on same radio." \
+                           " Run Wifi-capacity test for first 8 stations. " \
+                           "8 stations are picked for sending/receiving packets while the other 8 STAs are picked to do a dis-association/re-association process during the test" \
+                           " Enable downlink 4 Mbps UDP flow from DUT to each of the 8 traffic stations" \
+                           "Disassociate the other 8 stations. Wait for 30 seconds, after that Re-associate the 8 stations.")
+
         # run wifi capacity test here
         def thread_fun(station_list):
             print(station_list)
@@ -242,6 +294,7 @@ class TestMultiAssoDisassoVlan(object):
         print(ssid_name)
         mode = "VLAN"
         vlan = 100
+        lf_tools.add_vlan(vlan_ids=[vlan])
         lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
@@ -266,6 +319,10 @@ class TestMultiAssoDisassoVlan(object):
         pass_value = 8 * 0.99
         print("pass value ", pass_value)
         pass_fail = []
+        allure.attach(name="Pass Fail Criteria",
+                      body="UDP traffic rate is at least 99% of the configured rate for each station. Here configured " \
+                           "traffic rate is 4 Mbps so traffic for each station should be 3.96 Mbps ")
+        lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
