@@ -96,8 +96,13 @@ class TestMuMimoBridge(object):
                                             skip_5g=False)
         report_name = mimo_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
-        result = lf_tools.read_kpi_file(column_name="pass/fail", dir_name=report_name)
-        assert True
+        result = lf_tools.read_kpi_file(column_name=["pass/fail"], dir_name=report_name)
+        # allure.attach.file(source="kpi.csv",
+        #                    name="Downlink_MU_MIMO_info", attachment_type=allure.attachment_type.CSV)
+        if result[0][0] == "PASS":
+            assert True
+        else:
+            assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10087", name="WIFI-10087")
     @pytest.mark.open
@@ -152,4 +157,8 @@ class TestMuMimoBridge(object):
                                             skip_5g=True)
         report_name = mimo_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
-        assert True
+        result = lf_tools.read_kpi_file(column_name=["pass/fail"], dir_name=report_name)
+        if result[0][0] == "PASS":
+            assert True
+        else:
+            assert False
