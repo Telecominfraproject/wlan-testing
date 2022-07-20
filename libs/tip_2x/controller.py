@@ -2019,3 +2019,4 @@ if __name__ == '__main__':
     # print(profile.get_ssid_info())
     # # print(obj.get_devices())
     obj.logout()
+
