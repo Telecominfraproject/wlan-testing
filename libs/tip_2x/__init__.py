@@ -118,4 +118,3 @@ if __name__ == '__main__':
         "traffic_generator": {}
     }
     var = tip_2x(controller_data=basic_1["controller"], device_under_tests_info=basic_1["device_under_tests"])
-
