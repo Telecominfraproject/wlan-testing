@@ -3611,3 +3611,21 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
 
 
     return downloadSpeed, uploadSpeed
+
+# Function for fetching upload and download speed from SpeedTest app
+# Pre-Requisites: Speedtest app with bundle ID 'com.ookla.speedtest' downloaded.
+def speedTest_App(request, setup_perfectoMobile):
+    driver = setup_perfectoMobile
+    driver.switch_to.context('NATIVE_APP')
+    openApp( 'com.ookla.speedtest',driver)
+    driver.find_element_by_xpath("//*[@label='GO']").click()
+    # Wait untill 2 minutes for the test to complete
+    WebDriverWait(driver, 120).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@value='Test Again']")))
+    result = driver.find_element_by_xpath("//XCUIElementTypeOther[contains(@label,'Download Speed')]").text
+    print(result)
+    downloadSpeed = result.split('Download Speed, ')[1].split('. ')[0]
+    uploadSpeed = result.split('Upload speed, ')[1].split('. ')[0]
+    print(f"Download speed: {downloadSpeed}")
+    print(f"Upload speed: {uploadSpeed}")
+    return downloadSpeed, uploadSpeed
