@@ -400,12 +400,12 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
-    @pytest.mark.rate_limiting_with_radius_per_ssid
+    @pytest.mark.rate_limiting_with_radius_per_ssid_bidirectional
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5858", name="WIFI-5858")
-    def test_radius_server_2g_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
+    def test_radius_server_2g_per_ssid_bidirectional(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
                                        station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
@@ -437,12 +437,12 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
-    @pytest.mark.rate_limiting_with_radius_per_ssid
+    @pytest.mark.rate_limiting_with_radius_per_ssid_bidirectional
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5860", name="WIFI-5860")
-    def test_radius_server_fiveg_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
+    def test_radius_server_fiveg_per_ssid_bidirectional(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
                                           station_names_fiveg):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
@@ -474,12 +474,12 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
-    @pytest.mark.rate_limiting_with_radius_per_ssid_per_client
+    @pytest.mark.rate_limiting_with_radius_per_ssid_per_client_bidirectional
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_per_ssid_per_client
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5862", name="WIFI-5862")
-    def test_radius_server_2g_per_ssid_per_client(self, lf_test, lf_tools, rate_radius_info,
+    def test_radius_server_2g_per_ssid_per_client_bidirectional(self, lf_test, lf_tools, rate_radius_info,
                                                   rate_radius_accounting_info,
                                                   station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
@@ -512,12 +512,12 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
-    @pytest.mark.rate_limiting_with_radius_per_ssid_per_client
+    @pytest.mark.rate_limiting_with_radius_per_ssid_per_client_bidirectional
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_per_ssid_per_client
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5864", name="WIFI-5864")
-    def test_radius_server_fiveg_per_ssid_per_client(self, lf_test, lf_tools, rate_radius_info,
+    def test_radius_server_fiveg_per_ssid_per_client_bidirectional(self, lf_test, lf_tools, rate_radius_info,
                                                      rate_radius_accounting_info,
                                                      station_names_fiveg):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
@@ -550,12 +550,12 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
-    @pytest.mark.rate_limiting_with_radius_download_per_ssid
+    @pytest.mark.rate_limiting_with_radius_download_per_ssid_bidirectional
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_per_ssid_down
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5868", name="WIFI-5868")
-    def test_radius_server_2g_per_ssid_downstream(self, lf_test, lf_tools, rate_radius_info,
+    def test_radius_server_2g_per_ssid_downstream_bidirectional(self, lf_test, lf_tools, rate_radius_info,
                                                   rate_radius_accounting_info,
                                                   station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
@@ -637,6 +637,7 @@ class TestRateLimitingWithRadiusBridge(object):
         else:
             assert False, "EAP Connect Failed"
 
+
     @pytest.mark.rate_limiting_with_radius_maxdownload_groupuser1
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -685,6 +686,7 @@ class TestRateLimitingWithRadiusBridge(object):
                 assert False, f"Expected Throughput should be less than {configured} Mbps"
         else:
             assert False, "EAP Connect Failed"
+
 
     @pytest.mark.rate_limiting_with_radius_maxupload_groupuser2
     @pytest.mark.wpa2_enterprise
