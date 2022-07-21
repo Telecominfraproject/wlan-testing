@@ -9,7 +9,7 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test,
-              pytest.mark.bridge,pytest.mark.basic_dataplane_throughput_test]  # , pytest.mark.usefixtures("setup_test_run")]
+              pytest.mark.bridge,]  # , pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -37,6 +37,7 @@ class TestDataplaneThroughputBRIDGE(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3913", name="WIFI-3913")
+    @pytest.mark.basic_dataplane_throughput_test
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.ac_station
@@ -72,6 +73,7 @@ class TestDataplaneThroughputBRIDGE(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3914", name="WIFI-3914")
+    @pytest.mark.basic_dataplane_throughput_test
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.ac_station

@@ -8,7 +8,8 @@ pytestmark = [pytest.mark.ow_sanity_lf,
               pytest.mark.ttls,
               pytest.mark.sanity,
               pytest.mark.uc_sanity,
-              pytest.mark.enterprise_client_connectivity]
+              pytest.mark.enterprise_client_connectivity,
+              pytest.mark.wg_client_connectivity]
 
 setup_params_enterprise = {
     "mode": "NAT",

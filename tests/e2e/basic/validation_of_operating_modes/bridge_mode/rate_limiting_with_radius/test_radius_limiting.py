@@ -10,7 +10,7 @@ from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_dynamic_qos_tests_lf,
               pytest.mark.ow_rate_limiting_with_radius_tests_lf,
-              pytest.mark.bridge]
+              pytest.mark.bridge,pytest.mark.basic_rate_limiting]
 
 setup_params_general = {
     "mode": "BRIDGE",

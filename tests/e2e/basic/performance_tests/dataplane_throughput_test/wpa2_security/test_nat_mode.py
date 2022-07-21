@@ -9,7 +9,7 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.performance, pytest.mark.dataplane_throughput_test,
-              pytest.mark.nat,pytest.mark.basic_dataplane_throughput_test]
+              pytest.mark.nat,]
 
 setup_params_general = {
     "mode": "NAT",
@@ -38,6 +38,7 @@ class TestDataplaneThroughputNAT(object):
     """
     
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3913", name="WIFI-3913")
+    @pytest.mark.basic_dataplane_throughput_test
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.ac_station
@@ -72,6 +73,7 @@ class TestDataplaneThroughputNAT(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3914", name="WIFI-3914")
+    @pytest.mark.basic_dataplane_throughput_test
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.ac_station
