@@ -5,7 +5,7 @@ Rate LImiting Vlan Mode Scenario
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_regression_lf, pytest.mark.vlan]
+pytestmark = [pytest.mark.ow_regression_lf, pytest.mark.vlan,pytest.mark.basic_rate_limiting]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -44,6 +44,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestRateLimitingVlan(object):
 
+    @pytest.mark.basic_rate_limiting_batch_125_up
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up
@@ -74,6 +75,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.dw
@@ -104,6 +106,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_dw
@@ -135,6 +138,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_disable_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.disable_up_dw
@@ -165,6 +169,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_dw_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_dw_per_client
@@ -194,6 +199,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_per_client
@@ -223,6 +229,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_dw_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.dw_per_client
@@ -252,6 +259,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up
@@ -281,6 +289,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dw
@@ -310,6 +319,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up_dw
@@ -339,6 +349,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_up
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up
@@ -368,6 +379,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.dw
@@ -397,6 +409,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_dw
@@ -426,6 +439,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_up
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up
@@ -455,6 +469,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dw
@@ -484,6 +499,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_1_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up_dw
@@ -513,6 +529,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_disable_up_dw
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.disable_up_dw
@@ -542,6 +559,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_dw_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up_dw_per_client
@@ -570,6 +588,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_up_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.up_per_client
@@ -598,6 +617,7 @@ class TestRateLimitingVlan(object):
         print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.basic_rate_limiting_batch_125_dw_per_client
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dw_per_client
