@@ -33,6 +33,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestMultiStaThptbridge(object):
 
+    @pytest.mark.multi_sta_thpt_udp_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_dl_2g_1",
@@ -72,6 +73,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_thpt_tcp_dl
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_dl_2g_2",
@@ -114,6 +116,7 @@ class TestMultiStaThptbridge(object):
                                       pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_thpt_udp_ul
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_udp_ul_2g_3",
@@ -153,6 +156,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_thpt_tcp_ul
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.testcase(name="test_mstathpt_wpa2p_bridge_tcp_ul_2g_4",
@@ -192,6 +196,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_thpt_udp_up_dl
     @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
@@ -233,6 +238,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_thpt_tcp_udp_up_dl
     @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal
@@ -274,6 +280,7 @@ class TestMultiStaThptbridge(object):
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Multi Station Throughput vs Packet Size Test")
         assert True
 
+    @pytest.mark.multi_sta_thpt_tcp_udp_up_dl
     @pytest.mark.multi_sta_perf_throughput
     @pytest.mark.tcp_udp_ul_dl
     @pytest.mark.wpa2_personal

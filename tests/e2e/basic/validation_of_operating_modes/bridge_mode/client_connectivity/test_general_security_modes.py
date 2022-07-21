@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connectivity, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
+pytestmark = [pytest.mark.wg_client_connectivity, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
               pytest.mark.sanity, pytest.mark.uc_sanity,pytest.mark.basic_client_connectivity]  # pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {

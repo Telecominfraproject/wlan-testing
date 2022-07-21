@@ -10,7 +10,7 @@ from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_dynamic_qos_tests_lf,
               pytest.mark.ow_rate_limiting_with_radius_tests_lf,
-              pytest.mark.bridge]
+              pytest.mark.bridge,pytest.mark.basic_rate_limiting]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -53,7 +53,7 @@ setup_params_general = {
 )
 @pytest.mark.usefixtures("setup_profiles")
 class TestRateLimitingWithRadiusBridge(object):
-
+    @pytest.mark.rate_limiting_with_radius_upload_per_ssid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.ow_sanity_lf
@@ -91,6 +91,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_download_per_ssid_per_sta
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_download_perssid_persta
@@ -129,6 +130,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_upload_per_sta_per_client
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_upload_persta_perclient
@@ -166,6 +168,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_download_per_sta_per_client
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_upload_download_persta_perclient
@@ -204,6 +207,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_download_per_ssid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_download_per_ssid
@@ -241,6 +245,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_upload_per_ssid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_upload_per_ssid
@@ -277,6 +282,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_download_per_ssid_per_client
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_download_per_ssid_per_client
@@ -315,6 +321,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_upload_per_client
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_upstream_per_ssid_per_client
@@ -353,6 +360,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_download_per_client
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_upstream__downstream_per_ssid_per_client
@@ -392,6 +400,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_per_ssid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_per_ssid
@@ -428,6 +437,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_per_ssid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_per_ssid
@@ -464,6 +474,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_per_ssid_per_client
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_per_ssid_per_client
@@ -501,6 +512,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_per_ssid_per_client
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_per_ssid_per_client
@@ -538,6 +550,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_download_per_ssid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_per_ssid_down
@@ -575,6 +588,7 @@ class TestRateLimitingWithRadiusBridge(object):
             print("Test Completed... Cleaning up Stations")
         assert True
 
+    @pytest.mark.rate_limiting_with_radius_maxupload_groupuser1
     @pytest.mark.twog
     @pytest.mark.max_upload_user1
     @pytest.mark.wpa2_enterprise
@@ -623,6 +637,7 @@ class TestRateLimitingWithRadiusBridge(object):
         else:
             assert False, "EAP Connect Failed"
 
+    @pytest.mark.rate_limiting_with_radius_maxdownload_groupuser1
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_download_user1
@@ -671,6 +686,7 @@ class TestRateLimitingWithRadiusBridge(object):
         else:
             assert False, "EAP Connect Failed"
 
+    @pytest.mark.rate_limiting_with_radius_maxupload_groupuser2
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_upload_user2
@@ -719,6 +735,7 @@ class TestRateLimitingWithRadiusBridge(object):
         else:
             assert False, "EAP Connect Failed"
 
+    @pytest.mark.rate_limiting_with_radius_maxdownload_groupuser2
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_download_user2
@@ -767,6 +784,7 @@ class TestRateLimitingWithRadiusBridge(object):
         else:
             assert False, "EAP Connect Failed"
 
+    @pytest.mark.rate_limiting_with_radius_maxupload_groupuser3
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_upload_user3
@@ -814,6 +832,7 @@ class TestRateLimitingWithRadiusBridge(object):
         else:
             assert False, "EAP Connect Failed"
 
+    @pytest.mark.rate_limiting_with_radius_maxdownload_groupuser3
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_download_user3
@@ -862,6 +881,7 @@ class TestRateLimitingWithRadiusBridge(object):
         else:
             assert False, "EAP Connect Failed"
 
+    @pytest.mark.rate_limiting_with_radius_maxupload_groupuser4
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_upload_user4
@@ -910,6 +930,7 @@ class TestRateLimitingWithRadiusBridge(object):
         else:
             assert False, "EAP Connect Failed"
 
+    @pytest.mark.rate_limiting_with_radius_maxdownload_groupuser4
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.max_download_user4
