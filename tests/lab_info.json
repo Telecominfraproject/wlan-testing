@@ -2,12 +2,13 @@
 
 "CONFIGURATION" : {
     "basic-01": {
+        "target": "tip_2x",
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },
-        "access_point": [
+        "device_under_tests": [
             {
                 "model": "wallys_dr40x9",
                 "mode": "wifi5",

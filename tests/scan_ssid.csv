@@ -1,0 +1,6 @@
+,age,auth,beacon,bss,channel,entity id,frequency,info,signal,ssid
+0,37900464,WPA2,100,00:06:ae:6f:6f:e6,1,1.1.4,2412,2x2 MCS 0-11 AX,-41.0,ssid_wpa2_dual_band
+1,4918,Open,100,90:3c:b3:9d:69:1b,1,1.1.4,2412,2x2 MCS 0-11 AX,-39.0,ssid_open_2g_vlan
+2,21029543,WPA,100,92:3c:b3:9d:69:1b,1,1.1.4,2412,2x2 MCS 0-11 AX,-38.0,ssid_wpa_2g
+3,21029518,WPA2,100,96:3c:b3:9d:69:1b,1,1.1.4,2412,2x2 MCS 0-11 AX,-39.0,ssid_wpa2_2g
+4,21029083,WPA WPA2,100,9a:3c:b3:9d:69:1b,1,1.1.4,2412,2x2 MCS 0-11 AX,-39.0,ssid_wpa_wpa2_p_m_2g

@@ -18,14 +18,13 @@ $ pip3 install pexpect-serial
 
 import sys
 
-
-
 if sys.version_info[0] != 3:
     print("This script requires Python 3")
     exit()
 
 try:
     import importlib
+
     re = importlib.import_module("re")
     logging = importlib.import_module("logging")
     time = importlib.import_module("time")

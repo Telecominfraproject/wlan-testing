@@ -324,3 +324,8 @@ class TestFMS(object):
             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
             status.append(current_version_ap == data['firmware'].split())
         assert False not in status
+
+
+@pytest.mark.shivam
+def test_abc(get_target_object):
+    assert True
