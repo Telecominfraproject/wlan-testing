@@ -14,8 +14,8 @@ import random
 import sys
 import allure
 
-if 'perfecto_libs' not in sys.path:
-    sys.path.append(f'../libs/perfecto_libs')
+if 'perfecto_interop' not in sys.path:
+    sys.path.append(f'../libs/perfecto_interop')
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.client_connect
               ,pytest.mark.interop_uc_sanity, pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.ow_sanity_interop]

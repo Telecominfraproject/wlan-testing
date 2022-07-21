@@ -13,8 +13,8 @@ from selenium.common.exceptions import NoSuchElementException
 import sys
 import allure
 
-if 'perfecto_libs' not in sys.path:
-    sys.path.append(f'../libs/perfecto_libs')
+if 'perfecto_interop' not in sys.path:
+    sys.path.append(f'../libs/perfecto_interop')
 
 from iOS_lib import closeApp, openApp, Toggle_AirplaneMode_iOS, ForgetWifiConnection, set_APconnMobileDevice_iOS, \
     verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown

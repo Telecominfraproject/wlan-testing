@@ -14,8 +14,8 @@ import string
 import sys
 import allure
 
-if 'perfecto_libs' not in sys.path:
-    sys.path.append(f'../libs/perfecto_libs')
+if 'perfecto_interop' not in sys.path:
+    sys.path.append(f'../libs/perfecto_interop')
 
 pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios, pytest.mark.interop_country_code_GB, pytest.mark.interop_country_code,
            pytest.mark.bridge]

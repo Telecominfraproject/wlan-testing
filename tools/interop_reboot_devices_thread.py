@@ -8,7 +8,7 @@ Note: Run this file as it is to reboot all devices at same time from interop lab
 import sys
 
 if "libs" not in sys.path:
-    sys.path.append("../libs/perfecto_libs/")
+    sys.path.append("../libs/perfecto_interop/")
 
 import argparse
 import paramiko

@@ -15,8 +15,8 @@ import allure
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.interop_and, pytest.mark.android, pytest.mark.AccessPointConnection]
 
-if 'perfecto_libs' not in sys.path:
-    sys.path.append(f'../libs/perfecto_libs')
+if 'perfecto_interop' not in sys.path:
+    sys.path.append(f'../libs/perfecto_interop')
 
 from android_lib import closeApp, verifyUploadDownloadSpeed_android, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp
 

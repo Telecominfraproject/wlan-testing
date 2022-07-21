@@ -15,8 +15,8 @@ import string
 import sys
 import allure
 
-if 'perfecto_libs' not in sys.path:
-    sys.path.append(f'../libs/perfecto_libs')
+if 'perfecto_interop' not in sys.path:
+    sys.path.append(f'../libs/perfecto_interop')
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, \
     get_ip_address_and, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, captive_portal_and

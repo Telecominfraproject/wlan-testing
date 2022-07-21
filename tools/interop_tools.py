@@ -9,7 +9,7 @@
 import sys
 
 if "libs" not in sys.path:
-    sys.path.append("../libs/perfecto_libs/")
+    sys.path.append("../libs/perfecto_interop/")
 
 import argparse
 import paramiko
