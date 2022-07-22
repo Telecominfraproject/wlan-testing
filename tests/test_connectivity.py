@@ -382,3 +382,8 @@ class TestFirmwareUpgrade(object):
             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
             status.append(current_version_ap == data['firmware'].split())
         assert False not in status
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> base structure for perfecto pip module
