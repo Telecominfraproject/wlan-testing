@@ -51,9 +51,9 @@
                 "mode": "wifi5",
                 "serial": "0006aee53b84",
                 "jumphost": true,
-                "ip": "10.28.3.100",
+                "ip": "192.168.52.89",
                 "username": "lanforge",
-                "password": "pumpkin77",
+                "password": "lanforge",
                 "port": 22,
                 "jumphost_tty": "/dev/ttyAP2",
                 "version": "next-latest"
@@ -62,7 +62,7 @@
         "traffic_generator": {
             "name": "lanforge",
             "details": {
-                "ip": "10.28.3.8",
+                "ip": "192.168.52.89",
                 "port": 8080,
                 "ssh_port": 22,
                 "2.4G-Radio": ["1.1.wiphy4"],
@@ -1177,9 +1177,9 @@
         "Disable DGAF": false
     }
 },
-"open_flow":{}
+"open_flow":{},
 
-
+"influx_params" : {}
 
 }
 

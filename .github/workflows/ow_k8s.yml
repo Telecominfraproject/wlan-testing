@@ -37,6 +37,10 @@ on:
         default: 'main'
         description: 'OpenWIFI Subscription (Userportal) version to be deployed'
         required: false
+      owrrm_version:
+        default: 'main'
+        description: 'OpenWIFI radio resource management service version to be deployed'
+        required: false
       id:
         description: 'run identifier'
         required: false
@@ -123,6 +127,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=${{ github.event.inputs.owanalytics_version }}
         export OWSUB_VERSION=${{ github.event.inputs.owsub_version }}
+        export OWRRM_VERSION=${{ github.event.inputs.owrrm_version }}
         export VALUES_FILE_LOCATION=values.openwifi-qa.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
