@@ -703,10 +703,13 @@ class Fixtures_2x:
 
         #Adding Ifconfig, ip route show and ip addr show commands info before applying config
         output = ap_ssh.run_generic_command(cmd="ifconfig")
+        output = '\n'.join(output)
         allure.attach(name="ifconfig before applying config", body=str(output))
         output = ap_ssh.run_generic_command(cmd="ip route show")
+        output = '\n'.join(output)
         allure.attach(name="ip route show before applying config", body=str(output))
         output = ap_ssh.run_generic_command(cmd="ip addr show")
+        output = '\n'.join(output)
         allure.attach(name="ip addr show before applying config", body=str(output))
 
         time_1 = time.time()
@@ -843,10 +846,13 @@ class Fixtures_2x:
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
         # Adding Ifconfig, ip route show and ip addr show commands info after applying config
         output = ap_ssh.run_generic_command(cmd="ifconfig")
+        output = '\n'.join(output)
         allure.attach(name="ifconfig after applying config", body=str(output))
         output = ap_ssh.run_generic_command(cmd="ip route show")
+        output = '\n'.join(output)
         allure.attach(name="ip route show after applying config", body=str(output))
         output = ap_ssh.run_generic_command(cmd="ip addr show")
+        output = '\n'.join(output)
         allure.attach(name="ip addr show after applying config", body=str(output))
 
         def teardown_session():

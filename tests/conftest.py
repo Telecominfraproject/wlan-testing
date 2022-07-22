@@ -2,6 +2,7 @@
     Pytest fixtures: High level Resource Management and base setup fixtures
 """
 import datetime
+import json
 import os
 import random
 import string
@@ -893,11 +894,14 @@ def get_ap_logs(request, get_apnos, get_configuration, run_lf):
             allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
             # Adding Ifconfig, ip route show and ip addr show commands info after every test completion
             output = ap_ssh.run_generic_command(cmd="ifconfig")
-            allure.attach(name="ifconfig after testcase completion", body=str(output))
+            output = '\n'.join(output)
+            allure.attach(name="ifconfig after every test completion", body=str(output))
             output = ap_ssh.run_generic_command(cmd="ip route show")
-            allure.attach(name="ip route show after testcase completion", body=str(output))
+            output = '\n'.join(output)
+            allure.attach(name="ip route show after every test completion", body=str(output))
             output = ap_ssh.run_generic_command(cmd="ip addr show")
-            allure.attach(name="ip addr show after testcase completion", body=str(output))
+            output = '\n'.join(output)
+            allure.attach(name="ip addr show after every test completion", body=str(output))
 
         request.addfinalizer(collect_logs)
 
