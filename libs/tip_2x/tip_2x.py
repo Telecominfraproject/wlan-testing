@@ -132,19 +132,19 @@ if __name__ == '__main__':
         "traffic_generator": {}
     }
     var = tip_2x(controller_data=basic_1["controller"], device_under_tests_info=basic_1["device_under_tests"])
-    setup_params_general = {
-        "mode": "BRIDGE",
-        "ssid_modes": {
-            "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                     {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"],
-                      "security_key": "something"}],
-            "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                    {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
-                     "security_key": "something"}],
-            "wpa2_personal": [
-                {"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"],
-                 "security_key": "something"}]},
-        "rf": {},
-        "radius": False
-    }
+    # setup_params_general = {
+    #     "mode": "BRIDGE",
+    #     "ssid_modes": {
+    #         "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+    #                  {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"],
+    #                   "security_key": "something"}],
+    #         "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+    #                 {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
+    #                  "security_key": "something"}],
+    #         "wpa2_personal": [
+    #             {"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+    #             {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"],
+    #              "security_key": "something"}]},
+    #     "rf": {},
+    #     "radius": False
+    # }

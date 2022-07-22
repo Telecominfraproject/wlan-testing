@@ -326,6 +326,3 @@ class TestFMS(object):
         assert False not in status
 
 
-@pytest.mark.shivam
-def test_abc(get_target_object):
-    assert True

@@ -44,7 +44,7 @@ def scrollDown(setup_perfectoMobile):
 
 
 def closeApp(appName, setup_perfectoMobile):
-    #print("Closing App.." + appName)
+    # print("Closing App.." + appName)
     setup_perfectoMobile[1].step_start("Closing App: " + appName)
     params = {'identifier': appName}
     setup_perfectoMobile[0].execute_script('mobile:application:close', params)
@@ -89,14 +89,12 @@ def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMo
     except NoSuchElementException:
         print("Exception: Verify Xpath - UpdateXpath")
 
-
     if Wifi_AP_Name.__eq__(WifiNameSSID):
         print("Wifi Name Matches - Already Connected To: " + Wifi_AP_Name)
 
-
-        #Verify if Ap is connected with Wifi
+        # Verify if Ap is connected with Wifi
         report.step_start("Verify Wifi Connection Status..")
-        #print("Click Wifi Connection..")
+        # print("Click Wifi Connection..")
         element.click()
 
         # Verifies if AP is connected to Wifi status
@@ -108,7 +106,6 @@ def set_APconnMobileDevice_iOS(request, WifiNameSSID, WifiPass, setup_perfectoMo
         except NoSuchElementException:
             reportFlag = False
             assert reportFlag
-
 
         print("Checking Internet Connection Error..")
         report.step_start("Checking Internet Connection Error..")
@@ -191,12 +188,10 @@ def Toggle_AirplaneMode_iOS(request, setup_perfectoMobile, connData):
             currentResult = False
             print("Cellular Mode Not in Airplane Mode: ERROR")
 
-
         AirplaneMode.click()
     except NoSuchElementException:
         currentResult = False
         print("Airplane Wifi Button not loaded...")
-
 
     report.step_start("Verify No Sim Card Installed Msg Popup")
     print("Verify No Sim Card Installed Msg Popup..")
@@ -204,7 +199,6 @@ def Toggle_AirplaneMode_iOS(request, setup_perfectoMobile, connData):
         NoSimCardErrorMsg = driver.find_element_by_xpath("//*[@value='No SIM Card Installed']")
     except NoSuchElementException:
         print("No Sim Card AlertMsg")
-
 
     print("Click ok on No Sim Card Msg Popup..")
     report.step_start("Click ok on No Sim Card Msg Popup")
@@ -235,8 +229,9 @@ def verify_APconnMobileDevice_iOS(request, WifiName, setup_perfectoMobile, connD
         print("Get Connected Wifi Name")
         report.step_start("Get Connected Wifi Name")
 
-        element = WebDriverWait(driver, 45).until(EC.presence_of_element_located((MobileBy.XPATH, "//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")))
-        #element = driver.find_element_by_xpath("")
+        element = WebDriverWait(driver, 45).until(EC.presence_of_element_located(
+            (MobileBy.XPATH, "//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")))
+        # element = driver.find_element_by_xpath("")
 
         element.click()
 
@@ -247,16 +242,15 @@ def verify_APconnMobileDevice_iOS(request, WifiName, setup_perfectoMobile, connD
         reportFlag = False
         assert reportFlag
 
-
-
     try:
         print("Waiting for Auto Connection to: " + WifiName)
         report.step_start("Waiting for Auto Connection to: " + WifiName)
 
-        selectedWifiNetwork = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='"+ WifiName + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
-        passPointWifi = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, selectedWifiNetwork)))
+        selectedWifiNetwork = "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeStaticText[@label='" + WifiName + "']/parent::*/XCUIElementTypeButton[@label='More Info']"
+        passPointWifi = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((MobileBy.XPATH, selectedWifiNetwork)))
     except Exception as e:
-        #Toggle Wifi Mode
+        # Toggle Wifi Mode
         Toggle_WifiMode_iOS(request, setup_perfectoMobile, connData)
         time.sleep(15)
 
@@ -375,7 +369,6 @@ def Toggle_WifiMode_iOS(request, setup_perfectoMobile, connData):
         except NoSuchElementException:
             print("Wifi Radio Button Not Disabled...")
 
-
         WifiDissconnected.click()
         print("Wifi Radio Button Toggled to Enabled")
     except NoSuchElementException:
@@ -414,7 +407,7 @@ def get_WifiIPAddress_iOS(request, setup_perfectoMobile, connData, wifiName):
 
     try:
 
-        WifiInternetInfo=driver.find_element_by_xpath("(//XCUIElementTypeButton[@label='More Info'])[1]")
+        WifiInternetInfo = driver.find_element_by_xpath("(//XCUIElementTypeButton[@label='More Info'])[1]")
 
         WifiInternetInfo.click()
     except NoSuchElementException:
@@ -422,7 +415,8 @@ def get_WifiIPAddress_iOS(request, setup_perfectoMobile, connData, wifiName):
 
     try:
 
-        WifiIPaddress= driver.find_element_by_xpath("(//*[@label='Router']/parent::*/XCUIElementTypeStaticText)[2]").text
+        WifiIPaddress = driver.find_element_by_xpath(
+            "(//*[@label='Router']/parent::*/XCUIElementTypeStaticText)[2]").text
 
         return WifiIPaddress
     except NoSuchElementException:
@@ -471,8 +465,9 @@ def ping_deftapps_iOS(setup_perfectoMobile, AP_IPaddress):
         print("Verifying Packet Sent..")
         try:
 
-            packetSent = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='Sent']/parent::*/XCUIElementTypeStaticText[2]").text
-            #assertEqual(element5.text, "0", "Packet Loss Exist, Please Check Device")
+            packetSent = driver.find_element_by_xpath(
+                "//XCUIElementTypeStaticText[@label='Sent']/parent::*/XCUIElementTypeStaticText[2]").text
+            # assertEqual(element5.text, "0", "Packet Loss Exist, Please Check Device")
 
         except NoSuchElementException:
             print("-------Exception: Packet Sent Error, check object ID")
@@ -481,8 +476,9 @@ def ping_deftapps_iOS(setup_perfectoMobile, AP_IPaddress):
         print("Verifying Packet Received..")
         try:
 
-            packetReceived = driver.find_element_by_xpath("//XCUIElementTypeStaticText[@label='Received']/parent::*/XCUIElementTypeStaticText[2]").text
-            #assertEqual(element5.text, "0", "Packet Loss Exist, Please Check Device")
+            packetReceived = driver.find_element_by_xpath(
+                "//XCUIElementTypeStaticText[@label='Received']/parent::*/XCUIElementTypeStaticText[2]").text
+            # assertEqual(element5.text, "0", "Packet Loss Exist, Please Check Device")
 
         except NoSuchElementException:
             print("-------Exception: Packet Sent Error, check object ID")
@@ -494,7 +490,8 @@ def ping_deftapps_iOS(setup_perfectoMobile, AP_IPaddress):
         report.step_start("Verifying No route to host Error Msg..")
         try:
 
-            element7 = driver.find_element_by_xpath("(//XCUIElementTypeStaticText[@label='Sendto: No route to host'])[2]")
+            element7 = driver.find_element_by_xpath(
+                "(//XCUIElementTypeStaticText[@label='Sendto: No route to host'])[2]")
 
             print("Packet Loss Detected on AP!!!!!: " + AP_IPaddress)
             # self.assertNotEqual(element7.text, "Sendto: No route to host", "Packet Loss Exist, Please Check Device AP: " + Wifi_AP_Name)
@@ -521,7 +518,7 @@ def tearDown(setup_perfectoMobile):
     except Exception as e:
         print(" -- Exception Not Able To close --")
 
-        print (e)
+        print(e)
 
     finally:
         try:
@@ -529,7 +526,7 @@ def tearDown(setup_perfectoMobile):
         except Exception as e:
             print(" -- Exception Not Able To Quit --")
 
-            print (e)
+            print(e)
 
 
 def verifyUploadDownloadSpeediOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
@@ -637,7 +634,6 @@ def downloadInstallOpenRoamingProfile(request, profileDownloadURL, setup_perfect
     except TimeoutException:
         print("no alert")
 
-
     openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
 
     try:
@@ -677,7 +673,8 @@ def downloadInstallOpenRoamingProfile(request, profileDownloadURL, setup_perfect
         print("Verify Profile Installed")
         report.step_start("Verify Profile Installed")
 
-        elelSearch2 = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Profile Installed']")))
+        elelSearch2 = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Profile Installed']")))
 
         elelSearch2.click()
     except Exception as e:
@@ -711,21 +708,19 @@ def downloadInstallOpenRoamingProfile(request, profileDownloadURL, setup_perfect
     # openApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
 
 
+# try:
+#     print("Verifying OpenRoaming Connected Wifi")
+#     time.sleep(3)
+#    report.step_start("Verifying Connected Wifi Name")
+#     element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
+#      OpenRoamingWifiName = element.text
+#      element.click()
 
-
-   # try:
-   #     print("Verifying OpenRoaming Connected Wifi")
-   #     time.sleep(3)
-    #    report.step_start("Verifying Connected Wifi Name")
-   #     element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']/XCUIElementTypeStaticText[2]")
-  #      OpenRoamingWifiName = element.text
-  #      element.click()
-
- #   except Exception as e:
-  #      OpenRoamingWifiName = "None"
-   #     print("Wifi Not Connected to OpenRoaming Profile: ")
-   #     request.config.cache.set(key="SelectingWifiFailed", value=str(e))
-    #    assert False
+#   except Exception as e:
+#      OpenRoamingWifiName = "None"
+#     print("Wifi Not Connected to OpenRoaming Profile: ")
+#     request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+#    assert False
 
 #   except Exception as e:
 #      OpenRoamingWifiName = "None"
@@ -786,9 +781,9 @@ def ForgetProfileWifiConnection(request, setup_perfectoMobile, installedProfileS
     if Wifi_AP_Name.__eq__("Not Connected"):
         print("Not Connected to any wifi")
 
-        #deleteOpenRoamingInstalledProfile(request, installedProfileSSID, setup_perfectoMobile, connData)
+        # deleteOpenRoamingInstalledProfile(request, installedProfileSSID, setup_perfectoMobile, connData)
     elif Wifi_AP_Name.__eq__("None"):
-        #deleteOpenRoamingInstalledProfile(request, installedProfileSSID, setup_perfectoMobile, connData)
+        # deleteOpenRoamingInstalledProfile(request, installedProfileSSID, setup_perfectoMobile, connData)
 
         print("Not Connected to any wifi Network/None")
     elif Wifi_AP_Name.__eq__(installedProfileSSID):
@@ -985,23 +980,25 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------This is to Forget current connected SSID-------------------------------
     # ---------------------This to Avoid any popup page from captive portal--------------------#
 
-
     try:
         time.sleep(4)
         print("getting in to Additional details")
         report.step_start("Clicking More Info")
-        additional_details_element = driver.find_element_by_xpath("//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+        additional_details_element = driver.find_element_by_xpath(
+            "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
         additional_details_element.click()
         try:
             time.sleep(2)
             print("Forget Connected Network")
-            forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+            forget_ssid = WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             try:
                 time.sleep(2)
                 report.step_start("Forget SSID popup1")
-                forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+                forget_ssid_popup = WebDriverWait(driver, 30).until(
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
 
                 print("**alert** Forget SSID popup killed **alert**")
@@ -1076,7 +1073,8 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         report.step_start("Selecting SSID To Connect")
                         ssid_found = True
                         print(WifiName + " : Found in Device")
-                        wifiSelElement = WebDriverWait(driver, 35).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
+                        wifiSelElement = WebDriverWait(driver, 35).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
                         print(wifiSelElement)
                         wifiSelElement.click()
                         print("Selecting SSID")
@@ -1089,7 +1087,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
             except:
                 print("couldn't connect to " + WifiName)
-                #request.config.cache.set(key="SelectingWifiFailed", value=str(e))
+                # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                 closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
                 return ip_address_element_text, is_internet
                 pass
@@ -1156,7 +1154,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             print("Checking SSID Name")
             ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
             print(ssidname_text)
-            if(ssidname_text == WifiName):
+            if (ssidname_text == WifiName):
                 print("SSID Matched")
                 allure.attach(name="SSID Matched ", body=str(WifiName))
             else:
@@ -1199,14 +1197,16 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
 
         try:
             report.step_start("Forget Network")
-            forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+            forget_ssid = WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             # time.sleep(2)
             # driver.implicitly_wait(3)
             try:
                 report.step_start("Forget Network popup")
-                forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+                forget_ssid_popup = WebDriverWait(driver, 30).until(
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
             except:
                 print("in popup exception")
@@ -2062,7 +2062,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
             print("Checking SSID Name")
             ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
             print(ssidname_text)
-            if(ssidname_text == WifiName):
+            if (ssidname_text == WifiName):
                 print("SSID Matched")
                 allure.attach(name="SSID Matched ", body=str(WifiName))
             else:
@@ -2386,7 +2386,8 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
 
     # ---------------------close app-------------------------------
 
-#Captive Portal
+
+# Captive Portal
 def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("CaptivePortal Connection iOS")
@@ -2472,8 +2473,6 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     # ---------------------This is to Forget current connected SSID-------------------------------
 
     # ---------------------This to Avoid any popup page from captive portal--------------------#
-
-
 
     try:
         time.sleep(4)
@@ -2635,7 +2634,8 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             time.sleep(8)
             print("Accepting terms and Services")
             report.step_start("loading Terms Page")
-            element = WebDriverWait(driver,40).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Accept Terms of Service']")))
+            element = WebDriverWait(driver, 40).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Accept Terms of Service']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Accept Terms of Service Button Not Found")
@@ -2644,14 +2644,16 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
         try:
             print("Continue to connect the services")
             report.step_start("Continiue Terms and Services Page")
-            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Continue']")))
+            element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Continue']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Continue to connect Terms of Service Button Not Found")
         try:
             print("Continue to the services")
             report.step_start("Continue to use captive portal services")
-            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Continue']")))
+            element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Continue']")))
             element.click()
         except NoSuchElementException:
             print("Exception: Continue to use captive portal services not found")
@@ -2659,7 +2661,8 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
             time.sleep(2)
             print("Final Result Page")
             report.step_start("Final Confirmation Page for Captive Portal Login")
-            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Done']")))
+            element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Done']")))
             element.click()
             # if element == driver.find_element_by_xpath("//XCUIElementTypeOther[@label='Success']"):
             #     element1 = driver.find_element_by_xpath("//*[@label='Done']")
@@ -2673,8 +2676,7 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     except NoSuchElementException:
         print("No Splash Page Found")
 
-
-# ---------------------Additional INFO-------------------------------
+    # ---------------------Additional INFO-------------------------------
     try:
         driver.implicitly_wait(5)
         print("Selecting SSID: ", WifiName)
@@ -2760,18 +2762,20 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
 
+
 # Returns whether the ssid is currently visible
-def ssid_Visible(driver,WifiName):
+def ssid_Visible(driver, WifiName):
     wifiSelectionElement = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
     isVisible = wifiSelectionElement.get_attribute("visible")
     print(f"Is ssid visible: {isVisible}")
-    if(isVisible == 'false'):
+    if (isVisible == 'false'):
         return False
     else:
         return True
 
-#--------------------------------Gets ip address from ssid but it won't get disconnected from it------------------
+
+# --------------------------------Gets ip address from ssid but it won't get disconnected from it------------------
 def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/Get IP Address IOS Connection")
@@ -2860,16 +2864,19 @@ def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_
         time.sleep(3)
         print("getting in to Additional details")
         report.step_start("Clicking More Info")
-        additional_details_element = driver.find_element_by_xpath("//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
+        additional_details_element = driver.find_element_by_xpath(
+            "//*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']")
         additional_details_element.click()
         try:
             print("Forget Connected Network")
-            forget_ssid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
+            forget_ssid = WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget This Network']")))
             forget_ssid.click()
             print("Forget old ssid")
             try:
                 report.step_start("Forget SSID popup1")
-                forget_ssid_popup = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
+                forget_ssid_popup = WebDriverWait(driver, 30).until(
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Forget']")))
                 forget_ssid_popup.click()
 
                 print("**alert** Forget SSID popup killed **alert**")
@@ -2984,7 +2991,7 @@ def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_
             print("Checking SSID Name")
             ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
             print(ssidname_text)
-            if(ssidname_text == WifiName):
+            if (ssidname_text == WifiName):
                 print("SSID Matched")
                 allure.attach(name="SSID Matched ", body=str(WifiName))
             else:
@@ -3032,7 +3039,9 @@ def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_
     # --------------------- close app-------------------------------
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
-#----------------Gets ip address of Enterprise ssids and won't forget it---------------
+
+
+# ----------------Gets ip address of Enterprise ssids and won't forget it---------------
 def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_passwd, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Get IP Address Enterprise IOS Connection")
@@ -3221,7 +3230,8 @@ def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_p
     try:
         report.step_start("Clicking Join")
         print("Clicking Join")
-        joinBTN = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
+        joinBTN = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Join']")))
         joinBTN.click()
     except Exception as e:
         print("Join Button Not Enabled...Password may not be needed")
@@ -3231,7 +3241,8 @@ def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_p
     try:
         report.step_start("Clicking Trust CA Cert")
         print("Clicking Trust CA Cert")
-        certElement = WebDriverWait(driver, 30).until(EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
+        certElement = WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Trust']")))
         certElement.click()
     except NoSuchElementException:
         print("Password Page Not Loaded, password May be cached in the System")
@@ -3264,7 +3275,7 @@ def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_p
             print("Checking SSID Name")
             ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
             print(ssidname_text)
-            if(ssidname_text == WifiName):
+            if (ssidname_text == WifiName):
                 print("SSID Matched")
                 allure.attach(name="SSID Matched ", body=str(WifiName))
             else:
@@ -3315,9 +3326,7 @@ def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_p
     return ip_address_element_text, is_internet
 
 
-
-
-#------------------Gets the ip address of already connected ssid---------------------------------------
+# ------------------Gets the ip address of already connected ssid---------------------------------------
 def gets_ip_add_for_checking_and_forgets_ssid_ios(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     print("\n-------------------------------------")
     print("Select Wifi/Get IP Address IOS Connection")
@@ -3415,7 +3424,7 @@ def gets_ip_add_for_checking_and_forgets_ssid_ios(request, WifiName, WifiPass, s
             print("Checking SSID Name")
             ssidname_text = driver.find_element_by_xpath("//*[@label='" + WifiName + "']").text
             print(ssidname_text)
-            if(ssidname_text == WifiName):
+            if (ssidname_text == WifiName):
                 print("SSID Matched")
                 allure.attach(name="SSID Matched ", body=str(WifiName))
             else:
@@ -3462,6 +3471,8 @@ def gets_ip_add_for_checking_and_forgets_ssid_ios(request, WifiName, WifiPass, s
     # --------------------- close app-------------------------------
     closeApp(connData["bundleId-iOS-Settings"], setup_perfectoMobile)
     return ip_address_element_text, is_internet
+
+
 def getDeviceModelName(setup_perfectoMobile):
     report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
@@ -3471,6 +3482,7 @@ def getDeviceModelName(setup_perfectoMobile):
     deviceModel = driver.execute_script('mobile:handset:info', params)
     print("ModelName: " + deviceModel)
     return deviceModel
+
 
 def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
     print("\n-------------------------------------")
@@ -3506,7 +3518,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     deviceModelName = getDeviceModelName(setup_perfectoMobile)
     print("Selected Device Model: " + deviceModelName)
     try:
-        if (deviceModelName!="iPhone-7"):
+        if (deviceModelName != "iPhone-7"):
             try:
                 print("Launching Safari")
                 report.step_start("Google Home Page")
@@ -3567,7 +3579,6 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
             currentResult = False
             print("Search Button Issue")
 
-
     # try:
     #     print("Click Search Button")
     #     report.step_start("Click Search Button")
@@ -3608,6 +3619,5 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
 
     except NoSuchElementException:
         print("Access Point Verification NOT Completed, checking Connection....")
-
 
     return downloadSpeed, uploadSpeed

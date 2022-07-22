@@ -23,23 +23,23 @@ except ImportError as e:
     print(e)
     sys.exit("Python Import Error: " + str(e))
 ########################################################################################################################
-########################################################################################################################
-"""
-    Target Name:LANforge Traffic Generator Library
-    Target Module:lanforge-scripts-0.0.1
-    Author Name:Shivam Thakur
-    Organization:Candela Technologies
-    Register ID:2
-    Email:support@candelatech.com
-    description:Libraries specific to Candela Wifi Test Automation
-"""
-try:
-    lanforge_scripts = importlib.import_module("lanforge_scripts")
-    lf_libs = lanforge_scripts.lf_libs
-except ImportError as e:
-    print(e)
-    sys.exit("Python Import Error: " + str(e))
-########################################################################################################################
+# ########################################################################################################################
+# """
+#     Target Name:LANforge Traffic Generator Library
+#     Target Module:lanforge-scripts-0.0.1
+#     Author Name:Shivam Thakur
+#     Organization:Candela Technologies
+#     Register ID:2
+#     Email:support@candelatech.com
+#     description:Libraries specific to Candela Wifi Test Automation
+# """
+# try:
+#     lanforge_scripts = importlib.import_module("lanforge_scripts")
+#     lf_libs = lanforge_scripts.lf_libs
+# except ImportError as e:
+#     print(e)
+#     sys.exit("Python Import Error: " + str(e))
+# ########################################################################################################################
 ########################################################################################################################
 """
     Target Name:Perforce Interop Library

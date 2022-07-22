@@ -28,9 +28,9 @@ class TestAP(object):
         allure.attach(name="Status before reboot(iwinfo):", body=str(iwinfo))
         device_name = get_configuration['access_point'][0]['serial']
         payload = {
-                  "serialNumber": device_name,
-                  "when": 0
-                }
+            "serialNumber": device_name,
+            "when": 0
+        }
         resp = setup_controller.ap_reboot(device_name, payload)
         time.sleep(150)
         print(resp.json())
@@ -72,10 +72,10 @@ class TestAP(object):
         allure.attach(name="Status before factory reset(iwinfo):", body=str(iwinfo))
         device_name = get_configuration['access_point'][0]['serial']
         payload = {
-                  "serialNumber": device_name,
-                  "when": 0,
-                  "keepRedirector": True
-                }
+            "serialNumber": device_name,
+            "when": 0,
+            "keepRedirector": True
+        }
         resp = setup_controller.ap_factory_reset(device_name, payload)
         time.sleep(200)
         print(resp.json())
@@ -97,3 +97,39 @@ class TestAP(object):
         allure.attach(name="Status after factory reset(ubus call ucentral status):", body=str(connected1))
         allure.attach(name="Status after factory reset(iwinfo):", body=str(iwinfo1))
         assert (resp.status_code == 200) & (gw == gw1) & (connected == connected1) & (iwinfo == iwinfo1)
+
+
+setup_params_general = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                 {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"],
+                  "security_key": "something"}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
+                 "security_key": "something"}],
+        "wpa2_personal": [
+            {"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"],
+             "security_key": "something"}]},
+    "rf": {},
+    "radius": False
+}
+
+
+@pytest.mark.shivam
+@pytest.mark.parametrize(
+    'setup_configuration',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
+@pytest.mark.open
+@pytest.mark.twog
+@pytest.mark.wpa
+@pytest.mark.twog
+@pytest.mark.wpa2_personal
+@pytest.mark.fiveg
+def test_abc():
+    assert True
