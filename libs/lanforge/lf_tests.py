@@ -2100,29 +2100,56 @@ class RunTest:
         self.staConnect.stop()
         self.staConnect.cleanup()
 
-    def rsn_test(self, mode="BRIDGE", security_mode="open", ssid="[BLANK]", passkey="[BLANK]", security="wpa2",
+    def rsn_test(self, mode="BRIDGE", ssid="[BLANK]", passkey="[BLANK]", security="open",
                  band="twog", vlan_id=100, station_name=None, radio="wiphy0", sniff_radio='wiphy0',
                  sniff_channel=11, sniff_duration=90, test_name='rsn-test'):
         if station_name is None:
             station_name=['sta0000']
         if band == "twog":
-            self.start_sniffer(radio_channel=sniff_channel, radio=self.twog_radios[1].split(".")[2],
-                               duration=sniff_duration, test_name=test_name)
-            radio=self.twog_radios[0].split(".")[2]
+            if len(self.twog_radios) > 1:
+                self.start_sniffer(radio_channel=sniff_channel, radio=self.twog_radios[1].split(".")[2],
+                                   duration=sniff_duration, test_name=test_name)
+                radio=self.twog_radios[0].split(".")[2]
+            elif len(self.twog_radios) == 0 and len(self.ax_radios) >= 1:
+                self.start_sniffer(radio_channel=sniff_channel, radio=self.ax_radios[0].split(".")[2],
+                                   duration=sniff_duration, test_name=test_name)
+                radio=self.twog_radios[0].split(".")[2]
+            else:
+                self.start_sniffer(radio_channel=sniff_channel, radio=self.twog_radios[0].split(".")[2],
+                                   duration=sniff_duration, test_name=test_name)
+                radio=self.twog_radios[0].split(".")[2]
         elif band == "fiveg":
-            self.start_sniffer(radio_channel=sniff_channel, radio=self.fiveg_radios[1].split(".")[2],
-                               duration=sniff_duration, test_name=test_name)
-            radio=self.fiveg_radios[0].split(".")[2]
+            if len(self.fiveg_radios) > 1:
+                self.start_sniffer(radio_channel=sniff_channel, radio=self.fiveg_radios[1].split(".")[2],
+                                   duration=sniff_duration, test_name=test_name)
+                radio=self.fiveg_radios[0].split(".")[2]
+            elif len(self.fiveg_radios) == 0 and len(self.ax_radios) >= 1:
+                self.start_sniffer(radio_channel=sniff_channel, radio=self.ax_radios[0].split(".")[2],
+                                   duration=sniff_duration, test_name=test_name)
+                radio=self.fiveg_radios[0].split(".")[2]
+            else:
+                self.start_sniffer(radio_channel=sniff_channel, radio=self.fiveg_radios[0].split(".")[2],
+                                   duration=sniff_duration, test_name=test_name)
+                radio=self.fiveg_radios[0].split(".")[2]
         elif band == "ax":
-            self.start_sniffer(radio_channel=sniff_channel, radio=self.ax_radios[1].split(".")[2],
-                               duration=sniff_duration, test_name=test_name)
-            radio=self.ax_radios[0].split(".")[2]
-        if security_mode == "open":
+            if len(self.ax_radios) > 1:
+                self.start_sniffer(radio_channel=sniff_channel, radio=self.ax_radios[1].split(".")[2],
+                                   duration=sniff_duration, test_name=test_name)
+                radio=self.ax_radios[0].split(".")[2]
+            else:
+                self.start_sniffer(radio_channel=sniff_channel, radio=self.ax_radios[0].split(".")[2],
+                                   duration=sniff_duration, test_name=test_name)
+                radio=self.ax_radios[0].split(".")[2]
+        if security == "open" or security == "wpa" or security == "wpa2" :
             cc_obj=self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
                                                    station_name=station_name, radio=radio)
             time.sleep(sniff_duration)
             self.stop_sniffer()
-
+        elif security == "wpa_enterprise" or security == "wpa2_enterprise" :
+            cc_obj=self.Client_Connect_Using_Radio(ssid=ssid, passkey=passkey, security=security, mode=mode,
+                                                   station_name=station_name, radio=radio)
+            time.sleep(sniff_duration)
+            self.stop_sniffer()
         try:
             if os.path.exists(self.pcap_name):
                 print('Pcap File Name:', self.pcap_name)
