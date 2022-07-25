@@ -194,7 +194,17 @@ class Fixtures_3x:
                                                                   key=lf_dut_data[0]['security_key'])
 
                         if 'dtim' in list_key:
-                            instantiate_profile_obj.set_dtim_2ghz(wlan=lf_dut_data[0]['ssid_name'], value=parameter["dtim"])
+                            instantiate_profile_obj.set_dtim_2ghz(wlan=lf_dut_data[0]['ssid_name'],
+                                                                  value=str(request.config.getoption("--dtim")))
+                        if "gtk_interval_in_sec" in list_key:
+                            print("gtkkkk...interval", str(request.config.getoption("--gtk_interval")))
+                            instantiate_profile_obj.set_eap_bcast_interval_in_sec(
+                                value=str(request.config.getoption("--gtk_interval")))
+                        if "disable_data_rate" in list_key:
+                            print("disabled_data_rate", str(request.config.getoption("--disable_data_rate")))
+                            instantiate_profile_obj.configure_data_rates(
+                                option=str(request.config.getoption("--data_rates_option")),
+                                value=str(request.config.getoption("--disable_data_rate")), band="b")
                         instantiate_profile_obj.get_ssids()
 
                     if lf_dut_data[band]["appliedRadios"] == ["5G"]:
@@ -239,8 +249,19 @@ class Fixtures_3x:
                             instantiate_profile_obj.enable_ftotd_psk(ssid=lf_dut_data[1]['ssid_name'],
                                                                   key=lf_dut_data[1]['security_key'])
                         if 'dtim' in list_key:
-                            instantiate_profile_obj.set_dtim_5ghz(wlan=lf_dut_data[1]['ssid_name'], value=parameter["dtim"])
-
+                            instantiate_profile_obj.set_dtim_5ghz(wlan=lf_dut_data[1]['ssid_name'],
+                                                                  value=str(request.config.getoption("--dtim")))
+                        if "gtk_interval_in_sec" in list_key:
+                            print("gtkkkk...interval", str(request.config.getoption("--gtk_interval")))
+                            instantiate_profile_obj.set_eap_bcast_interval_in_sec(
+                                value=str(request.config.getoption("--gtk_interval")))
+                        if "disable_data_rate" in list_key:
+                            print("disabled_data_rate", str(request.config.getoption("--disable_data_rate")))
+                            data_rate_list = request.config.getoption("--disable_data_rate")
+                            for data_val in data_rate_list:
+                                instantiate_profile_obj.configure_data_rates(
+                                    option=str(request.config.getoption("--data_rates_option")),
+                                    value=str(data_val), band="a")
                         instantiate_profile_obj.get_ssids()
                     if lf_dut_data[band]["appliedRadios"] == ["6G"]:
                         instantiate_profile_obj.no_logging_console()
