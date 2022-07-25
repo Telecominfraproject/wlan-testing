@@ -10,7 +10,7 @@ import pytest
 
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_multi_vlan_tests_lf,
-              pytest.mark.fiveg]
+              pytest.mark.fiveg,pytest.mark.vlan_mode_ip]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -42,6 +42,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestVlanConfigFivegRadio(object):
 
+    @pytest.mark.valid_client_ip
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @pytest.mark.valid_client_ip_wpa_fiveg  # wifi-2169
@@ -99,6 +100,7 @@ class TestVlanConfigFivegRadio(object):
         except:
             pass
 
+    @pytest.mark.valid_client_ip
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.valid_client_ip_wpa2_fiveg  # wifi-2157
@@ -148,6 +150,7 @@ class TestVlanConfigFivegRadio(object):
         except:
             pass
 
+    @pytest.mark.disable_vlan
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.disable_vlan_fiveg  # wifi-2174
@@ -207,6 +210,7 @@ class TestVlanConfigFivegRadio(object):
         except:
             pass
 
+    @pytest.mark.valid_client_ip
     @pytest.mark.open
     @pytest.mark.fiveg
     @pytest.mark.valid_client_ip_open_fiveg  # wifi-2161
@@ -262,6 +266,7 @@ class TestVlanConfigFivegRadio(object):
         except:
             pass
 
+    @pytest.mark.valid_client_ip
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @pytest.mark.test_station_ip_wpa_wpa2_ssid_5g  # wifi-2167
@@ -319,6 +324,7 @@ class TestVlanConfigFivegRadio(object):
         except:
             pass
 
+    @pytest.mark.enable_vlan
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.enable_vlan_fiveg  # wifi-2172

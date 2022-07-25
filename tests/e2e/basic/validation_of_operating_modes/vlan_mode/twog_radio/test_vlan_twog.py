@@ -10,7 +10,7 @@ import pytest
 
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_multi_vlan_tests_lf,
-              pytest.mark.twog]
+              pytest.mark.twog,pytest.mark.vlan_mode_ip]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -40,6 +40,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 class TestVlanConfigTwogRadio(object):
 
+    @pytest.mark.valid_client_ip
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.valid_client_ip_twog_wpa
@@ -94,6 +95,7 @@ class TestVlanConfigTwogRadio(object):
         except:
             pass
 
+    @pytest.mark.valid_client_ip
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.valid_client_ip_twog_wpa2  # wifi-2156
@@ -141,6 +143,8 @@ class TestVlanConfigTwogRadio(object):
         except:
             pass
 
+
+    @pytest.mark.disable_vlan
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.disable_vlan_twog  # wifi-2158
@@ -198,6 +202,7 @@ class TestVlanConfigTwogRadio(object):
         except:
             pass
 
+    @pytest.mark.valid_client_ip
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.valid_client_ip_twog_open
@@ -253,6 +258,7 @@ class TestVlanConfigTwogRadio(object):
         except:
             pass
 
+    @pytest.mark.valid_client_ip
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @pytest.mark.test_station_ip_twog_wpa_wpa2
@@ -310,6 +316,7 @@ class TestVlanConfigTwogRadio(object):
         except:
             pass
 
+    @pytest.mark.enable_vlan
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.enable_vlan_twog  # wifi-2172
