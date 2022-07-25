@@ -1279,6 +1279,12 @@ class UProfileUtility:
             "channel-mode": "HE",
             "channel": "auto"
         }
+        base_radio_config_6g = {
+            "band": "6G",
+            "country": "CA",
+            "channel-mode": "HE",
+            "channel": "auto"
+        }
         for band in radio_config:
             if band == "2G":
                 for keys in radio_config[band]:
@@ -1286,9 +1292,9 @@ class UProfileUtility:
             if band == "5G":
                 for keys in radio_config[band]:
                     base_radio_config_5g[keys] = radio_config[band][keys]
-            # if band == "6G":
-            #     for keys in radio_config[band]:
-            #         base_radio_config_6g[keys] = radio_config[band][keys]
+            if band == "6G":
+                for keys in radio_config[band]:
+                    base_radio_config_6g[keys] = radio_config[band][keys]
 
         self.base_profile_config["radios"].append(base_radio_config_2g)
         self.base_profile_config["radios"].append(base_radio_config_5g)
