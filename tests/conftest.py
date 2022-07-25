@@ -8,7 +8,9 @@ import string
 import sys
 import re
 
-import allure
+import requests
+from _pytest.fixtures import SubRequest
+from pyparsing import Optional
 
 ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
 ALLUREDIR_OPTION = '--alluredir'
@@ -195,6 +197,32 @@ def pytest_addoption(parser):
         default="iPhone-11",
         help="Device Model which is needed to test"
     )
+    parser.addoption(
+        "--gtk_interval",
+        default=120,
+        help="value for GTK interval 120 to 3600"
+    )
+    parser.addoption(
+        "--test_duration",
+        default="5m",
+        help="example 2m,1h.. to run test"
+    )
+    parser.addoption(
+        "--dtim",
+        default="5",
+        help="value for dtim"
+    )
+    parser.addoption(
+        "--disable_data_rate",
+        nargs="+",
+        help="6 9 12... comma is not required",
+        default=['6']
+    )
+    parser.addoption(
+        "--data_rates_option",
+        default="disable",
+        help="disable,mandatory,supported",
+    )
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -272,6 +300,24 @@ def cc_1(request):
     var = request.config.getoption("--cc.1")
     yield var
 
+
+
+@pytest.fixture(scope='session')
+def test_duration(request):
+    "yeilds test duration for the test case to run"
+    dur = request.config.getoption("--test_duration")
+    yield dur
+
+@pytest.fixture(scope='session')
+def gtk_interval(request):
+    "yields tht gtk interval for test case"
+    gtk = request.config.getoption("--gtk_interval")
+    yield gtk
+@pytest.fixture(scope='session')
+def disabled_data_rate(request):
+    "yields the disable data rate for test case"
+    data_rate=request.config.getoption("--disable_data_rate")
+    yield data_rate
 
 @pytest.fixture(scope="session")
 def roaming_delay(request):
