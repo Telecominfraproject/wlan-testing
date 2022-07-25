@@ -103,6 +103,7 @@ class CController:
         self.cc.command = []
         self.cc.command_extend = []
         self.cc.pwd = "../lanforge/lanforge-scripts"
+        # self.cc.pwd = "../../../lanforge/lanforge-scripts"
 
 
     def no_logging_console(self):
@@ -593,10 +594,21 @@ class CController:
         en = self.cc.enable_ft_sae_cc()
         return en
 
-    def set_dtim_5ghz(self, wlan, value):
+    def set_dtim_2ghz(self, wlan=None, value=None):
+
         self.cc.wlan = wlan
-        self.value = value
+        self.cc.dtim = value
+        self.cc.wlan_shutdown()
+        dtim = self.cc.config_dtim_dot11_24ghz()
+        self.cc.config_enable_wlan_send_no_shutdown()
+        return dtim
+
+    def set_dtim_5ghz(self, wlan=None, value=None):
+        self.cc.wlan = wlan
+        self.cc.dtim = value
+        self.cc.wlan_shutdown()
         dtim = self.cc.config_dtim_dot11_5ghz()
+        self.cc.config_enable_wlan_send_no_shutdown()
         return dtim
 
     def set_channel(self, band=None, channel=None, slot=None):
@@ -662,6 +674,35 @@ class CController:
         mac = self.get_mc_address()
         detail = self.cc.show_wireless_client_mac_details(mac=mac)
         return detail
+
+    def set_eap_bcast_interval_in_sec(self, value=None):
+        eap_interval = self.cc.set_eap_bcast_key_interval_in_sec(interval=value)
+        return eap_interval
+
+    def show_data_rates_config(self):
+        data_rate_response = self.cc.show_data_rates()
+        return data_rate_response
+
+    def configure_data_rates(self, option="", value="", band=""):
+        # response = self.cc.show_ap_dot11_5ghz_network()
+        # print("HELLOOOOOOOO.....",type(response))
+        if option and value and band != "":
+            if band == "a":
+                self.cc.ap_dot11_5ghz_shutdown()
+                response=self.cc.configure_dot11_data_rates(option, datarate, band)
+                # print(response)
+                allure.attach(name=f"Controller response for {datarate}Mb {option} datarate", body=str(response))
+                self.cc.config_no_ap_dot11_5ghz_shutdown()
+            # response=self.cc.show_ap_dot11_5ghz_network()
+
+            elif band == "b":
+                self.cc.ap_dot11_24ghz_shutdown()
+
+                response = self.cc.configure_dot11_data_rates(option, datarate, band)
+                # print(response)
+                allure.attach(name=f"Controller response for {datarate}Mb {option} datarate", body=str(response))
+                self.cc.config_no_ap_dot11_24ghz_shutdown()
+
 
 
 if __name__ == '__main__':
