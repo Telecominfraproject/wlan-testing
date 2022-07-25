@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.bridge, pytest.mark.wifi_capacity_ax]
+pytestmark = [pytest.mark.performance, pytest.mark.bridge, pytest.mark.wifi_capacity_ax,pytest.mark.ax_capacity]
 
 setup_params_general_5G = {
     "mode": "BRIDGE",
@@ -39,6 +39,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
            pytest -m "wifi_capacity_test and BRIDGE"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
+    @pytest.mark.wifi_capacity_ax_tcp_download
     @pytest.mark.tcp_download
     def test_client_wpa2_BRIDGE_tcp_dl(self, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -63,6 +64,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
+    @pytest.mark.wifi_capacity_ax_udp_download
     @pytest.mark.udp_download
     def test_client_wpa2_BRIDGE_udp_dl(self, lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -87,6 +89,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
+    @pytest.mark.wifi_capacity_ax_tcp_bidirectional
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -111,6 +114,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
+    @pytest.mark.wifi_capacity_ax_udp_bidirectional
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_BRIDGE_udp_bidirectional(self, lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -135,6 +139,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
+    @pytest.mark.wifi_capacity_ax_tcp_upload
     @pytest.mark.tcp_upload
     def test_client_wpa2_BRIDGE_tcp_ul(self, lf_tools, setup_profiles,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
@@ -159,6 +164,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
+    @pytest.mark.wifi_capacity_ax_tcp_upload
     @pytest.mark.udp_upload
     def test_client_wpa2_BRIDGE_udp_ul(self, lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
