@@ -5,6 +5,7 @@
 """
 import importlib
 import json
+import time
 
 import allure
 import pytest
@@ -46,6 +47,7 @@ class tip_2x:
     firmware_library_object = object()
     dut_library_object = object()
     supported_bands = ["2G", "5G", "6G", "5G-lower", "5G-upper"]
+    supported_modes = ["BRIDGE", "NAT", "VLAN"]
     supported_encryption = ["open",
                             "wpa",
                             "wpa2_personal",
@@ -90,24 +92,31 @@ class tip_2x:
     """
 
     def setup_metadata(self):
-        logging.info("setting up the Controller metadata for tip_2x Library: " + str(self.controller_data))
-        logging.info("setting up the DUT metadata for tip_2x Library: " + str(self.device_under_tests_info))
-        logging.info("Number of DUT's configured: " + str(len(self.device_under_tests_info)))
+        logging.info(
+            "Setting up the Controller metadata for tip_2x Library: " + str(json.dumps(self.controller_data, indent=2)))
+        logging.info("Setting up the DUT metadata for tip_2x Library: " + str(
+            json.dumps(self.device_under_tests_info, indent=2)))
+        logging.info("Number of DUT's in lab_info.json: " + str(len(self.device_under_tests_info)))
         self.ow_sec_url = self.controller_data["url"]
         self.ow_sec_login_username = self.controller_data["username"]
         self.ow_sec_login_password = self.controller_data["password"]
 
     def setup_objects(self):
         try:
-            self.controller_library_object = Controller(controller_data=self.lab_info["controller"])
-            self.prov_library_object = ProvUtils(sdk_client=self.controller_obj)
-            self.firmware_library_object = FMSUtils(sdk_client=self.controller_obj)
+            self.controller_library_object = Controller(controller_data=self.controller_data)
+            self.prov_library_object = ProvUtils(sdk_client=self.controller_library_object)
+            self.firmware_library_object = FMSUtils(sdk_client=self.controller_library_object)
         except Exception as e:
+            pytest.fail("Unable to setup Controller Objects")
             logging.error("Exception in setting up Controller objects:" + str(e))
         try:
             self.dut_library_object = APLIBS()
         except Exception as e:
+            pytest.fail("Unable to setup AP Objects")
             logging.error("Exception in setting up Access Point Library object:" + str(e))
+
+    def teardown_objects(self):
+        self.controller_library_object.logout()
 
     """ Standard getter methods. Should be available for all type of libraries. Commonly used by wlan-testing"""
 
@@ -132,31 +141,101 @@ class tip_2x:
     def get_controller_logs(self):
         pass
 
-    def setup_configuration(self, configuration=None,
-                            requested_combination=None):
+    def setup_basic_configuration(self, configuration=None,
+                                  requested_combination=None,
+                                  dut_idx=0):
+        final_configuration = self.setup_configuration_data(configuration=configuration,
+                                                            requested_combination=requested_combination)
 
+        logging.info("Selected Configuration: " + str(json.dumps(final_configuration, indent=2)))
+
+        profile_object = UProfileUtility(sdk_client=self.controller_library_object)
+        if final_configuration["mode"] in self.supported_modes:
+            profile_object.set_mode(mode=final_configuration["mode"])
+        else:
+            pytest.skip(final_configuration["mode"] + " Mode is not supported")
+        # Setup Radio Scenario
+        if final_configuration["rf"] != {}:
+            profile_object.set_radio_config(radio_config=final_configuration["rf"])
+        else:
+            profile_object.set_radio_config()
+        for ssid in final_configuration["ssid_modes"]:
+            for ssid_data in final_configuration["ssid_modes"][ssid]:
+                profile_object.add_ssid(ssid_data=ssid_data)
+        logging.info(
+            "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
+        r_val = False
+
+        # Do check AP before pushing the configuration
+        """ 
+            TODO: Check 
+            
+                    serial connection check
+                    ubus call ucentral status
+                    save the current uuid
+                    uci show ucentral
+                    ifconfig
+                    wifi status
+                    start logger to collect ap logs before config apply        
+                    Timestamp before doing config apply
+        
+        
+        """
+
+
+        for dut in self.device_under_tests_info:
+            resp = profile_object.push_config(serial_number=dut["identifier"])
+            logging.info("Response for Config apply: " + resp.status_code)
+            if resp.status_code != 200:
+                logging.info("Failed to apply Configuration to AP. Response Code"  +
+                             resp.status_code +
+                             "Retrying in 5 Seconds... ")
+                time.sleep(5)
+                resp = profile_object.push_config(serial_number=dut["identifier"])
+                if resp.status_code != 200:
+                    logging.info("Failed to apply Config, Response code:" + resp.status_code)
+                    pytest.fail("Failed to apply Config, Response code :" + resp.status_code)
+        if resp.status_code == 200:
+            r_val = True
+
+        """ 
+                    TODO: Check 
+                            
+                            serial connection check
+                            ubus call ucentral status
+                            save the current uuid and compare with the one before config apply
+                            save the active config and compare with the latest apply
+                            uci show 
+                            ifconfig
+                            iwinfo
+                            wifi status
+                            start logger to collect ap logs before config apply        
+                            Timestamp after doing config apply
+
+
+       """
+        return r_val
+
+    def setup_configuration_data(self, configuration=None,
+                                 requested_combination=None):
         if configuration is None:
             pytest.exit("No Configuration Received")
         if requested_combination is None:
             pytest.exit("No requested_combination Received")
-        print(configuration, "\n", requested_combination)
         rf_data = None
         if configuration.keys().__contains__("rf"):
             rf_data = configuration["rf"]
-
-        mode = configuration["mode"]
-        base_band_keys = ["2G", "5G", "6G", "5G-lower", "5G-upper"]
-        base_dict = dict.fromkeys(base_band_keys)
+        # base_band_keys = ["2G", "5G", "6G", "5G-lower", "5G-upper"]
+        base_dict = dict.fromkeys(self.supported_bands)
         for i in base_dict:
             base_dict[i] = []
         for i in requested_combination:
-            if i[0] in base_band_keys:
+            if i[0] in self.supported_bands:
                 base_dict[i[0]].append(self.tip_2x_specific_encryption_translation[i[1]])
-            if i[1] in base_band_keys:
+            if i[1] in self.supported_bands:
                 base_dict[i[1]].append((self.tip_2x_specific_encryption_translation[i[0]]))
 
-
-        temp =[]
+        temp = []
         for i in list(base_dict.values()):
             for j in i:
                 temp.append(j)
@@ -164,93 +243,23 @@ class tip_2x:
         for i in temp_conf:
             if self.tip_2x_specific_encryption_translation[i] not in temp:
                 configuration["ssid_modes"].pop(i)
-        print(json.dumps(configuration, indent=2))
 
         temp_conf = configuration["ssid_modes"].copy()
-        print(base_dict)
         for i in temp_conf:
             for j in range(len(temp_conf[i])):
-                print("shivam")
-                print(temp_conf[i], j)
+
                 for k in temp_conf[i][j]["appliedRadios"]:
                     if self.tip_2x_specific_encryption_translation[i] not in base_dict[k]:
-                        print(i, temp_conf[i][j], k)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            configuration["ssid_modes"][i][j]["appliedRadios"]
-
-        print(json.dumps(configuration, indent=2))
-
-            # if i in base_dict[temp[i]["appliedRadios"]]:
-            #     pass
-
-
-
-
-
-        exit()
-        # print("gogo" + configuration)
-
+                        configuration["ssid_modes"][i][j]["appliedRadios"].remove(k)
+                        if configuration["ssid_modes"][i][j]["appliedRadios"] == []:
+                            configuration["ssid_modes"][i][j] = {}  # .popi.popitem())  # .popitem()
+        for i in configuration["ssid_modes"]:
+            if {} in configuration["ssid_modes"][i]:
+                configuration["ssid_modes"][i].remove({})
         for ssids in configuration["ssid_modes"]:
             for i in configuration["ssid_modes"][ssids]:
                 i["security"] = self.tip_2x_specific_encryption_translation[ssids]
-                print(i, i['appliedRadios'])
-
-            # i['appliedRadios']
-
-        # Setup Profile Object
-        profile_object = UProfileUtility(sdk_client=self.controller_library_object)
-
-        # Setup Radio Scenario
-        if rf_data != {}:
-            profile_object.set_radio_config(radio_config=rf_data)
-        else:
-            profile_object.set_radio_config()
-
-        # Setup mode
-        if mode in ["BRIDGE", "NAT", "VLAN"]:
-            profile_object.set_mode(mode=mode)
-        else:
-            logging.warning("Unsupported Mode Specified: " + mode)
-            pytest.skip("Unsupported Mode Specified: " + mode)
-        dta = {'ssid_name': 'ssid_wpa2_5g_br', 'appliedRadios': ['5G'], 'security_key': 'something', "security": "psk2"}
-        profile_object.add_ssid(dta)
-
-        logging.info(str(json.dumps(profile_object.base_profile_config, indent=2)))
-        # ssid_encryptions = list(configuration["ssid_modes"].keys())
-        # for comb in requested_combination:
-        #     for enc in ssid_encryptions:
-        #
-        #         if enc in comb:
-        #
-        # for encryption in ssid_encryptions:
-        #     band = []
-        #     enc = None
-        #     for value in requested_combination:
-        #         for val in value:
-        #             # print(self.supported_bands, val)
-        #             if val in self.supported_bands:
-        #                 band.append(val)
-        #             if val in self.supported_encryption:
-        #                 enc = val
-        #     print(band, enc)
-        #     # if band in configuration["ssid_modes"][enc]["appliedRadios"]:
-        #     print(configuration["ssid_modes"][enc])
-        logging.info("Setting up the DUT for Configuration: ")
-        return 0
+        return configuration
 
     def get_dut_version(self):
         pass
@@ -274,28 +283,31 @@ if __name__ == '__main__':
             "password": "OpenWifi%123"
         },
         "device_under_tests": [{
-            "model": "wallys_dr40x9",
-            "mode": "wifi5",
-            "serial": "c44bd1005b30",
-            "jumphost": True,
-            "ip": "10.28.3.100",
-            "username": "lanforge",
-            "password": "pumpkin77",
-            "port": 22,
+            "model": "edgecore_eap101",
+            "supported_bands": ["2G", "5G"],
+            "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+            "mode": "wifi6",
+            "identifier": "c44bd1005b30",
+            "serial_port": True,
+            "host_ip": "10.28.3.100",
+            "host_username": "lanforge",
+            "host_password": "pumpkin77",
+            "host_ssh_port": 22,
             "serial_tty": "/dev/ttyAP8",
-            "version": "next-latest"
+            "firmware_version": "next-latest"
         }],
         "traffic_generator": {}
     }
     var = tip_2x(controller_data=basic_1["controller"],
                  device_under_tests_info=basic_1["device_under_tests"],
                  target=basic_1["target"])
+
+    var.setup_objects()
     setup_params_general = {
         "mode": "BRIDGE",
         "ssid_modes": {
-            "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                     {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"],
-                      "security_key": "something"}],
+            "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+                     ],
             "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
                     {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
                      "security_key": "something"}],
@@ -307,4 +319,5 @@ if __name__ == '__main__':
         "radius": False
     }
     target = [['2G', 'wpa'], ['5G', 'open'], ['5G', 'wpa']]
-    var.setup_configuration(configuration=setup_params_general, requested_combination=target)
+    var.setup_basic_configuration(configuration=setup_params_general, requested_combination=target)
+    var.teardown_objects()

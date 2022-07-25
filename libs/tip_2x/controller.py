@@ -5,6 +5,7 @@
 """
 import datetime
 import json
+import logging
 import sys
 import time
 from operator import itemgetter
@@ -28,7 +29,6 @@ class ConfigureController:
         self.username = controller_data["username"]
         self.password = controller_data["password"]
         self.host = urlparse(controller_data["url"])
-        print(self.host)
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
@@ -38,29 +38,25 @@ class ConfigureController:
             self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
             if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
                 self.logout()
-                print(self.gw_host, self.fms_host, self.prov_host)
+                logging.info(self.gw_host, self.fms_host, self.prov_host)
                 pytest.exit("All Endpoints not available in Controller Service")
                 sys.exit()
 
     def build_uri_sec(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.host.hostname, self.host.port, path)
-        print(new_uri)
         return new_uri
 
     def build_url_fms(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.fms_host.hostname, self.fms_host.port, path)
-        print(new_uri)
         return new_uri
 
     def build_uri(self, path):
 
         new_uri = 'https://%s:%d/api/v1/%s' % (self.gw_host.hostname, self.gw_host.port, path)
-        print(new_uri)
         return new_uri
 
     def build_url_prov(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
-        print(new_uri)
         return new_uri
 
     def request(self, service, command, method, params, payload):
@@ -74,13 +70,10 @@ class ConfigureController:
             uri = self.build_url_prov(command)
         else:
             raise NameError("Invalid service code for request.")
-
-        print(uri)
         params = params
         if method == "GET":
             resp = requests.get(uri, headers=self.make_headers(), params=params, verify=False, timeout=100)
         elif method == "POST":
-            print(uri, payload, params)
             resp = requests.post(uri, params=params, data=payload, headers=self.make_headers(), verify=False,
                                  timeout=100)
         elif method == "PUT":
@@ -96,11 +89,11 @@ class ConfigureController:
         uri = self.build_uri_sec("oauth2")
         # self.session.mount(uri, HTTPAdapter(max_retries=15))
         payload = json.dumps({"userId": self.username, "password": self.password})
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -118,10 +111,10 @@ class ConfigureController:
 
     def get_gw_endpoint(self):
         uri = self.build_uri_sec("systemEndpoints")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -142,10 +135,10 @@ class ConfigureController:
 
     def logout(self):
         uri = self.build_uri_sec('oauth2/%s' % self.access_token)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -164,13 +157,19 @@ class ConfigureController:
                    }
         return headers
 
-    def check_response(self, cmd, response, headers, data_str, url):
+    def check_response(self, cmd, response, headers, data_str, url=""):
         try:
-            print("Command Response: " + "\n" +
-                  "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-                  "Response Code: " + str(response.status_code) + "\n" +
-                  "Response Body: " + str(response.json()))
+            logging.info("Command Response: " + "\n" +
+                         "Command Type: " + str(cmd) + "\n" +
+                         "Response URI: " + str(url) + "\n" +
+                         "Response Headers: " + str(headers) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "Response Code: " + str(response.status_code) + "\n" +
+                         "Response Body: " + str(response.json()))
             allure.attach(name="Command Response: ", body="Command Response: " + "\n" +
+                                                          "Command Type: " + str(cmd) + "\n" +
+                                                          "Response URI: " + str(url) + "\n" +
+                                                          "Response Headers: " + str(headers) + "\n" +
                                                           "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                           "Response Code: " + str(response.status_code) + "\n" +
                                                           "Response Body: " + str(response.json()))
@@ -186,10 +185,10 @@ class Controller(ConfigureController):
 
     def get_devices(self):
         uri = self.build_uri("devices")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -200,10 +199,10 @@ class Controller(ConfigureController):
 
     def get_device_by_serial_number(self, serial_number):
         uri = self.build_uri("device/" + serial_number)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -214,10 +213,10 @@ class Controller(ConfigureController):
 
     def get_sdk_version(self):
         uri = self.build_uri("system?command=info")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -229,10 +228,10 @@ class Controller(ConfigureController):
 
     def get_system_gw(self):
         uri = self.build_uri("system?command=info")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -243,10 +242,10 @@ class Controller(ConfigureController):
 
     def get_system_fms(self):
         uri = self.build_url_fms("system?command=info")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -257,10 +256,10 @@ class Controller(ConfigureController):
 
     def get_system_prov(self):
         uri = self.build_url_prov("system?command=info")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -277,11 +276,11 @@ class Controller(ConfigureController):
     def add_device_to_gw(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number)
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -294,10 +293,10 @@ class Controller(ConfigureController):
 
     def delete_device_from_gw(self, device_name):
         uri = self.build_uri("device/" + device_name)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -308,10 +307,10 @@ class Controller(ConfigureController):
 
     def get_commands(self):
         uri = self.build_uri("commands")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -322,10 +321,10 @@ class Controller(ConfigureController):
 
     def get_device_logs(self, serial_number):
         uri = self.build_uri("device/" + serial_number + "/logs")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -336,10 +335,10 @@ class Controller(ConfigureController):
 
     def get_device_health_checks(self, serial_number):
         uri = self.build_uri("device/" + serial_number + "/healthchecks")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -350,10 +349,10 @@ class Controller(ConfigureController):
 
     def get_device_capabilities(self, serial_number):
         uri = self.build_uri("device/" + serial_number + "/capabilities")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -364,10 +363,10 @@ class Controller(ConfigureController):
 
     def get_device_statistics(self, serial_number):
         uri = self.build_uri("device/" + serial_number + "/statistics")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -378,10 +377,10 @@ class Controller(ConfigureController):
 
     def get_device_status(self, serial_number):
         uri = self.build_uri("device/" + serial_number + "/status")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -393,11 +392,11 @@ class Controller(ConfigureController):
     def ap_reboot(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/reboot")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -410,11 +409,11 @@ class Controller(ConfigureController):
     def ap_factory_reset(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/factory")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -427,11 +426,11 @@ class Controller(ConfigureController):
     def ping_device(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/ping")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -444,11 +443,11 @@ class Controller(ConfigureController):
     def led_blink_device(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/leds")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -461,11 +460,11 @@ class Controller(ConfigureController):
     def trace_device(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/trace")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -478,11 +477,11 @@ class Controller(ConfigureController):
     def wifi_scan_device(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/wifiscan")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -495,11 +494,11 @@ class Controller(ConfigureController):
     def request_specific_msg_from_device(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/request")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -513,11 +512,11 @@ class Controller(ConfigureController):
     def event_queue(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/eventqueue")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -530,11 +529,11 @@ class Controller(ConfigureController):
     def telemetry(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/telemetry")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -546,10 +545,10 @@ class Controller(ConfigureController):
 
     def get_rtty_params(self, serial_number):
         uri = self.build_uri("device/" + serial_number + "/rtty")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -561,11 +560,11 @@ class Controller(ConfigureController):
     def edit_device_on_gw(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number)
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -591,11 +590,11 @@ class FMSUtils:
                   + "\"" + ", \"when\" : 0" \
                   + " }"
         command = "device/" + serial + "/upgrade"
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(command) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(command) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(command) + "\n" +
@@ -658,13 +657,8 @@ class FMSUtils:
         if response.status_code == 200:
             data = response.json()
             newlist = sorted(data['firmwares'], key=itemgetter('created'))
-            # for i in newlist:
-            #     print(i['uri'])
-            #     print(i['revision'])
-            # print(newlist)
 
             return newlist
-            # print(data)
 
         return "error"
 
@@ -678,10 +672,10 @@ class ProvUtils:
 
     def get_inventory(self):
         uri = self.sdk_client.build_url_prov("inventory")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -692,10 +686,10 @@ class ProvUtils:
 
     def get_inventory_by_device(self, device_name):
         uri = self.sdk_client.build_url_prov("inventory/" + device_name)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -706,10 +700,10 @@ class ProvUtils:
 
     def get_system_prov(self):
         uri = self.sdk_client.build_url_prov("system?command=info")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -721,11 +715,11 @@ class ProvUtils:
     def add_device_to_inventory(self, device_name, payload):
         uri = self.sdk_client.build_url_prov("inventory/" + device_name)
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -739,10 +733,10 @@ class ProvUtils:
 
     def delete_device_from_inventory(self, device_name):
         uri = self.sdk_client.build_url_prov("inventory/" + device_name)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -753,10 +747,10 @@ class ProvUtils:
 
     def get_entity(self):
         uri = self.sdk_client.build_url_prov("entity")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -767,10 +761,10 @@ class ProvUtils:
 
     def get_entity_by_id(self, entity_id):
         uri = self.sdk_client.build_url_prov("entity/" + entity_id)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -783,11 +777,11 @@ class ProvUtils:
         uri = self.sdk_client.build_url_prov("entity/1")
 
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -800,10 +794,10 @@ class ProvUtils:
 
     def delete_entity(self, entity_id):
         uri = self.sdk_client.build_url_prov("entity/" + entity_id)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -815,11 +809,11 @@ class ProvUtils:
     def edit_device_from_inventory(self, device_name, payload):
         uri = self.sdk_client.build_url_prov("inventory/" + device_name)
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -833,11 +827,11 @@ class ProvUtils:
     def edit_entity(self, payload, entity_id):
         uri = self.sdk_client.build_url_prov("entity/" + entity_id)
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -850,10 +844,10 @@ class ProvUtils:
 
     def get_contact(self):
         uri = self.sdk_client.build_url_prov("contact")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -864,10 +858,10 @@ class ProvUtils:
 
     def get_contact_by_id(self, contact_id):
         uri = self.sdk_client.build_url_prov("contact/" + contact_id)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -879,11 +873,11 @@ class ProvUtils:
     def add_contact(self, payload):
         uri = self.sdk_client.build_url_prov("contact/1")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -896,10 +890,10 @@ class ProvUtils:
 
     def delete_contact(self, contact_id):
         uri = self.sdk_client.build_url_prov("contact/" + contact_id)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -911,11 +905,11 @@ class ProvUtils:
     def edit_contact(self, payload, contact_id):
         uri = self.sdk_client.build_url_prov("contact/" + contact_id)
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -928,10 +922,10 @@ class ProvUtils:
 
     def get_location(self):
         uri = self.sdk_client.build_url_prov("location")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -942,10 +936,10 @@ class ProvUtils:
 
     def get_location_by_id(self, location_id):
         uri = self.sdk_client.build_url_prov("location/" + location_id)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -957,11 +951,11 @@ class ProvUtils:
     def add_location(self, payload):
         uri = self.sdk_client.build_url_prov("location/1")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -974,10 +968,10 @@ class ProvUtils:
 
     def delete_location(self, location_id):
         uri = self.sdk_client.build_url_prov("location/" + location_id)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -989,11 +983,11 @@ class ProvUtils:
     def edit_location(self, payload, location_id):
         uri = self.sdk_client.build_url_prov("location/" + location_id)
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -1006,10 +1000,10 @@ class ProvUtils:
 
     def get_venue(self):
         uri = self.sdk_client.build_url_prov("venue")
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -1020,10 +1014,10 @@ class ProvUtils:
 
     def get_venue_by_id(self, venue_id):
         uri = self.sdk_client.build_url_prov("venue/" + venue_id)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -1035,11 +1029,11 @@ class ProvUtils:
     def add_venue(self, payload):
         uri = self.sdk_client.build_url_prov("venue/0")
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -1051,10 +1045,10 @@ class ProvUtils:
 
     def delete_venue(self, venue_id):
         uri = self.sdk_client.build_url_prov("venue/" + venue_id)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -1066,11 +1060,11 @@ class ProvUtils:
     def edit_venue(self, payload, venue_id):
         uri = self.sdk_client.build_url_prov("venue/" + venue_id)
         payload = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
@@ -1225,9 +1219,7 @@ class UProfileUtility:
             del self.base_profile_config["interfaces"][1]["services"]
             del self.base_profile_config["metrics"]["wifi-frames"]
             del self.base_profile_config["metrics"]["dhcp-snooping"]
-            # print(self.base_profile_config)
-            # print(self.base_profile_config, file=sourceFile)
-            # sourceFile.close()
+
 
     def encryption_lookup(self, encryption="psk"):
         encryption_mapping = {
@@ -1298,7 +1290,6 @@ class UProfileUtility:
 
         self.base_profile_config["radios"].append(base_radio_config_2g)
         self.base_profile_config["radios"].append(base_radio_config_5g)
-        print(self.base_profile_config)
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
@@ -1341,16 +1332,14 @@ class UProfileUtility:
             }
             self.base_profile_config['interfaces'].append(wan_section_vlan)
         else:
-            print("Invalid Mode")
+            logging.error("Invalid Mode")
             return 0
 
     def add_ssid(self, ssid_data, radius=False, radius_auth_data={}, radius_accounting_data={}):
-        print("ssid data : ", ssid_data)
         ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
         for options in ssid_data:
             if options == "multi-psk":
                 ssid_info[options] = ssid_data[options]
-                print("hi", ssid_info)
             if options == "rate-limit":
                 ssid_info[options] = ssid_data[options]
         for i in ssid_data["appliedRadios"]:
@@ -1400,19 +1389,17 @@ class UProfileUtility:
             }
             vlan_section = self.vlan_section
             if vid in self.vlan_ids:
-                print("sss", self.vlan_ids)
                 for i in self.base_profile_config['interfaces']:
                     if i["name"] == "WANv%s" % (vid):
                         i["ssids"].append(ssid_info)
             else:
-                print(self.vlan_ids)
                 self.vlan_ids.append(vid)
                 vlan_section['name'] = "WANv%s" % (vid)
                 vlan_section['vlan']['id'] = int(vid)
                 vlan_section["ssids"] = []
                 vlan_section["ssids"].append(ssid_info)
                 self.base_profile_config['interfaces'].append(vlan_section)
-                print(vlan_section)
+
                 vsection = 0
         else:
             print("invalid mode")
@@ -1422,11 +1409,11 @@ class UProfileUtility:
         payload = {"configuration": self.base_profile_config, "serialNumber": serial_number, "UUID": 1}
         uri = self.sdk_client.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
-        print("Sending Command: " + "\n" +
-              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-              "URI: " + str(uri) + "\n" +
-              "Data: " + str(payload) + "\n" +
-              "Headers: " + str(self.sdk_client.make_headers()))
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
