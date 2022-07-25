@@ -42,7 +42,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_profiles")
 @allure.parent_suite("OpenWifi Multi Vlan Test")
 @allure.suite("VLAN Mode")
-@allure.sub_suite("fiveg")
+@allure.sub_suite("5 GHz Band")
 class TestVlanConfigFivegRadio(object):
 
     @pytest.mark.wpa
@@ -51,7 +51,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2169")
-    @allure.title("Test for station ip wpa ssid vlan 125")
+    @allure.title("Test for station ip WPA ssid vlan 125")
     def test_station_ip_wpa_ssid_5g(self, lf_test, lf_tools,
                                     station_names_fiveg,
                                     test_cases, get_configuration):
@@ -109,7 +109,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2157")
-    @allure.title("Test for station ip wpa2 ssid vlan 200")
+    @allure.title("Test for station ip WPA2 ssid vlan 200")
     def test_station_ip_wpa2_ssid_5g(self, lf_test, lf_tools,
                                      station_names_fiveg,
                                      test_cases, get_configuration):
@@ -159,7 +159,7 @@ class TestVlanConfigFivegRadio(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
-    @allure.title("Test for disable vlan wpa2 ssid vlan 200")
+    @allure.title("Test for disable vlan WPA2 ssid vlan 200")
     def test_disable_vlan_wpa2_ssid_5g(self, lf_test, lf_tools,
                                        station_names_fiveg,
                                        test_cases, get_configuration):

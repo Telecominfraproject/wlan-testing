@@ -34,8 +34,8 @@ setup_params_general = {
 
 #@allure.suite("regression")
 @allure.parent_suite("OpenWifi Dynamic Vlan Test")
-@allure.suite("wpa2 personal")
-@allure.sub_suite("twog")
+@allure.suite("WPA2 Enterprise Security")
+@allure.sub_suite("2.4 GHz Band")
 @allure.feature("VLAN MODE wpa2_enterprise Dynamic Vlan")
 @pytest.mark.parametrize(
     'setup_profiles',

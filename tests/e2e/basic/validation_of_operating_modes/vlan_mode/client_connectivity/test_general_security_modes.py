@@ -53,7 +53,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    @allure.title("Test for open ssid 2g")
+    @allure.title("Test for open ssid 2.4 GHz")
     def test_open_ssid_2g(self, get_ap_logs, get_lf_logs,
                           lf_test, update_report,
                           station_names_twog,
@@ -78,7 +78,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    @allure.title("Test for open ssid 5g")
+    @allure.title("Test for open ssid 5 GHz")
     def test_open_ssid_5g(self, get_ap_logs, get_lf_logs,
                           lf_test, test_cases, station_names_fiveg,
                           update_report, get_ap_channel):
@@ -104,7 +104,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    @allure.title("Test for wpa ssid 2g")
+    @allure.title("Test for wpa ssid 2.4 GHz")
     def test_wpa_ssid_2g(self, get_ap_logs,
                          update_report, get_lf_logs,
                          lf_test, test_cases, station_names_twog, get_ap_channel):
@@ -130,7 +130,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
-    @allure.title("Test for wpa ssid 5g")
+    @allure.title("Test for wpa ssid 5 GHz")
     def test_wpa_ssid_5g(self, get_ap_logs, get_lf_logs,
                          lf_test, update_report, test_cases, station_names_fiveg, get_ap_channel):
         """Client Connectivity wpa ssid 5G
@@ -155,7 +155,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("Test for wpa2 personal ssid 2g")
+    @allure.title("Test for wpa2 personal ssid 2.4 GHz")
     def test_wpa2_personal_ssid_2g(self, get_ap_logs, get_lf_logs,
                                    lf_test, update_report, test_cases,
                                    station_names_twog, get_ap_channel):
@@ -181,7 +181,7 @@ class TestvlanModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("Test for wpa2 personal ssid 5g")
+    @allure.title("Test for wpa2 personal ssid 5 GHz")
     def test_wpa2_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
                                    update_report, test_cases,
                                    station_names_fiveg,
@@ -247,7 +247,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    @allure.title("Test for wpa3 personal ssid 2g")
+    @allure.title("Test for wpa3 personal ssid 2.4 GHz")
     def test_wpa3_personal_ssid_2g(self, get_ap_logs, get_lf_logs,
                                    station_names_twog, lf_test,
                                    update_report,
@@ -274,7 +274,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    @allure.title("Test for wpa3 personal ssid 5g")
+    @allure.title("Test for wpa3 personal ssid 5 GHz")
     def test_wpa3_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
                                    station_names_fiveg, lf_test, test_cases,
                                    update_report, get_ap_channel):
@@ -299,7 +299,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    @allure.title("Test for wpa3 personal mixed ssid 2g")
+    @allure.title("Test for wpa3 personal mixed ssid 2.4 GHz")
     def test_wpa3_personal_mixed_ssid_2g(self, get_ap_logs,
                                          station_names_twog,
                                          lf_test, get_lf_logs,
@@ -326,7 +326,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    @allure.title("Test for wpa3 personal mixed ssid 5g")
+    @allure.title("Test for wpa3 personal mixed ssid 5 GHz")
     def test_wpa3_personal_mixed_ssid_5g(self, get_ap_logs,
                                          station_names_fiveg, lf_test,
                                          test_cases, get_lf_logs,
@@ -352,7 +352,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
-    @allure.title("Test for wpa wpa2 personal ssid 2g")
+    @allure.title("Test for wpa wpa2 personal ssid 2.4 GHz")
     def test_wpa_wpa2_personal_ssid_2g(self, get_ap_logs,
                                        station_names_twog,
                                        lf_test, get_lf_logs,
@@ -380,7 +380,7 @@ class TestvlanModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
-    @allure.title("Test for wpa wpa2 personal ssid 5g")
+    @allure.title("Test for wpa wpa2 personal ssid 5 GHz")
     def test_wpa_wpa2_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
                                        station_names_fiveg, lf_test, test_cases,
                                        update_report, get_ap_channel):

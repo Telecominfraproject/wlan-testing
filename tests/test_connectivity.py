@@ -24,6 +24,8 @@ sdk_expected = True
 
 
 @allure.testcase(name="Test Resources", url="")
+@allure.parent_suite("OpenWifi Test Connectivity")
+@allure.suite("Test Resources")
 class TestResources(object):
     """Test Case Class: Test cases to cover resource Connectivity"""
 
@@ -31,6 +33,7 @@ class TestResources(object):
     @pytest.mark.uc_sanity
     @pytest.mark.interop_uc_sanity
     @allure.testcase(name="test_controller_connectivity", url="")
+    @allure.title("Test for controller connectivity")
     def test_controller_connectivity(self, setup_controller, get_configuration):
         """Test case to verify cloud Controller Connectivity"""
 
@@ -152,6 +155,7 @@ class TestResources(object):
 
     @pytest.mark.test_access_points_connectivity
     @allure.testcase(name="test_access_points_connectivity", url="")
+    @allure.title("Test for access points connectivity")
     def test_access_points_connectivity(self, setup_controller, get_uci_show, test_access_point, get_configuration,
                                         test_ap_connection_status, fixtures_ver, get_apnos_logs):
         """Test case to verify Access Points Connectivity"""
@@ -194,12 +198,14 @@ class TestResources(object):
         assert False not in data
 
     @pytest.mark.traffic_generator_connectivity
+    @allure.title("Test for traffic generator connectivity")
     @allure.testcase(name="test_traffic_generator_connectivity", url="")
     def test_traffic_generator_connectivity(self, traffic_generator_connectivity):
         """Test case to verify Traffic Generator Connectivity"""
         allure.attach(name="LANforge version", body=str(traffic_generator_connectivity))
         assert traffic_generator_connectivity
 
+    @allure.title("Test for ap conn state")
     def test_ap_conn_state(self):
         global state
         if state == False:
@@ -211,10 +217,13 @@ class TestResources(object):
 
 
 @allure.testcase(name="Firmware Management", url="")
+@allure.parent_suite("OpenWifi Test Connectivity")
+@allure.suite("Test FMS")
 @pytest.mark.uc_firmware
 class TestFMS(object):
 
     @pytest.mark.get_firmware_list
+    @allure.title("Test for fms version list")
     def test_fms_version_list(self, fixtures_ver, get_configuration, get_ap_logs):
         PASS = []
         for ap in get_configuration['access_point']:
@@ -298,6 +307,7 @@ class TestFMS(object):
         assert False not in PASS
 
     @pytest.mark.firmware_upgrade
+    @allure.title("Test for firmware upgrade request")
     def test_firmware_upgrade_request(self, firmware_upgrade, get_ap_logs, test_ap_connection_status):
         for update in firmware_upgrade:
             allure.attach(name='serial: ' + update[0], body="")
@@ -307,11 +317,13 @@ class TestFMS(object):
         assert True
 
     @pytest.mark.test_firmware_ap
+    @allure.title("Test for firmware upgrade status AP")
     def test_firmware_upgrade_status_AP(self, firmware_upgrade, get_ap_logs):
         allure.attach(name="firmware Upgrade Status:", body="")
         assert True
 
     @pytest.mark.test_firmware_gw
+    @allure.title("Test for firmware upgrade status gateway")
     def test_firmware_upgrade_status_gateway(self, get_apnos, get_configuration, setup_controller, get_ap_logs,
                                              add_firmware_property_after_upgrade):
         status = []

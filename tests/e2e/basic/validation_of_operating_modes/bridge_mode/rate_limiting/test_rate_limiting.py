@@ -36,7 +36,7 @@ setup_params_general = {
 #@allure.feature("Bridge MODE Rate Limiting")
 @allure.parent_suite("OpenWifi Rate Limiting Test")
 @allure.suite("BRIDGE Mode")
-@allure.sub_suite("wpa2 personal")
+@allure.sub_suite("WPA2 Personal Security")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -113,7 +113,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.batch_size_125
     @pytest.mark.ow_rate_limiting_tests_lf
     #@allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
-    @allure.title("Test for Upload and Download batch size 1,2,5 2g")
+    @allure.title("Test for Upload and Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_125_2g(self, lf_test, lf_tools):
         """
             Test Rate Limiting Scenario

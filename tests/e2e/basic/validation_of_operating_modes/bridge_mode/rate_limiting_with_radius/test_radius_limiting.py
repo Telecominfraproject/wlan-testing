@@ -47,7 +47,7 @@ setup_params_general = {
 #@allure.feature("Bridge MODE Rate Limiting with radius server")
 @allure.parent_suite("OpenWifi Rate Limiting with Radius Test")
 @allure.suite("BRIDGE Mode")
-@allure.sub_suite("wpa2 personal")
+@allure.sub_suite("WPA2 Enterprise Security")
 @pytest.mark.parametrize(
     'setup_profiles',
     [setup_params_general],
@@ -62,7 +62,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.ow_sanity_lf
     @pytest.mark.twog_upload_per_ssid
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
-    @allure.title("Test for Upload per SSID 2g")
+    @allure.title("Test for Upload per SSID 2.4 GHz")
     def test_radius_server_2g_upload_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
                                               station_names_twog):
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
@@ -100,7 +100,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.twog_download_perssid_persta
     @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5850", name="WIFI-5850")
-    @allure.title("Test for Download per SSID per Station 2g")
+    @allure.title("Test for Download per SSID per Station 2.4GHz")
     def test_radius_server_2g_download_perssid_persta(self, lf_test, lf_tools, rate_radius_info,
                                                       rate_radius_accounting_info,
                                                       station_names_twog):
