@@ -13,6 +13,7 @@ if "libs" not in sys.path:
 from controller.controller_1x.controller import ProfileUtility
 from controller.controller_2x.controller import UProfileUtility
 from controller.controller_3x.controller import CController
+from apnos.APNOS_3x.apnos_3x import CCap
 import time
 from lanforge.lf_tools import ChamberView
 import pytest
@@ -27,8 +28,10 @@ def instantiate_profile(request):
         yield CController
     else:
         yield UProfileUtility
-
-
+@pytest.fixture(scope="session")
+def instantiate_ap_profile(request):
+    if request.config.getoption("cc.1"):
+        yield CCap
 @pytest.fixture(scope="session")
 def create_lanforge_chamberview(lf_tools):
     scenario_object, scenario_name = lf_tools.Chamber_View()
