@@ -2103,8 +2103,8 @@ class RunTest:
     def rsn_test(self, mode="BRIDGE", ssid="[BLANK]", passkey="[BLANK]", security="open", extra_securities=["wpa2"],
                  band="twog", vlan_id=100, station_name=None, radio="wiphy0", sniff_radio='wiphy0', ssid_channel=6,
                  eap="TLS", tls_passwd="password", identity="user", key_mgmt="WPA-EAP",
-                 sniff_channel=11, sniff_duration=90, test_name='rsn-test'):
-        passes, result = True, "Successful"
+                 sniff_channel=11, sniff_duration=100, test_name='rsn-test'):
+        passes, result=True, "Successful"
         if station_name is None:
             station_name=['sta0000']
         if band == "twog":
@@ -2135,20 +2135,24 @@ class RunTest:
                 self.start_sniffer(radio_channel=sniff_channel, radio=self.ax_radios[0].split(".")[2],
                                    duration=sniff_duration, test_name=test_name)
         if security == "open" or security == "wpa" or security == "wpa2" or security == "wpa3":
-            self.skip_pcap = True
-            passes, result = self.Client_Connectivity(ssid=ssid, passkey=passkey, security=security, extra_securities=extra_securities,
-                            station_name=station_name, mode=mode, vlan_id=1, band=band, ssid_channel=ssid_channel)
+            self.skip_pcap=True
+            passes, result=self.Client_Connectivity(ssid=ssid, passkey=passkey, security=security,
+                                                    extra_securities=extra_securities,
+                                                    station_name=station_name, mode=mode, vlan_id=1, band=band,
+                                                    ssid_channel=ssid_channel)
             time.sleep(sniff_duration)
             self.stop_sniffer()
         elif security == "wpa3_enterprise" or security == "wpa2_enterprise":
             if security == "wpa3_enterprise":
-                security = "wpa3"
+                security="wpa3"
             elif security == "wpa2_enterprise":
-                security = "wpa2"
-            passes, result = self.EAP_Connect(ssid=ssid, security=security,
-                                           mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                           identity=identity, station_name=station_name,
-                                           key_mgmt=key_mgmt, vlan_id=vlan_id, ssid_channel=ssid_channel)
+                security="wpa2"
+
+            self.skip_pcap=True
+            passes, result=self.EAP_Connect(ssid=ssid, security=security,
+                                            mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
+                                            identity=identity, station_name=station_name,
+                                            key_mgmt=key_mgmt, vlan_id=vlan_id, ssid_channel=ssid_channel)
             time.sleep(sniff_duration)
             self.stop_sniffer()
         try:
@@ -2157,6 +2161,29 @@ class RunTest:
         except Exception as e:
             raise FileNotFoundError(e)
 
+        self.pcap_obj=LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
+
+        table_heads=["Packet Type", "Capability Check", 'PASS/FAIL']
+        table_data=[]
+
+        # check for RSN Capabilities in Beacon Frame
+        check_rsn=self.pcap_obj.check_rsn(pcap_file=self.pcap_obj.pcap_name)
+        allure.attach(body=check_rsn, name="Verify RSN Capabilities in Beacon Frame")
+        if check_rsn is not None:
+            for i in range(len(check_rsn)):
+                if check_rsn[i] != "Value not Found":
+                    table_data.append(['Frame', check_rsn[i], 'PASS'])
+                else:
+                    table_data.append(['Frame ', check_rsn[i], 'FAIL'])
+                    result='FAIL'
+        print(table_data)
+        # attach test data in a table to allure
+        report_obj=Report()
+        table_info=report_obj.table2(table=table_data, headers=table_heads)
+        allure.attach(name="Test Results Info", body=table_info)
+
+        allure.attach.file(source=self.pcap_obj.pcap_name,
+                           name="pcap_file", attachment_type=allure.attachment_type.PCAP)
         # print(table_data)
         # attach test data in a table to allure
         report_obj=Report()

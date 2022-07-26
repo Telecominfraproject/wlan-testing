@@ -1,6 +1,6 @@
 """
        RSN Capability Test : BRIDGE Mode
-       pytest -m "rsn and open and bridge"
+       pytest -m "rsn and bridge"
 """
 
 import os
@@ -69,7 +69,7 @@ setup_params_general={
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-class TestRSNCapabilitities(object):
+class TestRSNCapabilities(object):
     """
         RSN capabilities Test Cases
         pytest -m "rsn and bridge"
@@ -448,7 +448,7 @@ class TestRSNCapabilitities(object):
                                     test_cases, radius_info, get_ap_channel):
         """ wpa enterprise 5g
                     pytest -m "rsn and bridge and wpa3_enterprise and twog"
-                """
+        """
 
         profile_data=setup_params_general["ssid_modes"]["wpa3_enterprise"][1]
         ssid_name=profile_data["ssid_name"]
