@@ -1063,7 +1063,7 @@ def get_ip_address_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(12):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
@@ -1450,7 +1450,7 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(12):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
@@ -1949,7 +1949,7 @@ def get_ip_address_eap_ios(request, WifiName, User, ttls_passwd, setup_perfectoM
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(12):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
@@ -2289,7 +2289,7 @@ def wifi_connect_eap(request, WifiName, User, ttls_passwd, setup_perfectoMobile,
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(2):
+        for check_for_all_ssids in range(12):
             available_ssids = get_all_available_ssids(driver)
             try:
                 if WifiName not in available_ssids:
@@ -2554,7 +2554,7 @@ def captive_portal_ios(request, WifiName, WifiPass, setup_perfectoMobile, connDa
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(12):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
@@ -2892,7 +2892,7 @@ def gets_ip_add_and_does_not_forget_ssid_ios(request, WifiName, WifiPass, setup_
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(12):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
@@ -3154,7 +3154,7 @@ def gets_ip_add_eap_and_does_not_forget_ssid_ios(request, WifiName, User, ttls_p
     available_ssids = False
 
     try:
-        for check_for_all_ssids in range(9):
+        for check_for_all_ssids in range(12):
             available_ssids = get_all_available_ssids(driver)
             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
             try:
