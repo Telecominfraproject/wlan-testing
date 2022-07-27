@@ -59,7 +59,9 @@ class SetupLibrary:
         client.close()
         available_tty_ports = output.split("\n")
         if tty in available_tty_ports:
-            logging.info("Expected Serial Console Port is available on Remote system: " + tty)
+            logging.info("Expected Serial Console Port, " + tty + " is available on " + self.remote_ip)
+        else:
+            logging.error("Expected Serial Console Port, " + tty + " is not available on " + self.remote_ip)
         return tty in available_tty_ports
 
     def kill_all_minicom_process(self, tty="/dev/ttyUSB0"):

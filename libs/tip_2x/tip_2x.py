@@ -110,7 +110,7 @@ class tip_2x:
             pytest.fail("Unable to setup Controller Objects")
             logging.error("Exception in setting up Controller objects:" + str(e))
         try:
-            self.dut_library_object = APLIBS()
+            self.dut_library_object = APLIBS(dut_data=self.device_under_tests_info)
         except Exception as e:
             pytest.fail("Unable to setup AP Objects")
             logging.error("Exception in setting up Access Point Library object:" + str(e))
@@ -142,8 +142,7 @@ class tip_2x:
         pass
 
     def setup_basic_configuration(self, configuration=None,
-                                  requested_combination=None,
-                                  dut_idx=0):
+                                  requested_combination=None):
         final_configuration = self.setup_configuration_data(configuration=configuration,
                                                             requested_combination=requested_combination)
 
@@ -154,6 +153,7 @@ class tip_2x:
             profile_object.set_mode(mode=final_configuration["mode"])
         else:
             pytest.skip(final_configuration["mode"] + " Mode is not supported")
+
         # Setup Radio Scenario
         if final_configuration["rf"] != {}:
             profile_object.set_radio_config(radio_config=final_configuration["rf"])
@@ -167,27 +167,24 @@ class tip_2x:
         r_val = False
 
         # Do check AP before pushing the configuration
-        """ 
-            TODO: Check 
-            
-                    serial connection check
-                    ubus call ucentral status
-                    save the current uuid
-                    uci show ucentral
-                    ifconfig
-                    wifi status
-                    start logger to collect ap logs before config apply        
-                    Timestamp before doing config apply
-        
-        
+        # TODO
+        self.dut_library_object.check_serial_connection()
+        """  
+        serial connection check
+        ubus call ucentral status
+        save the current uuid
+        uci show ucentral
+        ifconfig
+        wifi status
+        start logger to collect ap logs before config apply        
+        Timestamp before doing config apply
         """
-
 
         for dut in self.device_under_tests_info:
             resp = profile_object.push_config(serial_number=dut["identifier"])
             logging.info("Response for Config apply: " + resp.status_code)
             if resp.status_code != 200:
-                logging.info("Failed to apply Configuration to AP. Response Code"  +
+                logging.info("Failed to apply Configuration to AP. Response Code" +
                              resp.status_code +
                              "Retrying in 5 Seconds... ")
                 time.sleep(5)
@@ -197,23 +194,19 @@ class tip_2x:
                     pytest.fail("Failed to apply Config, Response code :" + resp.status_code)
         if resp.status_code == 200:
             r_val = True
-
+        # TODO
         """ 
-                    TODO: Check 
-                            
-                            serial connection check
-                            ubus call ucentral status
-                            save the current uuid and compare with the one before config apply
-                            save the active config and compare with the latest apply
-                            uci show 
-                            ifconfig
-                            iwinfo
-                            wifi status
-                            start logger to collect ap logs before config apply        
-                            Timestamp after doing config apply
-
-
-       """
+        serial connection check
+        ubus call ucentral status
+        save the current uuid and compare with the one before config apply
+        save the active config and compare with the latest apply
+        uci show 
+        ifconfig
+        iwinfo
+        wifi status
+        start logger to collect ap logs before config apply        
+        Timestamp after doing config apply
+        """
         return r_val
 
     def setup_configuration_data(self, configuration=None,
