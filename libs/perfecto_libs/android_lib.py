@@ -2159,9 +2159,11 @@ def wifi_connect(request, WifiName, WifiPass, setup_perfectoMobile, connData):
                 try:
                     driver.implicitly_wait(1)
                     get_switch_text_element = driver.find_element_by_xpath(
-                        "//*[@resource-id='android:id/icon']")
-                    get_switch_text = get_switch_text_element.click()
-                    if get_switch_text is not None:
+                        "//*[@resource-id='com.android.settings:id/switch_widget']")
+                    get_switch_text = get_switch_text_element.text
+                    print("Value of switch button")
+                    print(get_switch_text)
+                    if get_switch_text =="OFF":
                         switch_text = "Off"
                     else:
                         switch_text = "On"
@@ -2471,7 +2473,7 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
                             try:
                                 check_if_no_internet_popup(driver)
                                 forget_ssid = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/forget_button']//*[@resource-id='com.android.settings:id/icon']")
+                                    "//*[@text='Forget']")
                                 forget_ssid.click()
                                 print("Forget old ssid")
                                #allure.attach(name=body=str("Forget old ssid"))
@@ -2531,9 +2533,11 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
                 try:
                     driver.implicitly_wait(1)
                     get_switch_text_element = driver.find_element_by_xpath(
-                        "//*[@resource-id='android:id/icon']")
-                    get_switch_text = get_switch_text_element.click()
-                    if get_switch_text is not None:
+                        "//*[@resource-id='com.android.settings:id/switch_widget']")
+                    get_switch_text = get_switch_text_element.text
+                    print("Value of switch button")
+                    print(get_switch_text)
+                    if get_switch_text == "OFF":
                         switch_text = "Off"
                     else:
                         switch_text = "On"
@@ -2578,31 +2582,31 @@ def wifi_disconnect_and_forget(request, WifiName, WifiPass, setup_perfectoMobile
                     except:
                         print("Couldn't turn on WIFI switch")
                         closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                        # ---------------------This is to Forget current connected SSID-------------------------------
-                        try:  # To deal with already connected SSID
+                    # ---------------------This is to Forget current connected SSID-------------------------------
+                    try:  # To deal with already connected SSID
+                        check_if_no_internet_popup(driver)
+                        network_category = driver.find_element_by_xpath("//*[@text='Connected']")
+                        try:  # To forget existing ssid
+                            print("To forget ssid")
                             check_if_no_internet_popup(driver)
-                            network_category = driver.find_element_by_xpath("//*[@text='Connected']")
-                            try:  # To forget existing ssid
-                                print("To forget ssid")
+                            additional_details_element = driver.find_element_by_xpath(
+                                "//*[@text='Connected']")
+                            additional_details_element.click()
+                            try:
                                 check_if_no_internet_popup(driver)
-                                additional_details_element = driver.find_element_by_xpath(
-                                    "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
-                                additional_details_element.click()
-                                try:
-                                    check_if_no_internet_popup(driver)
-                                    forget_ssid = driver.find_element_by_xpath(
-                                        "//*[@resource-id='com.android.settings:id/button1']")
-                                    forget_ssid.click()
-                                    print("Forget old ssid")
-                                except:
-                                    print("Couldn't forget ssid")
-                                    closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                                forget_ssid = driver.find_element_by_xpath(
+                                    "//*[@resource-id='com.android.settings:id/button1']")
+                                forget_ssid.click()
+                                print("Forget old ssid")
                             except:
-                                #allure.attach(name=body=str("Couldn't get into additional details"))
-                                print("Couldn't get into additional details")
+                                print("Couldn't forget ssid")
+                                closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         except:
-                            #allure.attach(name=body=str("No Connected SSIDS"))
-                            print("No Connected SSIDS")
+                            #allure.attach(name=body=str("Couldn't get into additional details"))
+                            print("Couldn't get into additional details")
+                    except:
+                        #allure.attach(name=body=str("No Connected SSIDS"))
+                        print("No Connected SSIDS")
                     #----------------------This is to Forget current connected SSID--------------------------------
 
                     try:
@@ -5073,6 +5077,16 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                         check_if_no_internet_popup(driver)
                     except Exception as e:
                         print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
+
+                    try:
+                        time.sleep(20)
+                        report.step_start("Click Sign in button")
+                        print("Click Sign in Button")
+                        join_btn_element = driver.find_element_by_xpath("//*[@resource-id='com.android.settings:id/button2']")
+                        join_btn_element.click()
+                    except NoSuchElementException:
+                        print(" Couldn't press Sign in  button")
+
                     try:
                         time.sleep(20)
                         report.step_start("Click Accept Terms Button")
