@@ -536,4 +536,3 @@ if __name__ == '__main__':
     #     print("a = l")
     # print(obj.get_ap_version())
 
-
