@@ -371,3 +371,143 @@ class TestNATModeCaptivePortalSuiteOneNAT(object):
         else:
             allure.attach(name="Connection Status: ", body=str("No Internet access"))
             assert False
+
+#------------------------Endurance Test------------------------------
+
+setup_params_general_stress = {
+    "mode": "NAT",
+    "ssid_modes": {
+        "open": [{"ssid_name": "stress_open_2g", "appliedRadios": ["2G"]}],
+        "wpa2_personal": [{"ssid_name": "stress_wpa2_2g", "appliedRadios": ["2G"], "security_key": "lanforge"}],
+        "wpa3_personal": [{"ssid_name": "stress_wpa3_2g", "appliedRadios": ["2G"], "security_key": "lanforge"}],
+        "wpa3_personal_mixed": [{"ssid_name": "stress_wpa3_p_m_2g", "appliedRadios": ["2G"],"security_key": "lanforge"}],
+        "wpa_wpa2_personal_mixed": [{"ssid_name": "stress_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"],"security_key": "lanforge"}]
+    },
+    "rf": {},
+    "radius": False
+}
+
+# for sec_modes in setup_params_general_stress['ssid_modes'].keys():
+#     for i in range(len(setup_params_general_stress['ssid_modes'][sec_modes])):
+#         N = 3
+#         rand_string = (''.join(random.choices(string.ascii_uppercase +
+#                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
+#         setup_params_general_stress['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general_stress['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+
+@allure.suite(suite_name="interop sanity")
+@allure.sub_suite(sub_suite_name="Nat Mode Stress test : Suite-B")
+@pytest.mark.InteropsuiteB_Stress
+@pytest.mark.parametrize(
+    'setup_profiles',
+    [setup_params_general_stress],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_profiles")
+class TestNATModeStressTestAndroid(object):
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10132", name="WIFI-10132")
+    @pytest.mark.open
+    @pytest.mark.wpa2_personal
+    @pytest.mark.wpa3_personal
+    @pytest.mark.wpa3_personal_mixed
+    @pytest.mark.wpa_wpa2_personal_mixed
+    @pytest.mark.stressTest
+    def test_stress_android(self, request, get_vif_state, get_ap_logs, get_APToMobileDevice_data,
+                                        setup_perfectoMobile_android):
+        for i in range(5):
+            if i == 0:
+                profile_data = setup_params_general_stress["ssid_modes"]["open"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = "[BLANK]"
+
+            elif i == 1:
+                profile_data = setup_params_general_stress["ssid_modes"]["wpa2_personal"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = profile_data["security_key"]
+
+            elif i == 2:
+                profile_data = setup_params_general_stress["ssid_modes"]["wpa3_personal"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = profile_data["security_key"]
+
+            elif i == 3:
+                profile_data = setup_params_general_stress["ssid_modes"]["wpa3_personal_mixed"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = profile_data["security_key"]
+
+            else:
+                profile_data = setup_params_general_stress["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = profile_data["security_key"]
+
+
+            print("SSID_NAME: " + ssidName)
+            print("SSID_PASS: " + ssidPassword)
+            get_vif_state.append(ssidName)
+            if ssidName not in get_vif_state:
+                allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+                pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
+            report = setup_perfectoMobile_android[1]
+            driver = setup_perfectoMobile_android[0]
+            connData = get_APToMobileDevice_data
+
+            # Set Wifi/AP Mode
+
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+
+
+        for i in range(5):
+            if i == 0:
+                profile_data = setup_params_general_stress["ssid_modes"]["open"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = "[BLANK]"
+
+            elif i == 1:
+                profile_data = setup_params_general_stress["ssid_modes"]["wpa2_personal"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = profile_data["security_key"]
+
+            elif i == 2:
+                profile_data = setup_params_general_stress["ssid_modes"]["wpa3_personal"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = profile_data["security_key"]
+
+            elif i == 3:
+                profile_data = setup_params_general_stress["ssid_modes"]["wpa3_personal_mixed"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = profile_data["security_key"]
+
+            else:
+                profile_data = setup_params_general_stress["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
+                print(profile_data)
+                ssidName = profile_data["ssid_name"]
+                ssidPassword = profile_data["security_key"]
+
+            print("SSID_NAME: " + ssidName)
+            print("SSID_PASS: " + ssidPassword)
+            get_vif_state.append(ssidName)
+            if ssidName not in get_vif_state:
+                allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
+                pytest.xfail("SSID NOT AVAILABLE IN VIF STATE")
+
+            report = setup_perfectoMobile_android[1]
+            driver = setup_perfectoMobile_android[0]
+            connData = get_APToMobileDevice_data
+
+            # Set Wifi/AP Mode
+
+            wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
+            assert verifyUploadDownloadSpeed_android(request, setup_perfectoMobile_android, connData)
+            wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
