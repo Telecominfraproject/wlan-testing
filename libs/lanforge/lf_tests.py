@@ -844,7 +844,7 @@ class RunTest:
         return self.apstab_obj
 
     def ratevsrange(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="85%", dut_name="TIP",
-                    upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None):
+                    upload_rate="0", duration="1m", instance_name="test_demo", raw_lines=None, move_to_influx=False):
         if mode == "BRIDGE":
             self.client_connect.upstream_port = self.upstream_port
         elif mode == "NAT":
@@ -871,15 +871,21 @@ class RunTest:
                                raw_lines=raw_lines)
         self.rvr_obj.setup()
         self.rvr_obj.run()
-        report_name = self.rvr_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
-                             influx_port=self.influx_params["influx_port"],
-                             influx_org=self.influx_params["influx_org"],
-                             influx_token=self.influx_params["influx_token"],
-                             influx_bucket=self.influx_params["influx_bucket"],
-                             path=report_name)
+        # report_name = self.rvr_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        if move_to_influx:
+            try:
+                report_name = self.rvr_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+                influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                     influx_port=self.influx_params["influx_port"],
+                                     influx_org=self.influx_params["influx_org"],
+                                     influx_token=self.influx_params["influx_token"],
+                                     influx_bucket=self.influx_params["influx_bucket"],
+                                     path=report_name)
 
-        influx.glob()
+                influx.glob()
+            except Exception as e:
+                print(e)
+                pass
         return self.rvr_obj
 
     def rx_sensitivity(self, station_name=None, mode="BRIDGE", vlan_id=100, download_rate="100%", dut_name="TIP",
@@ -1688,9 +1694,9 @@ class RunTest:
         self.cvtest_obj.setup()
         t1 = threading.Thread(target=self.cvtest_obj.run)
         t1.start()
-        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 50))
+        t2 = threading.Thread(target=self.pcap_obj.sniff_packets, args=(sniff_radio, "mu-mimo", channel, 40))
         if t1.is_alive():
-            time.sleep(400)
+            time.sleep(375)
             t2.start()
         while t1.is_alive():
             time.sleep(1)
