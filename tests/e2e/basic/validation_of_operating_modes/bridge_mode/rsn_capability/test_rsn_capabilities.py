@@ -139,7 +139,7 @@ class TestRSNCapabilities(object):
         channel=6
         print("ssid channel:- ", channel)
         vlan=1
-        passes, result=lf_test.rsn_test(ssid=ssid_2g, security=security, extra_securities=extra_sec, passkey="[BLANK]",
+        passes, result=lf_test.rsn_test(ssid=ssid_2g, security=security, extra_securities=extra_sec, passkey=passkey,
                                         mode=mode, band=band, station_name=station_names_twog, vlan_id=vlan,
                                         ssid_channel=channel, sniff_radio='wiphy0', sniff_channel=channel)
 
@@ -188,7 +188,7 @@ class TestRSNCapabilities(object):
         channel=6
         print("ssid channel:- ", channel)
         vlan=1
-        passes, result=lf_test.rsn_test(ssid=ssid_2g, security=security, extra_securities=extra_sec, passkey="[BLANK]",
+        passes, result=lf_test.rsn_test(ssid=ssid_2g, security=security, extra_securities=extra_sec, passkey=passkey,
                                         mode=mode, band=band, station_name=station_names_twog, vlan_id=vlan,
                                         ssid_channel=channel, sniff_radio='wiphy0', sniff_channel=channel)
 
@@ -256,7 +256,7 @@ class TestRSNCapabilities(object):
         channel=get_ap_channel[0]["5G"]
         print("ssid channel:- ", channel)
         vlan=1
-        passes, result=lf_test.rsn_test(ssid=ssid_5g, security=security, extra_securities=extra_sec, passkey=passkey,
+        passes, result=lf_test.rsn_test(ssid=ssid_5g, security=security, extra_securities=extra_sec, passkey=security_key,
                                 mode=mode, band=band, station_name=station_names_fiveg, vlan_id=vlan,
                                 ssid_channel=channel, sniff_radio='wiphy0', sniff_channel=channel)
         assert passes == "PASS", result
@@ -278,7 +278,7 @@ class TestRSNCapabilities(object):
         channel=get_ap_channel[0]["2G"]
         print("ssid channel:- ", channel)
         vlan=1
-        passes, result=lf_test.rsn_test(ssid=ssid_2g, security=security_key, extra_securities=extra_sec, passkey="[BLANK]",
+        passes, result=lf_test.rsn_test(ssid=ssid_2g, security=security_key, extra_securities=extra_sec, passkey=security_key,
                                 mode=mode, band=band, station_name=station_names_twog, vlan_id=vlan,
                                 ssid_channel=channel, sniff_radio='wiphy0', sniff_channel=channel)
         assert passes == "PASS", result
