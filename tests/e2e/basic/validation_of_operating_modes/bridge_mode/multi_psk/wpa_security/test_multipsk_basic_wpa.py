@@ -85,7 +85,7 @@ class TestMultipskBridge(object):
         if multipsk_obj == True:
             assert True
         else:
-            assert False
+            assert False, "Expected and Attained IP's of Station are Different"
 
     @pytest.mark.multipsk
     @pytest.mark.wpa
@@ -126,5 +126,5 @@ class TestMultipskBridge(object):
         if multipsk_obj == True:
             assert True
         else:
-            assert False
+            assert False, "Expected and Attained IP's of Station are Different"
 
