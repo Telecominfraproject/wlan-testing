@@ -52,14 +52,20 @@ class TestMultiAssoDisassoVlan(object):
             lf_tools.admin_up_down(sta_list=station_list, option="up")
             print("stations up")
 
+        print("Cleanup existing clients and traffic")
         lf_tools.reset_scenario()
+        lf_test.Client_disconnect(clean_l3_traffic=True)
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         print(ssid_name)
         mode = "VLAN"
         vlan = 100
+        lf_tools.add_vlan(vlan_ids=[vlan])
+        for rad in lf_tools.twog_radios:
+            values = rad.split(".")
+            lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
+                                       radio=values[2], antenna=4)
         lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
@@ -72,9 +78,7 @@ class TestMultiAssoDisassoVlan(object):
                                         upload_rate="4Mbps", protocol="UDP-IPv4", duration="120000", create_stations=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
-
         csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="upload")
         print(type(csv_val))
         print(csv_val)
@@ -88,21 +92,21 @@ class TestMultiAssoDisassoVlan(object):
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            assert False, "csv file does not exist"
         else:
             for i in csv_val.values():
                 if i >= pass_value:
                     pass_fail.append(1)
                 else:
                     pass_fail.append(0)
+            allure.attach.file(source="../reports/" + report_name + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                               name="Throughput CSV file",attachment_type=allure.attachment_type.CSV)
             if pass_fail.count(0) == 0:
                 print("Test passed successfully")
-                allure.attach(name="Csv Data", body=str(csv_val))
                 assert True
             else:
-                print(" valueTest failed due to lesser")
-                allure.attach(name="Csv Data", body=str(csv_val))
-                assert False
+                print("Test failed due to lesser value")
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5874", name="WIFI-5874")
@@ -136,8 +140,12 @@ class TestMultiAssoDisassoVlan(object):
         print(ssid_name)
         mode = "VLAN"
         vlan = 100
+        lf_tools.add_vlan(vlan_ids=[vlan])
+        for rad in lf_tools.twog_radios:
+            values = rad.split(".")
+            lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
+                                       radio=values[2], antenna=4)
         lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
@@ -151,9 +159,7 @@ class TestMultiAssoDisassoVlan(object):
                                         create_stations=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
-
         csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="download")
         print(type(csv_val))
         print(csv_val)
@@ -167,21 +173,21 @@ class TestMultiAssoDisassoVlan(object):
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            assert False, "csv file does not exist"
         else:
             for i in csv_val.values():
                 if i >= pass_value:
                     pass_fail.append(1)
                 else:
                     pass_fail.append(0)
+            allure.attach.file(source="../reports/" + report_name + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                               name="Throughput CSV file",attachment_type=allure.attachment_type.CSV)
             if pass_fail.count(0) == 0:
                 print("Test passed successfully")
-                allure.attach(name="Csv Data", body=str(csv_val))
                 assert True
             else:
-                print(" valueTest failed due to lesser")
-                allure.attach(name="Csv Data", body=str(csv_val))
-                assert False
+                print("Test failed due to lesser value")
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5875", name="WIFI-5875")
@@ -215,8 +221,12 @@ class TestMultiAssoDisassoVlan(object):
         print(ssid_name)
         mode = "VLAN"
         vlan = 100
+        lf_tools.add_vlan(vlan_ids=[vlan])
+        for rad in lf_tools.fiveg_radios:
+            values = rad.split(".")
+            lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
+                                       radio=values[2], antenna=4)
         lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
@@ -230,9 +240,7 @@ class TestMultiAssoDisassoVlan(object):
                                         create_stations=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
-
         csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="upload")
         print(type(csv_val))
         print(csv_val)
@@ -246,21 +254,21 @@ class TestMultiAssoDisassoVlan(object):
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            assert False, "csv file does not exist"
         else:
             for i in csv_val.values():
                 if i >= pass_value:
                     pass_fail.append(1)
                 else:
                     pass_fail.append(0)
+            allure.attach.file(source="../reports/" + report_name + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                               name="Throughput CSV file",attachment_type=allure.attachment_type.CSV)
             if pass_fail.count(0) == 0:
                 print("Test passed successfully")
-                allure.attach(name="Csv Data", body=str(csv_val))
                 assert True
             else:
-                print(" valueTest failed due to lesser")
-                allure.attach(name="Csv Data", body=str(csv_val))
-                assert False
+                print("Test failed due to lesser value")
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5876", name="WIFI-5876")
@@ -295,8 +303,11 @@ class TestMultiAssoDisassoVlan(object):
         mode = "VLAN"
         vlan = 100
         lf_tools.add_vlan(vlan_ids=[vlan])
+        for rad in lf_tools.fiveg_radios:
+            values = rad.split(".")
+            lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
+                                       radio=values[2], antenna=4)
         lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
@@ -310,9 +321,7 @@ class TestMultiAssoDisassoVlan(object):
                                         create_stations=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
-
         csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="download")
         print(type(csv_val))
         print(csv_val)
@@ -326,21 +335,21 @@ class TestMultiAssoDisassoVlan(object):
         if not csv_val:
             print("csv file does not exist, station did not got ip, Test failed")
             allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            assert False, "csv file does not exist"
         else:
             for i in csv_val.values():
                 if i >= pass_value:
                     pass_fail.append(1)
                 else:
                     pass_fail.append(0)
+            allure.attach.file(source="../reports/" + report_name + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                               name="Throughput CSV file",attachment_type=allure.attachment_type.CSV)
             if pass_fail.count(0) == 0:
                 print("Test passed successfully")
-                allure.attach(name="Csv Data", body=str(csv_val))
                 assert True
             else:
-                print(" valueTest failed due to lesser")
-                allure.attach(name="Csv Data", body=str(csv_val))
-                assert False
+                print("Test failed due to lesser value")
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
 
