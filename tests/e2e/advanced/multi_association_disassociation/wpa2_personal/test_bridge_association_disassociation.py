@@ -31,7 +31,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_upload_2g
-    def test_multi_station_udp_upload_2g(self, lf_test, lf_tools):
+    def test_multi_asso_disasso_udp_upload_nss2_2g(self, lf_test, lf_tools):
         allure.attach(name="Definition",
                       body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
                            "under a dynamic environment with frequent change of connection status.")
@@ -51,14 +51,19 @@ class TestMultiAssoDisassoBridge(object):
             lf_tools.admin_up_down(sta_list=station_list, option="up")
             print("stations up")
 
+        print("Cleanup existing clients and traffic")
         lf_tools.reset_scenario()
+        lf_test.Client_disconnect(clean_l3_traffic=True)
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         print(ssid_name)
         mode = "BRIDGE"
         vlan = 1
+        for rad in lf_tools.twog_radios:
+            values = rad.split(".")
+            lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
+                                       radio=values[2], antenna=4)
         lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
@@ -72,9 +77,7 @@ class TestMultiAssoDisassoBridge(object):
                                         upload_rate="4Mbps", protocol="UDP-IPv4", duration="120000", create_stations=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
-
         csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="upload")
         print(type(csv_val))
         print(csv_val)
@@ -95,7 +98,9 @@ class TestMultiAssoDisassoBridge(object):
                     pass_fail.append(1)
                 else:
                     pass_fail.append(0)
-            allure.attach(name="Csv Data", body=str(csv_val))
+            # allure.attach(name="Csv Data", body=str(csv_val))
+            allure.attach.file(source="../reports/" + report_name + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                               name="Throughput CSV file",attachment_type=allure.attachment_type.CSV)
             if pass_fail.count(0) == 0:
                 print("Test passed successfully")
                 assert True
@@ -108,7 +113,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_download_2g
-    def test_multi_station_udp_download_2g(self, lf_test, lf_tools):
+    def test_multi_asso_disasso_udp_download_nss2_2g(self, lf_test, lf_tools):
         allure.attach(name="Definition",
                       body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
                            "under a dynamic environment with frequent change of connection status.")
@@ -134,9 +139,11 @@ class TestMultiAssoDisassoBridge(object):
         print(ssid_name)
         mode = "BRIDGE"
         vlan = 1
+        for rad in lf_tools.twog_radios:
+            values = rad.split(".")
+            lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
+                                       radio=values[2], antenna=4)
         lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
-        time.sleep(10)
         sta_list = lf_tools.get_station_list()
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
         sel_stations = ",".join(sta_list[0:8])
@@ -149,9 +156,7 @@ class TestMultiAssoDisassoBridge(object):
                                         create_stations=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
-
         csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="download")
         print(type(csv_val))
         print(csv_val)
@@ -172,7 +177,9 @@ class TestMultiAssoDisassoBridge(object):
                     pass_fail.append(1)
                 else:
                     pass_fail.append(0)
-            allure.attach(name="Csv Data", body=str(csv_val))
+            # allure.attach(name="Csv Data", body=str(csv_val))
+            allure.attach.file(source="../reports/" + report_name + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                name="Throughput CSV file", attachment_type=allure.attachment_type.CSV)
             if pass_fail.count(0) == 0:
                 print("Test passed successfully")
                 assert True
@@ -185,7 +192,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.udp_upload_5g
-    def test_multi_station_udp_upload_5g(self, lf_test, lf_tools):
+    def test_multi_asso_disasso_udp_upload_nss2_5g(self, lf_test, lf_tools):
         allure.attach(name="Definition",
                       body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
                            "under a dynamic environment with frequent change of connection status.")
@@ -211,8 +218,11 @@ class TestMultiAssoDisassoBridge(object):
         print(ssid_name)
         mode = "BRIDGE"
         vlan = 1
+        for rad in lf_tools.fiveg_radios:
+            values = rad.split(".")
+            lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
+                                       radio=values[2], antenna=4)
         lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
@@ -226,9 +236,7 @@ class TestMultiAssoDisassoBridge(object):
                                         create_stations=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
-
         csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="upload")
         print(type(csv_val))
         print(csv_val)
@@ -249,7 +257,9 @@ class TestMultiAssoDisassoBridge(object):
                     pass_fail.append(1)
                 else:
                     pass_fail.append(0)
-            allure.attach(name="Csv Data", body=str(csv_val))
+            # allure.attach(name="Csv Data", body=str(csv_val))
+            allure.attach.file(source="../reports/" + report_name + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                name="Throughput CSV file", attachment_type=allure.attachment_type.CSV)
             if pass_fail.count(0) == 0:
                 print("Test passed successfully")
                 assert True
@@ -262,7 +272,7 @@ class TestMultiAssoDisassoBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.udp_download_5g
-    def test_multi_station_udp_download_5g(self, lf_test, lf_tools):
+    def test_multi_asso_disasso_udp_download_nss2_5g(self, lf_test, lf_tools):
         allure.attach(name="Definition",
                       body="Multiple association/disassociation stability test intends to measure stability of Wi-Fi device " \
                            "under a dynamic environment with frequent change of connection status.")
@@ -288,8 +298,11 @@ class TestMultiAssoDisassoBridge(object):
         print(ssid_name)
         mode = "BRIDGE"
         vlan = 1
+        for rad in lf_tools.fiveg_radios:
+            values = rad.split(".")
+            lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
+                                       radio=values[2], antenna=4)
         lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        lf_tools.Chamber_View()
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
@@ -303,9 +316,7 @@ class TestMultiAssoDisassoBridge(object):
                                         create_stations=False)
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
         lf_tools.attach_report_graphs(report_name=report_name)
-
         csv_val = lf_tools.read_csv_individual_station_throughput(dir_name=report_name, option="download")
         print(type(csv_val))
         print(csv_val)
@@ -326,7 +337,9 @@ class TestMultiAssoDisassoBridge(object):
                     pass_fail.append(1)
                 else:
                     pass_fail.append(0)
-            allure.attach(name="Csv Data", body=str(csv_val))
+            # allure.attach(name="Csv Data", body=str(csv_val))
+            allure.attach.file(source="../reports/" + report_name + "/csv-data/data-Combined_bps__60_second_running_average-1.csv",
+                name="Throughput CSV file", attachment_type=allure.attachment_type.CSV)
             if pass_fail.count(0) == 0:
                 print("Test passed successfully")
                 assert True
