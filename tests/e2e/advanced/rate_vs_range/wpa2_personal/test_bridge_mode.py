@@ -49,6 +49,9 @@ class TestRatevsRangeBridge(object):
         pytest -m "ratevsrange and client11b" -s -vvv --skip-testrail --testbed=advanced-02
         jira- wifi-2495
         """
+        print("Cleanup existing clients and traffic")
+        lf_tools.reset_scenario()
+        lf_test.Client_disconnect(clean_l3_traffic=True)
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -61,16 +64,13 @@ class TestRatevsRangeBridge(object):
         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
                                          passkey=security_key, mode=mode, band=band,
                                          station_name=station_names_twog, vlan_id=vlan)
-        print("station", station)
-
         ser_no = lf_test.attenuator_serial()
         print(ser_no)
         val = [['modes: 802.11b'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:;TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
+               ['attenuations: 0 100 210..+30..630'], ['attenuations2: 0 100 210..+30..630']]
         if station:
-            time.sleep(3)
-            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
+            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,duration="120000",
                                        instance_name="MODEBRIDGE_RVR_11B_TWOG_modified",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -79,16 +79,18 @@ class TestRatevsRangeBridge(object):
             print("entries",entries)
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
+            lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             assert station
         else:
-            assert False
+            print("Test failed due to no station ip")
+            assert False, "Test failed due to no station ip"
     # kpi_val = lf_tools.read_kpi_file(column_name=None, dir_name=report_name)
     # print(str(kpi_val))
     # if str(kpi_val) == "empty":
     #     print("kpi is empty, station did not got ip, Test failed")
     #     allure.attach(name="Kpi Data", body="station did not got ip Test failed.")
-    #     assert False
+    #     print("Test failed due to no station ip")
+            assert False, "Test failed due to no station ip"
     # else:
     #     print("Test passed successfully")
     #     allure.attach(name="Kpi Data", body=str(kpi_val))
@@ -105,6 +107,7 @@ class TestRatevsRangeBridge(object):
         pytest -m "ratevsrange and bridge and client11g" -s -vvv --skip-testrail --testbed=advanced-02
         jira- wifi-2496
         """
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -121,7 +124,7 @@ class TestRatevsRangeBridge(object):
         print(ser_no)
         val = [['modes: 802.11g'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types: TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
+               ['attenuations: 0 100 210..+30..630'], ['attenuations2: 0 100 210..+30..630']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
@@ -131,10 +134,11 @@ class TestRatevsRangeBridge(object):
             entries = os.listdir("../reports/" + report_name + '/')
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
+            lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             assert station
         else:
-            assert False
+            print("Test failed due to no station ip")
+            assert False, "Test failed due to no station ip"
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -148,6 +152,7 @@ class TestRatevsRangeBridge(object):
         pytest -m "ratevsrange and bridge and client11a" -s -vvv --skip-testrail --testbed=advanced-02
         jira- wifi-2497
         """
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -164,7 +169,7 @@ class TestRatevsRangeBridge(object):
         print(ser_no)
         val = [['modes: 802.11a'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
+               ['attenuations: 0 100 210..+30..540'], ['attenuations2: 0 100 210..+30..540']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
@@ -174,10 +179,11 @@ class TestRatevsRangeBridge(object):
             entries = os.listdir("../reports/" + report_name + '/')
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             assert station
         else:
-            assert False
+            print("Test failed due to no station ip")
+            assert False, "Test failed due to no station ip"
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -191,6 +197,7 @@ class TestRatevsRangeBridge(object):
         pytest -m "ratevsrange and bridge and client11an" -s -vvv --skip-testrail --testbed=advanced-02
         jira- wifi-2498
         """
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -208,7 +215,7 @@ class TestRatevsRangeBridge(object):
         print(ser_no)
         val = [['modes: 802.11an'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 0..+50..950'], ['attenuations2: 0..+50..950']]
+               ['attenuations: 0 100 210..+30..540'], ['attenuations2: 0 100 210..+30..540']]
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
@@ -218,10 +225,11 @@ class TestRatevsRangeBridge(object):
             entries = os.listdir("../reports/" + report_name + '/')
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             assert station
         else:
-            assert False
+            print("Test failed due to no station ip")
+            assert False, "Test failed due to no station ip"
 
     @pytest.mark.performance_advanced
     @pytest.mark.wpa2_personal
@@ -235,6 +243,7 @@ class TestRatevsRangeBridge(object):
         pytest -m "ratevsrange and bridge and client11ac" -s -vvv --skip-testrail --testbed=advanced-02
         jira- wifi-2499
         """
+        lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -252,7 +261,7 @@ class TestRatevsRangeBridge(object):
         print(ser_no)
         val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 0..+50..950'],['attenuations2: 0..+50..950']]
+               ['attenuations: 0 100 210..+30..540'],['attenuations2: 0 100 210..+30..540']]
 
         if station:
             time.sleep(3)
@@ -263,7 +272,8 @@ class TestRatevsRangeBridge(object):
             entries = os.listdir("../reports/" + report_name + '/')
             lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
             print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_fiveg)
+            lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             assert station
         else:
-            assert False
+            print("Test failed due to no station ip")
+            assert False, "Test failed due to no station ip"
