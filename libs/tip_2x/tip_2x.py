@@ -141,6 +141,56 @@ class tip_2x:
     def get_controller_logs(self):
         pass
 
+    def setup_configuration_data(self, configuration=None,
+                                 requested_combination=None):
+        if configuration is None:
+            pytest.exit("No Configuration Received")
+        if requested_combination is None:
+            pytest.exit("No requested_combination Received")
+        rf_data = None
+        if configuration.keys().__contains__("rf"):
+            rf_data = configuration["rf"]
+        # base_band_keys = ["2G", "5G", "6G", "5G-lower", "5G-upper"]
+        base_dict = dict.fromkeys(self.supported_bands)
+        for i in base_dict:
+            base_dict[i] = []
+        for i in requested_combination:
+            if i[0] in self.supported_bands:
+                base_dict[i[0]].append(self.tip_2x_specific_encryption_translation[i[1]])
+            if i[1] in self.supported_bands:
+                base_dict[i[1]].append((self.tip_2x_specific_encryption_translation[i[0]]))
+
+        temp = []
+        for i in list(base_dict.values()):
+            for j in i:
+                temp.append(j)
+        temp_conf = configuration["ssid_modes"].copy()
+        for i in temp_conf:
+            if self.tip_2x_specific_encryption_translation[i] not in temp:
+                configuration["ssid_modes"].pop(i)
+
+        temp_conf = configuration["ssid_modes"].copy()
+        for i in temp_conf:
+            for j in range(len(temp_conf[i])):
+
+                for k in temp_conf[i][j]["appliedRadios"]:
+                    if self.tip_2x_specific_encryption_translation[i] not in base_dict[k]:
+                        configuration["ssid_modes"][i][j]["appliedRadios"].remove(k)
+                        if configuration["ssid_modes"][i][j]["appliedRadios"] == []:
+                            configuration["ssid_modes"][i][j] = {}  # .popi.popitem())  # .popitem()
+        for i in configuration["ssid_modes"]:
+            if {} in configuration["ssid_modes"][i]:
+                configuration["ssid_modes"][i].remove({})
+        for ssids in configuration["ssid_modes"]:
+            for i in configuration["ssid_modes"][ssids]:
+                i["security"] = self.tip_2x_specific_encryption_translation[ssids]
+        return configuration
+
+    """
+        setup_basic_configuration - Method to configure AP in basic operating modes with multiple SSID's and multiple AP's
+                                This covers, basic and advanced test cases
+    """
+
     def setup_basic_configuration(self, configuration=None,
                                   requested_combination=None):
         final_configuration = self.setup_configuration_data(configuration=configuration,
@@ -209,50 +259,79 @@ class tip_2x:
         """
         return r_val
 
-    def setup_configuration_data(self, configuration=None,
-                                 requested_combination=None):
-        if configuration is None:
-            pytest.exit("No Configuration Received")
-        if requested_combination is None:
-            pytest.exit("No requested_combination Received")
-        rf_data = None
-        if configuration.keys().__contains__("rf"):
-            rf_data = configuration["rf"]
-        # base_band_keys = ["2G", "5G", "6G", "5G-lower", "5G-upper"]
-        base_dict = dict.fromkeys(self.supported_bands)
-        for i in base_dict:
-            base_dict[i] = []
-        for i in requested_combination:
-            if i[0] in self.supported_bands:
-                base_dict[i[0]].append(self.tip_2x_specific_encryption_translation[i[1]])
-            if i[1] in self.supported_bands:
-                base_dict[i[1]].append((self.tip_2x_specific_encryption_translation[i[0]]))
+    """
+        setup_special_configuration - Method to configure APs in mesh operating modes with multiple SSID's and multiple AP's
+                                    This covers, mesh and other roaming scenarios which includes any special type of modes
+                                    multiple AP's with WDS and Wifi Steering scenarios are also covered here
+    """
 
-        temp = []
-        for i in list(base_dict.values()):
-            for j in i:
-                temp.append(j)
-        temp_conf = configuration["ssid_modes"].copy()
-        for i in temp_conf:
-            if self.tip_2x_specific_encryption_translation[i] not in temp:
-                configuration["ssid_modes"].pop(i)
+    def setup_special_configuration(self, configuration=None,
+                                    requested_combination=None):
+        final_configuration = self.setup_configuration_data(configuration=configuration,
+                                                            requested_combination=requested_combination)
 
-        temp_conf = configuration["ssid_modes"].copy()
-        for i in temp_conf:
-            for j in range(len(temp_conf[i])):
+        logging.info("Selected Configuration: " + str(json.dumps(final_configuration, indent=2)))
 
-                for k in temp_conf[i][j]["appliedRadios"]:
-                    if self.tip_2x_specific_encryption_translation[i] not in base_dict[k]:
-                        configuration["ssid_modes"][i][j]["appliedRadios"].remove(k)
-                        if configuration["ssid_modes"][i][j]["appliedRadios"] == []:
-                            configuration["ssid_modes"][i][j] = {}  # .popi.popitem())  # .popitem()
-        for i in configuration["ssid_modes"]:
-            if {} in configuration["ssid_modes"][i]:
-                configuration["ssid_modes"][i].remove({})
-        for ssids in configuration["ssid_modes"]:
-            for i in configuration["ssid_modes"][ssids]:
-                i["security"] = self.tip_2x_specific_encryption_translation[ssids]
-        return configuration
+        profile_object = UProfileUtility(sdk_client=self.controller_library_object)
+        if final_configuration["mode"] in self.supported_modes:
+            profile_object.set_mode(mode=final_configuration["mode"])
+        else:
+            pytest.skip(final_configuration["mode"] + " Mode is not supported")
+
+        # Setup Radio Scenario
+        if final_configuration["rf"] != {}:
+            profile_object.set_radio_config(radio_config=final_configuration["rf"])
+        else:
+            profile_object.set_radio_config()
+        for ssid in final_configuration["ssid_modes"]:
+            for ssid_data in final_configuration["ssid_modes"][ssid]:
+                profile_object.add_ssid(ssid_data=ssid_data)
+        logging.info(
+            "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
+        r_val = False
+
+        # Do check AP before pushing the configuration
+        # TODO
+        self.dut_library_object.check_serial_connection()
+        """  
+        serial connection check
+        ubus call ucentral status
+        save the current uuid
+        uci show ucentral
+        ifconfig
+        wifi status
+        start logger to collect ap logs before config apply        
+        Timestamp before doing config apply
+        """
+
+        for dut in self.device_under_tests_info:
+            resp = profile_object.push_config(serial_number=dut["identifier"])
+            logging.info("Response for Config apply: " + resp.status_code)
+            if resp.status_code != 200:
+                logging.info("Failed to apply Configuration to AP. Response Code" +
+                             resp.status_code +
+                             "Retrying in 5 Seconds... ")
+                time.sleep(5)
+                resp = profile_object.push_config(serial_number=dut["identifier"])
+                if resp.status_code != 200:
+                    logging.info("Failed to apply Config, Response code:" + resp.status_code)
+                    pytest.fail("Failed to apply Config, Response code :" + resp.status_code)
+        if resp.status_code == 200:
+            r_val = True
+        # TODO
+        """ 
+        serial connection check
+        ubus call ucentral status
+        save the current uuid and compare with the one before config apply
+        save the active config and compare with the latest apply
+        uci show 
+        ifconfig
+        iwinfo
+        wifi status
+        start logger to collect ap logs before config apply        
+        Timestamp after doing config apply
+        """
+        return r_val
 
     def get_dut_version(self):
         pass
@@ -260,11 +339,17 @@ class tip_2x:
     def get_controller_version(self):
         pass
 
-    # def get_controller_logs(self):
-    #     pass
-    #
-    # def setup_configuration(self):
-    #     pass
+    # TODO: Get the vlans info such as vlan-ids
+    #  Jitendra
+
+    def vlans_needed(self):
+        pass
+
+    # TODO: Get the wireless info data structure such as (ssid, bssid, passkey, encryption, band, channel)
+    #  Jitendra
+
+    def wireless_info(self):
+        pass
 
 
 if __name__ == '__main__':
