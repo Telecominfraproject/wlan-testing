@@ -67,7 +67,7 @@ class SetupLibrary:
     def kill_all_minicom_process(self, tty="/dev/ttyUSB0"):
         client = self.ssh_cli_connect()
         stdin, stdout, stderr = client.exec_command("fuser -k " + tty)
-        print(stdout.read())
+        # print(stdout.read())
         client.close()
 
 
