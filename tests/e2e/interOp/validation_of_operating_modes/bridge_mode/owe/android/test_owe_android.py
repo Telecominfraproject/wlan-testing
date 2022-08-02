@@ -56,7 +56,6 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.OWE
 class TestOWEBridge(object):
 
     @pytest.mark.twog
@@ -98,7 +97,7 @@ class TestOWEBridge(object):
 
     @pytest.mark.fiveg
     @pytest.mark.ow_sanity_interop
-    @pytest.mark.OWE
+    @pytest.mark.owe
     def test_owe_android_5g(self, request, get_vif_state, get_ap_logs,
                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["owe"][1]
