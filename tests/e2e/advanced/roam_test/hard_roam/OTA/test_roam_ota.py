@@ -24,9 +24,9 @@ setup_params_general = {
 @allure.feature("Roam Test")
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general],
+   [setup_params_general],
     indirect=True,
-    scope="class"
+   scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
 
@@ -60,9 +60,11 @@ class TestRoamOTA(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 2g and 6g")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
+        print("enable 5g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -121,9 +123,11 @@ class TestRoamOTA(object):
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
-        print("disable wlan ")
+        print("disable 6g and 5g wlan ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
+        print("enable 2g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -187,9 +191,11 @@ class TestRoamOTA(object):
         mode = "BRIDGE"
         band = "sixg"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 2g ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
-        instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
+        print("enable 5g wlan and 6g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -199,7 +205,7 @@ class TestRoamOTA(object):
         # check channel
         lf_test.create_n_clients(sta_prefix="wlan1", num_sta=1, dut_ssid=ssid_name,
                                  dut_security=security, dut_passwd=security_key, band="sixg",
-                                 lf_tools=lf_tools, type="11r-sae-802.1x")
+                                 lf_tools=lf_tools, type="11r-sae-802.1x", identity=identity, ttls_pass=ttls_passwd)
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         val = lf_test.wait_for_ip(station=sta_list)
@@ -223,7 +229,7 @@ class TestRoamOTA(object):
                           band=band, test="6g",
                           iteration=int(iteration), num_sta=int(client), roaming_delay=roaming_delay,
                           option="ota", channel=ch, duration=duration, iteration_based=True,
-                          duration_based=False, dut_name=dut_name, identity=identity, ttls_passwd=ttls_passwd,
+                          duration_based=False, dut_name=dut_name, identity=identity, ttls_pass=ttls_passwd,
                           debug=roam_debug)
 
     @pytest.mark.soft_roam_5g_ota
@@ -252,9 +258,11 @@ class TestRoamOTA(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 2g and 6g")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
+        print("enable 5g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -313,9 +321,11 @@ class TestRoamOTA(object):
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
-        print("disable wlan ")
+        print("disable 6g and 5g wlan ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
+        print("enable 2g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -379,9 +389,11 @@ class TestRoamOTA(object):
         mode = "BRIDGE"
         band = "sixg"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 2g ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
-        instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
+        print("enable 5g wlan and 6g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -391,7 +403,7 @@ class TestRoamOTA(object):
         # check channel
         lf_test.create_n_clients(sta_prefix="wlan1", num_sta=1, dut_ssid=ssid_name,
                                  dut_security=security, dut_passwd=security_key, band="sixg",
-                                 lf_tools=lf_tools, type="11r-sae-802.1x")
+                                 lf_tools=lf_tools, type="11r-sae-802.1x", identity=identity, ttls_pass=ttls_passwd)
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         val = lf_test.wait_for_ip(station=sta_list)
