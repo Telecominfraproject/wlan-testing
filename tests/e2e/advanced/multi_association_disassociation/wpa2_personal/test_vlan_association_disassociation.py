@@ -5,7 +5,7 @@ import time
 import pandas as pd
 import threading
 
-pytestmark = [pytest.mark.advance, pytest.mark.multiassodisasso, pytest.mark.vlan]
+# pytestmark = [pytest.mark.advance, pytest.mark.multiassodisasso, pytest.mark.vlan, pytest.mark.report]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -61,13 +61,14 @@ class TestMultiAssoDisassoVlan(object):
         mode = "VLAN"
         vlan = 100
         lf_tools.add_vlan(vlan_ids=[vlan])
+        lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        sta_list = lf_tools.get_station_list()
+        print(sta_list)
         for rad in lf_tools.twog_radios:
             values = rad.split(".")
             lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
                                        radio=values[2], antenna=4)
-        lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        sta_list = lf_tools.get_station_list()
-        print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
         sel_stations = ",".join(sta_list[0:8])
         val = [['ul_rate_sel: Per-Station Upload Rate:']]
@@ -141,13 +142,14 @@ class TestMultiAssoDisassoVlan(object):
         mode = "VLAN"
         vlan = 100
         lf_tools.add_vlan(vlan_ids=[vlan])
+        lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        sta_list = lf_tools.get_station_list()
+        print(sta_list)
         for rad in lf_tools.twog_radios:
             values = rad.split(".")
             lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
                                        radio=values[2], antenna=4)
-        lf_tools.add_stations(band="2G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        sta_list = lf_tools.get_station_list()
-        print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
         sel_stations = ",".join(sta_list[0:8])
         val = [['dl_rate_sel: Per-Station Download Rate:']]
@@ -222,13 +224,14 @@ class TestMultiAssoDisassoVlan(object):
         mode = "VLAN"
         vlan = 100
         lf_tools.add_vlan(vlan_ids=[vlan])
+        lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        sta_list = lf_tools.get_station_list()
+        print(sta_list)
         for rad in lf_tools.fiveg_radios:
             values = rad.split(".")
             lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
                                        radio=values[2], antenna=4)
-        lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        sta_list = lf_tools.get_station_list()
-        print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
         sel_stations = ",".join(sta_list[0:8])
         val = [['ul_rate_sel: Per-Station Upload Rate:']]
@@ -303,13 +306,14 @@ class TestMultiAssoDisassoVlan(object):
         mode = "VLAN"
         vlan = 100
         lf_tools.add_vlan(vlan_ids=[vlan])
+        lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
+        lf_tools.Chamber_View()
+        sta_list = lf_tools.get_station_list()
+        print(sta_list)
         for rad in lf_tools.fiveg_radios:
             values = rad.split(".")
             lf_tools.set_radio_antenna(req_url="cli-json/set_wifi_radio", shelf=int(values[0]), resources=int(values[1]),
                                        radio=values[2], antenna=4)
-        lf_tools.add_stations(band="5G", num_stations=16, dut=lf_tools.dut_name, ssid_name=ssid_name)
-        sta_list = lf_tools.get_station_list()
-        print(sta_list)
         lf_tools.admin_up_down(sta_list=sta_list, option="up")
         sel_stations = ",".join(sta_list[0:8])
         val = [['dl_rate_sel: Per-Station Download Rate:']]
