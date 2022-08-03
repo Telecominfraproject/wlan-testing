@@ -154,12 +154,13 @@ def main():
             egg.logfile = FileAdapter(logg)
             egg.sendline(NL)
             has_reset = False
+            if args.value == "reset-from-console":
+                has_reset = True
             try:
                 logg.info("prompt: %s user: %s  passwd: %s" % (prompt, user, passwd))
                 while True:
                     i = egg.expect([prompt, "Please press Enter to activate", "login:", "Password:", "IPQ6018#"],
                                    timeout=3)
-                    logg.info("expect-0: %i" % (i))
                     if (i == 0):
                         logg.info("Found prompt, login complete.")
                         break
@@ -174,14 +175,17 @@ def main():
                         egg.sendline(passwd)
                     if (i == 4):  # in bootloader
                         if has_reset:
-                            logg.info("ERROR:  Have reset once already, back in bootloader?")
+                            logg.info("In boot loader, will reset and sleep 30 seconds")
+                            egg.sendline("reset")
+                            time.sleep(30)
+                            egg.sendline(NL)
                             sys.exit(1)
-                        has_reset = True
-                        logg.info("In boot loader, will reset and sleep 30 seconds")
-                        egg.sendline("reset")
-                        time.sleep(30)
-                        egg.sendline(NL)
-
+                        else:
+                            print("BOOTLOADER-CONSOLE-IPQ6018#")
+                            break
+                    else:
+                        logg.info("Found prompt, login complete.")
+                        break
             except Exception as e:
                 # maybe something like 'logread -f' is running?
                 # send ctrl-c
@@ -364,7 +368,7 @@ def main():
                     print(egg.before.decode('utf-8', 'ignore'))
                 if i == 2:  # new line of text, just print and continue
                     continue
-
+                wait_forever = False
                 if not wait_forever:
                     break
 

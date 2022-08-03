@@ -42,23 +42,26 @@ class APLIBS:
                        port=port, timeout=timeout, allow_agent=allow_agent, banner_timeout=banner_timeout)
         return client
 
-    def check_serial_connection(self):
-        status = []
-        for dut in self.device_under_tests_data:
-            if dut["method"] == "serial":
-                status.append(self.setup_library_objects[0].check_serial_connection(tty=dut["serial_tty"]))
-        if False in status:
+    def check_serial_connection(self, idx=0, print_log=True, attach_allure=True):
+        status = False
+
+        if self.device_under_tests_data[idx]["method"] == "serial":
+            status = self.setup_library_objects[idx].check_serial_connection(
+                tty=self.device_under_tests_data[idx]["serial_tty"])
+        if not status:
             logging.error("Serial port not available. Exiting the Test")
             pytest.exit("Serial port not available. Please check your serial port connection")
 
-    def setup_serial_environment(self):
+    def setup_serial_environment(self, idx=0):
         status = []
         for dut in self.device_under_tests_data:
             if dut["method"] == "serial":
-                status.append(self.setup_library_objects[0].setup_serial_environment())
+                status.append(self.setup_library_objects[idx].setup_serial_environment())
         if False in status:
             logging.error("Serial port not available. Exiting the Test")
             pytest.exit("Serial port not available. Please check your serial port connection")
+        self.exit_from_uboot(idx=idx)
+        self.reset_to_default(idx=idx)
 
     def get_dut_logs(self, idx=0, print_log=True, attach_allure=True):
         output = self.run_generic_command(cmd="logread", idx=idx,
@@ -108,7 +111,6 @@ class APLIBS:
 
     def ubus_call_ucentral_status(self, idx=0, print_log=True, attach_allure=True):
         ret_val = dict.fromkeys(["connected", "latest", "active"])
-        print(ret_val)
         output = self.run_generic_command(cmd="ubus call ucentral status", idx=idx,
                                           print_log=print_log,
                                           attach_allure=attach_allure,
@@ -136,15 +138,49 @@ class APLIBS:
             ret_val["latest"] = data.get("latest")
         if data.keys().__contains__("active"):
             ret_val["active"] = data.get("active")
-
-        print(ret_val)
         return ret_val
 
     def get_latest_config_recieved(self, idx=0):
-        pass
+        r_val = self.ubus_call_ucentral_status(idx=idx)
+        latest_json = {}
+        if r_val["latest"] is None:
+            r_val = self.ubus_call_ucentral_status(idx=idx)
+            if r_val["latest"] is None:
+                logging.error("ubus call ucentral status has unexpected data")
+                return False
+        latest_uuid = r_val["latest"]
+        output = self.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(latest_uuid), idx=idx,
+                                          print_log=True,
+                                          attach_allure=False,
+                                          expected_attachment_type=allure.attachment_type.JSON)
+        try:
+            data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
+            logging.info("Latest config is : " + str(data))
+        except Exception as e:
+            logging.error("error in converting the output to json" + output)
+            try_again = True
+        return latest_json
 
     def get_active_config(self, idx=0):
-        pass
+        r_val = self.ubus_call_ucentral_status(idx=idx)
+        active_json = {}
+        if r_val["active"] is None:
+            r_val = self.ubus_call_ucentral_status(idx=idx)
+            if r_val["active"] is None:
+                logging.error("ubus call ucentral status has unexpected data")
+                return False
+        active_uuid = r_val["active"]
+        output = self.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(active_uuid), idx=idx,
+                                          print_log=True,
+                                          attach_allure=False,
+                                          expected_attachment_type=allure.attachment_type.JSON)
+        try:
+            data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
+            logging.info("Active config is : " + str(data))
+        except Exception as e:
+            logging.error("error in converting the output to json" + output)
+            try_again = True
+        return active_json
 
     def get_iwinfo(self, idx=0):
         pass
@@ -153,11 +189,23 @@ class APLIBS:
         pass
 
     def verify_certificates(self, idx=0):
-        pass
+        cert_files_name = ["cas.pem", "dev-id", "key.pem", "cert.pem"]
+        for cert in cert_files_name:
+            output = self.run_generic_command(cmd='[ -f /etc/ucentral/' + cert + ' ] && echo "True" || echo "False"',
+                                              idx=idx,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.JSON)
+            if output == "False":
+                logging.error("Certificate " + cert + "is missing from /etc/ucentral/ directory. "
+                                                      "Please add valid certificates on AP")
+                pytest.exit("Certificate " + cert + "is missing from /etc/ucentral/ directory. "
+                                                    "Please add valid certificates on AP")
 
     def run_generic_command(self, cmd="", idx=0, print_log=True, attach_allure=False,
                             expected_attachment_type=allure.attachment_type.TEXT):
         input_command = cmd
+        logging.info("Executing Command on AP: " + cmd)
         try:
             self.setup_library_objects[idx].kill_all_minicom_process(
                 tty=self.device_under_tests_data[idx]["serial_tty"])
@@ -170,34 +218,48 @@ class APLIBS:
                                           banner_timeout=200)
             if self.device_under_tests_data[idx]["method"] == "serial":
                 owrt_args = "--prompt root@" + self.device_under_tests_data[idx][
-                    "identifier"] + ":~# " + " -s serial --log stdout --user root --passwd openwifi"
+                    "identifier"] + " -s serial --log stdout --user root --passwd openwifi"
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {owrt_args} -t {self.device_under_tests_data[idx]['serial_tty']} --action " \
                       f"cmd --value \"{cmd}\" "
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
-            status = output.decode('utf-8').splitlines()
-            status.pop(0)
-            final_output = '\n'.join(status)
-            if print_log:
-                logging.info("Output for command: " + input_command + "\n" + final_output)
-            if attach_allure:
-                allure.attach(name=input_command, body=output, attachment_type=expected_attachment_type)
+            final_output = str(output)
+            if not output.__contains__(b"BOOTLOADER-CONSOLE-IPQ6018#"):
+                status = output.decode('utf-8').splitlines()
+                status.pop(0)
+                final_output = '\n'.join(status)
+                if print_log:
+                    logging.info("Output for command: " + input_command + "\n" + final_output)
+                if attach_allure:
+                    allure.attach(name=input_command, body=output, attachment_type=expected_attachment_type)
             client.close()
         except Exception as e:
             logging.error(e)
-            final_output = "Error" + str(e)
+            final_output = "Error: " + str(e)
         return final_output
 
     def get_status(self, idx=0):
         pass
 
     def exit_from_uboot(self, idx=0):
-        pass
+        if self.is_console_uboot():
+            self.run_generic_command(cmd="reset-from-console", idx=idx,
+                                     print_log=True,
+                                     attach_allure=True,
+                                     expected_attachment_type=allure.attachment_type.JSON)
 
     def is_console_uboot(self, idx=0):
-        pass
+        output = self.run_generic_command(cmd="ubus call ucentral status", idx=idx,
+                                          print_log=True,
+                                          attach_allure=True,
+                                          expected_attachment_type=allure.attachment_type.JSON)
+        if output.__contains__("BOOTLOADER-CONSOLE-IPQ6018#"):
+            return True
+        else:
+            return False
 
-    def is_prompt_available(self, idx=0):
+    def is_autoreboot_running(self):
+        # TODO : Jitendra/Shivam
         pass
 
     def reboot(self, idx=0):
@@ -205,6 +267,12 @@ class APLIBS:
 
     def get_active_firmware(self, idx=0):
         pass
+
+    def reset_to_default(self, idx=0):
+        self.run_generic_command(cmd="cd", idx=idx,
+                                 print_log=False,
+                                 attach_allure=False,
+                                 expected_attachment_type=allure.attachment_type.JSON)
 
 
 if __name__ == '__main__':
@@ -216,24 +284,29 @@ if __name__ == '__main__':
             "password": "OpenWifi%123"
         },
         "device_under_tests": [{
-            "model": "cig_wf188n",
+            "model": "edgecore_eap101",
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "mode": "wifi6",
-            "identifier": "0000c1018812",
+            "identifier": "903cb36c44f0",
             "method": "serial",  # serial/ssh/telnet
-            "host_ip": "10.28.3.103",
+            "host_ip": "192.168.200.101",
             "host_username": "lanforge",
-            "host_password": "pumpkin77",  # Endurance@123
+            "host_password": "Endurance@123",  # Endurance@123
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyAP1",
+            "serial_tty": "/dev/ttyUSB0",
             "firmware_version": "next-latest"
         }],
         "traffic_generator": {}
     }
+    logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.NOTSET)
     obj = APLIBS(dut_data=basic_1["device_under_tests"])
-    # obj.check_serial_connection()
-    # obj.setup_serial_environment()
-    # obj.run_generic_command("uci show ucentral")
-    # obj.get_dut_logs()
-    obj.ubus_call_ucentral_status()
+    obj.check_serial_connection()
+    obj.setup_serial_environment()
+    obj.run_generic_command("uci show ucentral")
+    obj.verify_certificates()
+    obj.get_dut_logs()
+    l = obj.get_latest_config_recieved()
+    a = obj.get_active_config()
+    if a == l:
+        print("a = l")

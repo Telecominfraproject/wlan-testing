@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name='perfecto_interop',
     version='0.1',
-    scripts=['android_lib.py', 'ios_lib.py'],
+    scripts=["perfecto_interop.py", "android_libs.py", "ios_libs.py", "android_tests.py", "ios_tests.py"],
     author="Shivam Thakur",
     author_email="shivam.thakur@candelatech.com",
     description="TIP OpenWIFI Perfecto Test Automation",

@@ -198,6 +198,7 @@ class tip_2x:
 
         logging.info("Selected Configuration: " + str(json.dumps(final_configuration, indent=2)))
 
+        # Setup Mode
         profile_object = UProfileUtility(sdk_client=self.controller_library_object)
         if final_configuration["mode"] in self.supported_modes:
             profile_object.set_mode(mode=final_configuration["mode"])
@@ -214,49 +215,37 @@ class tip_2x:
                 profile_object.add_ssid(ssid_data=ssid_data)
         logging.info(
             "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
-        r_val = False
+        r_val = []
+        self.pre_apply_check()          # Do check AP before pushing the configuration
 
-        # Do check AP before pushing the configuration
-        # TODO
-        self.dut_library_object.check_serial_connection()
-        """  
-        serial connection check
-        ubus call ucentral status
-        save the current uuid
-        uci show ucentral
-        ifconfig
-        wifi status
-        start logger to collect ap logs before config apply        
-        Timestamp before doing config apply
-        """
-
-        for dut in self.device_under_tests_info:
-            resp = profile_object.push_config(serial_number=dut["identifier"])
+        # Setup Config Apply on all AP's
+        for i in range(0, len(self.device_under_tests_info)):
+            resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
             logging.info("Response for Config apply: " + resp.status_code)
             if resp.status_code != 200:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
                              resp.status_code +
                              "Retrying in 5 Seconds... ")
                 time.sleep(5)
-                resp = profile_object.push_config(serial_number=dut["identifier"])
+                resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
                 if resp.status_code != 200:
-                    logging.info("Failed to apply Config, Response code:" + resp.status_code)
+                    logging.error("Failed to apply Config, Response code:" + resp.status_code)
                     pytest.fail("Failed to apply Config, Response code :" + resp.status_code)
-        if resp.status_code == 200:
-            r_val = True
-        # TODO
-        """ 
-        serial connection check
-        ubus call ucentral status
-        save the current uuid and compare with the one before config apply
-        save the active config and compare with the latest apply
-        uci show 
-        ifconfig
-        iwinfo
-        wifi status
-        start logger to collect ap logs before config apply        
-        Timestamp after doing config apply
-        """
+            if resp.status_code == 200:
+                r_val.append(True)
+
+            """ 
+            serial connection check
+            ubus call ucentral status
+            save the current uuid and compare with the one before config apply
+            save the active config and compare with the latest apply
+            uci show 
+            ifconfig
+            iwinfo
+            wifi status
+            start logger to collect ap logs before config apply        
+            Timestamp after doing config apply
+            """
         return r_val
 
     """
@@ -350,6 +339,31 @@ class tip_2x:
 
     def wireless_info(self):
         pass
+
+    def pre_apply_check(self):
+        """
+                    serial connection check
+                    ubus call ucentral status
+                    save the current uuid
+                    uci show ucentral
+                    ifconfig
+                    wifi status
+                    start logger to collect ap logs before config apply
+                    Timestamp before doing config apply
+                    """
+        for i in range(0, len(self.device_under_tests_info)):
+            self.dut_library_object.check_serial_connection(idx=i)
+            self.dut_library_object.setup_serial_environment(idx=i)
+            self.dut_library_object.verify_certificates(idx=i)
+            ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=i)
+            if not ret_val["connected"] or ret_val["connected"] is None:
+                # TODO: check the connectivity (if it is not connected, then check the lanforge wan port and bring it
+                #  up if lanforge eth is in down state. Also check the link state of eth port with ip address
+                #  reload the scenario in case it is messed up)
+                #  if wan is available, then run (/etc/init.d/ucentral restart) to retry the connection and check the
+                #  status again in next 30 seconds if still disconnected, then fail and attach the logs,
+                #  Jitendra
+                pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
 
 
 if __name__ == '__main__':
