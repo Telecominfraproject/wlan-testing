@@ -28,14 +28,13 @@ setup_params_general = {
         "owe": [
             {"ssid_name": "OWE_Enhanced_2G",
              "appliedRadios": ["2G"],
-             "ieee80211w": "required"
              },
             {"ssid_name": "OWE_Enhanced_5G",
              "appliedRadios": ["5G"],
-             "ieee80211w": "required"
              }
         ],
     },
+    "ieee80211w": "optional",
     "rf": {},
     "radius": False
 }
@@ -98,9 +97,7 @@ class TestOWEBridge(object):
 
     @pytest.mark.fiveg
     @pytest.mark.ow_sanity_interop
-    @pytest.mark.owe
-
-
+    # @pytest.mark.owe
     def test_owe_android_5g(self, request, get_vif_state, get_ap_logs,
                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["owe"][1]
