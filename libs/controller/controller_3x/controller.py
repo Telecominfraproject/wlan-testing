@@ -468,8 +468,8 @@ class CController:
         bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
         return bssid
 
-    def cal_bssid_5g(self):
-        wlan_sumry = self.get_ap_bssid_5g()
+    def cal_bssid_5g(self, dual=None):
+        wlan_sumry = self.get_ap_bssid_5g(dual=dual)
         ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
         indices = [i for i, s in enumerate(ele_list) if 'BSSID' in s]
         data = indices[1]
