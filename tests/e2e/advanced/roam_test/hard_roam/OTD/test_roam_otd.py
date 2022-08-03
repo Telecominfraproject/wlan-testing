@@ -12,10 +12,10 @@ setup_params_general = {
     "ft-dot1x": False,
     "ft-dot1x_sha256": True,
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "RoamAP2g", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "RoamAP5g", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa2_personal": [{"ssid_name": "RoamAP2g", "appliedRadios": ["2G"], "security_key": "something",  "security": "wpa2"},
+                          {"ssid_name": "RoamAP5g", "appliedRadios": ["5G"], "security_key": "something",  "security": "wpa2"}],
 
-        "wpa3_personal": [{"ssid_name": "RoamAP6g", "appliedRadios": ["6G"], "security_key": "something"}]
+        "wpa3_personal": [{"ssid_name": "RoamAP6g", "appliedRadios": ["6G"], "security_key": "something",  "security": "wpa3"}]
     },
     "rf": {},
     "radius": False
