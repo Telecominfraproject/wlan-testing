@@ -117,7 +117,7 @@ class Fixtures_3x:
         print("lf dut data", lf_dut_data)
         allure.attach(name="wlan data passing", body=str(parameter))
         ap = instantiate_profile_obj.show_ap_summary()
-        print("show ap summ", ap)
+        print("show ap sum", ap)
         allure.attach(name="show ap summary", body=str(ap))
 
         print("create 3 wlans on slot1,2 and 3")
@@ -326,6 +326,7 @@ class Fixtures_3x:
 
         bssid_list_2g = []
         bssid_list_5g = []
+        bssid_list_6g = []
         ssid_data_list = []
 
         for ap_name in range(len(self.lab_info['access_point'])):
@@ -335,18 +336,29 @@ class Fixtures_3x:
                                                       ssid_data=lf_dut_data, ap_data=self.lab_info['access_point'], type=ap_name)
             bss2_info = instantiate_profile_obj.get_ap_bssid_2g()
             allure.attach(name="wlan 2g bssid info", body=str(bss2_info))
-            bss5_info = instantiate_profile_obj.get_ap_bssid_5g()
+            ap_mode = self.lab_info['access_point'][ap_name]["mode"]
+            print("ap_mode", ap_mode)
+            mode = None
+            if ap_mode == "wifi6e-dual":
+                print("its a dual band ap")
+                mode = True
+            bss5_info = instantiate_profile_obj.get_ap_bssid_5g(dual=mode)
             allure.attach(name="wlan 5g bssid info", body=str(bss5_info))
-            bss6_info = instantiate_profile_obj.get_ap_bssid_6g()
+
+            bss6_info = instantiate_profile_obj.get_ap_bssid_6g(dual=mode)
             allure.attach(name="wlan 6g bssid info", body=str(bss6_info))
 
             bssid_2g = instantiate_profile_obj.cal_bssid_2g()
             print("bssid 2g", bssid_2g)
             lst_2g = bssid_list_2g.append(bssid_2g)
 
-            bssid_5g = instantiate_profile_obj.cal_bssid_5g()
+            bssid_5g = instantiate_profile_obj.cal_bssid_5g(dual=mode)
             print("bssid 5g ", bssid_5g)
             lst_5g = bssid_list_5g.append(bssid_5g)
+
+            bssid_6g = instantiate_profile_obj.cal_bssid_6g(dual=mode)
+            print("bssid 6g ", bssid_6g)
+            lst_6g = bssid_list_6g.append(bssid_6g)
             # print(bssid_5g)
             # print(bssid_list_2g)
             # print(bssid_list_5g)
@@ -359,8 +371,12 @@ class Fixtures_3x:
                         bssid = bssid_2g
                     if interface == 1:
                         bssid = bssid_5g
-                    if lf_dut_data[interface]['security'] == "psk2":
+                    if interface == 2:
+                        bssid = bssid_6g
+                    if lf_dut_data[interface]['security'] == "wpa2":
                         lf_dut_data[interface]['security'] = "WPA2"
+                    if lf_dut_data[interface]['security'] == "wpa3":
+                        lf_dut_data[interface]['security'] = "WPA3"
                     ssid = ["ssid_idx=" + str(interface) +
                             " ssid=" + lf_dut_data[interface]['ssid_name'] +
                             " security=" + lf_dut_data[interface]['security'] +
@@ -389,7 +405,6 @@ class Fixtures_3x:
                   ["Bring down unused band before start of testcase", "done"]]
         tab1 = lf_reports.table2(table=table1)
         allure.attach(name="skeleton of code", body=str(tab1))
-
 
 
 
