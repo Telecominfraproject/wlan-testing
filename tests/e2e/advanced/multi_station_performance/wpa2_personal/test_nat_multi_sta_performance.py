@@ -36,8 +36,8 @@ class TestMultiStaPerfNat(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5897", name="WIFI-5897")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_10dB_dis_nss1_2g
-    def test_multi_station_NAT_tcp_upload_10dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_upload_10dB_dis_nss1_2g
+    def test_multi_station_NAT_udp_upload_10dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -64,13 +64,13 @@ class TestMultiStaPerfNat(object):
         sta_ip = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=profile_data["security_key"], radio=radio_name, station_name=sta)
         if not sta_ip:
             print("test failed due to no station ip")
-            assert False
+            assert False, "test failed due to no station ip"
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name)
@@ -82,24 +82,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5898", name="WIFI-5898")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_10dB_40dB_dis_nss1_2g
-    def test_multi_station_NAT_tcp_upload_10dB_40dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_upload_10dB_38dB_dis_nss1_2g
+    def test_multi_station_NAT_udp_upload_10dB_38dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -134,18 +134,18 @@ class TestMultiStaPerfNat(object):
             sta_ip = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=profile_data["security_key"], radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(2):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 380)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_40dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_38dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -159,24 +159,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5901", name="WIFI-5901")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_10dB_40dB_50dB_dis_nss1_2g
-    def test_multi_station_NAT_tcp_upload_10dB_40dB_50dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_upload_10dB_38dB_48dB_dis_nss1_2g
+    def test_multi_station_NAT_udp_upload_10dB_38dB_48dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -211,21 +211,21 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(4):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 380)
             time.sleep(0.5)
             if i >= 2:
-                lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
+                lf_test.attenuator_modify(int(atten_sr2[2]), i, 480)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_40dB_50dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_38dB_480dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -238,24 +238,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5905", name="WIFI-5905")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_10dB_dis_nss1_2g
-    def test_multi_station_NAT_tcp_download_10dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_download_10dB_dis_nss1_2g
+    def test_multi_station_NAT_udp_download_10dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -283,13 +283,13 @@ class TestMultiStaPerfNat(object):
                                                     radio=radio_name, station_name=sta)
         if not sta_ip:
             print("test failed due to no station ip")
-            assert False
+            assert False, "test failed due to no station ip"
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -303,24 +303,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5906", name="WIFI-5906")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_10dB_40dB_dis_nss1_2g
-    def test_multi_station_NAT_tcp_download_10dB_40dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_download_10dB_38dB_dis_nss1_2g
+    def test_multi_station_NAT_udp_download_10dB_38dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -356,18 +356,18 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(2):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 380)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_40dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_38dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -381,24 +381,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6084", name="WIFI-6084")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_10dB_40dB_50dB_dis_nss1_2g
-    def test_multi_station_NAT_tcp_download_10dB_40dB_50dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_download_10dB_38dB_48dB_dis_nss1_2g
+    def test_multi_station_NAT_udp_download_10dB_38dB_48dB_dis_nss1_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -433,21 +433,21 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(4):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 380)
             time.sleep(0.5)
             if i >= 2:
-                lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
+                lf_test.attenuator_modify(int(atten_sr2[2]), i, 480)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_40dB_50dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_38dB_48dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -461,24 +461,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6089", name="WIFI-6089")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_10dB_dis_nss1_5g
-    def test_multi_station_NAT_tcp_upload_10dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_upload_10dB_dis_nss1_5g
+    def test_multi_station_NAT_udp_upload_10dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -506,13 +506,13 @@ class TestMultiStaPerfNat(object):
                                                     radio=radio_name, station_name=sta)
         if not sta_ip:
             print("test failed due to no station ip")
-            assert False
+            assert False, "test failed due to no station ip"
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -526,24 +526,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6090", name="WIFI-6090")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_10dB_40dB_dis_nss1_5g
-    def test_multi_station_NAT_tcp_upload_10dB_40dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_upload_10dB_25dB_dis_nss1_5g
+    def test_multi_station_NAT_udp_upload_10dB_25dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -579,18 +579,18 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(2):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 250)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_40dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_25dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -604,24 +604,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(csv_val["Up"]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6091", name="WIFI-6091")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_10dB_40dB_50dB_dis_nss1_5g
-    def test_multi_station_NAT_tcp_upload_10dB_40dB_50dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_upload_10dB_25dB_35dB_dis_nss1_5g
+    def test_multi_station_NAT_udp_upload_10dB_25dB_35dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -656,21 +656,21 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(4):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 250)
             time.sleep(0.5)
             if i >= 2:
-                lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
+                lf_test.attenuator_modify(int(atten_sr2[2]), i, 350)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_40dB_50dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_25dB_35dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -684,24 +684,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5902", name="WIFI-5902")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_10dB_dis_nss1_5g
-    def test_multi_station_NAT_tcp_download_10dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_download_10dB_dis_nss1_5g
+    def test_multi_station_NAT_udp_download_10dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -729,13 +729,13 @@ class TestMultiStaPerfNat(object):
                                                     radio=radio_name, station_name=sta)
         if not sta_ip:
             print("test failed due to no station ip")
-            assert False
+            assert False, "test failed due to no station ip"
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -749,24 +749,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5903", name="WIFI-5903")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_10dB_40dB_dis_nss1_5g
-    def test_multi_station_NAT_tcp_download_10dB_40dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_download_10dB_25dB_dis_nss1_5g
+    def test_multi_station_NAT_udp_download_10dB_25dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -802,18 +802,18 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(2):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 250)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_40dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_25dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -827,25 +827,25 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5904", name="WIFI-5904")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_10dB_40dB_50dB_dis_nss1_5g
-    def test_multi_station_NAT_tcp_download_10dB_40dB_50dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_download_10dB_25dB_35dB_dis_nss1_5g
+    def test_multi_station_NAT_udp_download_10dB_25dB_35dB_dis_nss1_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -880,22 +880,22 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(4):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 250)
             time.sleep(0.5)
             if i >= 2:
-                lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
+                lf_test.attenuator_modify(int(atten_sr2[2]), i, 350)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_40dB_50dB_dis_nss1_5g", mode=mode,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_25dB_35dB_dis_nss1_5g", mode=mode,
                                         vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -909,24 +909,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5907", name="WIFI-5907")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_10dB_dis_nss2_2g
-    def test_multi_station_NAT_tcp_upload_10dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_upload_10dB_dis_nss2_2g
+    def test_multi_station_NAT_udp_upload_10dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -954,13 +954,13 @@ class TestMultiStaPerfNat(object):
                                                     radio=radio_name, station_name=sta)
         if not sta_ip:
             print("test failed due to no station ip")
-            assert False
+            assert False, "test failed due to no station ip"
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size="3",
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -974,24 +974,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5911", name="WIFI-5911")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_10dB_40dB_dis_nss2_2g
-    def test_multi_station_NAT_tcp_upload_10dB_40dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_upload_10dB_38dB_dis_nss2_2g
+    def test_multi_station_NAT_udp_upload_10dB_38dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -1027,18 +1027,18 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(2):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 380)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_40dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_38dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1052,24 +1052,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5910", name="WIFI-5910")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_upload_10dB_40dB_50dB_dis_nss2_2g
-    def test_multi_station_NAT_tcp_upload_10dB_40dB_50dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_upload_10dB_38dB_48dB_dis_nss2_2g
+    def test_multi_station_NAT_udp_upload_10dB_38dB_48dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -1104,21 +1104,21 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(4):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 380)
             time.sleep(0.5)
             if i >= 2:
-                lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
+                lf_test.attenuator_modify(int(atten_sr2[2]), i, 480)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_40dB_50dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_38dB_48dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1132,24 +1132,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5914", name="WIFI-5914")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_10dB_dis_nss2_2g
-    def test_multi_station_NAT_tcp_download_10dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_download_10dB_dis_nss2_2g
+    def test_multi_station_NAT_udp_download_10dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -1177,13 +1177,13 @@ class TestMultiStaPerfNat(object):
                                                     radio=radio_name, station_name=sta)
         if not sta_ip:
             print("test failed due to no station ip")
-            assert False
+            assert False, "test failed due to no station ip"
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1197,24 +1197,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5913", name="WIFI-5913")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_10dB_40dB_dis_nss2_2g
-    def test_multi_station_NAT_tcp_download_10dB_40dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_download_10dB_38dB_dis_nss2_2g
+    def test_multi_station_NAT_udp_download_10dB_38dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -1250,18 +1250,18 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(2):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 380)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_40dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_38dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1275,24 +1275,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5912", name="WIFI-5912")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tcp_download_10dB_40dB_50dB_dis_nss2_2g
-    def test_multi_station_NAT_tcp_download_10dB_40dB_50dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
+    @pytest.mark.udp_download_10dB_38dB_48dB_dis_nss2_2g
+    def test_multi_station_NAT_udp_download_10dB_38dB_48dB_dis_nss2_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -1327,21 +1327,21 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(4):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 380)
             time.sleep(0.5)
             if i >= 2:
-                lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
+                lf_test.attenuator_modify(int(atten_sr2[2]), i, 480)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_40dB_50dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_38dB_48dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1355,24 +1355,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5908", name="WIFI-5908")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_10dB_dis_nss2_5g
-    def test_multi_station_NAT_tcp_upload_10dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_upload_10dB_dis_nss2_5g
+    def test_multi_station_NAT_udp_upload_10dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1400,13 +1400,13 @@ class TestMultiStaPerfNat(object):
                                                     radio=radio_name, station_name=sta)
         if not sta_ip:
             print("test failed due to no station ip")
-            assert False
+            assert False, "test failed due to no station ip"
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1420,24 +1420,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5909", name="WIFI-5909")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_10dB_40dB_dis_nss2_5g
-    def test_multi_station_NAT_tcp_upload_10dB_40dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_upload_10dB_25dB_dis_nss2_5g
+    def test_multi_station_NAT_udp_upload_10dB_25dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1473,18 +1473,18 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(2):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 250)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_40dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_25dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1498,24 +1498,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5918", name="WIFI-5918")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_upload_10dB_40dB_50dB_dis_nss2_5g
-    def test_multi_station_NAT_tcp_upload_10dB_40dB_50dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_upload_10dB_25dB_35dB_dis_nss2_5g
+    def test_multi_station_NAT_udp_upload_10dB_25dB_35dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1550,21 +1550,21 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(4):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 250)
             time.sleep(0.5)
             if i >= 2:
-                lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
+                lf_test.attenuator_modify(int(atten_sr2[2]), i, 350)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_upload_10dB_40dB_50dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_upload_10dB_25dB_35dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1578,24 +1578,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Up"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5916", name="WIFI-5916")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_10dB_dis_nss2_5g
-    def test_multi_station_NAT_tcp_download_10dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_download_10dB_dis_nss2_5g
+    def test_multi_station_NAT_udp_download_10dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1623,13 +1623,13 @@ class TestMultiStaPerfNat(object):
                                                     radio=radio_name, station_name=sta)
         if not sta_ip:
             print("test failed due to no station ip")
-            assert False
+            assert False, "test failed due to no station ip"
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1643,24 +1643,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5915", name="WIFI-5915")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_10dB_40dB_dis_nss2_5g
-    def test_multi_station_NAT_tcp_download_10dB_40dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_download_10dB_25dB_dis_nss2_5g
+    def test_multi_station_NAT_udp_download_10dB_25dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1696,18 +1696,18 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(2):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 250)
             time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_40dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_25dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1721,24 +1721,24 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5917", name="WIFI-5917")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tcp_download_10dB_40dB_50dB_dis_nss2_5g
-    def test_multi_station_NAT_tcp_download_10dB_40dB_50dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
+    @pytest.mark.udp_download_10dB_25dB_35dB_dis_nss2_5g
+    def test_multi_station_NAT_udp_download_10dB_25dB_35dB_dis_nss2_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1773,22 +1773,22 @@ class TestMultiStaPerfNat(object):
                                                         radio=radio_name, station_name=sta[i])
             if not sta_ip:
                 print("test failed due to no station ip")
-                assert False
+                assert False, "test failed due to no station ip"
             time.sleep(0.5)
         for i in range(4):
             lf_test.attenuator_modify(int(atten_sr1[2]), i, 100)
             time.sleep(0.5)
         for i in range(4):
-            lf_test.attenuator_modify(int(atten_sr2[2]), i, 400)
+            lf_test.attenuator_modify(int(atten_sr2[2]), i, 250)
             time.sleep(0.5)
             if i >= 2:
-                lf_test.attenuator_modify(int(atten_sr2[2]), i, 500)
+                lf_test.attenuator_modify(int(atten_sr2[2]), i, 350)
                 time.sleep(0.5)
 
-        wct_obj = lf_test.wifi_capacity(instance_name="tcp_NAT_download_10dB_40dB_50dB_dis_nss2_5g", mode=mode,
+        wct_obj = lf_test.wifi_capacity(instance_name="udp_NAT_download_10dB_25dB_35dB_dis_nss2_5g", mode=mode,
                                         vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1802,15 +1802,15 @@ class TestMultiStaPerfNat(object):
         print("pass value ", pass_value)
         lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         if not csv_val:
-            print("csv file does not exist, station did not got ip, Test failed")
-            allure.attach(name="Csv Data", body="station did not got ip Test failed.")
-            assert False
+            print("csv file does not exist, Test failed")
+            allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
+            assert False, "csv file does not exist, Test failed"
         else:
-            allure.attach(name="Csv Data", body=str(list(csv_val["Down"].values())[-1]))
+            allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
                 print("Test passed successfully")
                 assert True
             else:
                 print("Test failed due to lesser value")
-                assert False
+                assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
