@@ -270,6 +270,21 @@ class CController:
         print("ele_list", ele_list)
         indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
         print("indices", indices)
+        y = ele_list[indices[-1]]
+        print(y)
+        list_ = []
+        list_.append(y)
+        z = list_[0].split(" ")
+        state = None
+        if "Disabled" in z:
+            # print("yes")
+            state = "Disabled"
+        if "Enabled" in z:
+            print("ap is up")
+            state = "Enabled"
+        return state
+
+
 
     def check_admin_state_2ghz(self, ap_name):
         summ = self.show_2ghz_summary()
