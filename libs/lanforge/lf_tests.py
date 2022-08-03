@@ -1251,7 +1251,7 @@ class RunTest:
         return atten_serial_radio
 
     def create_n_clients(self, start_id=0, sta_prefix=None, num_sta=None, dut_ssid=None,
-                         dut_security=None, dut_passwd=None, band=None, radio=None, lf_tools=None, type=None):
+                         dut_security=None, dut_passwd=None, band=None, radio=None, lf_tools=None, type=None, identity=None, ttls_pass=None):
 
         local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         station_profile = local_realm.new_station_profile()
@@ -1327,13 +1327,15 @@ class RunTest:
             station_profile.set_command_flag("add_sta", "8021x_radius", 1)
             station_profile.set_command_flag("add_sta", "disable_roam", 1)
             # station_profile.set_command_flag("add_sta", "ap", "68:7d:b4:5f:5c:3f")
+            print("identity", identity)
+            print(ttls_pass)
             station_profile.set_wifi_extra(key_mgmt="FT-EAP     ",
                                            pairwise="[BLANK]",
                                            group="[BLANK]",
                                            psk="[BLANK]",
                                            eap="TTLS",
-                                           identity="testuser",
-                                           passwd="testpasswd",
+                                           identity=identity,
+                                           passwd=ttls_pass,
                                            pin=""
                                            )
         station_profile.create(radio=radio, sta_names_=station_list)
@@ -1484,7 +1486,12 @@ class RunTest:
                                                                   timeout="10",
                                                                   ap_data=get_configuration['access_point'],
                                                                   type=ap_name)
-                    bssid_6g = instantiate_profile_obj.cal_bssid_6g()
+                    ap_mode = get_configuration['access_point'][ap_name]["mode"]
+                    print("ap mode", ap_mode)
+                    mode = None
+                    if ap_mode == "wifi6e-dual":
+                        mode = True
+                    bssid_6g = instantiate_profile_obj.cal_bssid_6g(dual=mode)
                     if ap_name == 0:
                         c1_6g_bssid = bssid_6g
                     if ap_name == 1:
