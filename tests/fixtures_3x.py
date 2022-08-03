@@ -118,6 +118,8 @@ class Fixtures_3x:
         allure.attach(name="wlan data passing", body=str(parameter))
         ap = instantiate_profile_obj.show_ap_summary()
         print("show ap sum", ap)
+        ap_status = instantiate_profile_obj.show_ap_status_cc()
+        print("show ap status", ap_status)
         allure.attach(name="show ap summary", body=str(ap))
 
         print("create 3 wlans on slot1,2 and 3")
@@ -125,10 +127,18 @@ class Fixtures_3x:
             print("ap ", ap_name)
             # instantiate controller object
 
-            print("set channel and bandwidth")
+
             instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
                                                           timeout="10", ssid_data=lf_dut_data,
                                                           ap_data=self.lab_info['access_point'], type=ap_name)
+            print("check ap admin state")
+            ap_state = instantiate_profile_obj.check_ap_admin_status(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
+            print("ap state", ap_state)
+            if ap_state == "Disabled":
+                allure.attach(body="Ap " + str(self.lab_info['access_point'][ap_name]["ap_name"]) + " is in down state", name="AP state")
+                pytest.fail("Ap " + str(self.lab_info['access_point'][ap_name]["ap_name"]) + " is in down state")
+                # pytest.exit("Ap " + str(ap_name) + "is in down state")
+            print("set channel and bandwidth")
             instantiate_profile_obj.set_channel(band="6g", channel=self.lab_info['access_point'][ap_name]["channel_6g"],
                                                 slot=self.lab_info['access_point'][ap_name]["6g_slot"])
             allure.attach(name="set 6g channel on " + str(ap_name + 1) + " ap ", body=str(self.lab_info['access_point'][ap_name]["channel_6g"]))
