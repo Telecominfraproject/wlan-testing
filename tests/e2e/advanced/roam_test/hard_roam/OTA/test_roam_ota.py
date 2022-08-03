@@ -67,7 +67,7 @@ class TestRoamOTA(object):
         instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
-            dut_name.append(get_configuration["access_point"][i]["ap_name"])
+            dut_name.append(get_configuration["access_point"][i]["model"])
 
         print("dut names", dut_name)
         # check channel
@@ -130,7 +130,7 @@ class TestRoamOTA(object):
         instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
-            dut_name.append(get_configuration["access_point"][i]["ap_name"])
+            dut_name.append(get_configuration["access_point"][i]["model"])
 
         print("dut names", dut_name)
         # check channel
@@ -198,7 +198,7 @@ class TestRoamOTA(object):
         instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
-            dut_name.append(get_configuration["access_point"][i]["ap_name"])
+            dut_name.append(get_configuration["access_point"][i]["model"])
 
         print("dut names", dut_name)
 
@@ -265,7 +265,7 @@ class TestRoamOTA(object):
         instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
-            dut_name.append(get_configuration["access_point"][i]["ap_name"])
+            dut_name.append(get_configuration["access_point"][i]["model"])
 
         print("dut names", dut_name)
         # check channel
@@ -328,7 +328,7 @@ class TestRoamOTA(object):
         instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
-            dut_name.append(get_configuration["access_point"][i]["ap_name"])
+            dut_name.append(get_configuration["access_point"][i]["model"])
 
         print("dut names", dut_name)
         # check channel
@@ -396,7 +396,7 @@ class TestRoamOTA(object):
         instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
-            dut_name.append(get_configuration["access_point"][i]["ap_name"])
+            dut_name.append(get_configuration["access_point"][i]["model"])
 
         print("dut names", dut_name)
 
