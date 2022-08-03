@@ -3473,10 +3473,12 @@ def getDeviceModelName(setup_perfectoMobile):
     return deviceModel
 
 def speedtest_app(request, setup_perfectoMobile,get_APToMobileDevice_data):
+    report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
     driver.switch_to.context('NATIVE_APP')
     connData = get_APToMobileDevice_data
     time.sleep(5)
+    report.step_start("Get upload/Download Speed from speed test app")
     openApp( 'com.ookla.speedtest',driver)
     driver.find_element_by_xpath("//*[@label='GO']").click()
     # Wait untill 2 minutes for the test to complete
@@ -3486,6 +3488,7 @@ def speedtest_app(request, setup_perfectoMobile,get_APToMobileDevice_data):
     print(result)
     downloadSpeed = result.split('Download Speed, ')[1].split('. ')[0]
     uploadSpeed = result.split('Upload speed, ')[1].split('. ')[0]
+    allure.attach(name="Speed Test logs: ",body=str("Upload: " + uploadSpeed + " Mbps" + "  Download: " + downloadSpeed + " Mbps"))
     print(f"Download speed: {downloadSpeed}")
     print(f"Upload speed: {uploadSpeed}")
     return downloadSpeed, uploadSpeed
