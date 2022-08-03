@@ -60,6 +60,7 @@ class TestOWEBridge(object):
 
     @pytest.mark.twog
     @pytest.mark.ow_sanity_interop
+    @pytest.mark.owe
     def test_owe_android_2g(self, request, get_vif_state, get_ap_logs,
                                get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["owe"][0]
@@ -98,6 +99,8 @@ class TestOWEBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.ow_sanity_interop
     @pytest.mark.owe
+
+
     def test_owe_android_5g(self, request, get_vif_state, get_ap_logs,
                                    get_ToggleAirplaneMode_data, setup_perfectoMobile_android):
         profile_data = setup_params_general["ssid_modes"]["owe"][1]
