@@ -60,9 +60,11 @@ class TestRoamOTD(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 2g and 6g ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
+        print("enable 5g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -116,16 +118,18 @@ class TestRoamOTD(object):
         print("enable only 2g")
         instantiate_profile_obj.no_ap_2ghz_shutdown()
 
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 5g and 6g ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
+        print("enable 2g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -178,7 +182,7 @@ class TestRoamOTD(object):
                                                       type=0)
         print("shut down 2g  band")
         instantiate_profile_obj.ap_2ghz_shutdown()
-        print("enable only 5g and 6g")
+        print("enable  5g and 6g network")
         instantiate_profile_obj.no_ap_5ghz_shutdown()
         instantiate_profile_obj.no_ap_6ghz_shutdown()
 
@@ -189,9 +193,11 @@ class TestRoamOTD(object):
         mode = "BRIDGE"
         band = "sixg"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 2g ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
-        instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
+        print("enable 5g wlan and 6g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -201,7 +207,7 @@ class TestRoamOTD(object):
         # check channel
         lf_test.create_n_clients(sta_prefix="wlan1", num_sta=1, dut_ssid=ssid_name,
                                  dut_security=security, dut_passwd=security_key, band="sixg",
-                                 lf_tools=lf_tools, type="11r-sae-802.1x")
+                                 lf_tools=lf_tools, type="11r-sae-802.1x",  identity=identity, ttls_pass=ttls_passwd)
         sta_list = lf_tools.get_station_list()
         print(sta_list)
         val = lf_test.wait_for_ip(station=sta_list)
@@ -254,9 +260,11 @@ class TestRoamOTD(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 2g and 6g")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
+        print("enable 5g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -315,9 +323,11 @@ class TestRoamOTD(object):
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
-        print("disable wlan ")
+        print("disable 6g and 5g wlan ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
+        print("enable 2g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
@@ -381,9 +391,11 @@ class TestRoamOTD(object):
         mode = "BRIDGE"
         band = "sixg"
         vlan = 1
-        print("disable wlan ")
+        print("disable wlan 2g ")
         instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][0]["ssid_name"])
-        instantiate_profile_obj.disable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
+        print("enable 5g wlan and 6g wlan")
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa2_personal"][1]["ssid_name"])
+        instantiate_profile_obj.enable_wlan(wlan=setup_params_general["ssid_modes"]["wpa3_personal"][0]["ssid_name"])
         dut_name = []
         for i in range(len(get_configuration["access_point"])):
             dut_name.append(get_configuration["access_point"][i]["ap_name"])
