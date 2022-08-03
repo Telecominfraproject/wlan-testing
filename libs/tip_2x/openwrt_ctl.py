@@ -160,7 +160,6 @@ def main():
                 while True:
                     i = egg.expect([prompt, "Please press Enter to activate", "login:", "Password:", "IPQ6018#"],
                                    timeout=3)
-                    logg.info("expect-0: %i" % (i))
                     if (i == 0):
                         logg.info("Found prompt, login complete.")
                         break
