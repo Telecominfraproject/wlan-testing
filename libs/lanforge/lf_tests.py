@@ -1464,7 +1464,12 @@ class RunTest:
                                                                   timeout="10",
                                                                   ap_data=get_configuration['access_point'],
                                                                   type=ap_name)
-                    bssid_5g = instantiate_profile_obj.cal_bssid_5g()
+                    ap_mode = get_configuration['access_point'][ap_name]["mode"]
+                    print("ap mode", ap_mode)
+                    mode = None
+                    if ap_mode == "wifi6e-dual":
+                        mode = True
+                    bssid_5g = instantiate_profile_obj.cal_bssid_5g(dual=mode)
                     if ap_name == 0:
                         c1_5g_bssid = bssid_5g
                     if ap_name == 1:
