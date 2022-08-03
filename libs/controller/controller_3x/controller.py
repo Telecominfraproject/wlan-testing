@@ -263,6 +263,14 @@ class CController:
         sum= self.cc.show_ap_dot11_6gz_summary()
         return sum
 
+    def check_ap_admin_status(self, ap_name=None):
+        summ = self.show_ap_status_cc()
+        print(sum)
+        ele_list = [y for y in (x.strip() for x in summ.splitlines()) if y]
+        print("ele_list", ele_list)
+        indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
+        print("indices", indices)
+
     def check_admin_state_2ghz(self, ap_name):
         summ = self.show_2ghz_summary()
         print(sum)
@@ -400,8 +408,11 @@ class CController:
         bssid_2g = self.cc.show_ap_bssid_24ghz()
         return bssid_2g
 
-    def get_ap_bssid_5g(self):
-        bssid_5g = self.cc.show_ap_bssid_5ghz()
+    def get_ap_bssid_5g(self, dual):
+        if dual == True:
+            bssid_5g = self.cc.show_ap_bssid_dual_band_5ghz()
+        else:
+            bssid_5g = self.cc.show_ap_bssid_5ghz()
         return bssid_5g
 
     def get_ap_bssid_6g(self, dual):
@@ -560,6 +571,10 @@ class CController:
 
     def show_ap_summary(self):
         summary = self.cc.show_ap_summary()
+        return summary
+
+    def show_ap_status_cc(self):
+        summary = self.cc.show_ap_status()
         return summary
 
     def show_ap_config_slots(self):
