@@ -97,8 +97,8 @@ class TestMuMimoBridge(object):
         report_name = mimo_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Downlink MU-MIMO Test")
         result = lf_tools.read_kpi_file(column_name=["pass/fail"], dir_name=report_name)
-        # allure.attach.file(source="kpi.csv",
-        #                    name="Downlink_MU_MIMO_info", attachment_type=allure.attachment_type.CSV)
+        allure.attach.file(source="../reports/" + report_name + "/kpi.csv",
+                           name="Downlink_MU_MIMO_info", attachment_type=allure.attachment_type.CSV)
         if result[0][0] == "PASS":
             assert True
         else:
