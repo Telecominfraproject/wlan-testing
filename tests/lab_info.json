@@ -962,6 +962,7 @@
     "projectVersion": "1.0",
     "reportTags": "TestTag",
     "perfectoURL":"tip",
+    "available_devices": [""],
     "iPhone-11": {
         "model-iOS": "iPhone-11",
         "bundleId-iOS": "com.apple.Preferences",

@@ -1,25 +1,33 @@
 #!/bin/bash
-
+#sh setup_env.bash -t tip_2x -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
 helpFunction()
 {
    echo "Open Wifi CICD Test Automation Installation"
    echo "Usage: $0 -t target -d device "
-   echo -e "\t-t|--target Target SDK (AP and/or controller Library) eg. tip_2x"
-   echo -e "\t-d|--device Test Device Name eg. lanforge | perfecto | all"
+   echo -e "\t-t Target SDK (AP and/or controller Library) eg. tip_2x"
+   echo -e "\t-n Author Name eg. Shivam Thakur"
+   echo -e "\t-o Organization eg. tip_2x"
+   echo -e "\t-e Author Email Address eg. tip_2x"
+   echo -e "\t-i Description Info eg. tip_2x"
+   echo -e "\t-d Test Device Name eg. lanforge | perfecto | all"
    exit 1 # Exit script after printing help
 }
 
-while getopts "t:d:" opt
+while getopts "t:n:o:e:i:d:" opt
 do
    case "$opt" in
       t ) target="$OPTARG" ;;
+      n ) author="$OPTARG" ;;
+      o ) org="$OPTARG" ;;
+      e ) email="$OPTARG" ;;
+      i ) description="$OPTARG" ;;
       d ) device="$OPTARG" ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
    esac
 done
 
 # Print helpFunction in case parameters are empty
-if [ -z "$target" ] || [ -z "$device" ]
+if [ -z "$target" ] || [ -z "$author" ] || [ -z "$org" ] || [ -z "$email" ] || [ -z "$description" ] || [ -z "$device" ]
 then
    echo "Some or all of the parameters are empty";
    helpFunction
@@ -47,7 +55,9 @@ then
   then
     cd ..
     git clone https://github.com/Telecominfraproject/wlan-lanforge-scripts
-    cd wlan-testing/
+    cd wlan-lanforge-scripts
+    git checkout WIFI-1321-create-a-lan-forge-pip-module
+    cd ../wlan-testing/
   fi
   if [ -d ../wlan-lanforge-scripts ]
   then
@@ -56,9 +66,53 @@ then
     sh to_pip.sh
     pip install ../lanforge_scripts/dist/*.whl #--force-reinstall
     echo "Installed LANforge PIP Module"
-    cd ../wlan-testing
-    # TODO Create a imports.py in tests directory for getting necessary imports which are nothing but dynamic imports,
-    #  Also, install the necessary requirements.txt file and check the pytest command line argument
-    #  Also, install java and allure command line tool
+    cd ../wlan-testing/
+    rm tests/imports.py
+    touch tests/imports.py
+    if [ $target == "tip_2x" ]
+    then
+      python libs/tip_2x/setup.py libs/tip_2x/bdist_wheel
+      pip install libs/tip_2x/dist/*.whl
+    fi
+    echo -e "\"\"\"\nRegistered Target Imports\n\"\"\"\nimport sys\nimport importlib\n\nsys.path.append('/usr/local/bin')\n\n" >> tests/imports.py
+    echo -e "########################################################################################################################" >> tests/imports.py
+    echo -e "\"\"\"
+    Target Name:$target
+    Author Name:$author
+    Organization:$org
+    Register ID:1
+    Email:$email
+    description:$description
+\"\"\"" >> tests/imports.py
+  echo -e "
+try:
+    target = importlib.import_module(\"tip_2x\")
+    target = target.tip_2x
+except ImportError as e:
+    print(e)
+    sys.exit(\"Python Import Error: \" + str(e))
+" >> tests/imports.py
+    echo -e "########################################################################################################################" >> tests/imports.py
+    echo -e "########################################################################################################################" >> tests/imports.py
+    echo -e "\"\"\"
+    Target Name:lanforge_scripts
+    Author Name:$author
+    Organization:$org
+    Register ID:2
+    Email:$email
+    description:Candela LANforge Based Library
+\"\"\"" >> tests/imports.py
+  echo -e "
+try:
+    lanforge_libs = importlib.import_module(\"lanforge_scripts.lf_libs.lf_libs\")
+    lf_libs = lanforge_libs.lf_libs
+    lanforge_tests = importlib.import_module(\"lanforge_scripts.lf_libs.lf_tests\")
+    lf_tests = lanforge_tests.lf_tests
+except ImportError as e:
+    print(e)
+    sys.exit(\"Python Import Error: \" + str(e))
+" >> tests/imports.py
+   echo -e "########################################################################################################################" >> tests/imports.py
+    # TODO Create a perfecto pip module baseline method
   fi
 fi
