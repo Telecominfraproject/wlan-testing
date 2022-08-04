@@ -362,9 +362,12 @@ class Fixtures_3x:
             print("bssid 2g", bssid_2g)
             lst_2g = bssid_list_2g.append(bssid_2g)
 
-            bssid_5g = instantiate_profile_obj.cal_bssid_5g(dual=mode)
-            print("bssid 5g ", bssid_5g)
-            lst_5g = bssid_list_5g.append(bssid_5g)
+            if ap_mode == "wifi6e-dual":
+                print("its a dual band ap")
+            else:
+                bssid_5g = instantiate_profile_obj.cal_bssid_5g(dual=mode)
+                print("bssid 5g ", bssid_5g)
+                lst_5g = bssid_list_5g.append(bssid_5g)
 
             bssid_6g = instantiate_profile_obj.cal_bssid_6g(dual=mode)
             print("bssid 6g ", bssid_6g)
