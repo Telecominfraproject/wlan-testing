@@ -154,7 +154,7 @@ jobs:
             export OWPROV_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16005";
             export OWANALYTICS_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16009";
             export OWSUB_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16006";
-            export OWRRM_SERVICECONFIG_PRIVATEENDPOINT="http://owrrm.wlan.local:16789";
+            export OWRRM_SERVICECONFIG_PRIVATEENDPOINT="http://owrrm.wlan.local:17007";
             export OWRRM_SERVICECONFIG_PUBLICENDPOINT="http://${{ needs.deploy-controller.outputs.gateway_url }}:16789";
             ./deploy.sh
           EOF
