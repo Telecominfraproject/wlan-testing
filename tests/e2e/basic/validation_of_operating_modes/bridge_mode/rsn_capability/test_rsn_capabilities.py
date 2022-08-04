@@ -80,7 +80,7 @@ class TestRSNCapabilities(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-9539", name="WIFI-9539")
     def test_rsn_open_2g(self, radius_info, lf_test, station_names_twog, get_ap_channel):
         """
-            rsn open 2.4g
+            RSN open 2.4g
             pytest -m "rsn and bridge and open and twog"
         """
         profile_data=setup_params_general["ssid_modes"]["open"][0]
@@ -102,8 +102,8 @@ class TestRSNCapabilities(object):
     @pytest.mark.fiveg
     def test_rsn_open_5g(self, radius_info, lf_test, station_names_fiveg, get_ap_channel):
         """
-            rsn open 5g
-            pytest -m "rsn and bridge and wpa and fiveg"
+            RSN open 5g
+            pytest -m "rsn and bridge and open and fiveg"
         """
         profile_data=setup_params_general["ssid_modes"]["open"][1]
         ssid_5g=profile_data["ssid_name"]
@@ -126,8 +126,8 @@ class TestRSNCapabilities(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-9539", name="WIFI-9539")
     def test_rsn_wpa_2g(self, radius_info, lf_test, station_names_twog, get_ap_channel):
         """
-            rsn wpa 2.4G
-           pytest -m "rsn and bridge and wpa and twog"
+            RSN wpa 2.4G
+            pytest -m "rsn and bridge and wpa and twog"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa"][0]
         ssid_2g=profile_data["ssid_name"]
@@ -150,8 +150,8 @@ class TestRSNCapabilities(object):
     @allure.story('wpa 5 GHZ Band')
     def test_rsn_wpa_5g(self, radius_info, lf_test, station_names_fiveg, get_ap_channel):
         """
-            rsn wpa 5G
-           pytest -m "rsn and bridge and wpa and fiveg"
+            RSN wpa 5G
+            pytest -m "rsn and bridge and wpa and fiveg"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa"][1]
         ssid_5g=profile_data["ssid_name"]
@@ -175,8 +175,8 @@ class TestRSNCapabilities(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-9539", name="WIFI-9539")
     def test_rsn_wpa2_personal_2g(self, radius_info, lf_test, station_names_twog, get_ap_channel):
         """
-            rsn wpa 2.4G
-           pytest -m "rsn and bridge and wpa2_personal and twog"
+            RSN wpa2-personal 2.4G
+            pytest -m "rsn and bridge and wpa2_personal and twog"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa"][0]
         ssid_2g=profile_data["ssid_name"]
@@ -200,7 +200,7 @@ class TestRSNCapabilities(object):
     def test_rsn_wpa2_personal_5g(self, radius_info, lf_test, station_names_fiveg, get_ap_channel):
         """
             rsn wpa2_personal 5G
-           pytest -m "rsn and bridge and wpa2_personal and fiveg"
+            pytest -m "rsn and bridge and wpa2_personal and fiveg"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_5g=profile_data["ssid_name"]
@@ -221,8 +221,9 @@ class TestRSNCapabilities(object):
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
     def test_wpa3_personal_ssid_2g(self, station_names_twog, lf_test, get_ap_channel):
-        """RSN open ssid 2.4G
-           pytest -m "rsn and bridge and general and wpa3_personal and twog"
+        """
+            RSN open ssid 2.4G
+            pytest -m "rsn and bridge and wpa3_personal and twog"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_2g=profile_data["ssid_name"]
@@ -243,8 +244,9 @@ class TestRSNCapabilities(object):
     @pytest.mark.fiveg
     @allure.story('wpa3 5 GHZ Band')
     def test_wpa3_personal_ssid_5g(self, station_names_fiveg, lf_test, get_ap_channel):
-        """RSN wpa3 Personal ssid 5G
-           pytest -m "rsn and bridge and wpa3_personal and fiveg"
+        """
+            RSN wpa3 Personal ssid 5G
+            pytest -m "rsn and bridge and wpa3_personal and fiveg"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa3_personal"][1]
         ssid_5g=profile_data["ssid_name"]
@@ -265,8 +267,9 @@ class TestRSNCapabilities(object):
     @pytest.mark.twog
     @allure.story('wpa3 Mixed GHZ Band')
     def test_wpa3_personal_mixed_ssid_2g(self, station_names_twog, lf_test, get_ap_channel):
-        """RSN wpa3 personal ssid 2.4G
-           pytest -m "rsn and bridge and general and wpa3_personal_mixed and twog"
+        """
+            RSN wpa3 personal ssid 2.4G
+            pytest -m "rsn and bridge and wpa3_personal_mixed and twog"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_2g=profile_data["ssid_name"]
@@ -287,8 +290,9 @@ class TestRSNCapabilities(object):
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_mixed_ssid_5g(self, station_names_fiveg, lf_test, get_ap_channel):
-        """RSN open ssid 2.4G
-           pytest -m "rsn and bridge and general and wpa3_personal_mixed and fiveg"
+        """
+            RSN wpa3-personal-mixed ssid 5GHz
+            pytest -m "rsn and bridge and wpa3_personal_mixed and fiveg"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_5g=profile_data["ssid_name"]
@@ -309,8 +313,9 @@ class TestRSNCapabilities(object):
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     def test_wpa_wpa2_personal_ssid_2g(self, station_names_twog, lf_test, get_ap_channel):
-        """RSN wpa-wpa2 mixed ssid 2.4G
-           pytest -m "rsn and bridge and general and wpa_wpa2_personal_mixed and twog"
+        """
+            RSN wpa-wpa2 mixed ssid 2.4G
+            pytest -m "rsn and bridge and wpa_wpa2_personal_mixed and twog"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_2g=profile_data["ssid_name"]
@@ -331,8 +336,9 @@ class TestRSNCapabilities(object):
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     def test_wpa_wpa2_personal_ssid_5g(self, station_names_fiveg, lf_test, get_ap_channel):
-        """RSN wpa-wpa2 mixed ssid 5G
-           pytest -m "rsn and bridge and general and wpa_wpa2_personal_mixed and fiveg"
+        """
+            RSN wpa-wpa2 mixed ssid 5G
+            pytest -m "rsn and bridge and wpa_wpa2_personal_mixed and fiveg"
         """
         profile_data=setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_5g=profile_data["ssid_name"]
@@ -354,8 +360,9 @@ class TestRSNCapabilities(object):
     def test_tls_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                     station_names_twog, setup_profiles, lf_test, update_report,
                                     test_cases, radius_info, exit_on_fail, get_ap_channel):
-        """ wpa enterprise 2g
-                    pytest -m "rsn and bridge and enterprise and tts and twog"
+        """
+            wpa enterprise 2g
+            pytest -m "rsn and bridge and wpa2_enterprise and twog"
         """
 
         profile_data=setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
@@ -385,9 +392,10 @@ class TestRSNCapabilities(object):
                                     station_names_fiveg, setup_profiles, lf_test,
                                     update_report, exit_on_fail,
                                     test_cases, radius_info, get_ap_channel):
-        """ wpa enterprise 2g
-                    pytest -m "rsn and bridge and enterprise and tts and twog"
-                """
+        """
+            wpa enterprise 5GHz
+            pytest -m "rsn and bridge and wpa2_enterprise and fiveg"
+        """
 
         profile_data=setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name=profile_data["ssid_name"]
@@ -415,9 +423,10 @@ class TestRSNCapabilities(object):
     def test_tls_wpa3_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                     station_names_twog, setup_profiles, lf_test, update_report,
                                     test_cases, radius_info, exit_on_fail, get_ap_channel):
-        """ wpa enterprise 2g
-                    pytest -m "rsn and bridge and enterprise and tts and twog"
-                """
+        """
+            wpa enterprise 2g
+            pytest -m "rsn and bridge and wpa3_enterprise and twog"
+        """
 
         profile_data=setup_params_general["ssid_modes"]["wpa3_enterprise"][0]
         ssid_name=profile_data["ssid_name"]
@@ -446,8 +455,9 @@ class TestRSNCapabilities(object):
                                     station_names_fiveg, setup_profiles, lf_test,
                                     update_report, exit_on_fail,
                                     test_cases, radius_info, get_ap_channel):
-        """ wpa enterprise 5g
-                    pytest -m "rsn and bridge and wpa3_enterprise and twog"
+        """
+            wpa enterprise 5g
+            pytest -m "rsn and bridge and wpa3_enterprise and fiveg"
         """
 
         profile_data=setup_params_general["ssid_modes"]["wpa3_enterprise"][1]

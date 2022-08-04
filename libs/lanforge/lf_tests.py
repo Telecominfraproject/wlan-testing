@@ -2140,7 +2140,7 @@ class RunTest:
                                                     extra_securities=extra_securities,
                                                     station_name=station_name, mode=mode, vlan_id=1, band=band,
                                                     ssid_channel=ssid_channel)
-            time.sleep(sniff_duration)
+            time.sleep(30)
             self.stop_sniffer()
         elif security == "wpa3_enterprise" or security == "wpa2_enterprise":
             if security == "wpa3_enterprise":
@@ -2158,10 +2158,9 @@ class RunTest:
         try:
             if os.path.exists(self.pcap_name):
                 print('Pcap File Name:', self.pcap_name)
+                self.pcap_obj=LfPcap(host=self.lanforge_ip, port=self.lanforge_port, _pcap_name=self.pcap_name)
         except Exception as e:
             raise FileNotFoundError(e)
-
-        self.pcap_obj=LfPcap(host=self.lanforge_ip, port=self.lanforge_port)
 
         table_heads=["Packet Type", "Capability Check", 'PASS/FAIL']
         table_data=[]
@@ -2184,12 +2183,6 @@ class RunTest:
 
         allure.attach.file(source=self.pcap_obj.pcap_name,
                            name="pcap_file", attachment_type=allure.attachment_type.PCAP)
-        # print(table_data)
-        # attach test data in a table to allure
-        report_obj=Report()
-        # table_info=report_obj.table2(table=table_data, headers=table_heads)
-        allure.attach(name="Test Results Info", body="Its working")
-        # self.Client_disconnect(station_name=station_name)
         return passes, result
 
 
