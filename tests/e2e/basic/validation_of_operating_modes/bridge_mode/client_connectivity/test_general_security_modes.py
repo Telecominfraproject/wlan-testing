@@ -8,22 +8,17 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.bridge, pytest.mark.general, pytest.mark.ucentral,
-              pytest.mark.sanity, pytest.mark.uc_sanity]  # pytest.mark.usefixtures("setup_test_run")]
+pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.bridge, pytest.mark.general]
 
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                 {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"],
-                  "security_key": "something"}],
+                 {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
-                 "security_key": "something"}],
-        "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"],
-             "security_key": "something"}]},
+                {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
@@ -32,7 +27,6 @@ setup_params_general = {
 @allure.suite(suite_name="OpenWifi Sanity LF")
 @allure.sub_suite(sub_suite_name="Bridge Mode Client Connectivity : Suite-A")
 @pytest.mark.suiteA
-@pytest.mark.sudo
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -91,6 +85,30 @@ class TestBridgeModeConnectivitySuiteA(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+
+        assert passes == "PASS", result
+
+    @pytest.mark.open
+    @pytest.mark.sixg
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
+    def test_open_ssid_6g(self, get_ap_logs, lf_test, test_cases, station_names_fiveg, get_lf_logs,
+                          update_report, get_ap_channel):
+        """Client Connectivity open ssid 5G
+           pytest -m "client_connectivity and bridge and general and open and fiveg"
+        """
+        profile_data = setup_params_general["ssid_modes"]["open"][1]
+        ssid_name = profile_data["ssid_name"]
+        security_key = "[BLANK]"
+        security = "open"
+        mode = "BRIDGE"
+        band = "sixg"
+        channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
+        vlan = 1
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+                                                     passkey=security_key, mode=mode, band=band,
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -198,17 +216,15 @@ setup_params_general_two = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}],
+            {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_6g_br", "appliedRadios": ["6G"], "security_key": "something"}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}],
+            {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]
+            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]
     },
     "rf": {},
     "radius": False
@@ -234,7 +250,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_ssid_2g(self, get_ap_logs, station_names_twog,  lf_test,
+    def test_wpa3_personal_ssid_2g_bridge(self, get_ap_logs, station_names_twog,  lf_test,
                                    update_report,
                                    test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
@@ -258,7 +274,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_ssid_5g(self, get_ap_logs, station_names_fiveg,
+    def test_wpa3_personal_ssid_5g_bridge(self, get_ap_logs, station_names_fiveg,
                                    lf_test, test_cases, get_lf_logs,
                                    update_report, get_ap_channel):
         """Client Connectivity open ssid 2.4G
@@ -271,6 +287,30 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         mode = "BRIDGE"
         band = "fiveg"
         channel = get_ap_channel[0]["5G"]
+        print("ssid channel:- ", channel)
+        vlan = 1
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+                                                     passkey=security_key, mode=mode, band=band,
+                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+
+        assert result
+
+    @pytest.mark.wpa3_personal
+    @pytest.mark.sixg
+    @allure.story('WPA3 6 GHZ Band')
+    def test_wpa3_personal_ssid_6g_bridge(self, get_ap_logs, station_names_fiveg,
+                                   lf_test, test_cases, get_lf_logs,
+                                   update_report, get_ap_channel):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and bridge and general and wpa3_personal and fiveg"
+        """
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][2]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa3"
+        mode = "BRIDGE"
+        band = "sixg"
+        channel = get_ap_channel[0]["6G"]
         print("ssid channel:- ", channel)
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,

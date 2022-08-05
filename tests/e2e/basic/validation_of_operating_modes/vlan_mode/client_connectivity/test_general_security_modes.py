@@ -200,16 +200,14 @@ setup_params_general_two = {
     "ssid_modes": {
         "wpa3_personal": [
             {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"],
-             "security_key": "something", "vlan": 100}],
+            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "ssid_wpa3_p_6g", "appliedRadios": ["6G"], "security_key": "something", "vlan": 100}],
         "wpa3_personal_mixed": [
             {"ssid_name": "ssid_wpa3_p_m_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something", "vlan": 100}],
+            {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}],
         "wpa_wpa2_personal_mixed": [
             {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something", "vlan": 100}]
+            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}]
     },
     "rf": {},
     "radius": False
@@ -256,7 +254,6 @@ class TestvlanModeConnectivitySuiteTwo(object):
 
         assert passes == "PASS", result
 
-    @pytest.mark.uc_sanity
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
@@ -278,6 +275,30 @@ class TestvlanModeConnectivitySuiteTwo(object):
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
                                                      station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+        assert passes == "PASS", result
+
+    @pytest.mark.wpa3_personal
+    @pytest.mark.sixg
+    @allure.story('open 6 GHZ Band')
+    def test_wpa3_personal_ssid_6g_vlan(self, get_ap_logs, get_lf_logs,
+                                   station_names_fiveg, lf_test, test_cases,
+                                   update_report, get_ap_channel):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and vlan and general and wpa3_personal and fiveg"
+        """
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][2]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa3"
+        mode = "VLAN"
+        band = "sixg"
+        channel = get_ap_channel[0]["6G"]
+        print("ssid channel:- ", channel)
+        vlan = 100
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+                                                     passkey=security_key, mode=mode, band=band,
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
         assert passes == "PASS", result
 
     @pytest.mark.uc_sanity

@@ -8,8 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.nat, pytest.mark.general, pytest.mark.sanity,
-              pytest.mark.uc_sanity, pytest.mark.ucentral]
+pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.nat, pytest.mark.general]
 
 setup_params_general = {
     "mode": "NAT",
@@ -27,7 +26,6 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
-
 
 
 @pytest.mark.suiteA
@@ -68,7 +66,8 @@ class TestNATModeConnectivitySuiteA(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_twog, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -76,7 +75,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_open_ssid_5g(self, get_ap_logs, get_lf_logs,
-                           lf_test, test_cases, station_names_fiveg,
+                          lf_test, test_cases, station_names_fiveg,
                           update_report, get_ap_channel):
         """Client Connectivity open ssid 5G
            pytest -m "client_connectivity and NAT and general and open and fiveg"
@@ -92,7 +91,8 @@ class TestNATModeConnectivitySuiteA(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -100,7 +100,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    def test_wpa_ssid_2g(self, get_ap_logs,  update_report, get_lf_logs,
+    def test_wpa_ssid_2g(self, get_ap_logs, update_report, get_lf_logs,
                          lf_test, test_cases, station_names_twog, get_ap_channel):
         """Client Connectivity wpa ssid 2.4G
            pytest -m "client_connectivity and NAT and general and wpa and twog"
@@ -116,7 +116,8 @@ class TestNATModeConnectivitySuiteA(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_twog, vlan_id=vlan,
+                                                     ssid_channel=channel)
         assert passes == "PASS", result
 
     @pytest.mark.sanity_light
@@ -139,8 +140,9 @@ class TestNATModeConnectivitySuiteA(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
-        
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
+
         assert passes == "PASS", result
 
     @pytest.mark.sanity_light
@@ -148,7 +150,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
     def test_wpa2_personal_ssid_2g(self, get_ap_logs, get_lf_logs,
-                                    lf_test, update_report, test_cases,
+                                   lf_test, update_report, test_cases,
                                    station_names_twog, get_ap_channel):
         """Client Connectivity wpa2_personal ssid 2.4G
            pytest -m "client_connectivity and NAT and general and wpa2_personal and twog"
@@ -164,7 +166,8 @@ class TestNATModeConnectivitySuiteA(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_twog, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -173,7 +176,7 @@ class TestNATModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
     def test_wpa2_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
-                                    update_report, test_cases,
+                                   update_report, test_cases,
                                    station_names_fiveg,
                                    lf_test, get_ap_channel):
         """Client Connectivity wpa2_personal ssid 5G
@@ -190,7 +193,8 @@ class TestNATModeConnectivitySuiteA(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -199,17 +203,15 @@ setup_params_general_two = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}],
+            {"ssid_name": "ssid_wpa3_p_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_5g_nat", "appliedRadios": ["5G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_6g_nat", "appliedRadios": ["6G"], "security_key": "something"}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}],
+            {"ssid_name": "ssid_wpa3_p_m_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_m_5g_nat", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"],
-             "security_key": "something"}]
+            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_nat", "appliedRadios": ["5G"], "security_key": "something"}]
     },
     "rf": {},
     "radius": False
@@ -233,10 +235,10 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
-    def test_wpa3_personal_ssid_2g(self, get_ap_logs, get_lf_logs,
-                                   station_names_twog, lf_test,
-                                   update_report,
-                                   test_cases, get_ap_channel):
+    def test_wpa3_personal_ssid_2g_nat(self, get_ap_logs, get_lf_logs,
+                                       station_names_twog, lf_test,
+                                       update_report,
+                                       test_cases, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and NAT and general and wpa3_personal and twog"
         """
@@ -251,16 +253,17 @@ class TestNATModeConnectivitySuiteB(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_twog, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
-    def test_wpa3_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
-                                   station_names_fiveg,  lf_test, test_cases,
-                                   update_report, get_ap_channel):
+    def test_wpa3_personal_ssid_5g_nat(self, get_ap_logs, get_lf_logs,
+                                       station_names_fiveg, lf_test, test_cases,
+                                       update_report, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and NAT and general and wpa3_personal and fiveg"
         """
@@ -275,7 +278,33 @@ class TestNATModeConnectivitySuiteB(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
+
+        assert passes == "PASS", result
+
+    @pytest.mark.wpa3_personal
+    @pytest.mark.sixg
+    @allure.story('open 5 GHZ Band')
+    def test_wpa3_personal_ssid_6g_nat(self, get_ap_logs, get_lf_logs,
+                                       station_names_fiveg, lf_test, test_cases,
+                                       update_report, get_ap_channel):
+        """Client Connectivity open ssid 2.4G
+           pytest -m "client_connectivity and NAT and general and wpa3_personal and fiveg"
+        """
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][2]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa3"
+        mode = "NAT"
+        band = "sixg"
+        channel = get_ap_channel[0]["6G"]
+        print("ssid channel:- ", channel)
+        vlan = 1
+        passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
+                                                     passkey=security_key, mode=mode, band=band,
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -301,7 +330,8 @@ class TestNATModeConnectivitySuiteB(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_twog, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -309,7 +339,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.fiveg
     @allure.story('open 5 GHZ Band')
     def test_wpa3_personal_mixed_ssid_5g(self, get_ap_logs, get_lf_logs,
-                                         station_names_fiveg,  lf_test,
+                                         station_names_fiveg, lf_test,
                                          test_cases,
                                          update_report, get_ap_channel):
         """Client Connectivity open ssid 2.4G
@@ -326,7 +356,8 @@ class TestNATModeConnectivitySuiteB(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -353,7 +384,8 @@ class TestNATModeConnectivitySuiteB(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_twog, vlan_id=vlan,
+                                                     ssid_channel=channel)
 
         assert passes == "PASS", result
 
@@ -361,7 +393,7 @@ class TestNATModeConnectivitySuiteB(object):
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     def test_wpa_wpa2_personal_ssid_5g(self, get_ap_logs, get_lf_logs,
-                                       station_names_fiveg,  lf_test, test_cases,
+                                       station_names_fiveg, lf_test, test_cases,
                                        update_report, get_ap_channel):
         """Client Connectivity open ssid 2.4G
            pytest -m "client_connectivity and NAT and general and wpa_wpa2_personal_mixed and fiveg"
@@ -378,9 +410,9 @@ class TestNATModeConnectivitySuiteB(object):
         vlan = 1
         passes, result = lf_test.Client_Connectivity(ssid=ssid_name, security=security, extra_securities=extra_secu,
                                                      passkey=security_key, mode=mode, band=band,
-                                                     station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+                                                     station_name=station_names_fiveg, vlan_id=vlan,
+                                                     ssid_channel=channel)
         assert passes == "PASS", result
-
 
 # WEP Security Feature not available
 # setup_params_wep = {
