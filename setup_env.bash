@@ -1,4 +1,7 @@
 #!/bin/bash
+# Setup python environment variable and pip environment variable like
+# export PYTHON=/usr/bin/python3
+# export PIP=/usr/bin/pip3
 #sh setup_env.bash -t tip_2x -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
 helpFunction()
 {
@@ -38,12 +41,12 @@ echo "Target SDK for " "$target"
 echo "$device"
 
 # Check Python version and pip version
-if ! hash python; then
+if ! hash $PYTHON; then
     echo "python is not installed"
     exit 1
 fi
 
-ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
+ver=$($PYTHON -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
 if [ "$ver" -lt "38" ]; then
     echo "This script requires python 3.8 or greater"
     exit 1
@@ -71,8 +74,10 @@ then
     touch tests/imports.py
     if [ $target == "tip_2x" ]
     then
-      python libs/tip_2x/setup.py libs/tip_2x/bdist_wheel
-      pip install libs/tip_2x/dist/*.whl
+      cd libs/tip_2x
+      python setup.py bdist_wheel
+      pip install dist/*.whl --force-reinstall
+      cd ../../
     fi
     echo -e "\"\"\"\nRegistered Target Imports\n\"\"\"\nimport sys\nimport importlib\n\nsys.path.append('/usr/local/bin')\n\n" >> tests/imports.py
     echo -e "########################################################################################################################" >> tests/imports.py

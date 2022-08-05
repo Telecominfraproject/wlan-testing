@@ -86,6 +86,7 @@ class tip_2x:
         self.controller_data = controller_data
         self.device_under_tests_info = device_under_tests_info
         self.setup_metadata()
+        self.setup_objects()
 
     """
         Controller and Access Point specific metadata that is related to OpenWifi 2.x
@@ -221,7 +222,7 @@ class tip_2x:
         # Setup Config Apply on all AP's
         for i in range(0, len(self.device_under_tests_info)):
             resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
-            logging.info("Response for Config apply: " + resp.status_code)
+            logging.info("Response for Config apply: " + str(resp.status_code))
             if resp.status_code != 200:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
                              resp.status_code +
@@ -229,8 +230,8 @@ class tip_2x:
                 time.sleep(5)
                 resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
                 if resp.status_code != 200:
-                    logging.error("Failed to apply Config, Response code:" + resp.status_code)
-                    pytest.fail("Failed to apply Config, Response code :" + resp.status_code)
+                    logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
+                    pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
             if resp.status_code == 200:
                 r_val.append(True)
 
@@ -295,7 +296,7 @@ class tip_2x:
 
         for dut in self.device_under_tests_info:
             resp = profile_object.push_config(serial_number=dut["identifier"])
-            logging.info("Response for Config apply: " + resp.status_code)
+            logging.info("Response for Config apply: " + str(resp.status_code))
             if resp.status_code != 200:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
                              resp.status_code +
@@ -303,8 +304,8 @@ class tip_2x:
                 time.sleep(5)
                 resp = profile_object.push_config(serial_number=dut["identifier"])
                 if resp.status_code != 200:
-                    logging.info("Failed to apply Config, Response code:" + resp.status_code)
-                    pytest.fail("Failed to apply Config, Response code :" + resp.status_code)
+                    logging.info("Failed to apply Config, Response code:" + str(resp.status_code))
+                    pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
         if resp.status_code == 200:
             r_val = True
         # TODO
