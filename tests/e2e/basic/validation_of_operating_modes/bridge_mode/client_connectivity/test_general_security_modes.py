@@ -405,3 +405,4 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                                    num_sta=num_stations)
 
         assert passes == "PASS", result
+
