@@ -654,3 +654,4 @@ class TestDFSChannel144Bw20(object):
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
         time.sleep(200)
+
