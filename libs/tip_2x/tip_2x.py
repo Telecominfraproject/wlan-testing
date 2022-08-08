@@ -9,6 +9,7 @@ import time
 
 import allure
 import pytest
+import requests
 
 logging = importlib.import_module("logging")
 
@@ -482,6 +483,256 @@ class tip_2x:
         add_allure_environment_property('DUT-Model/s', ", ".join(models))
         add_allure_environment_property('Serial-Number/s', ", ".join(identifiers))
 
+    def setup_firmware(self):
+        # Query AP Firmware
+        upgrade_status = []
+        for ap in range(len(self.device_under_tests_info)):
+
+            # If specified as URL
+            try:
+                response = requests.get(self.device_under_tests_info[ap]['firmware_version'])
+                logging.info("URL is valid and exists on the internet")
+                allure.attach(name="firmware url: ", body=str(self.device_under_tests_info[ap]['firmware_version']))
+                target_revision_commit = self.device_under_tests_info[ap]['firmware_version'].split("-")[-2]
+                ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                current_version_commit = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                if target_revision_commit in current_version_commit:
+                    continue
+                self.firmware_library_object.upgrade_firmware(serial=self.device_under_tests_info[ap]['identifier'],
+                                                url=str(self.device_under_tests_info[ap]['firmware_version']))
+
+                items = list(range(0, 300))
+                l = len(items)
+                ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                current_version_commit = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                if target_revision_commit in current_version_commit:
+                    upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision_commit, current_version_commit])
+                    logging.info("Firmware Upgraded to :", ap_version)
+                else:
+                    logging.info("firmware upgraded failed: ", target_revision)
+                    upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision_commit, current_version_commit])
+                break
+            except Exception as e:
+                logging.error("URL does not exist on Internet")
+            # else Specified as "branch-commit_id" / "branch-latest"
+            firmware_url = ""
+            ap_version = self.dut_library_object.get_ap_version(idx=ap)
+            response = self.firmware_library_object.get_latest_fw(model=self.device_under_tests_info[ap]['model'])
+            # if the target version specified is "branch-latest"
+            if self.device_under_tests_info[ap]['firmware_version'].split('-')[1] == "latest":
+                # get the latest branch
+                firmware_list = self.firmware_library_object.get_firmwares(model=self.device_under_tests_info[ap]['model'], branch="", commit_id='')
+                firmware_list.reverse()
+
+                for firmware in firmware_list:
+                    if firmware['image'] == "":
+                        continue
+                    if str(firmware['image']).__contains__("upgrade.bin"):
+                        temp = firmware['image'].split("-")
+                        temp.pop(-1)
+                        temp = "-".join(temp)
+                        firmware['image'] = temp
+                    if self.device_under_tests_info[ap]['firmware_version'].split('-')[0] == 'release':
+                        if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+                            logging.info("Target Firmware: \n", firmware)
+                            allure.attach(name="Target firmware : ", body=str(firmware))
+                            target_revision = firmware['revision'].split("/")[1].replace(" ", "")
+
+                            # check the current AP Revision before upgrade
+
+                            ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                            # print and report the firmware versions before upgrade
+                            allure.attach(name="Before Firmware Upgrade Request: ",
+                                          body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                            logging.info("current revision: " + current_version + "\ntarget revision: " + target_revision)
+
+                            # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                            if current_version == target_revision:
+                                upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision,
+                                                       current_version, 'skip'])
+                                logging.info("Skipping Upgrade! AP is already in target version")
+                                allure.attach(name="Skipping Upgrade because AP is already in the target Version",
+                                              body="")
+                                break
+
+                            self.firmware_library_object.upgrade_firmware(serial=self.device_under_tests_info[ap]['identifier'],
+                                                            url=str(firmware['uri']))
+                            # wait for 300 seconds after firmware upgrade
+                            logging.info("waiting for 300 Sec for Firmware Upgrade")
+                            time.sleep(300)
+
+                            # check the current AP Revision again
+                            ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                            # print and report the Firmware versions after upgrade
+                            allure.attach(name="After Firmware Upgrade Request: ",
+                                          body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                            logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                            if current_version == target_revision:
+                                upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
+                                logging.info("firmware upgraded successfully: ", target_revision)
+                            else:
+                                upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
+                                logging.info("firmware upgraded failed: ", target_revision)
+                            break
+                    if firmware['image'].split("-")[-2] == self.device_under_tests_info[ap]['firmware_version'].split('-')[0]:
+                        logging.info("Target Firmware: \n", firmware)
+                        allure.attach(name="Target firmware : ", body=str(firmware))
+
+                        target_revision = firmware['revision'].split("/")[1].replace(" ", "")
+
+                        # check the current AP Revision before upgrade
+                        ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                        current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                        # print and report the firmware versions before upgrade
+                        allure.attach(name="Before Firmware Upgrade Request: ",
+                                      body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                        logging.info("current revision: " + current_version + "\ntarget revision: " + target_revision)
+
+                        # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                        if current_version == target_revision:
+                            upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version, 'skip'])
+                            logging.info("Skipping Upgrade! AP is already in target version")
+                            allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
+                            break
+
+                        self.firmware_library_object.upgrade_firmware(serial=self.device_under_tests_info[ap]['identifier'], url=str(firmware['uri']))
+                        # wait for 300 seconds after firmware upgrade
+                        logging.info("waiting for 300 Sec for Firmware Upgrade")
+                        time.sleep(500)
+
+                        # check the current AP Revision again
+                        ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                        current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                        # print and report the Firmware versions after upgrade
+                        allure.attach(name="After Firmware Upgrade Request: ",
+                                      body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                        logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                        if current_version == target_revision:
+                            upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
+                            logging.info("firmware upgraded successfully: ", target_revision)
+                        else:
+                            upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
+                            logging.info("firmware upgraded failed: ", target_revision)
+                        break
+            # if branch-commit is specified
+            else:
+                firmware_list = self.firmware_library_object.get_firmwares(model=self.device_under_tests_info[ap]['model'],
+                                                             branch="", commit_id='')
+                fw_list = []
+                # getting the list of firmwares in fw_list that has the commit id specified as an input
+                for firmware in firmware_list:
+                    if firmware['revision'].split("/")[1].replace(" ", "").split('-')[-1] == \
+                            self.device_under_tests_info[ap]['firmware_version'].split('-')[1]:
+                        fw_list.append(firmware)
+
+                # If there is only 1 commit ID in fw_list
+                if len(fw_list) == 1:
+
+                    logging.info("Target Firmware: \n", fw_list[0])
+                    allure.attach(name="Target firmware : ", body=str(fw_list[0]))
+
+                    url = fw_list[0]['uri']
+                    target_revision = fw_list[0]['revision'].split("/")[1].replace(" ", "")
+
+                    # check the current AP Revision before upgrade
+                    ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                    current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                    # print and report the firmware versions before upgrade
+                    allure.attach(name="Before Firmware Upgrade Request: ",
+                                  body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                    logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+
+                    # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                    if current_version == target_revision:
+                        upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version, 'skip'])
+                        logging.info("Skipping Upgrade! AP is already in target version")
+                        allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
+                        break
+
+                    # upgrade the firmware in another condition
+                    else:
+                        self.firmware_library_object.upgrade_firmware(serial=self.device_under_tests_info[ap]['identifier'], url=str(url))
+
+                        # wait for 300 seconds after firmware upgrade
+                        logging.info("waiting for 300 Sec for Firmware Upgrade")
+                        time.sleep(300)
+
+                        # check the current AP Revision again
+                        ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                        current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                        # print and report the Firmware versions after upgrade
+                        allure.attach(name="After Firmware Upgrade Request: ",
+                                      body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                        logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                        if current_version == target_revision:
+                            upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
+                            logging.info("firmware upgraded successfully: ", target_revision)
+                        else:
+                            upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
+                            logging.info("firmware upgraded failed: ", target_revision)
+                        break
+
+                # if there are 1+ firmware images in fw_list then check for branch
+                else:
+                    target_fw = ""
+                    for firmware in fw_list:
+                        if self.device_under_tests_info[ap]['firmware_version'].split('-')[0] == 'release':
+                            if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+                                target_fw = firmware
+                                break
+                        if firmware['image'].split("-")[-2] == self.device_under_tests_info[ap]['firmware_version'].split('-')[0]:
+                            target_fw = firmware
+                            break
+                    firmware = target_fw
+                    logging.info("Target Firmware: \n", firmware)
+                    allure.attach(name="Target firmware : ", body=str(firmware))
+
+                    target_revision = firmware['revision'].split("/")[1].replace(" ", "")
+
+                    # check the current AP Revision before upgrade
+                    ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                    current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+
+                    # print and report the firmware versions before upgrade
+                    allure.attach(name="Before Firmware Upgrade Request: ",
+                                  body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                    logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+
+                    # if AP is already in target Version then skip upgrade unless force upgrade is specified
+                    if current_version == target_revision:
+                        upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version, 'skip'])
+                        logging.info("Skipping Upgrade! AP is already in target version")
+                        allure.attach(name="Skipping Upgrade because AP is already in the target Version", body="")
+                        break
+
+                    self.firmware_library_object.upgrade_firmware(serial=self.device_under_tests_info[ap]['identifier'], url=str(firmware['uri']))
+                    # wait for 300 seconds after firmware upgrade
+
+                    logging.info("waiting for 300 Sec for Firmware Upgrade")
+                    time.sleep(300)
+
+                    # check the current AP Revision again
+                    ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                    current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                    # print and report the Firmware versions after upgrade
+                    allure.attach(name="After Firmware Upgrade Request: ",
+                                  body="current revision: " + current_version + "\ntarget revision: " + target_revision)
+                    logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                    if current_version == target_revision:
+                        upgrade_status.append([target_revision, current_version])
+                        logging.info("firmware upgraded successfully: ", target_revision)
+                    else:
+                        upgrade_status.append([target_revision, current_version])
+                        logging.info("firmware upgraded failed: ", target_revision)
+                    break
+        return upgrade_status
 
 
 if __name__ == '__main__':
@@ -530,5 +781,5 @@ if __name__ == '__main__':
     }
     target = [['2G', 'wpa2_personal'], ['5G', 'wpa2_personal']]
     # var.setup_basic_configuration(configuration=setup_params_general, requested_combination=target)
-    var.get_dut_version()
+    var.setup_firmware()
     var.teardown_objects()

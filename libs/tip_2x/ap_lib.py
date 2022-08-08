@@ -253,6 +253,8 @@ class APLIBS:
                     "identifier"] + " -s serial --log stdout --user root --passwd openwifi"
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {owrt_args} -t {self.device_under_tests_data[idx]['serial_tty']} --action " \
                       f"cmd --value \"{cmd}\" "
+                if print_log:
+                    logging.info(cmd)
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
             final_output = str(output)
@@ -261,6 +263,7 @@ class APLIBS:
                 status.pop(0)
                 final_output = '\n'.join(status)
                 if print_log:
+                    logging.info(cmd)
                     logging.info("Output for command: " + input_command + "\n" + final_output)
                 if attach_allure:
                     allure.attach(name=input_command, body=output, attachment_type=expected_attachment_type)
@@ -330,7 +333,7 @@ class APLIBS:
         ret_val = data
         return ret_val
 
-    def get_ap_version(self, idx=0, print_log=False, attach_allure=False):
+    def get_ap_version(self, idx=0, print_log=True, attach_allure=False):
         output = self.run_generic_command(cmd="cat /tmp/ucentral.version", idx=idx,
                                           print_log=print_log,
                                           attach_allure=attach_allure,
@@ -347,31 +350,17 @@ if __name__ == '__main__':
             "password": "OpenWifi%123"
         },
         "device_under_tests": [{
-            "model": "cig_wf188n",
+            "model": "edgecore_eap101",
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
-            "ssid": {
-                "2g-ssid": "OpenWifi",
-                "5g-ssid": "OpenWifi",
-                "6g-ssid": "candela6ghz",
-                "2g-password": "OpenWifi",
-                "5g-password": "OpenWifi",
-                "6g-password": "hello123",
-                "2g-encryption": "WPA2",
-                "5g-encryption": "open",
-                "6g-encryption": "WPA3",
-                "2g-bssid": "68:7d:b4:5f:5c:31 ",
-                "5g-bssid": "68:7d:b4:5f:5c:3c",
-                "6g-bssid": "68:7d:b4:5f:5c:38"
-            },
             "mode": "wifi6",
-            "identifier": "0000c1018812",
+            "identifier": "903cb36c44f0",
             "method": "serial",
-            "host_ip": "10.28.3.103",
+            "host_ip": "192.168.200.101",
             "host_username": "lanforge",
-            "host_password": "pumpkin77",
+            "host_password": "Endurance@123",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyAP1",
+            "serial_tty": "/dev/ttyUSB0",
             "firmware_version": "next-latest"
         }],
         "traffic_generator": {
@@ -401,7 +390,7 @@ if __name__ == '__main__':
     }
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.NOTSET)
     obj = APLIBS(dut_data=basic_1["device_under_tests"])
-    obj.check_serial_connection()
+    # obj.exit_from_uboot()
     obj.setup_serial_environment()
     # obj.run_generic_command("uci show ucentral")
     # obj.verify_certificates()
@@ -410,4 +399,4 @@ if __name__ == '__main__':
     # a = obj.get_active_config()
     # if a == l:
     #     print("a = l")
-    print(obj.get_ap_version())
+    # print(obj.get_ap_version())
