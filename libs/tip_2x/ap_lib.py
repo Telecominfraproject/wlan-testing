@@ -99,7 +99,7 @@ class APLIBS:
 
         if output.__contains__("INCOMPLETE") or output.__contains__("FAILED"):
             logging.error(output)
-            pytest.exit("up0v0 interface is failed to have connectivity!!!")
+            pytest.fail("up0v0 interface is failed to have connectivity!!!")
 
     def get_uci_show(self, param="ucentral", idx=0, print_log=True, attach_allure=True):
         output = self.run_generic_command(cmd="uci show " + param, idx=idx,
@@ -140,7 +140,7 @@ class APLIBS:
             ret_val["active"] = data.get("active")
         return ret_val
 
-    def get_latest_config_recieved(self, idx=0):
+    def get_latest_config_recieved(self, idx=0, print_log=True, attach_allure=True):
         r_val = self.ubus_call_ucentral_status(idx=idx)
         latest_json = {}
         if r_val["latest"] is None:
@@ -150,8 +150,8 @@ class APLIBS:
                 return False
         latest_uuid = r_val["latest"]
         output = self.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(latest_uuid), idx=idx,
-                                          print_log=True,
-                                          attach_allure=False,
+                                          print_log=print_log,
+                                          attach_allure=attach_allure,
                                           expected_attachment_type=allure.attachment_type.JSON)
         try:
             data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
@@ -161,7 +161,7 @@ class APLIBS:
             try_again = True
         return latest_json
 
-    def get_active_config(self, idx=0):
+    def get_active_config(self, idx=0, print_log=True, attach_allure=True):
         r_val = self.ubus_call_ucentral_status(idx=idx)
         active_json = {}
         if r_val["active"] is None:
@@ -171,8 +171,8 @@ class APLIBS:
                 return False
         active_uuid = r_val["active"]
         output = self.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(active_uuid), idx=idx,
-                                          print_log=True,
-                                          attach_allure=False,
+                                          print_log=print_log,
+                                          attach_allure=attach_allure,
                                           expected_attachment_type=allure.attachment_type.JSON)
         try:
             data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
@@ -182,19 +182,51 @@ class APLIBS:
             try_again = True
         return active_json
 
-    def get_iwinfo(self, idx=0):
-        pass
+    def get_iwinfo(self, idx=0, print_log=True, attach_allure=True):
+
+        # [['ssid_wpa2_2g', 'wpa', 'something', '2G'], ['ssid_wpa2_2g', 'wpa', 'something', '5G']] {'wlan0': [
+        # '"ssid_wpa3_p_5g"', '12:34:56:78:90:12', '5G'], 'wlan1': ['"ssid_wpa3_p_2g"','00:03:7F:12:34:56', '5G']}
+        iwinfo_output = self.run_generic_command(cmd="iwinfo", idx=idx,
+                                                 print_log=print_log,
+                                                 attach_allure=attach_allure,
+                                                 expected_attachment_type=allure.attachment_type.TEXT)
+
+        return iwinfo_output
+
+    def get_bssid_band_mapping(self, idx=0):
+        data = self.get_iwinfo(idx=idx)
+        data = str(data).replace(" ", "").split("\n")
+        band_info = []
+        for i in data:
+            tmp = []
+            if i.__contains__("AccessPoint"):
+                bssid = i.replace("AccessPoint:", "")
+                tmp.append(bssid.casefold())
+            elif i.__contains__("MasterChannel"):
+                if i.split(":")[2].__contains__("2.4"):
+                    tmp.append("2G")
+                else:
+                    tmp.append("5G")
+            else:
+                tmp = []
+            if tmp != []:
+                band_info.append(tmp)
+        bssi_band_mapping = {}
+        for i in range(len(band_info)):
+            if (i % 2) == 0:
+                bssi_band_mapping[band_info[i][0]] = band_info[i + 1][0]
+        return bssi_band_mapping
 
     def get_ifconfig(self, idx=0):
         pass
 
-    def verify_certificates(self, idx=0):
+    def verify_certificates(self, idx=0, print_log=False, attach_allure=False):
         cert_files_name = ["cas.pem", "dev-id", "key.pem", "cert.pem"]
         for cert in cert_files_name:
             output = self.run_generic_command(cmd='[ -f /etc/ucentral/' + cert + ' ] && echo "True" || echo "False"',
                                               idx=idx,
-                                              print_log=True,
-                                              attach_allure=False,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
                                               expected_attachment_type=allure.attachment_type.JSON)
             if output == "False":
                 logging.error("Certificate " + cert + "is missing from /etc/ucentral/ directory. "
@@ -274,6 +306,37 @@ class APLIBS:
                                  attach_allure=False,
                                  expected_attachment_type=allure.attachment_type.JSON)
 
+    def get_wifi_status(self, idx=0, print_log=True, attach_allure=True):
+        output = self.run_generic_command(cmd="wifi status", idx=idx,
+                                          print_log=print_log,
+                                          attach_allure=attach_allure,
+                                          expected_attachment_type=allure.attachment_type.JSON)
+
+        try_again = False
+        try:
+            data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
+        except Exception as e:
+            logging.error("error in converting the ubus call ucentral status output to json" + output)
+            try_again = True
+        if try_again or len(data.keys()) != 3:
+            output = self.run_generic_command(cmd="wifi status", idx=idx,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
+                                              expected_attachment_type=allure.attachment_type.JSON)
+            try:
+                data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
+            except Exception as e:
+                logging.error("error in converting the ubus call ucentral status output to json" + output)
+        ret_val = data
+        return ret_val
+
+    def get_ap_version(self, idx=0, print_log=False, attach_allure=False):
+        output = self.run_generic_command(cmd="cat /tmp/ucentral.version", idx=idx,
+                                          print_log=print_log,
+                                          attach_allure=attach_allure,
+                                          expected_attachment_type=allure.attachment_type.JSON)
+        return output
+
 
 if __name__ == '__main__':
     basic_1 = {
@@ -284,29 +347,67 @@ if __name__ == '__main__':
             "password": "OpenWifi%123"
         },
         "device_under_tests": [{
-            "model": "edgecore_eap101",
+            "model": "cig_wf188n",
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+            "ssid": {
+                "2g-ssid": "OpenWifi",
+                "5g-ssid": "OpenWifi",
+                "6g-ssid": "candela6ghz",
+                "2g-password": "OpenWifi",
+                "5g-password": "OpenWifi",
+                "6g-password": "hello123",
+                "2g-encryption": "WPA2",
+                "5g-encryption": "open",
+                "6g-encryption": "WPA3",
+                "2g-bssid": "68:7d:b4:5f:5c:31 ",
+                "5g-bssid": "68:7d:b4:5f:5c:3c",
+                "6g-bssid": "68:7d:b4:5f:5c:38"
+            },
             "mode": "wifi6",
-            "identifier": "903cb36c44f0",
-            "method": "serial",  # serial/ssh/telnet
-            "host_ip": "192.168.200.101",
+            "identifier": "0000c1018812",
+            "method": "serial",
+            "host_ip": "10.28.3.103",
             "host_username": "lanforge",
-            "host_password": "Endurance@123",  # Endurance@123
+            "host_password": "pumpkin77",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyUSB0",
+            "serial_tty": "/dev/ttyAP1",
             "firmware_version": "next-latest"
         }],
-        "traffic_generator": {}
+        "traffic_generator": {
+            "name": "lanforge",
+            "testbed": "basic",
+            "scenario": "dhcp-bridge",
+            "details": {
+                "manager_ip": "10.28.3.28",
+                "http_port": 8080,
+                "ssh_port": 22,
+                "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                "wan_ports": {
+                    "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                        "lease-first": 10,
+                        "lease-count": 10000,
+                        "lease-time": "6h"
+                    }}
+                },
+                "lan_ports": {
+
+                },
+                "uplink_nat_ports": {
+                    "1.1.eth1": {"addressing": "static", "subnet": "10.28.2.16/24", "gateway_ip": "10.28.2.1"}
+                }
+            }
+        }
     }
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.NOTSET)
     obj = APLIBS(dut_data=basic_1["device_under_tests"])
     obj.check_serial_connection()
     obj.setup_serial_environment()
-    obj.run_generic_command("uci show ucentral")
-    obj.verify_certificates()
-    obj.get_dut_logs()
-    l = obj.get_latest_config_recieved()
-    a = obj.get_active_config()
-    if a == l:
-        print("a = l")
+    # obj.run_generic_command("uci show ucentral")
+    # obj.verify_certificates()
+    # obj.get_dut_logs()
+    # l = obj.get_latest_config_recieved()
+    # a = obj.get_active_config()
+    # if a == l:
+    #     print("a = l")
+    print(obj.get_ap_version())

@@ -216,38 +216,79 @@ class tip_2x:
                 profile_object.add_ssid(ssid_data=ssid_data)
         logging.info(
             "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
-        r_val = []
-        self.pre_apply_check()          # Do check AP before pushing the configuration
 
         # Setup Config Apply on all AP's
+        ret_val = dict()
         for i in range(0, len(self.device_under_tests_info)):
+            self.pre_apply_check(idx=i)  # Do check AP before pushing the configuration
+
+            # Check the latest uuid
+            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
+            uuid_before_apply = r_data["latest"]
+
+            # Apply the Config
             resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
             logging.info("Response for Config apply: " + str(resp.status_code))
             if resp.status_code != 200:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
                              resp.status_code +
                              "Retrying in 5 Seconds... ")
-                time.sleep(5)
-                resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
-                if resp.status_code != 200:
-                    logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
-                    pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
-            if resp.status_code == 200:
-                r_val.append(True)
+            time.sleep(5)
+            resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
+            if resp.status_code != 200:
+                logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
+                pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
 
-            """ 
-            serial connection check
-            ubus call ucentral status
-            save the current uuid and compare with the one before config apply
-            save the active config and compare with the latest apply
-            uci show 
-            ifconfig
-            iwinfo
-            wifi status
-            start logger to collect ap logs before config apply        
-            Timestamp after doing config apply
-            """
-        return r_val
+            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
+            uuid_after_apply = r_data["latest"]
+            x = 0
+            while uuid_before_apply == uuid_after_apply:
+                time.sleep(10)
+                x += 1
+                logging.info("uuid_before_apply: ", uuid_before_apply)
+                logging.info("uuid_after_apply: ", uuid_after_apply)
+                r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+                uuid_after_apply = r_data["latest"]
+                if x == 5:
+                    break
+            if uuid_after_apply == uuid_before_apply:
+                logging.error("Config is not received by AP")
+                logging.info("uuid_before_apply: ", uuid_before_apply)
+                logging.info("uuid_after_apply: ", uuid_after_apply)
+                pytest.fail("Config sent from Gateway is not received by AP")
+            self.dut_library_object.get_latest_config_recieved(idx=i, print_log=True, attach_allure=True)
+
+            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+            latest_uuid = r_data["latest"]
+
+            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+            active_uuid = r_data["active"]
+
+            x = 0
+            while latest_uuid == active_uuid:
+                time.sleep(10)
+                x += 1
+                logging.info("active_uuid: " + str(active_uuid))
+                logging.info("latest_uuid: " + str(latest_uuid))
+                r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+                active_uuid = r_data["active"]
+                if x == 5:
+                    break
+            if latest_uuid != active_uuid:
+                logging.error("Config is not received by AP")
+                logging.info("uuid_before_apply: ", uuid_before_apply)
+                logging.info("uuid_after_apply: ", uuid_after_apply)
+                pytest.fail("Config sent from Gateway is not received by AP")
+            self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=True)
+
+            logging.info("Config is Properly Applied on AP, Waiting for 30 Seconds for All interfaces to come up")
+            # wait time interfaces to come up
+            time.sleep(30)
+
+            self.post_apply_check(idx=i)  # Do check AP after pushing the configuration
+            ret_val[self.device_under_tests_info[i]["identifier"]] = self.get_applied_ssid_info(idx=i,
+                                                                                                profile_object=profile_object)
+        return ret_val
 
     """
         setup_special_configuration - Method to configure APs in mesh operating modes with multiple SSID's and multiple AP's
@@ -323,11 +364,43 @@ class tip_2x:
         """
         return r_val
 
+    def get_applied_ssid_info(self, profile_object=None, idx=0):
+        if profile_object is None:
+            logging.error("Profile object is None, Unable to fetch ssid info from AP")
+            return None
+        ssid_info_sdk = profile_object.get_ssid_info()
+        ap_wifi_data = self.dut_library_object.get_iwinfo(idx=idx)
+        o = ap_wifi_data.split()
+        iwinfo_bssid_data = {}
+        for i in range(len(o)):
+            if o[i].__contains__("ESSID"):
+                if o[i + 9].__contains__("2.4"):
+                    band = "2G"
+                else:
+                    band = "5G"
+                iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
+        for p in iwinfo_bssid_data:
+            for q in ssid_info_sdk:
+                if iwinfo_bssid_data[p][0] == q[0] and iwinfo_bssid_data[p][2] == q[3]:
+                    q.append(iwinfo_bssid_data[p][1])
+        return ssid_info_sdk
+
     def get_dut_version(self):
-        pass
+        version_info = []
+        for ap in range(len(self.device_under_tests_info)):
+            version_info.append(self.dut_library_object.get_ap_version(idx=ap, print_log=True))
+        return version_info
 
     def get_controller_version(self):
-        pass
+        version_info = dict()
+        version_info["ow_fms"] = self.controller_library_object.get_sdk_version_fms()
+        version_info["ow_gw"] = self.controller_library_object.get_sdk_version_gw()
+        version_info["ow_sec"] = self.controller_library_object.get_sdk_version_sec()
+        version_info["ow_prov"] = self.controller_library_object.get_sdk_version_prov()
+        version_info["ow_rrm"] = self.controller_library_object.get_sdk_version_owrrm()
+        version_info["ow_analytics"] = self.controller_library_object.get_sdk_version_ow_analytics()
+        version_info["ow_sub"] = self.controller_library_object.get_sdk_version_owsub()
+        return version_info
 
     # TODO: Get the vlans info such as vlan-ids
     #  Jitendra
@@ -338,10 +411,7 @@ class tip_2x:
     # TODO: Get the wireless info data structure such as (ssid, bssid, passkey, encryption, band, channel)
     #  Jitendra
 
-    def wireless_info(self):
-        pass
-
-    def pre_apply_check(self):
+    def pre_apply_check(self, idx=0):
         """
                     serial connection check
                     ubus call ucentral status
@@ -352,19 +422,66 @@ class tip_2x:
                     start logger to collect ap logs before config apply
                     Timestamp before doing config apply
                     """
-        for i in range(0, len(self.device_under_tests_info)):
-            self.dut_library_object.check_serial_connection(idx=i)
-            self.dut_library_object.setup_serial_environment(idx=i)
-            self.dut_library_object.verify_certificates(idx=i)
-            ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=i)
+
+        self.dut_library_object.check_serial_connection(idx=idx)
+        self.dut_library_object.setup_serial_environment(idx=idx)
+        self.dut_library_object.verify_certificates(idx=idx)
+        ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx)
+        if not ret_val["connected"] or ret_val["connected"] is None:
+            # TODO: check the connectivity (if it is not connected, then check the lanforge wan port and bring it
+            #  up if lanforge eth is in down state. Also check the link state of eth port with ip address
+            #  reload the scenario in case it is messed up)
+            #  if wan is available, then run (/etc/init.d/ucentral restart) to retry the connection and check the
+            #  status again in next 30 seconds if still disconnected, then fail and attach the logs,
+            #  Jitendra
+            pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
+
+    def post_apply_check(self, idx=0):
+        """
+                    ubus call ucentral status
+                    ifconfig - check if up0v0 has ip address
+                    wifi status - check if all phy radios are up
+        """
+        ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx)
+        if not ret_val["connected"] or ret_val["connected"] is None:
+            logging.error(" AP Went to Disconnected State after Applying Config, Checking again after 30 Seconds")
+            time.sleep(30)
+            ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx)
             if not ret_val["connected"] or ret_val["connected"] is None:
-                # TODO: check the connectivity (if it is not connected, then check the lanforge wan port and bring it
-                #  up if lanforge eth is in down state. Also check the link state of eth port with ip address
-                #  reload the scenario in case it is messed up)
-                #  if wan is available, then run (/etc/init.d/ucentral restart) to retry the connection and check the
-                #  status again in next 30 seconds if still disconnected, then fail and attach the logs,
-                #  Jitendra
-                pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
+                logging.error("Dang !!!, AP is still in Disconnected State. Your Config Messed up.")
+                logging.error("Failed the post apply check on: " + self.device_under_tests_info[idx]["identifier"])
+                self.dut_library_object.check_connectivity(idx=idx)
+        self.dut_library_object.check_connectivity(idx=idx)
+        r_data = self.dut_library_object.get_wifi_status(idx=idx)
+        logging.info("Checking Wifi Status after Config Apply...")
+        for radio in r_data:
+            if not r_data[radio]["up"]:
+                logging.error(radio + " is in down State...")
+                pytest.fail(radio + " is in down State after config apply")
+            else:
+                logging.info(radio + " is up and running")
+
+    def setup_environment_properties(self, add_allure_environment_property=None):
+        if add_allure_environment_property is None:
+            return
+        add_allure_environment_property('Cloud-Controller-SDK-URL', self.controller_data.get("url"))
+        sdk_version_data = self.get_controller_version()
+        for microservice in sdk_version_data:
+            add_allure_environment_property(microservice + '-version',
+                                            str(sdk_version_data.get(microservice)))
+        dut_versions = self.get_dut_version()
+        for i in range(len(self.device_under_tests_info)):
+            add_allure_environment_property("Firmware-Version_" + self.device_under_tests_info[i]["identifier"],
+                                            str(dut_versions[i]))
+
+        for dut in self.device_under_tests_info:
+            models = []
+            identifiers = []
+            models.append(dut["model"])
+            identifiers.append(dut["identifier"])
+        add_allure_environment_property('DUT-Model/s', ", ".join(models))
+        add_allure_environment_property('Serial-Number/s', ", ".join(identifiers))
+
 
 
 if __name__ == '__main__':
@@ -380,13 +497,13 @@ if __name__ == '__main__':
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "mode": "wifi6",
-            "identifier": "c44bd1005b30",
-            "serial_port": True,
-            "host_ip": "10.28.3.100",
+            "identifier": "903cb36c44f0",
+            "method": "serial",
+            "host_ip": "192.168.200.101",
             "host_username": "lanforge",
-            "host_password": "pumpkin77",
+            "host_password": "Endurance@123",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyAP8",
+            "serial_tty": "/dev/ttyUSB0",
             "firmware_version": "next-latest"
         }],
         "traffic_generator": {}
@@ -405,12 +522,13 @@ if __name__ == '__main__':
                     {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
                      "security_key": "something"}],
             "wpa2_personal": [
-                {"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"],
-                 "security_key": "something"}]},
+                {"ssid_name": "TestSSID-2G", "appliedRadios": ["2G"], "security_key": "OpenWifi"},
+                {"ssid_name": "TestSSID-5G", "appliedRadios": ["5G"],
+                 "security_key": "OpenWifi"}]},
         "rf": {"2G": {}, "5G": {}, "6G": {}},
         "radius": False
     }
-    target = [['2G', 'wpa'], ['5G', 'open'], ['5G', 'wpa']]
-    var.setup_basic_configuration(configuration=setup_params_general, requested_combination=target)
+    target = [['2G', 'wpa2_personal'], ['5G', 'wpa2_personal']]
+    # var.setup_basic_configuration(configuration=setup_params_general, requested_combination=target)
+    var.get_dut_version()
     var.teardown_objects()

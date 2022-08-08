@@ -32,7 +32,9 @@ class ConfigureController:
         self.access_token = ""
         # self.session = requests.Session()
         self.login_resp = self.login()
-        self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
+        self.gw_host, self.fms_host, \
+        self.prov_host, self.owrrm_host, \
+        self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
         if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
             time.sleep(60)
             self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
@@ -51,12 +53,23 @@ class ConfigureController:
         return new_uri
 
     def build_uri(self, path):
-
         new_uri = 'https://%s:%d/api/v1/%s' % (self.gw_host.hostname, self.gw_host.port, path)
         return new_uri
 
     def build_url_prov(self, path):
         new_uri = 'https://%s:%d/api/v1/%s' % (self.prov_host.hostname, self.prov_host.port, path)
+        return new_uri
+
+    def build_url_owrrm(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.owrrm_host.hostname, self.owrrm_host.port, path)
+        return new_uri
+
+    def build_url_owanalytics(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.owanalytics_host.hostname, self.owanalytics_host.port, path)
+        return new_uri
+
+    def build_url_owsub(self, path):
+        new_uri = 'https://%s:%d/api/v1/%s' % (self.owsub_host.hostname, self.owsub_host.port, path)
         return new_uri
 
     def request(self, service, command, method, params, payload):
@@ -68,6 +81,12 @@ class ConfigureController:
             uri = self.build_url_fms(command)
         elif service == "prov":
             uri = self.build_url_prov(command)
+        elif service == "rrm":
+            uri = self.build_url_owrrm(command)
+        elif service == "analytics":
+            uri = self.build_url_owanalytics(command)
+        elif service == "sub":
+            uri = self.build_url_owsub(command)
         else:
             raise NameError("Invalid service code for request.")
         params = params
@@ -131,7 +150,13 @@ class ConfigureController:
                 fms_host = urlparse(service["uri"])
             if service['type'] == "owprov":
                 prov_host = urlparse(service["uri"])
-        return gw_host, fms_host, prov_host
+            if service['type'] == "owrrm":
+                owrrm_host = urlparse(service["uri"])
+            if service['type'] == "owanalytics":
+                owanalytics_host = urlparse(service["uri"])
+            if service['type'] == "owsub":
+                owsub_host = urlparse(service["uri"])
+        return gw_host, fms_host, prov_host, owrrm_host, owanalytics_host, owsub_host
 
     def logout(self):
         uri = self.build_uri_sec('oauth2/%s' % self.access_token)
@@ -211,8 +236,98 @@ class Controller(ConfigureController):
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
-    def get_sdk_version(self):
+    def get_sdk_version_gw(self):
         uri = self.build_uri("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        return version['version']
+
+    def get_sdk_version_fms(self):
+        uri = self.build_url_fms("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        return version['version']
+
+    def get_sdk_version_prov(self):
+        uri = self.build_url_prov("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        return version['version']
+
+    def get_sdk_version_owrrm(self):
+        uri = self.build_url_owrrm("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        return version['version']
+
+    def get_sdk_version_ow_analytics(self):
+        uri = self.build_url_owanalytics("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        return version['version']
+
+    def get_sdk_version_owsub(self):
+        uri = self.build_url_owsub("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        version = resp.json()
+        return version['version']
+
+    def get_sdk_version_sec(self):
+        uri = self.build_uri_sec("system?command=info")
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -256,6 +371,48 @@ class Controller(ConfigureController):
 
     def get_system_prov(self):
         uri = self.build_url_prov("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_ow_rrm(self):
+        uri = self.build_url_owrrm("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_ow_analytics(self):
+        uri = self.build_url_owanalytics("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_ow_sub(self):
+        uri = self.build_url_owsub("system?command=info")
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +

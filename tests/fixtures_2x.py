@@ -732,7 +732,7 @@ class Fixtures_2x:
             connected, latest, active = ap_ssh.get_ucentral_status()
             if x == 5:
                 break
-        onnected, latest, active = ap_ssh.get_ucentral_status()
+        connected, latest, active = ap_ssh.get_ucentral_status()
         if latest == latest_old:
             latest_cfg = ap_ssh.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(latest))
             allure.attach(name="Latest Config Received by AP: ",
