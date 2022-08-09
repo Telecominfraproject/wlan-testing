@@ -24,7 +24,6 @@ if sys.version_info[0] != 3:
 
 try:
     import importlib
-
     re = importlib.import_module("re")
     logging = importlib.import_module("logging")
     time = importlib.import_module("time")
@@ -161,6 +160,7 @@ def main():
                 while True:
                     i = egg.expect([prompt, "Please press Enter to activate", "login:", "Password:", "IPQ6018#"],
                                    timeout=3)
+                    logg.info("expect-0: %i" % (i))
                     if (i == 0):
                         logg.info("Found prompt, login complete.")
                         break
@@ -368,7 +368,7 @@ def main():
                     print(egg.before.decode('utf-8', 'ignore'))
                 if i == 2:  # new line of text, just print and continue
                     continue
-                wait_forever = False
+                # wait_forever = False
                 if not wait_forever:
                     break
 
