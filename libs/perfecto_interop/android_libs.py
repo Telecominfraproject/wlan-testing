@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 import time
@@ -41,6 +42,7 @@ class android_libs(perfecto_interop):
                         print("popup killed")
                     except:
                         print("Couldnt kill popup")
+                        logging.warning("Couldn't kill popup")
                         return False
                 else:
                     print("Popup Text is: ", popup_text)
@@ -83,8 +85,10 @@ class android_libs(perfecto_interop):
                         active_ssid_list.append(elements[i].text)
                     except:
                         print("Encountered a cache SSID which is no longer in the DOM.Moving to next SSID.")
+                        logging.warning("Encountered a cache SSID which is no longer in the DOM.Moving to next SSID")
             except:
                 print("No SSIDS available")
+                logging.error("No SSIDS available")
         return active_ssid_list
     def openApp(self, appName, setup_perfectoMobile):
         print("Refreshing App: " + appName)
