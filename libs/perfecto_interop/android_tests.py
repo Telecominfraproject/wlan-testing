@@ -157,7 +157,7 @@ class android_tests(android_libs):
                                     logging.error("Couldn't get into additional details")
                             except:
                                 print("No Connected SSIDS")
-                                logging.error("No Connected SSIDS")
+                                logging.warning("No Connected SSIDS")
                         else:
                             try:  # To deal with already connected SSID
                                 self.check_if_no_internet_popup(driver)
@@ -189,7 +189,7 @@ class android_tests(android_libs):
                                     logging.error("Couldn't get into additional details")
                             except:
                                 print("No Connected SSIDS")
-                                logging.error("No Connected SSIDS")
+                                logging.warning("No Connected SSIDS")
                         # ----------------------This is to Forget current connected SSID--------------------------------
 
                         # time.sleep(2)
