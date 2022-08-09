@@ -65,6 +65,7 @@ then
   if [ -d ../wlan-lanforge-scripts ]
   then
     cd ../wlan-lanforge-scripts
+    pip uninstall ../lanforge_scripts/dist/*.whl
     rm -rf ../lanforge_scripts
     sh to_pip.sh
     pip install ../lanforge_scripts/dist/*.whl #--force-reinstall
