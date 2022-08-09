@@ -96,13 +96,8 @@ then
     if [ $target == "tip_2x" ]
     then
       cd libs/tip_2x
-<<<<<<< HEAD
       $PYTHON setup.py bdist_wheel
       $PIP install dist/*.whl --force-reinstall
-=======
-      python setup.py bdist_wheel
-      pip install dist/*.whl --force-reinstall
->>>>>>> Fixed some library errors and environment setup script issues
       cd ../../
     fi
     x=$(whoami)
