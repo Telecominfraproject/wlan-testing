@@ -208,7 +208,6 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    @pytest.mark.shivamt
     def test_wpa_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                     station_names_twog,  lf_test,
                                     update_report,

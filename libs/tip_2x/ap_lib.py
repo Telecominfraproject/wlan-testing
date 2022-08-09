@@ -83,7 +83,7 @@ class APLIBS:
             #  missing, if anything is missing, then report that. if everything looks good, please check md5sum of certs
             #  also, try to do a reboot in case everything looks good and post reboot, check the maverick status.
             #  Jitendra
-            pytest.exit("Maverick is running, Please check the wan connection and certificates")
+            # pytest.exit("Maverick is running, Please check the wan connection and certificates")
         check_iface = self.run_generic_command(cmd="ifconfig up0v0", idx=idx,
                                                print_log=print_log,
                                                attach_allure=attach_allure,
@@ -116,6 +116,7 @@ class APLIBS:
                                           attach_allure=attach_allure,
                                           expected_attachment_type=allure.attachment_type.JSON)
         try_again = False
+        data = {}
         try:
             data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
         except Exception as e:
