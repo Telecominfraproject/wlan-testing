@@ -120,7 +120,7 @@ class Fixtures_3x:
         print("show ap sum", ap)
         ap_status = instantiate_profile_obj.show_ap_status_cc()
         print("show ap status", ap_status)
-        allure.attach(name="show ap summary", body=str(ap))
+       allure.attach(name="show ap summary", body=str(ap))
 
         print("create 3 wlans on slot1,2 and 3")
         for ap_name in range(len(self.lab_info['access_point'])):
@@ -155,8 +155,8 @@ class Fixtures_3x:
             check_admin_5 = instantiate_profile_obj.check_admin_state_5ghz(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
             allure.attach(name="5ghz ap admin state for " + str(ap_name + 1) + " ap", body=str(check_admin_5))
 
-            check_admin_6 = instantiate_profile_obj.check_admin_state_6ghz(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
-            allure.attach(name="6ghz ap admin state for " + str(ap_name + 1) + " ap", body=str(check_admin_6))
+            #check_admin_6 = instantiate_profile_obj.check_admin_state_6ghz(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
+            #allure.attach(name="6ghz ap admin state for " + str(ap_name + 1) + " ap", body=str(check_admin_6))
 
             # table1.append(tab)
 
@@ -336,7 +336,6 @@ class Fixtures_3x:
 
         bssid_list_2g = []
         bssid_list_5g = []
-        bssid_list_6g = []
         ssid_data_list = []
 
         for ap_name in range(len(self.lab_info['access_point'])):
@@ -346,15 +345,14 @@ class Fixtures_3x:
                                                       ssid_data=lf_dut_data, ap_data=self.lab_info['access_point'], type=ap_name)
             bss2_info = instantiate_profile_obj.get_ap_bssid_2g()
             allure.attach(name="wlan 2g bssid info", body=str(bss2_info))
+            bss5_info = instantiate_profile_obj.get_ap_bssid_5g()
+            allure.attach(name="wlan 5g bssid info", body=str(bss5_info))
             ap_mode = self.lab_info['access_point'][ap_name]["mode"]
             print("ap_mode", ap_mode)
             mode = None
             if ap_mode == "wifi6e-dual":
-                print("its a dual band ap")
+                print("yes")
                 mode = True
-            bss5_info = instantiate_profile_obj.get_ap_bssid_5g(dual=mode)
-            allure.attach(name="wlan 5g bssid info", body=str(bss5_info))
-
             bss6_info = instantiate_profile_obj.get_ap_bssid_6g(dual=mode)
             allure.attach(name="wlan 6g bssid info", body=str(bss6_info))
 
@@ -362,16 +360,9 @@ class Fixtures_3x:
             print("bssid 2g", bssid_2g)
             lst_2g = bssid_list_2g.append(bssid_2g)
 
-            if ap_mode == "wifi6e-dual":
-                print("its a dual band ap")
-            else:
-                bssid_5g = instantiate_profile_obj.cal_bssid_5g(dual=mode)
-                print("bssid 5g ", bssid_5g)
-                lst_5g = bssid_list_5g.append(bssid_5g)
-
-            bssid_6g = instantiate_profile_obj.cal_bssid_6g(dual=mode)
-            print("bssid 6g ", bssid_6g)
-            lst_6g = bssid_list_6g.append(bssid_6g)
+            bssid_5g = instantiate_profile_obj.cal_bssid_5g()
+            print("bssid 5g ", bssid_5g)
+            lst_5g = bssid_list_5g.append(bssid_5g)
             # print(bssid_5g)
             # print(bssid_list_2g)
             # print(bssid_list_5g)
@@ -384,12 +375,8 @@ class Fixtures_3x:
                         bssid = bssid_2g
                     if interface == 1:
                         bssid = bssid_5g
-                    if interface == 2:
-                        bssid = bssid_6g
-                    if lf_dut_data[interface]['security'] == "wpa2":
+                    if lf_dut_data[interface]['security'] == "psk2":
                         lf_dut_data[interface]['security'] = "WPA2"
-                    if lf_dut_data[interface]['security'] == "wpa3":
-                        lf_dut_data[interface]['security'] = "WPA3"
                     ssid = ["ssid_idx=" + str(interface) +
                             " ssid=" + lf_dut_data[interface]['ssid_name'] +
                             " security=" + lf_dut_data[interface]['security'] +
