@@ -423,11 +423,8 @@ class CController:
         bssid_2g = self.cc.show_ap_bssid_24ghz()
         return bssid_2g
 
-    def get_ap_bssid_5g(self, dual):
-        if dual == True:
-            bssid_5g = self.cc.show_ap_bssid_dual_band_5ghz()
-        else:
-            bssid_5g = self.cc.show_ap_bssid_5ghz()
+    def get_ap_bssid_5g(self):
+        bssid_5g = self.cc.show_ap_bssid_5ghz()
         return bssid_5g
 
     def get_ap_bssid_6g(self, dual):
@@ -483,8 +480,8 @@ class CController:
         bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
         return bssid
 
-    def cal_bssid_5g(self, dual=None):
-        wlan_sumry = self.get_ap_bssid_5g(dual=dual)
+    def cal_bssid_5g(self):
+        wlan_sumry = self.get_ap_bssid_5g()
         ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
         indices = [i for i, s in enumerate(ele_list) if 'BSSID' in s]
         data = indices[1]
