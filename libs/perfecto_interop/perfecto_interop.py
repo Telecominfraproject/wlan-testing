@@ -122,7 +122,7 @@ class perfecto_interop:
     def setup_metadata(self):
         pass
     def get_device_configuration(self):
-        return self.perfecto_data["Galaxy S10.*"]
+        return self.perfecto_data["iPhone-11"]
     # def get_PassPointConniOS_data(self, get_device_configuration):
     #     passPoint_data = {
     #         "netAnalyzer-inter-Con-Xpath": "//*[@label='Network Connected']/parent::*/XCUIElementTypeButton",
@@ -256,96 +256,6 @@ class perfecto_interop:
         else:
             yield rdriver, reporting_client
 
-    def setup_perfectoMobile_iOS(self, get_device_configuration):
-        from appium import webdriver
-        driver = None
-        reporting_client = None
-
-        warnings.simplefilter("ignore", ResourceWarning)
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-        capabilities = {
-            'platformName': get_device_configuration["platformName-iOS"],
-            'model': get_device_configuration["model-iOS"],
-            'browserName': 'safari',
-            # 'automationName' : 'Appium',
-            'securityToken': self.perfecto_data["securityToken"],
-            'useAppiumForWeb': 'false',
-            'autoAcceptAlerts': 'true',
-            # 'bundleId' : request.config.getini("bundleId-iOS"),
-            'useAppiumForHybrid': 'false',
-        }
-
-        # Check if the device is available
-        if not self.is_device_available_timeout(capabilities['model']):
-            print("Unable to get device.")
-            pytest.exit("Exiting Pytest")
-
-        driver = webdriver.Remote(
-            'https://' + self.perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
-            capabilities)
-        driver.implicitly_wait(2)
-
-        TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-        nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-        try:
-            # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
-            TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
-            print("\n\nExecuting TestCase: " + TestCaseName)
-        except Exception as e:
-            TestCaseName = nCurrentTestMethodNameSplit
-            print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-            # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
-
-        projectname = self.perfecto_data["projectName"]
-        projectversion = self.perfecto_data["projectVersion"]
-        jobname = get_device_configuration["jobName"]
-        jobnumber = get_device_configuration["jobNumber"]
-        tags = self.perfecto_data["reportTags"]
-        testCaseName = TestCaseName
-
-        print("\nSetting Perfecto ReportClient....")
-        perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),
-                                                              Project(projectname, projectversion))
-        reporting_client = PerfectoReportiumClient(perfecto_execution_context)
-        reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
-        self.report_client(reporting_client)
-        try:
-            params = {'property': 'model'}
-            deviceModel = driver.execute_script('mobile:handset:info', params)
-        except:
-            pass
-
-        def teardown():
-            try:
-                print("\n---------- Tear Down ----------")
-                print('Report-Url: ' + reporting_client.report_url())
-                try:
-                    allure.dynamic.link(
-                        str(reporting_client.report_url()),
-                        name=str(deviceModel))
-                except:
-                    print("fail to attach video link")
-                print("----------------------------------------------------------\n\n\n\n")
-                driver.close()
-            except Exception as e:
-                print(" -- Exception While Tear Down --")
-                driver.close()
-                print(e)
-            finally:
-                try:
-                    driver.quit()
-                except Exception as e:
-                    print(" -- Exception Not Able To Quit --")
-                    print(e)
-
-        # request.addfinalizer(teardown)
-
-        if driver is None:
-            yield -1
-        else:
-            yield driver, reporting_client
-
     # Does HTTP GET request to Perfecto cloud and gets response and information related to a headset
     def response_device(self, model):
         securityToken = self.perfecto_data["securityToken"]
@@ -424,15 +334,19 @@ if __name__ == '__main__':
         "projectVersion": "1.0",
         "reportTags": "TestTag",
         "perfectoURL": "tip",
-        "Galaxy S20": {
-            "platformName-android": "Android",
-            "model-android": "Galaxy S20",
-            "appPackage-android": "com.android.settings",
-            "bundleId-iOS-Settings": "com.apple.Preferences",
-            "bundleId-iOS-Safari": "com.apple.mobilesafari",
-            "jobName": "Interop-Galaxy-S20",
-            "jobNumber": 38
-        }
+        "iPhone-11": {
+                        "model-iOS": "iPhone-11",
+                        "bundleId-iOS": "com.apple.Preferences",
+                        "platformName-iOS": "iOS",
+                        "bundleId-iOS-Settings": "com.apple.Preferences",
+                        "bundleId-iOS-Ping": "com.deftapps.ping",
+                        "browserType-iOS": "Safari",
+                        "bundleId-iOS-Safari": "com.apple.mobilesafari",
+                        "platformName-android": "Android",
+                        "appPackage-android": "com.android.settings",
+                        "jobName": "Interop-iphone-11",
+                        "jobNumber": 38
+                    }
     }
     access_point = [{
             "model": "edgecore_eap101",
