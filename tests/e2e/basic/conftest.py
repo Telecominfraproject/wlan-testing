@@ -13,6 +13,6 @@ def setup_configuration(request, get_markers, get_target_object):
     print(requested_combination)
 
     # Method to setup the basic configuration
-    status = get_target_object.setup_basic_configuration(configuration=configuration,
+    data = get_target_object.setup_basic_configuration(configuration=configuration,
                                                          requested_combination=requested_combination)
-    yield status
+    yield data

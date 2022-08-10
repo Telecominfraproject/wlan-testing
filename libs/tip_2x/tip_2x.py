@@ -365,12 +365,59 @@ class tip_2x:
         """
         return r_val
 
+    def get_dut_channel_data(self, idx):
+        try:
+            d = self.dut_library_object.run_generic_command(cmd="iw dev | grep channel", idx=idx)
+            d = d.replace("\n", "").replace("\t", "").replace(" ", "").split("channel")
+            d.pop(0)
+            d = list(set(d))
+            data = dict.fromkeys(["2G", "5G", "6G"])
+            for i in d:
+                channel = int(i.split("(")[0])
+                bandwidth = int(i.split(":")[1].split("MHz")[0])
+                center_freq = int(i.split(":")[-1].replace("MHz", ""))
+                if 2401 < center_freq < 2495:
+                    data["2G"] = [channel, bandwidth, center_freq]
+                elif center_freq in [5955, 5975, 5995] and channel <= 9:
+                    data["6G"] = [channel, bandwidth, center_freq]
+                elif 5030 < center_freq < 5990:
+                    data["5G"] = [channel, bandwidth, center_freq]
+                elif 5995 < center_freq < 7125:
+                    data["6G"] = [channel, bandwidth, center_freq]
+                else:
+                    pass
+        except Exception as e:
+            logging.error("Exception in getting DUT Channel and bw data, Retrying again!")
+            try:
+                d = self.dut_library_object.run_generic_command(cmd="iw dev | grep channel", idx=idx)
+                d = d.replace("\n", "").replace("\t", "").replace(" ", "").split("channel")
+                d.pop(0)
+                data = dict.fromkeys(["2G", "5G", "6G"])
+                for i in d:
+                    channel = int(i.split("(")[0])
+                    bandwidth = int(i.split(":")[1].split("MHz")[0])
+                    center_freq = int(i.split(":")[-1].replace("MHz", ""))
+                    if 2401 < center_freq < 2495:
+                        data["2G"] = [channel, bandwidth, center_freq]
+                    elif center_freq in [5955, 5975, 5995] and channel <= 9:
+                        data["6G"] = [channel, bandwidth, center_freq]
+                    elif 5030 < center_freq < 5990:
+                        data["5G"] = [channel, bandwidth, center_freq]
+                    elif 5995 < center_freq < 7125:
+                        data["6G"] = [channel, bandwidth, center_freq]
+                    else:
+                        pass
+            except Exception as e:
+                logging.error("Exception in getting DUT Channel and bw data.")
+        return data
+
     def get_applied_ssid_info(self, profile_object=None, idx=0):
         if profile_object is None:
             logging.error("Profile object is None, Unable to fetch ssid info from AP")
             return None
         ssid_info_sdk = profile_object.get_ssid_info()
         ap_wifi_data = self.dut_library_object.get_iwinfo(idx=idx)
+        channel_info = self.get_dut_channel_data(idx=idx)
         o = ap_wifi_data.split()
         iwinfo_bssid_data = {}
         for i in range(len(o)):
@@ -384,6 +431,7 @@ class tip_2x:
             for q in ssid_info_sdk:
                 if iwinfo_bssid_data[p][0] == q[0] and iwinfo_bssid_data[p][2] == q[3]:
                     q.append(iwinfo_bssid_data[p][1])
+        ssid_info_sdk.append(channel_info)
         return ssid_info_sdk
 
     def get_dut_version(self):
@@ -736,7 +784,7 @@ class tip_2x:
 
 
 if __name__ == '__main__':
-    basic_1 = {
+    basic_05 = {
         "target": "tip_2x",
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
@@ -744,26 +792,70 @@ if __name__ == '__main__':
             "password": "OpenWifi%123"
         },
         "device_under_tests": [{
-            "model": "edgecore_eap101",
+            "model": "cig_wf188n",
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+            "wan_port": "1.1.eth2",
+            "ssid": {
+                "mode": "BRIDGE",
+                "2g-ssid": "OpenWifi",
+                "5g-ssid": "OpenWifi",
+                "6g-ssid": "OpenWifi",
+                "2g-password": "OpenWifi",
+                "5g-password": "OpenWifi",
+                "6g-password": "OpenWifi",
+                "2g-encryption": "WPA2",
+                "5g-encryption": "WPA2",
+                "6g-encryption": "WPA3",
+                "2g-bssid": "68:7d:b4:5f:5c:31",
+                "5g-bssid": "68:7d:b4:5f:5c:3c",
+                "6g-bssid": "68:7d:b4:5f:5c:38"
+            },
             "mode": "wifi6",
-            "identifier": "903cb36c44f0",
+            "identifier": "0000c1018812",
             "method": "serial",
-            "host_ip": "192.168.200.101",
+            "host_ip": "10.28.3.103",
             "host_username": "lanforge",
-            "host_password": "Endurance@123",
+            "host_password": "pumpkin77",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyUSB0",
+            "serial_tty": "/dev/ttyAP1",
             "firmware_version": "next-latest"
         }],
-        "traffic_generator": {}
+        "traffic_generator": {
+            "name": "lanforge",
+            "testbed": "basic",
+            "scenario": "dhcp-bridge",
+            "details": {
+                "manager_ip": "10.28.3.28",
+                "http_port": 8080,
+                "ssh_port": 22,
+                "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                "wan_ports": {
+                    "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                        "lease-first": 10,
+                        "lease-count": 10000,
+                        "lease-time": "6h"
+                    }
+                                 }
+                },
+                "lan_ports": {
+                    "1.1.eth1": {"addressing": "dynamic"}
+                },
+                "uplink_nat_ports": {
+                    "1.1.eth1": {"addressing": "static",
+                                 "subnet": "10.28.2.16/24",
+                                 "gateway_ip": "10.28.2.1",
+                                 "ip_mask": "255.255.255.0"
+                                 }
+                }
+            }
+        }
     }
-    var = tip_2x(controller_data=basic_1["controller"],
-                 device_under_tests_info=basic_1["device_under_tests"],
-                 target=basic_1["target"])
+    var = tip_2x(controller_data=basic_05["controller"],
+                 device_under_tests_info=basic_05["device_under_tests"],
+                 target=basic_05["target"])
 
-    var.setup_objects()
+    # var.setup_objects()
     setup_params_general = {
         "mode": "BRIDGE",
         "ssid_modes": {
@@ -780,6 +872,8 @@ if __name__ == '__main__':
         "radius": False
     }
     target = [['2G', 'wpa2_personal'], ['5G', 'wpa2_personal']]
-    # var.setup_basic_configuration(configuration=setup_params_general, requested_combination=target)
-    var.setup_firmware()
-    var.teardown_objects()
+
+    d = var.setup_basic_configuration(configuration=setup_params_general, requested_combination=target)
+    print(d)
+    # var.setup_firmware()
+    # var.teardown_objects()

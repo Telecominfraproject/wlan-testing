@@ -45,7 +45,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band
             pytest -m "client_connectivity and nat and general and open and twog"
@@ -60,7 +60,7 @@ class TestBridgeModeConnectivitySuiteA(object):
             mode = "NAT-LAN"
         band = "twog"
         vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -71,7 +71,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Client Connectivity Test with open encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
-    def test_nat_open_5g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_open_5g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with open encryption 5 GHz Band
             pytest -m "client_connectivity and nat and general and open and fiveg"
@@ -86,7 +86,7 @@ class TestBridgeModeConnectivitySuiteA(object):
             mode = "NAT-LAN"
         band = "twog"
         vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -100,7 +100,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @allure.story('wpa 2.4 GHZ Band')
     @allure.title("Client Connectivity Test with wpa encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
-    def test_nat_wpa_2g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa_2g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa encryption 2.4 GHz Band
             pytest -m "client_connectivity and nat and general and wpa and twog"
@@ -115,7 +115,7 @@ class TestBridgeModeConnectivitySuiteA(object):
             mode = "NAT-LAN"
         band = "twog"
         vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -126,7 +126,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa 5 GHZ Band')
     @allure.title("Client Connectivity Test with wpa encryption 5 GHz Band")
-    def test_nat_wpa_5g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa_5g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa encryption 5 GHz Band
             pytest -m "client_connectivity and nat and general and wpa and fiveg"
@@ -141,7 +141,7 @@ class TestBridgeModeConnectivitySuiteA(object):
             mode = "NAT-LAN"
         band = "fiveg"
         vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -152,7 +152,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band")
-    def test_nat_wpa2_personal_2g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa2_personal_2g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity and nat and general and wpa2_personal and twog"
@@ -167,7 +167,7 @@ class TestBridgeModeConnectivitySuiteA(object):
             mode = "NAT-LAN"
         band = "twog"
         vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -180,7 +180,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("Client Connectivity Test with wpa2_personal encryption 5 GHz Band")
-    def test_nat_wpa2_personal_5g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa2_personal_5g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band
             pytest -m "client_connectivity and nat and general and wpa2_personal and fiveg"
@@ -195,7 +195,7 @@ class TestBridgeModeConnectivitySuiteA(object):
             mode = "NAT-LAN"
         band = "fiveg"
         vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -242,7 +242,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa3_personal 2.4 GHZ Band')
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band")
-    def test_nat_wpa3_personal_2g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa3_personal_2g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity and nat and general and wpa3_personal and twog"
@@ -258,6 +258,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         band = "twog"
         vlan = 1
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -268,7 +269,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa3_personal 5 GHZ Band')
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
-    def test_nat_wpa3_personal_5g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa3_personal_5g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connectivity and nat and general and wpa3_personal and fiveg"
@@ -284,6 +285,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         band = "fiveg"
         vlan = 1
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -294,7 +296,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal 6 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
-    def test_nat_wpa3_personal_6g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa3_personal_6g_client_connectivity(self, get_test_library, execution_number, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
             pytest -m "client_connectivity and nat and general and wpa3_personal and sixg"
@@ -310,6 +312,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         band = "sixg"
         vlan = 1
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -320,7 +323,8 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal_mixed 2.4 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band")
-    def test_nat_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library, execution_number,
+                                                            setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity and nat and general and wpa3_personal_mixed and twog"
@@ -336,6 +340,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         band = "twog"
         vlan = 1
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -346,7 +351,8 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal_mixed 5 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
-    def test_nat_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library, execution_number,
+                                                            setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity and nat and general and wpa3_personal_mixed and fiveg"
@@ -362,6 +368,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         band = "fiveg"
         vlan = 1
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -372,7 +379,8 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
-    def test_nat_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library, execution_number,
+                                                                setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity and nat and general and wpa_wpa2_personal_mixed and twog"
@@ -389,6 +397,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         band = "twog"
         vlan = 1
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
@@ -400,7 +409,8 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
-    def test_nat_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library, execution_number):
+    def test_nat_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library, execution_number,
+                                                                setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity and nat and general and wpa_wpa2_personal_mixed and fiveg"
@@ -417,6 +427,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         band = "fiveg"
         vlan = 1
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)

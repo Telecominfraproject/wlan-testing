@@ -343,7 +343,7 @@ class APLIBS:
 
 
 if __name__ == '__main__':
-    basic_1 = {
+    basic_05 = {
         "target": "tip_2x",
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
@@ -351,17 +351,33 @@ if __name__ == '__main__':
             "password": "OpenWifi%123"
         },
         "device_under_tests": [{
-            "model": "edgecore_eap101",
+            "model": "cig_wf188n",
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+            "wan_port": "1.1.eth2",
+            "ssid": {
+                "mode": "BRIDGE",
+                "2g-ssid": "OpenWifi",
+                "5g-ssid": "OpenWifi",
+                "6g-ssid": "OpenWifi",
+                "2g-password": "OpenWifi",
+                "5g-password": "OpenWifi",
+                "6g-password": "OpenWifi",
+                "2g-encryption": "WPA2",
+                "5g-encryption": "WPA2",
+                "6g-encryption": "WPA3",
+                "2g-bssid": "68:7d:b4:5f:5c:31",
+                "5g-bssid": "68:7d:b4:5f:5c:3c",
+                "6g-bssid": "68:7d:b4:5f:5c:38"
+            },
             "mode": "wifi6",
-            "identifier": "903cb36c44f0",
+            "identifier": "0000c1018812",
             "method": "serial",
-            "host_ip": "192.168.200.101",
+            "host_ip": "10.28.3.103",
             "host_username": "lanforge",
-            "host_password": "Endurance@123",
+            "host_password": "pumpkin77",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyUSB0",
+            "serial_tty": "/dev/ttyAP1",
             "firmware_version": "next-latest"
         }],
         "traffic_generator": {
@@ -378,22 +394,46 @@ if __name__ == '__main__':
                         "lease-first": 10,
                         "lease-count": 10000,
                         "lease-time": "6h"
-                    }}
+                    }
+                                 }
                 },
                 "lan_ports": {
-
+                    "1.1.eth1": {"addressing": "dynamic"}
                 },
                 "uplink_nat_ports": {
-                    "1.1.eth1": {"addressing": "static", "subnet": "10.28.2.16/24", "gateway_ip": "10.28.2.1"}
+                    "1.1.eth1": {"addressing": "static",
+                                 "subnet": "10.28.2.16/24",
+                                 "gateway_ip": "10.28.2.1",
+                                 "ip_mask": "255.255.255.0"
+                                 }
                 }
             }
         }
     }
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.NOTSET)
-    obj = APLIBS(dut_data=basic_1["device_under_tests"])
+    obj = APLIBS(dut_data=basic_05["device_under_tests"])
     # obj.exit_from_uboot()
-    obj.setup_serial_environment()
-    # obj.run_generic_command("uci show ucentral")
+    # obj.setup_serial_environment()
+    d = obj.run_generic_command("iw dev | grep channel")
+    d = d.replace("\n", "").replace("\t", "").replace(" ", "").split("channel")
+    d.pop(0)
+    data = dict.fromkeys(["2G", "5G", "6G"])
+    for i in d:
+        channel = int(i.split("(")[0])
+        bandwidth = int(i.split(":")[1].split("MHz")[0])
+        center_freq = int(i.split(":")[-1].replace("MHz", ""))
+        if 2401 < center_freq < 2495:
+            data["2G"] = [channel, bandwidth, center_freq]
+        elif center_freq in [5955, 5975, 5995] and channel <= 9:
+            data["6G"] = [channel, bandwidth, center_freq]
+        elif 5030 < center_freq < 5990:
+            data["5G"] = [channel, bandwidth, center_freq]
+        elif 5995 < center_freq < 7125:
+            data["6G"] = [channel, bandwidth, center_freq]
+        else:
+            pass
+
+    print(data)
     # obj.verify_certificates()
     # obj.get_dut_logs()
     # l = obj.get_latest_config_recieved()
