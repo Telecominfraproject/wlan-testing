@@ -120,7 +120,7 @@ class Fixtures_3x:
         print("show ap sum", ap)
         ap_status = instantiate_profile_obj.show_ap_status_cc()
         print("show ap status", ap_status)
-       allure.attach(name="show ap summary", body=str(ap))
+        allure.attach(name="show ap summary", body=str(ap))
 
         print("create 3 wlans on slot1,2 and 3")
         for ap_name in range(len(self.lab_info['access_point'])):
