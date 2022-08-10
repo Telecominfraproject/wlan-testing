@@ -188,7 +188,7 @@ class android_libs(perfecto_interop):
             # 'bundleId' : request.config.getini("appPackage-android"),
         }
 
-        if not perfecto_interop.is_device_Available_timeout(self, capabilities['model']):
+        if not self.is_device_Available_timeout(capabilities['model']):
             print("Unable to get device.")
             pytest.exit("Exiting Pytest")
         driver = webdriver.Remote(
