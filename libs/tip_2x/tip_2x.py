@@ -554,8 +554,6 @@ class tip_2x:
                 logging.error("Exception in getting DUT Channel and bw data.")
         return data
 
-=======
->>>>>>> Added Environment Variable Generic Method for tip_2x
     def get_applied_ssid_info(self, profile_object=None, idx=0):
         if profile_object is None:
             logging.error("Profile object is None, Unable to fetch ssid info from AP")
@@ -1090,7 +1088,7 @@ if __name__ == '__main__':
             "host_username": "lanforge",
             "host_password": "lanforge",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyUSB0",
+            "serial_tty": "/dev/ttyAP1",
             "firmware_version": "next-latest"
         }],
         "traffic_generator": {

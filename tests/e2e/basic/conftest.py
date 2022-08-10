@@ -22,4 +22,3 @@ def setup_configuration(request, get_markers, get_target_object, run_lf):
     yield data
 
 
-
