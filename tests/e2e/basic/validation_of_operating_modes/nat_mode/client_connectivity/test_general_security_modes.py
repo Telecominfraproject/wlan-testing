@@ -104,6 +104,7 @@ class TestNatModeConnectivitySuiteA(object):
 
     @pytest.mark.wpa
     @pytest.mark.twog
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa 2.4 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa encryption 2.4 GHz Band")
@@ -467,4 +468,3 @@ class TestNatModeConnectivitySuiteTwo(object):
                                                                    num_sta=num_stations)
 
         assert passes == "PASS", result
-
