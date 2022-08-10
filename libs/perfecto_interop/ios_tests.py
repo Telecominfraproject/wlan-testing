@@ -384,4 +384,3 @@ if __name__ == '__main__':
     #print(obj.enterprise_client_connect(ssid="ssid_wpa2_eap_5g", identity="nolaradius", ttls_passwd="nolastart"))
     print(obj.enterprise_toggle_wifi_mode_test(ssid="ssid_wpa_eap_5g_5O05610", identity="nolaradius",
                                                ttls_passwd="nolastart"))
-
