@@ -275,6 +275,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security_key = profile_data["security_key"]
         security = "wpa3"
         band = "sixg"
+        mode = "VLAN"
         vlan = 1
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
