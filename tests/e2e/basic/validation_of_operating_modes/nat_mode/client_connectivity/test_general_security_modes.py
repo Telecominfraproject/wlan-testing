@@ -35,7 +35,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeConnectivitySuiteA(object):
+class TestNatModeConnectivitySuiteA(object):
     """ Client Connectivity SuiteA
         pytest -m "client_connectivity and nat and general and suiteA"
     """
@@ -232,7 +232,7 @@ setup_params_general_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeConnectivitySuiteTwo(object):
+class TestNatModeConnectivitySuiteTwo(object):
     """ Client Connectivity SuiteA
         pytest -m "client_connectivity and nat and suiteB"
     """

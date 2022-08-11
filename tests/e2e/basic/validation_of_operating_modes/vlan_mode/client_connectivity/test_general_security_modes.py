@@ -35,7 +35,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeConnectivitySuiteA(object):
+class TestVLANModeConnectivitySuiteA(object):
     """ Client Connectivity SuiteA
         pytest -m "client_connectivity and vlan and general "
     """
@@ -210,7 +210,7 @@ setup_params_general_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeConnectivitySuiteTwo(object):
+class TestVLANModeConnectivitySuiteTwo(object):
     """ Client Connectivity SuiteA
         pytest -m "client_connectivity and vlan and suiteB"
     """
