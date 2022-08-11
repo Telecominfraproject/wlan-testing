@@ -445,4 +445,3 @@ class TestVLANModeConnectivitySuiteTwo(object):
                                                                    num_sta=num_stations, vlan_id=vlan)
 
         assert passes == "PASS", result
-
