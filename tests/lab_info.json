@@ -51,8 +51,8 @@
                         "lease-first": 10,
                         "lease-count": 10000,
                         "lease-time": "6h"
+                        }
                     }
-                                 }
                 },
                 "lan_ports": {
 
