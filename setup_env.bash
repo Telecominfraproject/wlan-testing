@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # Setup python environment variable and pip environment variable like
 # export PYTHON=/usr/bin/python3
 # export PIP=/usr/bin/pip3
@@ -45,8 +45,11 @@ if ! hash $PYTHON; then
     echo "python is not installed"
     exit 1
 fi
-
-ver=$($PYTHON -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
+x=$(python3 -V)
+echo $x
+ver=$([[ "$x" =~ "Python 3" ]] && echo "38")
+echo $ver
+#ver=$($PYTHON -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
 if [ "$ver" -lt "38" ]; then
     echo "This script requires python 3.8 or greater"
     exit 1
@@ -67,17 +70,22 @@ then
     cd ../wlan-lanforge-scripts
     pip uninstall ../lanforge_scripts/dist/*.whl
     rm -rf ../lanforge_scripts
-    sh to_pip.sh
+    bash to_pip.sh
     pip install ../lanforge_scripts/dist/*.whl #--force-reinstall
     echo "Installed LANforge PIP Module"
     cd ../wlan-testing/
+    mkdir ~/.pip
+    echo "[global]" > ~/.pip/pip.conf
+    echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
+    echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple" >> ~/.pip/pip.conf
+    pip3 install -r requirements.txt
     rm tests/imports.py
     touch tests/imports.py
     if [ $target == "tip_2x" ]
     then
       cd libs/tip_2x
-      python setup.py bdist_wheel
-      pip install dist/*.whl --force-reinstall
+      python3 setup.py bdist_wheel
+      pip3 install dist/*.whl --force-reinstall
       cd ../../
     fi
     echo -e "\"\"\"\nRegistered Target Imports\n\"\"\"\nimport sys\nimport importlib\n\nsys.path.append('/usr/local/bin')\n\n" >> tests/imports.py
