@@ -28,13 +28,13 @@ setup_params_general = {
 @allure.parent_suite("Client Connectivity Tests")
 @allure.suite(suite_name="VLAN Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connectivity")
-# @pytest.mark.parametrize(
-#     'setup_configuration',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-# @pytest.mark.usefixtures("setup_configuration")
+@pytest.mark.parametrize(
+    'setup_configuration',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
 class TestVLANModeConnectivitySuiteA(object):
     """
         VLAN Client Connectivity (open. wpa. wpa2_personal) (twog, fiveg)
@@ -45,7 +45,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.title("VLAN Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_vlan_open_2g_client_connectivity(self, get_test_library):
+    def test_vlan_open_2g_client_connectivity(self, get_test_library, setup_configuration):
         """
             VLAN Mode Client Connectivity Test with open encryption 2.4 GHz Band
             pytest -m "client_connectivity and vlan and general and open and twog"
@@ -59,7 +59,7 @@ class TestVLANModeConnectivitySuiteA(object):
         vlan = [100]
 
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                   dut_data={},
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
@@ -81,7 +81,8 @@ class TestVLANModeConnectivitySuiteA(object):
         mode = "VLAN"
         band = "twog"
         vlan = 100
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan, ssid_channel=1)
 
