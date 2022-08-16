@@ -58,7 +58,13 @@
 
                 },
                 "uplink_nat_ports": {
-                    "1.1.eth1": {"addressing": "static", "subnet": "10.28.2.16/24", "gateway_ip": "10.28.2.1"}
+                    "1.1.eth1": {
+                        "addressing": "static",
+                        "subnet": "10.28.2.16",
+                        "gateway_ip": "10.28.2.1",
+                        "ip_mask": "255.255.255.0",
+                        "dns_servers": "BLANK"
+                    }
                 }
             }
         }
