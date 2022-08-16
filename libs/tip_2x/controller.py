@@ -141,8 +141,12 @@ class ConfigureController:
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=100)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         services = resp.json()
-        gw_host = ""
-        fms_host = ""
+        gw_host = None
+        fms_host = None
+        prov_host = None
+        owrrm_host = None
+        owanalytics_host = None
+        owsub_host = None
         for service in services['endpoints']:
             if service['type'] == "owgw":
                 gw_host = urlparse(service["uri"])
@@ -156,6 +160,11 @@ class ConfigureController:
                 owanalytics_host = urlparse(service["uri"])
             if service['type'] == "owsub":
                 owsub_host = urlparse(service["uri"])
+        if (gw_host is None) or (fms_host is None) or (prov_host is None) or (owrrm_host is None) or (
+                owanalytics_host is None) or (
+                owsub_host is None):
+            logging.error("Not All Microservices available:" + str(
+                json.dumps(services['endpoints'], indent=2)))
         return gw_host, fms_host, prov_host, owrrm_host, owanalytics_host, owsub_host
 
     def logout(self):
@@ -1376,7 +1385,6 @@ class UProfileUtility:
             del self.base_profile_config["interfaces"][1]["services"]
             del self.base_profile_config["metrics"]["wifi-frames"]
             del self.base_profile_config["metrics"]["dhcp-snooping"]
-
 
     def encryption_lookup(self, encryption="psk"):
         encryption_mapping = {

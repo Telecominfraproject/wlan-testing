@@ -61,7 +61,7 @@
                     "1.1.eth1": {
                         "addressing": "static",
                         "ip": "10.28.2.16",
-                        "gateway_ip": "10.28.2.1",
+                        "gateway_ip": "10.28.2.1/24",
                         "ip_mask": "255.255.255.0",
                         "dns_servers": "BLANK"
                     }
