@@ -259,4 +259,3 @@ markers =
     wpa_wpa2_enterprise_mixed: Use this marker to run wpa_wpa2_enterprise_mixed Encryption tests in each of the above test plans/suites
     wpa3_enterprise_mixed: Use this marker to run wpa3_enterprise_mixed Encryption tests in each of the above test plans/suites
 " >> tests/pytest.ini
-
