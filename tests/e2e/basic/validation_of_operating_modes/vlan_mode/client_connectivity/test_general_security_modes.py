@@ -17,8 +17,9 @@ setup_params_general = {
                  {"ssid_name": "ssid_open_5g_vlan", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}],
         "wpa": [{"ssid_name": "ssid_wpa_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
                 {"ssid_name": "ssid_wpa_5g_vlan", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}],
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-                          {"ssid_name": "ssid_wpa2_5g_vlan", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}]},
+        "wpa2_personal": [
+            {"ssid_name": "ssid_wpa2_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
+            {"ssid_name": "ssid_wpa2_5g_vlan", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}]},
     "rf": {},
     "radius": False
 }
@@ -61,7 +62,7 @@ class TestVLANModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -80,11 +81,11 @@ class TestVLANModeConnectivitySuiteA(object):
         security = "open"
         mode = "VLAN"
         band = "twog"
-        vlan = 100
+        vlan = [100]
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -106,10 +107,11 @@ class TestVLANModeConnectivitySuiteA(object):
         security = "wpa"
         mode = "VLAN"
         band = "twog"
-        vlan = 100
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        vlan = [100]
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -128,10 +130,11 @@ class TestVLANModeConnectivitySuiteA(object):
         security = "wpa"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 100
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        vlan = [100]
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -150,10 +153,11 @@ class TestVLANModeConnectivitySuiteA(object):
         security = "wpa2"
         mode = "VLAN"
         band = "twog"
-        vlan = 100
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        vlan = [100]
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -174,10 +178,11 @@ class TestVLANModeConnectivitySuiteA(object):
         security = "wpa2"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 100
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        vlan = [100]
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -193,8 +198,10 @@ setup_params_general_two = {
             {"ssid_name": "ssid_wpa3_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
             {"ssid_name": "ssid_wpa3_p_m_5g_vlan", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_vlan", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}]
+            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something",
+             "vlan": 100},
+            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_vlan", "appliedRadios": ["5G"], "security_key": "something",
+             "vlan": 100}]
     },
     "rf": {},
     "radius": False
@@ -234,11 +241,11 @@ class TestVLANModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 100
+        vlan = [100]
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -257,11 +264,11 @@ class TestVLANModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 100
+        vlan = [100]
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -280,11 +287,11 @@ class TestVLANModeConnectivitySuiteTwo(object):
         security = "wpa3"
         band = "sixg"
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -293,7 +300,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal_mixed 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band")
     def test_vlan_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library,
-                                                            setup_configuration):
+                                                             setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity and vlan and general and wpa3_personal_mixed and twog"
@@ -304,11 +311,11 @@ class TestVLANModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "VLAN"
         band = "twog"
-        vlan = 100
+        vlan = [100]
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -317,7 +324,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal_mixed 5 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_vlan_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library,
-                                                            setup_configuration):
+                                                             setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity and vlan and general and wpa3_personal_mixed and fiveg"
@@ -328,11 +335,11 @@ class TestVLANModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "VLAN"
         band = "fiveg"
-        vlan = 100
+        vlan = [100]
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -341,7 +348,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_vlan_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library,
-                                                                setup_configuration):
+                                                                 setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity and vlan and general and wpa_wpa2_personal_mixed and twog"
@@ -353,12 +360,12 @@ class TestVLANModeConnectivitySuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "VLAN"
         band = "twog"
-        vlan = 100
+        vlan = [100]
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
 
@@ -367,7 +374,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_vlan_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library,
-                                                                setup_configuration):
+                                                                 setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity and vlan and general and wpa_wpa2_personal_mixed and fiveg"
@@ -379,12 +386,11 @@ class TestVLANModeConnectivitySuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "VLAN"
         band = "fiveg"
-        vlan = 100
+        vlan = [100]
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1, vlan_id=vlan)
 
         assert passes == "PASS", result
-
