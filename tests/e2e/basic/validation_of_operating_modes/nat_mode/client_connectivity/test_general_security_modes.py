@@ -60,10 +60,10 @@ class TestNatModeConnectivitySuiteA(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -86,10 +86,11 @@ class TestNatModeConnectivitySuiteA(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -115,10 +116,11 @@ class TestNatModeConnectivitySuiteA(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -141,10 +143,11 @@ class TestNatModeConnectivitySuiteA(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "fiveg"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -167,10 +170,11 @@ class TestNatModeConnectivitySuiteA(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -195,10 +199,11 @@ class TestNatModeConnectivitySuiteA(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "fiveg"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+        
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -257,11 +262,11 @@ class TestNatModeConnectivitySuiteTwo(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
-        vlan = 1
+        
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -284,11 +289,11 @@ class TestNatModeConnectivitySuiteTwo(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "fiveg"
-        vlan = 1
+        
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -311,11 +316,11 @@ class TestNatModeConnectivitySuiteTwo(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "sixg"
-        vlan = 1
+        
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -339,11 +344,11 @@ class TestNatModeConnectivitySuiteTwo(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
-        vlan = 1
+        
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -367,11 +372,11 @@ class TestNatModeConnectivitySuiteTwo(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "fiveg"
-        vlan = 1
+        
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -396,12 +401,12 @@ class TestNatModeConnectivitySuiteTwo(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
-        vlan = 1
+        
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -426,12 +431,12 @@ class TestNatModeConnectivitySuiteTwo(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "fiveg"
-        vlan = 1
+        
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 

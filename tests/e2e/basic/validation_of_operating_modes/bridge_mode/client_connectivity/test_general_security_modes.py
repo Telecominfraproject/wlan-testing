@@ -56,12 +56,11 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "open"
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
 
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -80,10 +79,11 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "open"
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -105,10 +105,11 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "wpa"
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -127,10 +128,11 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "wpa"
         mode = "BRIDGE"
         band = "fiveg"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -149,10 +151,11 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -173,10 +176,11 @@ class TestBridgeModeConnectivitySuiteA(object):
         security = "wpa2"
         mode = "BRIDGE"
         band = "fiveg"
-        vlan = 1
-        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security, dut_data=setup_configuration,
+
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -231,11 +235,11 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
+
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -254,11 +258,11 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
-        vlan = 1
+
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -277,11 +281,11 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         band = "sixg"
         mode = "BRIDGE"
-        vlan = 1
+
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -290,7 +294,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal_mixed 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band")
     def test_bridge_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library,
-                                                            setup_configuration):
+                                                               setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity and bridge and general and wpa3_personal_mixed and twog"
@@ -301,11 +305,11 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
+
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -314,7 +318,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal_mixed 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_bridge_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library,
-                                                            setup_configuration):
+                                                               setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity and bridge and general and wpa3_personal_mixed and fiveg"
@@ -325,11 +329,11 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
-        vlan = 1
+
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -338,7 +342,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_bridge_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library,
-                                                                setup_configuration):
+                                                                   setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity and bridge and general and wpa_wpa2_personal_mixed and twog"
@@ -350,12 +354,12 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
+
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
 
@@ -364,7 +368,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_bridge_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library,
-                                                                setup_configuration):
+                                                                   setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity and bridge and general and wpa_wpa2_personal_mixed and fiveg"
@@ -376,12 +380,11 @@ class TestBridgeModeConnectivitySuiteTwo(object):
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
-        vlan = 1
+
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=vlan, ssid_channel=1)
+                                                                   num_sta=1)
 
         assert passes == "PASS", result
-
