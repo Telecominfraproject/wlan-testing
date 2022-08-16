@@ -118,7 +118,6 @@ class tip_2x:
         try:
             self.dut_library_object = APLIBS(dut_data=self.device_under_tests_info)
         except Exception as e:
-            pytest.fail("Unable to setup AP Objects")
             logging.error("Exception in setting up Access Point Library object:" + str(e))
             pytest.fail("Unable to setup AP Objects")
 
