@@ -172,6 +172,8 @@ class tip_2x:
                 configuration["ssid_modes"].pop(i)
 
         temp_conf = configuration["ssid_modes"].copy()
+        print(configuration)
+        print(self.tip_2x_specific_encryption_translation)
         for i in temp_conf:
             for j in range(len(temp_conf[i])):
                 for k in temp_conf[i][j]["appliedRadios"]:
@@ -179,12 +181,13 @@ class tip_2x:
                         configuration["ssid_modes"][i][j]["appliedRadios"].remove(k)
                         if configuration["ssid_modes"][i][j]["appliedRadios"] == []:
                             configuration["ssid_modes"][i][j] = {}  # .popi.popitem())  # .popitem()
+
         for i in configuration["ssid_modes"]:
-            if {} in configuration["ssid_modes"][i]:
-                configuration["ssid_modes"][i].remove({})
+            configuration["ssid_modes"][i] = [x for x in configuration["ssid_modes"][i] if x != {}]
         for ssids in configuration["ssid_modes"]:
             for i in configuration["ssid_modes"][ssids]:
-                i["security"] = self.tip_2x_specific_encryption_translation[ssids]
+                if i is not {}:
+                    i["security"] = self.tip_2x_specific_encryption_translation[ssids]
         temp_conf = configuration.copy()
         for i in range(0, len(self.device_under_tests_info)):
             if configuration["mode"] not in self.device_under_tests_info[i]["supported_modes"]:
@@ -227,6 +230,7 @@ class tip_2x:
         if final_configuration["rf"] != {}:
             profile_object.set_radio_config(radio_config=final_configuration["rf"])
         else:
+            final_configuration["rf"] = {"2G": {}, "5G": {}, "6G": {}}
             profile_object.set_radio_config()
         for ssid in final_configuration["ssid_modes"]:
             for ssid_data in final_configuration["ssid_modes"][ssid]:
@@ -871,24 +875,26 @@ if __name__ == '__main__':
                  target=basic_05["target"])
 
     # var.setup_objects()
-    setup_params_general = {
+    setup_params_general_two = {
         "mode": "BRIDGE",
         "ssid_modes": {
-            "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G", "5G"], "security_key": "something"},
-                     ],
-            "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                    {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"],
-                     "security_key": "something"}],
-            "wpa2_personal": [
-                {"ssid_name": "TestSSID-2G", "appliedRadios": ["2G"], "security_key": "OpenWifi"},
-                {"ssid_name": "TestSSID-5G", "appliedRadios": ["5G"],
-                 "security_key": "OpenWifi"}]},
-        "rf": {"2G": {}, "5G": {}, "6G": {}},
+            "wpa3_personal": [
+                {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa3_p_6g_br", "appliedRadios": ["6G"], "security_key": "something"}],
+            "wpa3_personal_mixed": [
+                {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+            "wpa_wpa2_personal_mixed": [
+                {"ssid_name": "ssid_wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]
+        },
+        "rf": {},
         "radius": False
     }
-    target = [['2G', 'wpa2_personal'], ['5G', 'wpa2_personal']]
-    # d = var.setup_configuration_data(configuration=setup_params_general, requested_combination=target)
-    d = var.setup_basic_configuration(configuration=setup_params_general, requested_combination=target)
+    target = [['6G', 'wpa3_personal']]
+    d = var.setup_configuration_data(configuration=setup_params_general_two, requested_combination=target)
+    # d = var.setup_basic_configuration(configuration=setup_params_general_two, requested_combination=target)
     print(d)
     # var.setup_firmware()
     # var.teardown_objects()

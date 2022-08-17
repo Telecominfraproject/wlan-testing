@@ -1453,12 +1453,10 @@ class UProfileUtility:
                 for keys in radio_config[band]:
                     base_radio_config_6g[keys] = radio_config[band][keys]
 
-        if radio_config["2G"] is not None:
-            self.base_profile_config["radios"].append(base_radio_config_2g)
-        if radio_config["5G"] is not None:
-            self.base_profile_config["radios"].append(base_radio_config_5g)
-        if radio_config["6G"] is not None:
-            self.base_profile_config["radios"].append(base_radio_config_6g)
+
+        self.base_profile_config["radios"].append(base_radio_config_2g)
+        self.base_profile_config["radios"].append(base_radio_config_5g)
+        # self.base_profile_config["radios"].append(base_radio_config_6g)
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
