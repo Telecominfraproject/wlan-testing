@@ -120,6 +120,7 @@ except ImportError as e:
 try:
     lanforge_libs = importlib.import_module(\"lanforge_scripts.lf_libs.lf_libs\")
     lf_libs = lanforge_libs.lf_libs
+    scp_file = lanforge_libs.SCP_File
     lanforge_tests = importlib.import_module(\"lanforge_scripts.lf_libs.lf_tests\")
     lf_tests = lanforge_tests.lf_tests
 except ImportError as e:

@@ -515,20 +515,20 @@
 #         client.close()
 #         return tx_power, name
 #
-#     def get_logread(self, start_ref="", stop_ref=""):
-#         data = self.logread()
-#         log_data = []
-#         data = data.split("\n")
-#         flag = 0
-#         for logs in data:
-#             if logs.__contains__(start_ref):
-#                 flag = 1
-#             if flag == 1:
-#                 log_data.append(logs)
-#             if logs.__contains__(stop_ref):
-#                 flag = 0
-#         ap_logs = "\n".join(log_data)
-#         return ap_logs
+    # def get_logread(self, start_ref="", stop_ref=""):
+    #     data = self.logread()
+    #     log_data = []
+    #     data = data.split("\n")
+    #     flag = 0
+    #     for logs in data:
+    #         if logs.__contains__(start_ref):
+    #             flag = 1
+    #         if flag == 1:
+    #             log_data.append(logs)
+    #         if logs.__contains__(stop_ref):
+    #             flag = 0
+    #     ap_logs = "\n".join(log_data)
+    #     return ap_logs
 #
 #     def logread(self):
 #         try:

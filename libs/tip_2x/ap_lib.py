@@ -341,6 +341,23 @@ class APLIBS:
                                           expected_attachment_type=allure.attachment_type.JSON)
         return output
 
+    def get_logread(self, start_ref="", stop_ref="", idx=0, print_log=False, attach_allure=False):
+        output = self.run_generic_command(cmd="logread", idx=idx,
+                                          print_log=print_log,
+                                          attach_allure=attach_allure,
+                                          expected_attachment_type=allure.attachment_type.JSON)
+        log_data = []
+        data = output.split("\n")
+        flag = 0
+        for logs in data:
+            if logs.__contains__(start_ref):
+                flag = 1
+            if flag == 1:
+                log_data.append(logs)
+            if logs.__contains__(stop_ref):
+                flag = 0
+        ap_logs = "\n".join(log_data)
+        return ap_logs
 
 if __name__ == '__main__':
     basic_05 = {

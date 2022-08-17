@@ -45,7 +45,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.title("BRIDGE Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_bridge_open_2g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_open_2g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with open encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and open and twog"
@@ -68,7 +68,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.title("BRIDGE Mode Client Connectivity Test with open encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
-    def test_bridge_open_5g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_open_5g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with open encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and open and fiveg"
@@ -94,7 +94,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @allure.story('wpa 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
-    def test_bridge_wpa_2g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_wpa_2g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa and twog"
@@ -117,7 +117,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa encryption 5 GHz Band")
-    def test_bridge_wpa_5g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_wpa_5g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa and fiveg"
@@ -140,7 +140,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band")
-    def test_bridge_wpa2_personal_2g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_wpa2_personal_2g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa2_personal and twog"
@@ -165,7 +165,7 @@ class TestBridgeModeConnectivitySuiteA(object):
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band")
-    def test_bridge_wpa2_personal_5g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_wpa2_personal_5g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa2_personal and fiveg"
@@ -224,7 +224,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.twog
     @allure.story('wpa3_personal 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band")
-    def test_bridge_wpa3_personal_2g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_wpa3_personal_2g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal and twog"
@@ -247,7 +247,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.fiveg
     @allure.story('wpa3_personal 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
-    def test_bridge_wpa3_personal_5g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_wpa3_personal_5g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal and fiveg"
@@ -270,7 +270,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.sixg
     @allure.story('wpa3_personal 6 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
-    def test_bridge_wpa3_personal_6g_client_connectivity(self, get_test_library, setup_configuration):
+    def test_bridge_wpa3_personal_6g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal and sixg"
@@ -294,7 +294,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal_mixed 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band")
     def test_bridge_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library,
-                                                               setup_configuration):
+                                                               get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal_mixed and twog"
@@ -318,7 +318,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal_mixed 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_bridge_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library,
-                                                               setup_configuration):
+                                                               get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal_mixed and fiveg"
@@ -342,7 +342,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_bridge_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library,
-                                                                   setup_configuration):
+                                                                   get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa_wpa2_personal_mixed and twog"
@@ -368,7 +368,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_bridge_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library,
-                                                                   setup_configuration):
+                                                                   get_dut_logs_per_test_case, get_test_device_logs, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa_wpa2_personal_mixed and fiveg"

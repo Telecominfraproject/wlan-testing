@@ -1,7 +1,10 @@
 import json
 import logging
 import os
+import string
 import sys
+from random import random
+
 import allure
 import pytest
 from _pytest.fixtures import SubRequest
@@ -18,6 +21,7 @@ try:
     target = imports.target
     lf_libs = imports.lf_libs
     lf_tests = imports.lf_tests
+    scp_file = imports.scp_file
     configuration = importlib.import_module("configuration")
     CONFIGURATION = configuration.CONFIGURATION
 except ImportError as e:
@@ -35,6 +39,11 @@ def pytest_addoption(parser):
         # nargs="+",
         default="basic-01",
         help="AP Model which is needed to test"
+    )
+    parser.addoption(
+        "--num_stations",
+        default=1,
+        help="Number of Stations"
     )
     parser.addoption(
         "--device",
@@ -206,3 +215,47 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
     with open(allure_env_path, 'w') as _f:
         data = '\n'.join([f'{variable}={value}' for variable, value in environment_properties.items()])
         _f.write(data)
+
+
+@pytest.fixture(scope="function")
+def get_dut_logs_per_test_case(request, get_testbed_details, get_target_object):
+    S = 9
+    instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+    for i in range(len(get_testbed_details["device_under_tests"])):
+        get_target_object.get_dut_library_object().run_generic_command(cmd="logger start testcase: " + instance_name,
+                                                                       idx=i)
+
+    def collect_logs():
+        for i in range(len(get_testbed_details["device_under_tests"])):
+            get_target_object.get_dut_library_object().run_generic_command(
+                cmd="logger stop testcase: " + instance_name,
+                idx=i)
+            ap_logs = get_target_object.get_dut_library_object().get_logread(
+                start_ref="logger start testcase: " + instance_name,
+                stop_ref="logger stop testcase: " + instance_name)
+            allure.attach(name='Logs - ' + get_testbed_details["device_under_tests"][i]["identifier"],
+                          body=str(ap_logs))
+
+    request.addfinalizer(collect_logs)
+
+
+@pytest.fixture(scope="function")
+def get_test_device_logs(request, get_testbed_details, get_target_object):
+    ip = get_testbed_details["traffic_generator"]["details"]["ip"]
+    port = get_testbed_details["traffic_generator"]["details"]["ssh_port"]
+
+    def collect_logs_tg():
+        log_0 = "/home/lanforge/lanforge_log_0.txt"
+        log_1 = "/home/lanforge/lanforge_log_1.txt"
+        obj = scp_file(ip=ip, port=port, username="root", password="lanforge", remote_path=log_0,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="lanforge_log_0.txt",
+                           name="lanforge_log_0")
+        obj = scp_file(ip=ip, port=port, username="root", password="lanforge", remote_path=log_1,
+                       local_path=".")
+        obj.pull_file()
+        allure.attach.file(source="lanforge_log_1.txt",
+                           name="lanforge_log_1")
+
+    request.addfinalizer(collect_logs_tg)
