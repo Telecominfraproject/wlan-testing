@@ -162,7 +162,6 @@ class tip_2x:
                 base_dict[i[0]].append(self.tip_2x_specific_encryption_translation[i[1]])
             if i[1] in self.supported_bands:
                 base_dict[i[1]].append((self.tip_2x_specific_encryption_translation[i[0]]))
-
         temp = []
         for i in list(base_dict.values()):
             for j in i:
@@ -175,7 +174,6 @@ class tip_2x:
         temp_conf = configuration["ssid_modes"].copy()
         for i in temp_conf:
             for j in range(len(temp_conf[i])):
-
                 for k in temp_conf[i][j]["appliedRadios"]:
                     if self.tip_2x_specific_encryption_translation[i] not in base_dict[k]:
                         configuration["ssid_modes"][i][j]["appliedRadios"].remove(k)
@@ -187,7 +185,24 @@ class tip_2x:
         for ssids in configuration["ssid_modes"]:
             for i in configuration["ssid_modes"][ssids]:
                 i["security"] = self.tip_2x_specific_encryption_translation[ssids]
-        return configuration
+        temp_conf = configuration.copy()
+        for i in range(0, len(self.device_under_tests_info)):
+            if configuration["mode"] not in self.device_under_tests_info[i]["supported_modes"]:
+                pytest.skip(configuration["mode"] + " is not Supported by DUT")
+            for enc in configuration["ssid_modes"]:
+                for idx in configuration["ssid_modes"][enc]:
+                    print(idx)
+                    check = all(item in self.device_under_tests_info[i]["supported_bands"] for item in idx["appliedRadios"])
+                    print(check)
+                    if not check:
+                        temp_conf["ssid_modes"][enc].remove(idx)
+        for key in configuration["rf"]:
+            # print(key)
+            if key not in self.device_under_tests_info[i]["supported_bands"]:
+                print(key)
+                temp_conf["rf"][key] = None
+
+        return temp_conf
 
     """
         setup_basic_configuration - Method to configure AP in basic operating modes with multiple SSID's and multiple AP's
@@ -218,7 +233,6 @@ class tip_2x:
                 profile_object.add_ssid(ssid_data=ssid_data)
         logging.info(
             "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
-
         # Setup Config Apply on all AP's
         ret_val = dict()
         for i in range(0, len(self.device_under_tests_info)):
@@ -873,7 +887,7 @@ if __name__ == '__main__':
         "radius": False
     }
     target = [['2G', 'wpa2_personal'], ['5G', 'wpa2_personal']]
-
+    # d = var.setup_configuration_data(configuration=setup_params_general, requested_combination=target)
     d = var.setup_basic_configuration(configuration=setup_params_general, requested_combination=target)
     print(d)
     # var.setup_firmware()

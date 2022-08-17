@@ -1443,18 +1443,22 @@ class UProfileUtility:
             "channel": "auto"
         }
         for band in radio_config:
-            if band == "2G":
+            if band == "2G" and radio_config[band] is not None:
                 for keys in radio_config[band]:
                     base_radio_config_2g[keys] = radio_config[band][keys]
-            if band == "5G":
+            if band == "5G" and radio_config[band] is not None:
                 for keys in radio_config[band]:
                     base_radio_config_5g[keys] = radio_config[band][keys]
-            if band == "6G":
+            if band == "6G" and radio_config[band] is not None:
                 for keys in radio_config[band]:
                     base_radio_config_6g[keys] = radio_config[band][keys]
 
-        self.base_profile_config["radios"].append(base_radio_config_2g)
-        self.base_profile_config["radios"].append(base_radio_config_5g)
+        if radio_config["2G"] is not None:
+            self.base_profile_config["radios"].append(base_radio_config_2g)
+        if radio_config["5G"] is not None:
+            self.base_profile_config["radios"].append(base_radio_config_5g)
+        if radio_config["6G"] is not None:
+            self.base_profile_config["radios"].append(base_radio_config_6g)
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
