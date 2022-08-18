@@ -265,8 +265,8 @@ class tip_2x:
             while uuid_before_apply == uuid_after_apply:
                 time.sleep(10)
                 x += 1
-                logging.info("uuid_before_apply: ", uuid_before_apply)
-                logging.info("uuid_after_apply: ", uuid_after_apply)
+                logging.info("uuid_before_apply: " + str(uuid_before_apply))
+                logging.info("uuid_after_apply: " + str(uuid_after_apply))
                 r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
                 uuid_after_apply = r_data["latest"]
                 if x == 5:
@@ -738,13 +738,13 @@ class tip_2x:
                         # print and report the Firmware versions after upgrade
                         allure.attach(name="After Firmware Upgrade Request: ",
                                       body="current revision: " + current_version + "\ntarget revision: " + target_revision)
-                        logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                        logging.info("current revision: " + str(current_version) + "\ntarget revision: " + target_revision)
                         if current_version == target_revision:
                             upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
-                            logging.info("firmware upgraded successfully: ", target_revision)
+                            logging.info("firmware upgraded successfully: " + target_revision)
                         else:
                             upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
-                            logging.info("firmware upgraded failed: ", target_revision)
+                            logging.info("firmware upgraded failed: " + str(target_revision))
                         break
 
                 # if there are 1+ firmware images in fw_list then check for branch
@@ -759,7 +759,7 @@ class tip_2x:
                             target_fw = firmware
                             break
                     firmware = target_fw
-                    logging.info("Target Firmware: \n", firmware)
+                    logging.info("Target Firmware: \n" + firmware)
                     allure.attach(name="Target firmware : ", body=str(firmware))
 
                     target_revision = firmware['revision'].split("/")[1].replace(" ", "")

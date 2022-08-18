@@ -1,4 +1,77 @@
+#!/usr/bin/bash
+# Setup python environment variable and pip environment variable like
+# export PYTHON=/usr/bin/python3
+# export PIP=/usr/bin/pip3
+#sh setup_env.bash -t tip_2x -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
+helpFunction()
+{
+   echo "Setup SSH Tunnel for TIP Labs"
+   echo "Usage: $0 -l lab "
+   echo -e "\t-l Target Lab basic-01 | basic-02 | basic-03 | basic-04 | basic-05 | basic-06 | basic-07 | basic-08 | advance-01 | advance-02"
+   exit 1 # Exit script after printing help
+}
 
+basic1_8080=8800
+basic1_22=8801
+basic1_lab_ctlr=8802
+basic1_vnc=8803
+
+basic2_8080=8810
+basic2_22=8811
+basic2_lab_ctlr=8812
+basic2_vnc=8813
+
+basic3_8080=8820
+basic3_22=8821
+basic3_lab_ctlr=8822
+basic3_vnc=8823
+
+basic4_8080=8830
+basic4_22=8831
+basic4_lab_ctlr=8832
+basic4_vnc=8833
+
+basic5_8080=8840
+basic5_22=8841
+basic5_lab_ctlr=8842
+basic5_vnc=8843
+
+basic6_8080=8850
+basic6_22=8851
+basic6_lab_ctlr=8852
+basic6_vnc=8853
+
+basic7_8080=8860
+basic7_22=8861
+basic7_lab_ctlr=8862
+basic7_vnc=8863
+
+
+basic8_8080=8870
+basic8_22=8871
+basic8_lab_ctlr=8872
+basic8_vnc=8873
+
+advance1_8080=8880
+advance1_22=8881
+advance1_lab_ctlr=8882
+advance1_vnc=8883
+
+advance2_8080=8890
+advance2_22=8891
+advance2_lab_ctlr=8892
+advance2_vnc=8893
+
+advance3_8080=8900
+advance3_22=8901
+advance3_lab_ctlr=8902
+advance3_vnc=8903
+Create_lab_info_json()
+{
+  rm tests/lab_info.json
+  touch lab_info.json
+  # shellcheck disable=SC2016
+  echo -e '
   {
 
 "CONFIGURATION" : {
@@ -14,7 +87,6 @@
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "wan_port": "1.1.eth2",
-            "lan_port": "1.1.eth1",
             "ssid": {
                 "2g-ssid": "OpenWifi",
                 "5g-ssid": "OpenWifi",
@@ -35,7 +107,7 @@
             "host_ip": "localhost",
             "host_username": "lanforge",
             "host_password": "pumpkin77",
-            "host_ssh_port":  8832 ,
+            "host_ssh_port": ' $basic4_lab_ctlr ',
             "serial_tty": "/dev/ttyAP5",
             "firmware_version": "next-latest"
         }],
@@ -45,8 +117,8 @@
             "scenario": "dhcp-bridge",
             "details": {
                 "manager_ip": "localhost",
-                "http_port": 8830,
-                "ssh_port": 8831,
+                "http_port":' $basic4_8080',
+                "ssh_port":' $basic4_22',
                 "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
                 "wan_ports": {
                     "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
@@ -105,7 +177,7 @@
             "host_ip": "localhost",
             "host_username": "lanforge",
             "host_password": "pumpkin77",
-            "host_ssh_port": 8842,
+            "host_ssh_port":' $basic5_lab_ctlr',
             "serial_tty": "/dev/ttyAP1",
             "firmware_version": "next-latest"
         }],
@@ -115,8 +187,8 @@
             "scenario": "dhcp-bridge",
             "details": {
                 "manager_ip": "localhost",
-                "http_port": 8840,
-                "ssh_port": 8841,
+                "http_port":' $basic5_8080',
+                "ssh_port":' $basic5_22',
                 "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
                 "wan_ports": {
                     "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
@@ -173,7 +245,7 @@
             "host_ip": "localhost",
             "host_username": "lanforge",
             "host_password": "pumpkin77",
-            "host_ssh_port": 8902,
+            "host_ssh_port":' $advance3_lab_ctlr',
             "serial_tty": "/dev/ttyAP0",
             "firmware_version": "next-latest"
         }],
@@ -183,8 +255,8 @@
             "scenario": "dhcp-bridge",
             "details": {
                 "manager_ip": "10.28.3.117",
-                "http_port":  8900,
-                "ssh_port":  8901,
+                "http_port": ' $advance3_8080',
+                "ssh_port": ' $advance3_22',
                 "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
                 "wan_ports": {
                     "1.3.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
@@ -438,4 +510,82 @@
 
 "influx_params" : {}
 
-}   
+}   ' >> tests/lab_info.json
+
+
+
+}
+while getopts "l:" opt
+do
+   case "$opt" in
+      l ) lab="$OPTARG" ;;
+      ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+   esac
+done
+
+# Print helpFunction in case parameters are empty
+if [ -z "$lab" ]
+then
+   echo "Some or all of the parameters are empty";
+   helpFunction
+fi
+if [ "$lab" = "basic-01" ]; then
+    echo "Initiating LAB Connection in basic-01"
+
+    Create_lab_info_json
+    ssh -C -L 8800:10.28.3.6:8080 -L 8801:10.28.3.6:22 -L 8802:10.28.3.100:22 -L 8803:10.28.3.6:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "basic-02" ]; then
+    echo "Initiating LAB Connection in basic-02"
+    Create_lab_info_json
+    ssh -C -L 8810:10.28.3.8:8080 -L 8811:10.28.3.8:22 -L 8812:10.28.3.100:22 -L 8813:10.28.3.8:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "basic-03" ]; then
+    echo "Initiating LAB Connection in basic-03"
+    Create_lab_info_json
+    ssh -C -L 8820:10.28.3.10:8080 -L 8821:10.28.3.10:22 -L 8822:10.28.3.100:22 -L 8823:10.28.3.10:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "basic-04" ]; then
+    echo "Initiating LAB Connection in basic-04"
+    Create_lab_info_json
+    ssh -C -L 8830:10.28.3.12:8080 -L 8831:10.28.3.12:22 -L 8832:10.28.3.100:22 -L 8833:10.28.3.12:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "basic-05" ]; then
+    echo "Initiating LAB Connection in basic-05"
+    Create_lab_info_json
+    ssh -C -L 8840:10.28.3.28:8080 -L 8841:10.28.3.28:22 -L 8842:10.28.3.103:22 -L 8843:10.28.3.28:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "basic-06" ]; then
+    echo "Initiating LAB Connection in basic-06"
+    Create_lab_info_json
+    ssh -C -L 8850:10.28.3.30:8080 -L 8851:10.28.3.30:22 -L 8852:10.28.3.103:22 -L 8853:10.28.3.30:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "basic-07" ]; then
+    echo "Initiating LAB Connection in basic-07"
+    Create_lab_info_json
+    ssh -C -L 8860:10.28.3.32:8080 -L 8861:10.28.3.32:22 -L 8862:10.28.3.103:22 -L 8863:10.28.3.32:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "basic-08" ]; then
+    echo "Initiating LAB Connection in basic-08"
+    Create_lab_info_json
+    ssh -C -L 8870:10.28.3.34:8080 -L 8871:10.28.3.34:22 -L 8872:10.28.3.103:22 -L 8873:10.28.3.34:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "advance-01" ]; then
+    echo "Initiating LAB Connection in advance-01"
+    Create_lab_info_json
+    ssh -C -L 8880:10.28.3.24:8080 -L 8881:10.28.3.24:22 -L 8882:10.28.3.102:22 -L 8883:10.28.3.24:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "advance-02" ]; then
+    echo "Initiating LAB Connection in advance-02"
+    Create_lab_info_json
+    ssh -C -L 8890:10.28.3.26:8080 -L 8801:10.28.3.26:22 -L 8892:10.28.3.102:22 -L 8893:10.28.3.26:5901 ubuntu@3.130.51.163
+fi
+if [ "$lab" = "advance-03" ]; then
+    echo "Initiating LAB Connection in advance-03"
+    Create_lab_info_json
+    ssh -C -L 8900:10.28.3.117:8080 -L 8901:10.28.3.117:22 -L 8902:10.28.3.115:22 -L 8903:10.28.3.117:5901 ubuntu@3.130.51.163
+else
+    echo "Testbed is Not Available"
+fi
+
+

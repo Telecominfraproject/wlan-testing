@@ -40,7 +40,7 @@ class ConfigureController:
             self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
             if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
                 self.logout()
-                logging.info(self.gw_host, self.fms_host, self.prov_host)
+                logging.info(self.gw_host, self.fms_host + self.prov_host)
                 pytest.exit("All Endpoints not available in Controller Service")
                 sys.exit()
 

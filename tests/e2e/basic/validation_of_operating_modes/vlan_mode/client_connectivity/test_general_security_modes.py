@@ -29,13 +29,13 @@ setup_params_general = {
 @allure.parent_suite("Client Connectivity Tests")
 @allure.suite(suite_name="VLAN Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connectivity")
-@pytest.mark.parametrize(
-    'setup_configuration',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_configuration")
+# @pytest.mark.parametrize(
+#     'setup_configuration',
+#     [setup_params_general],
+#     indirect=True,
+#     scope="class"
+# )
+# @pytest.mark.usefixtures("setup_configuration")
 class TestVLANModeConnectivitySuiteA(object):
     """
         VLAN Client Connectivity (open. wpa. wpa2_personal) (twog, fiveg)
@@ -46,7 +46,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @pytest.mark.twog
     @allure.title("VLAN Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_vlan_open_2g_client_connectivity(self, get_test_library, num_stations, setup_configuration):
+    def test_vlan_open_2g_client_connectivity(self, get_test_library, num_stations):
         """
             VLAN Mode Client Connectivity Test with open encryption 2.4 GHz Band
             pytest -m "client_connectivity and vlan and general and open and twog"
@@ -60,7 +60,7 @@ class TestVLANModeConnectivitySuiteA(object):
         vlan = [100]
 
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                   dut_data=setup_configuration,
+                                                                   dut_data={},
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=num_stations, vlan_id=vlan)
 
