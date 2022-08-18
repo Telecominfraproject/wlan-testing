@@ -69,8 +69,14 @@ def get_lab_info():
 def selected_testbed(request):
     """yields the testbed option selection"""
     current_testbed = request.config.getoption("--testbed")
-    allure.attach(name="selected testbed name", body=current_testbed)
     yield current_testbed
+
+
+@pytest.fixture(scope="session")
+def num_stations(request):
+    """yields the testbed option selection"""
+    num_stations = request.config.getoption("--num_stations")
+    yield num_stations
 
 
 @pytest.fixture(scope="session")

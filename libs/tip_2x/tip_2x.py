@@ -273,8 +273,8 @@ class tip_2x:
                     break
             if uuid_after_apply == uuid_before_apply:
                 logging.error("Config is not received by AP")
-                logging.info("uuid_before_apply: ", uuid_before_apply)
-                logging.info("uuid_after_apply: ", uuid_after_apply)
+                logging.info("uuid_before_apply: " + str(uuid_before_apply))
+                logging.info("uuid_after_apply: " + str(uuid_after_apply))
                 pytest.fail("Config sent from Gateway is not received by AP")
             self.dut_library_object.get_latest_config_recieved(idx=i, print_log=True, attach_allure=True)
 
@@ -296,8 +296,8 @@ class tip_2x:
                     break
             if latest_uuid != active_uuid:
                 logging.error("Config is not received by AP")
-                logging.info("uuid_before_apply: ", uuid_before_apply)
-                logging.info("uuid_after_apply: ", uuid_after_apply)
+                logging.info("uuid_before_apply: " + str(uuid_before_apply))
+                logging.info("uuid_after_apply: " + str(uuid_after_apply))
                 pytest.fail("Config sent from Gateway is not received by AP")
             self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=True)
 
@@ -360,7 +360,7 @@ class tip_2x:
             logging.info("Response for Config apply: " + str(resp.status_code))
             if resp.status_code != 200:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
-                             resp.status_code +
+                             str(resp.status_code) +
                              "Retrying in 5 Seconds... ")
                 time.sleep(5)
                 resp = profile_object.push_config(serial_number=dut["identifier"])
@@ -576,9 +576,9 @@ class tip_2x:
                 current_version_commit = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
                 if target_revision_commit in current_version_commit:
                     upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision_commit, current_version_commit])
-                    logging.info("Firmware Upgraded to :", ap_version)
+                    logging.info("Firmware Upgraded to : " + str(ap_version))
                 else:
-                    logging.info("firmware upgraded failed: ", target_revision)
+                    logging.info("firmware upgraded failed: " + str(target_revision))
                     upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision_commit, current_version_commit])
                 break
             except Exception as e:
@@ -603,7 +603,7 @@ class tip_2x:
                         firmware['image'] = temp
                     if self.device_under_tests_info[ap]['firmware_version'].split('-')[0] == 'release':
                         if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
-                            logging.info("Target Firmware: \n", firmware)
+                            logging.info("Target Firmware: \n" + str(firmware))
                             allure.attach(name="Target firmware : ", body=str(firmware))
                             target_revision = firmware['revision'].split("/")[1].replace(" ", "")
 
@@ -614,8 +614,8 @@ class tip_2x:
 
                             # print and report the firmware versions before upgrade
                             allure.attach(name="Before Firmware Upgrade Request: ",
-                                          body="current revision: " + current_version + "\ntarget revision: " + target_revision)
-                            logging.info("current revision: " + current_version + "\ntarget revision: " + target_revision)
+                                          body="current revision: " + str(current_version) + "\ntarget revision: " + str(target_revision))
+                            logging.info("current revision: " + str(current_version) + "\ntarget revision: " + str(target_revision))
 
                             # if AP is already in target Version then skip upgrade unless force upgrade is specified
                             if current_version == target_revision:
@@ -638,16 +638,17 @@ class tip_2x:
                             # print and report the Firmware versions after upgrade
                             allure.attach(name="After Firmware Upgrade Request: ",
                                           body="current revision: " + current_version + "\ntarget revision: " + target_revision)
-                            logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                            logging.info("current revision: " + str(current_version) +
+                                         "\ntarget revision: " + str(target_revision))
                             if current_version == target_revision:
                                 upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
-                                logging.info("firmware upgraded successfully: ", target_revision)
+                                logging.info("firmware upgraded successfully: " + target_revision)
                             else:
                                 upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
                                 logging.info("firmware upgraded failed: ", target_revision)
                             break
                     if firmware['image'].split("-")[-2] == self.device_under_tests_info[ap]['firmware_version'].split('-')[0]:
-                        logging.info("Target Firmware: \n", firmware)
+                        logging.info("Target Firmware: \n" + firmware)
                         allure.attach(name="Target firmware : ", body=str(firmware))
 
                         target_revision = firmware['revision'].split("/")[1].replace(" ", "")
@@ -679,13 +680,13 @@ class tip_2x:
                         # print and report the Firmware versions after upgrade
                         allure.attach(name="After Firmware Upgrade Request: ",
                                       body="current revision: " + current_version + "\ntarget revision: " + target_revision)
-                        logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                        logging.info("current revision: " + current_version + "\ntarget revision: " + target_revision)
                         if current_version == target_revision:
                             upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
-                            logging.info("firmware upgraded successfully: ", target_revision)
+                            logging.info("firmware upgraded successfully: " + str(target_revision))
                         else:
                             upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
-                            logging.info("firmware upgraded failed: ", target_revision)
+                            logging.info("firmware upgraded failed: " + str(target_revision))
                         break
             # if branch-commit is specified
             else:
@@ -701,7 +702,7 @@ class tip_2x:
                 # If there is only 1 commit ID in fw_list
                 if len(fw_list) == 1:
 
-                    logging.info("Target Firmware: \n", fw_list[0])
+                    logging.info("Target Firmware: \n" + str(fw_list[0]))
                     allure.attach(name="Target firmware : ", body=str(fw_list[0]))
 
                     url = fw_list[0]['uri']
@@ -714,7 +715,7 @@ class tip_2x:
                     # print and report the firmware versions before upgrade
                     allure.attach(name="Before Firmware Upgrade Request: ",
                                   body="current revision: " + current_version + "\ntarget revision: " + target_revision)
-                    logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                    logging.info("current revision: " + str(current_version) + "\ntarget revision: " + str(target_revision))
 
                     # if AP is already in target Version then skip upgrade unless force upgrade is specified
                     if current_version == target_revision:
