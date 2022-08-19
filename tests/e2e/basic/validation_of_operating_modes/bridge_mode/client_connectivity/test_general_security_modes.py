@@ -284,7 +284,6 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal and sixg"
         """
-        print("shivam", setup_params_general_two_br)
         profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
