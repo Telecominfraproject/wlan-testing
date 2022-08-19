@@ -278,6 +278,7 @@ class tip_2x:
                 logging.error("Config is not received by AP")
                 logging.info("uuid_before_apply: " + str(uuid_before_apply))
                 logging.info("uuid_after_apply: " + str(uuid_after_apply))
+                self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
                 pytest.fail("Config sent from Gateway is not received by AP")
             self.dut_library_object.get_latest_config_recieved(idx=i, print_log=True, attach_allure=True)
 
@@ -301,7 +302,8 @@ class tip_2x:
                 logging.error("Config is not received by AP")
                 logging.info("uuid_before_apply: " + str(uuid_before_apply))
                 logging.info("uuid_after_apply: " + str(uuid_after_apply))
-                pytest.fail("Config sent from Gateway is not received by AP")
+                self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
+                pytest.fail("Config sent from Gateway is Received by AP, But not Applied by AP")
             self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=True)
 
             logging.info("Config is Properly Applied on AP, Waiting for 30 Seconds for All interfaces to come up")

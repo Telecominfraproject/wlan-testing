@@ -3,7 +3,7 @@ import logging
 import os
 import string
 import sys
-from random import random
+import random
 
 import allure
 import pytest
@@ -247,7 +247,7 @@ def get_dut_logs_per_test_case(request, get_testbed_details, get_target_object):
 
 @pytest.fixture(scope="function")
 def get_test_device_logs(request, get_testbed_details, get_target_object):
-    ip = get_testbed_details["traffic_generator"]["details"]["ip"]
+    ip = get_testbed_details["traffic_generator"]["details"]["manager_ip"]
     port = get_testbed_details["traffic_generator"]["details"]["ssh_port"]
 
     def collect_logs_tg():

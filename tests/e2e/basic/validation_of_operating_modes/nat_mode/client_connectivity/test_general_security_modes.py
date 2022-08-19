@@ -46,7 +46,8 @@ class TestNatModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and open and twog"
@@ -72,7 +73,8 @@ class TestNatModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with open encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
-    def test_nat_open_5g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_open_5g_client_connectivity(self, get_test_library, execution_number, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with open encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and open and fiveg"
@@ -85,7 +87,7 @@ class TestNatModeConnectivitySuiteA(object):
             mode = "NAT-WAN"
         if execution_number == 1:
             mode = "NAT-LAN"
-        band = "twog"
+        band = "fiveg"
         
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
@@ -102,7 +104,8 @@ class TestNatModeConnectivitySuiteA(object):
     @allure.story('wpa 2.4 GHZ Band')
     @allure.title("NAT Mode Client Connectivity Test with wpa encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
-    def test_nat_wpa_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_wpa_2g_client_connectivity(self, get_test_library, execution_number, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa and twog"
@@ -129,7 +132,8 @@ class TestNatModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa 5 GHZ Band')
     @allure.title("NAT Mode Client Connectivity Test with wpa encryption 5 GHz Band")
-    def test_nat_wpa_5g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_wpa_5g_client_connectivity(self, get_test_library, execution_number, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa and fiveg"
@@ -156,7 +160,8 @@ class TestNatModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("NAT Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band")
-    def test_nat_wpa2_personal_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_wpa2_personal_2g_client_connectivity(self, get_test_library, execution_number, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa2_personal and twog"
@@ -185,7 +190,8 @@ class TestNatModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("NAT Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band")
-    def test_nat_wpa2_personal_5g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_wpa2_personal_5g_client_connectivity(self, get_test_library, execution_number, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa2_personal and fiveg"
@@ -208,7 +214,7 @@ class TestNatModeConnectivitySuiteA(object):
         assert passes == "PASS", result
 
 
-setup_params_general_two = {
+setup_params_general_two_nat = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa3_personal": [
@@ -233,7 +239,7 @@ setup_params_general_two = {
 @allure.sub_suite(sub_suite_name="General security mode Client Connectivity")
 @pytest.mark.parametrize(
     'setup_configuration',
-    [setup_params_general_two],
+    [setup_params_general_two_nat],
     indirect=True,
     scope="class"
 )
@@ -248,12 +254,13 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa3_personal 2.4 GHZ Band')
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band")
-    def test_nat_wpa3_personal_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_wpa3_personal_2g_client_connectivity(self, get_test_library, execution_number, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal and twog"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
+        profile_data = setup_params_general_two_nat["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -275,12 +282,14 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa3_personal 5 GHZ Band')
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
-    def test_nat_wpa3_personal_5g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_wpa3_personal_5g_client_connectivity(self, get_test_library, execution_number, num_stations,
+                                                      get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal and fiveg"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
+        profile_data = setup_params_general_two_nat["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -302,12 +311,14 @@ class TestNatModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal 6 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
-    def test_nat_wpa3_personal_6g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_wpa3_personal_6g_client_connectivity(self, get_test_library, execution_number, num_stations,
+                                                      get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal and sixg"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][2]
+        profile_data = setup_params_general_two_nat["ssid_modes"]["wpa3_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -330,12 +341,13 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band")
     def test_nat_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library, execution_number,
-                                                            num_stations, setup_configuration):
+                                                            num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal_mixed and twog"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
+        profile_data = setup_params_general_two_nat["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -358,12 +370,13 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_nat_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library, execution_number,
-                                                            num_stations, setup_configuration):
+                                                            num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal_mixed and fiveg"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
+        profile_data = setup_params_general_two_nat["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -386,12 +399,13 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_nat_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library, execution_number,
-                                                                num_stations, setup_configuration):
+                                                                num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa_wpa2_personal_mixed and twog"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
+        profile_data = setup_params_general_two_nat["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -416,12 +430,13 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_nat_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library, execution_number,
-                                                                num_stations, setup_configuration):
+                                                                num_stations, get_dut_logs_per_test_case, get_test_device_logs,
+                                                                   setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa_wpa2_personal_mixed and fiveg"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
+        profile_data = setup_params_general_two_nat["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"

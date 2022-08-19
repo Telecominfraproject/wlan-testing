@@ -1,7 +1,7 @@
 """
 
     Client Connectivity and tcp-udp Traffic Test: BRIDGE Mode
-    pytest -m "client_connectivity_testsand nat and general"
+    pytest -m "client_connectivity_tests and nat and general"
 
 """
 
@@ -80,7 +80,7 @@ class TestBridgeModeConnectivitySuiteA(object):
         security_key = "[BLANK]"
         security = "open"
         mode = "BRIDGE"
-        band = "twog"
+        band = "fiveg"
 
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
@@ -191,7 +191,7 @@ class TestBridgeModeConnectivitySuiteA(object):
         assert passes == "PASS", result
 
 
-setup_params_general_two = {
+setup_params_general_two_br = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa3_personal": [
@@ -216,7 +216,7 @@ setup_params_general_two = {
 @allure.sub_suite(sub_suite_name="General security mode Client Connectivity")
 @pytest.mark.parametrize(
     'setup_configuration',
-    [setup_params_general_two],
+    [setup_params_general_two_br],
     indirect=True,
     scope="class"
 )
@@ -236,7 +236,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal and twog"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -260,7 +260,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal and fiveg"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -277,14 +277,15 @@ class TestBridgeModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.sixg
     @allure.story('wpa3_personal 6 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
+    @allure.title("BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band")
     def test_bridge_wpa3_personal_6g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration):
         """
             BRIDGE Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal and sixg"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][2]
+        print("shivam", setup_params_general_two_br)
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -309,7 +310,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal_mixed and twog"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -334,7 +335,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             BRIDGE Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa3_personal_mixed and fiveg"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -359,7 +360,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             BRIDGE Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa_wpa2_personal_mixed and twog"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -386,7 +387,7 @@ class TestBridgeModeConnectivitySuiteTwo(object):
             BRIDGE Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa_wpa2_personal_mixed and fiveg"
         """
-        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
