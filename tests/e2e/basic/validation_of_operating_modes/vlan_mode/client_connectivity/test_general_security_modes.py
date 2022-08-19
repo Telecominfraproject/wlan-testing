@@ -47,7 +47,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.title("VLAN Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
     def test_vlan_open_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with open encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and open and twog"
@@ -71,7 +71,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.title("VLAN Mode Client Connectivity Test with open encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_vlan_open_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with open encryption 5 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and open and fiveg"
@@ -98,7 +98,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.title("VLAN Mode Client Connectivity Test with wpa encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_vlan_wpa_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa and twog"
@@ -122,7 +122,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.story('wpa 5 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa encryption 5 GHz Band")
     def test_vlan_wpa_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa encryption 5 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa and fiveg"
@@ -146,7 +146,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band")
     def test_vlan_wpa2_personal_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa2_personal and twog"
@@ -172,7 +172,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band")
     def test_vlan_wpa2_personal_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa2_personal and fiveg"
@@ -236,7 +236,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band")
     def test_vlan_wpa3_personal_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and twog"
@@ -260,7 +260,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal 5 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
     def test_vlan_wpa3_personal_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and fiveg"
@@ -284,7 +284,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.story('wpa3_personal 6 GHZ Band')
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band")
     def test_vlan_wpa3_personal_6g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and sixg"
@@ -309,7 +309,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band")
     def test_vlan_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library,
                                                              num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa3_personal_mixed and twog"
@@ -334,7 +334,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_vlan_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library,
                                                              num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa3_personal_mixed and fiveg"
@@ -359,7 +359,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_vlan_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library,
                                                                  num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa_wpa2_personal_mixed and twog"
@@ -386,7 +386,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
     def test_vlan_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library,
                                                                  num_stations, get_dut_logs_per_test_case, get_test_device_logs,
-                                                                   num_stations, setup_configuration):
+                                                                   setup_configuration):
         """
             VLAN Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa_wpa2_personal_mixed and fiveg"
