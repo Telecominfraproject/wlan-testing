@@ -1310,4 +1310,3 @@ if [ "$lab" = "advance-03" ]; then
 else
     echo "Testbed is Not Available"
 fi
-
