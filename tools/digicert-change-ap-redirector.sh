@@ -4,6 +4,7 @@ function normalize_mac() {
   echo "$mac" | tr -d ":" | tr -d "-" |  tr "[:lower:]" "[:upper:]"
 }
 
+DIGICERT_BASE_URL="https://one.digicert.com/iot/api/"
 
 set -e
 
