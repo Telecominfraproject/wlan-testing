@@ -85,6 +85,7 @@
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "wan_port": "1.1.eth2",
+            "lan_port": null,
             "ssid": {
                 "2g-ssid": "OpenWifi",
                 "5g-ssid": "OpenWifi",

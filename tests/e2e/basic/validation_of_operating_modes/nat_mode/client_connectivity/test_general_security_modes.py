@@ -1,7 +1,7 @@
 """
 
     Client Connectivity and tcp-udp Traffic Test: NAT Mode
-    pytest -m "client_connectivity and nat and general"
+    pytest -m "client_connectivity_tests and nat and general"
 
 """
 
@@ -28,17 +28,17 @@ setup_params_general = {
 @allure.parent_suite("Client Connectivity Tests")
 @allure.suite(suite_name="NAT Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connectivity")
-@pytest.mark.parametrize(
-    'setup_configuration',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
-@pytest.mark.usefixtures("setup_configuration")
+# @pytest.mark.parametrize(
+#     'setup_configuration',
+#     [setup_params_general],
+#     indirect=True,
+#     scope="class"
+# )
+# @pytest.mark.usefixtures("setup_configuration")
 class TestNatModeConnectivitySuiteA(object):
     """
         NAT Client Connectivity (open. wpa. wpa2_personal) (twog, fiveg)
-        pytest -m "client_connectivity and nat and general"
+        pytest -m "client_connectivity_tests and nat and general"
     """
 
     @pytest.mark.open
@@ -46,10 +46,10 @@ class TestNatModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
+    def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number, num_stations):
         """
             NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band
-            pytest -m "client_connectivity and nat and general and open and twog"
+            pytest -m "client_connectivity_tests and nat and general and open and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
@@ -60,8 +60,10 @@ class TestNatModeConnectivitySuiteA(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
+        dut = {'0000c1018812': [['ssid_open_2g_nat', 'open', 'something', '2G', '6A:21:5F:DA:45:6F'],
+                                {'2G': [6, 40, 2437], '5G': None, '6G': None}]}
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                   dut_data=setup_configuration,
+                                                                   dut_data=dut,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=num_stations)
 
@@ -75,7 +77,7 @@ class TestNatModeConnectivitySuiteA(object):
     def test_nat_open_5g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with open encryption 5 GHz Band
-            pytest -m "client_connectivity and nat and general and open and fiveg"
+            pytest -m "client_connectivity_tests and nat and general and open and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
@@ -105,7 +107,7 @@ class TestNatModeConnectivitySuiteA(object):
     def test_nat_wpa_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa encryption 2.4 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa and twog"
+            pytest -m "client_connectivity_tests and nat and general and wpa and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
@@ -132,7 +134,7 @@ class TestNatModeConnectivitySuiteA(object):
     def test_nat_wpa_5g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa encryption 5 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa and fiveg"
+            pytest -m "client_connectivity_tests and nat and general and wpa and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
@@ -159,7 +161,7 @@ class TestNatModeConnectivitySuiteA(object):
     def test_nat_wpa2_personal_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa2_personal and twog"
+            pytest -m "client_connectivity_tests and nat and general and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -188,7 +190,7 @@ class TestNatModeConnectivitySuiteA(object):
     def test_nat_wpa2_personal_5g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa2_personal and fiveg"
+            pytest -m "client_connectivity_tests and nat and general and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -240,7 +242,7 @@ setup_params_general_two = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestNatModeConnectivitySuiteTwo(object):
     """ Client Connectivity SuiteA
-        pytest -m "client_connectivity and nat and suiteB"
+        pytest -m "client_connectivity_tests and nat and suiteB"
     """
 
     @pytest.mark.wpa3_personal
@@ -251,7 +253,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     def test_nat_wpa3_personal_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa3_personal and twog"
+            pytest -m "client_connectivity_tests and nat and general and wpa3_personal and twog"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -278,7 +280,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     def test_nat_wpa3_personal_5g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa3_personal and fiveg"
+            pytest -m "client_connectivity_tests and nat and general and wpa3_personal and fiveg"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -305,7 +307,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     def test_nat_wpa3_personal_6g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa3_personal and sixg"
+            pytest -m "client_connectivity_tests and nat and general and wpa3_personal and sixg"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][2]
         ssid_name = profile_data["ssid_name"]
@@ -333,7 +335,7 @@ class TestNatModeConnectivitySuiteTwo(object):
                                                             num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa3_personal_mixed and twog"
+            pytest -m "client_connectivity_tests and nat and general and wpa3_personal_mixed and twog"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
@@ -361,7 +363,7 @@ class TestNatModeConnectivitySuiteTwo(object):
                                                             num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa3_personal_mixed and fiveg"
+            pytest -m "client_connectivity_tests and nat and general and wpa3_personal_mixed and fiveg"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
@@ -389,7 +391,7 @@ class TestNatModeConnectivitySuiteTwo(object):
                                                                 num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa_wpa2_personal_mixed and twog"
+            pytest -m "client_connectivity_tests and nat and general and wpa_wpa2_personal_mixed and twog"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
@@ -419,7 +421,7 @@ class TestNatModeConnectivitySuiteTwo(object):
                                                                 num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
-            pytest -m "client_connectivity and nat and general and wpa_wpa2_personal_mixed and fiveg"
+            pytest -m "client_connectivity_tests and nat and general and wpa_wpa2_personal_mixed and fiveg"
         """
         profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]

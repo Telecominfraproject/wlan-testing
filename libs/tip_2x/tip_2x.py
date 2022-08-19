@@ -253,11 +253,11 @@ class tip_2x:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
                              resp.status_code +
                              "Retrying in 5 Seconds... ")
-            time.sleep(5)
-            resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
-            if resp.status_code != 200:
-                logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
-                pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
+                time.sleep(5)
+                resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
+                if resp.status_code != 200:
+                    logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
+                    pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
 
             r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
             uuid_after_apply = r_data["latest"]
@@ -271,6 +271,9 @@ class tip_2x:
                 uuid_after_apply = r_data["latest"]
                 if x == 5:
                     break
+            time.sleep(5)
+            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+            uuid_after_apply = r_data["latest"]
             if uuid_after_apply == uuid_before_apply:
                 logging.error("Config is not received by AP")
                 logging.info("uuid_before_apply: " + str(uuid_before_apply))

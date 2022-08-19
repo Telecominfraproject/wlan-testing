@@ -1,7 +1,7 @@
 """
 
     Client Connectivity and tcp-udp Traffic Test: BRIDGE Mode
-    pytest -m "client_connectivity and nat and general"
+    pytest -m "client_connectivity_testsand nat and general"
 
 """
 
