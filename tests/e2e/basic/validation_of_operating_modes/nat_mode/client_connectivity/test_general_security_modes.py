@@ -28,13 +28,13 @@ setup_params_general = {
 @allure.parent_suite("Client Connectivity Tests")
 @allure.suite(suite_name="NAT Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connectivity")
-# @pytest.mark.parametrize(
-#     'setup_configuration',
-#     [setup_params_general],
-#     indirect=True,
-#     scope="class"
-# )
-# @pytest.mark.usefixtures("setup_configuration")
+@pytest.mark.parametrize(
+    'setup_configuration',
+    [setup_params_general],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
 class TestNatModeConnectivitySuiteA(object):
     """
         NAT Client Connectivity (open. wpa. wpa2_personal) (twog, fiveg)
@@ -46,7 +46,7 @@ class TestNatModeConnectivitySuiteA(object):
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number, num_stations):
+    def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number, num_stations, setup_configuration):
         """
             NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and open and twog"
@@ -60,10 +60,8 @@ class TestNatModeConnectivitySuiteA(object):
         if execution_number == 1:
             mode = "NAT-LAN"
         band = "twog"
-        dut = {'0000c1018812': [['ssid_open_2g_nat', 'open', 'something', '2G', '6A:21:5F:DA:45:6F'],
-                                {'2G': [6, 40, 2437], '5G': None, '6G': None}]}
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                   dut_data=dut,
+                                                                   dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=num_stations)
 

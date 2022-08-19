@@ -87,6 +87,7 @@ Create_lab_info_json()
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "wan_port": "1.1.eth2",
+            "lan_port": "1.1.eth1",
             "ssid": {
                 "2g-ssid": "OpenWifi",
                 "5g-ssid": "OpenWifi",
@@ -157,6 +158,7 @@ Create_lab_info_json()
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "wan_port": "1.1.eth2",
+            "lan_port": null,
             "ssid": {
                 "2g-ssid": "OpenWifi",
                 "5g-ssid": "OpenWifi",
@@ -225,6 +227,7 @@ Create_lab_info_json()
             "supported_bands": ["2G", "5G", "6G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "wan_port": "1.3.eth2",
+            "lan_port": null,
             "ssid": {
                 "2g-ssid": "OpenWifi",
                 "5g-ssid": "OpenWifi",
