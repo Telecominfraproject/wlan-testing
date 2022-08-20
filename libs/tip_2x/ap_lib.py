@@ -1,6 +1,9 @@
 import importlib
 import json
 import logging
+import random
+import string
+import time
 
 import allure
 import paramiko
@@ -359,6 +362,7 @@ class APLIBS:
         ap_logs = "\n".join(log_data)
         return ap_logs
 
+
 if __name__ == '__main__':
     basic_05 = {
         "target": "tip_2x",
@@ -372,8 +376,8 @@ if __name__ == '__main__':
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "wan_port": "1.1.eth2",
+            "lan_port": None,
             "ssid": {
-                "mode": "BRIDGE",
                 "2g-ssid": "OpenWifi",
                 "5g-ssid": "OpenWifi",
                 "6g-ssid": "OpenWifi",
@@ -390,10 +394,10 @@ if __name__ == '__main__':
             "mode": "wifi6",
             "identifier": "0000c1018812",
             "method": "serial",
-            "host_ip": "10.28.3.103",
+            "host_ip": "localhost",
             "host_username": "lanforge",
             "host_password": "pumpkin77",
-            "host_ssh_port": 22,
+            "host_ssh_port": 8842,
             "serial_tty": "/dev/ttyAP1",
             "firmware_version": "next-latest"
         }],
@@ -402,9 +406,9 @@ if __name__ == '__main__':
             "testbed": "basic",
             "scenario": "dhcp-bridge",
             "details": {
-                "manager_ip": "10.28.3.28",
-                "http_port": 8080,
-                "ssh_port": 22,
+                "manager_ip": "localhost",
+                "http_port": 8840,
+                "ssh_port": 8841,
                 "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
                 "wan_ports": {
                     "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
@@ -415,14 +419,16 @@ if __name__ == '__main__':
                                  }
                 },
                 "lan_ports": {
-                    "1.1.eth1": {"addressing": "dynamic"}
+
                 },
                 "uplink_nat_ports": {
-                    "1.1.eth1": {"addressing": "static",
-                                 "subnet": "10.28.2.16/24",
-                                 "gateway_ip": "10.28.2.1",
-                                 "ip_mask": "255.255.255.0"
-                                 }
+                    "1.1.eth1": {
+                        "addressing": "static",
+                        "ip": "10.28.2.16",
+                        "gateway_ip": "10.28.2.1/24",
+                        "ip_mask": "255.255.255.0",
+                        "dns_servers": "BLANK"
+                    }
                 }
             }
         }
@@ -431,26 +437,7 @@ if __name__ == '__main__':
     obj = APLIBS(dut_data=basic_05["device_under_tests"])
     # obj.exit_from_uboot()
     # obj.setup_serial_environment()
-    d = obj.run_generic_command("iw dev | grep channel")
-    d = d.replace("\n", "").replace("\t", "").replace(" ", "").split("channel")
-    d.pop(0)
-    data = dict.fromkeys(["2G", "5G", "6G"])
-    for i in d:
-        channel = int(i.split("(")[0])
-        bandwidth = int(i.split(":")[1].split("MHz")[0])
-        center_freq = int(i.split(":")[-1].replace("MHz", ""))
-        if 2401 < center_freq < 2495:
-            data["2G"] = [channel, bandwidth, center_freq]
-        elif center_freq in [5955, 5975, 5995] and channel <= 9:
-            data["6G"] = [channel, bandwidth, center_freq]
-        elif 5030 < center_freq < 5990:
-            data["5G"] = [channel, bandwidth, center_freq]
-        elif 5995 < center_freq < 7125:
-            data["6G"] = [channel, bandwidth, center_freq]
-        else:
-            pass
 
-    print(data)
     # obj.verify_certificates()
     # obj.get_dut_logs()
     # l = obj.get_latest_config_recieved()

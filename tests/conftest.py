@@ -128,14 +128,22 @@ def get_markers(request, get_security_flags):
 @pytest.fixture(scope="session")
 def get_target_object(request, get_testbed_details):
     """yields the testbed option selection"""
+    t_object = None
     try:
-        tb_details = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"],
-                            device_under_tests_info=get_testbed_details["device_under_tests"])
+        t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"],
+                          device_under_tests_info=get_testbed_details["device_under_tests"])
     except Exception as e:
+        t_object = None
         logging.error(
             "Exception is setting up Target Library Object: " + e + " Check the lab_info.json for the Data and ")
         pytest.exit("Exception is setting up Target Library Object: " + e)
-    yield tb_details
+
+    def teardown_target():
+        if t_object is not None:
+            t_object.teardown_objects()
+
+    request.addfinalizer(teardown_target)
+    yield t_object
 
 
 @pytest.fixture(scope="session")
@@ -237,8 +245,8 @@ def get_dut_logs_per_test_case(request, get_testbed_details, get_target_object):
                 cmd="logger stop testcase: " + instance_name,
                 idx=i)
             ap_logs = get_target_object.get_dut_library_object().get_logread(
-                start_ref="logger start testcase: " + instance_name,
-                stop_ref="logger stop testcase: " + instance_name)
+                start_ref="start testcase: " + instance_name,
+                stop_ref="stop testcase: " + instance_name)
             allure.attach(name='Logs - ' + get_testbed_details["device_under_tests"][i]["identifier"],
                           body=str(ap_logs))
 
