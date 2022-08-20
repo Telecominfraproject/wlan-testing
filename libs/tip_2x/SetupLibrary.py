@@ -32,7 +32,7 @@ class SetupLibrary:
         stdin, stdout, stderr = client.exec_command(cmd)
         output = str(stdout.read())
         if output.__contains__("False"):
-            print("Copying openwrt_ctl serial control Script...")
+            logging.info("Copying openwrt_ctl serial control Script...")
             with SCPClient(client.get_transport()) as scp:
                 scp.put(self.pwd + 'openwrt_ctl.py', '~/cicd-git/openwrt_ctl.py')  # Copy my_file.txt to the server
         cmd = '[ -f ~/cicd-git/openwrt_ctl.py ] && echo "True" || echo "False"'

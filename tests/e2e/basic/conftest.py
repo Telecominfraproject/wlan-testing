@@ -9,7 +9,6 @@ def setup_configuration(request, get_markers, get_target_object):
     for key in get_markers:
         if get_markers[key]:
             requested_combination.append(get_markers[key])
-    print(requested_combination)
 
     # Method to setup the basic configuration
     data = get_target_object.setup_basic_configuration(configuration=configuration,

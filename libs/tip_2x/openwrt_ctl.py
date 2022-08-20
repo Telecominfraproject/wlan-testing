@@ -36,7 +36,7 @@ try:
     telnetlib = importlib.import_module("telnetlib")
     argparse = importlib.import_module("argparse")
 except ImportError as e:
-    print(e)
+    logging.error(e)
     sys.exit("Python Import Error: " + str(e))
 
 default_host = "localhost"

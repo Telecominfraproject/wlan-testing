@@ -1569,7 +1569,7 @@ class UProfileUtility:
 
                 vsection = 0
         else:
-            print("invalid mode")
+            logging.error("invalid Operating Mode")
             pytest.exit("invalid Operating Mode")
 
     def push_config(self, serial_number):
