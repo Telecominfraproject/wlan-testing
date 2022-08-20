@@ -44,6 +44,7 @@ class TestNatModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.twog
+    @allure.story('OPEN 2.4 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
@@ -72,6 +73,7 @@ class TestNatModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
+    @allure.story('OPEN 5 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with open encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
@@ -103,8 +105,8 @@ class TestNatModeConnectivitySuiteA(object):
 
     @pytest.mark.wpa
     @pytest.mark.twog
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.story('wpa 2.4 GHZ Band')
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("NAT Mode Client Connectivity Test with wpa encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_nat_wpa_2g_client_connectivity(self, get_test_library, execution_number, num_stations,

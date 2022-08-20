@@ -194,9 +194,7 @@ class tip_2x:
                 pytest.skip(configuration["mode"] + " is not Supported by DUT")
             for enc in configuration["ssid_modes"]:
                 for idx in configuration["ssid_modes"][enc]:
-                    print(idx)
                     check = all(item in self.device_under_tests_info[i]["supported_bands"] for item in idx["appliedRadios"])
-                    print(check)
                     if not check:
                         temp_conf["ssid_modes"][enc].remove(idx)
         for key in configuration["rf"]:

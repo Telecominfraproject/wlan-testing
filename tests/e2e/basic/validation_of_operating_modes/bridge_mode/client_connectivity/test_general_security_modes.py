@@ -44,6 +44,7 @@ class TestBridgeModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.twog
+    @allure.story('OPEN 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
     def test_bridge_open_2g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case,
@@ -68,6 +69,7 @@ class TestBridgeModeConnectivitySuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
+    @allure.story('OPEN 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with open encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_bridge_open_5g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case,
