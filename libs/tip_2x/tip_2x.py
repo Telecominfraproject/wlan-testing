@@ -251,7 +251,7 @@ class tip_2x:
             logging.info("Response for Config apply: " + str(resp.status_code))
             if resp.status_code != 200:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
-                             resp.status_code +
+                             str(resp.status_code) +
                              "Retrying in 5 Seconds... ")
                 time.sleep(5)
                 resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
