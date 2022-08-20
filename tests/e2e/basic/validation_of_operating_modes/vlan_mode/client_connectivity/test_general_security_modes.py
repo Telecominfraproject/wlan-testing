@@ -4,6 +4,7 @@
     pytest -m "client_connectivity_tests and vlan and general"
 
 """
+import logging
 
 import allure
 import pytest
@@ -248,6 +249,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
             VLAN Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and twog"
         """
+        logging.critical("shivam_debug" + str(setup_params_general_two_vlan))
         profile_data = setup_params_general_two_vlan["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -273,6 +275,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
             VLAN Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and fiveg"
         """
+        logging.critical("shivam_debug" + str(setup_params_general_two_vlan))
         profile_data = setup_params_general_two_vlan["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -298,6 +301,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
             VLAN Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
             pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and sixg"
         """
+        logging.critical("shivam_debug" + str(setup_params_general_two_vlan))
         profile_data = setup_params_general_two_vlan["ssid_modes"]["wpa3_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
