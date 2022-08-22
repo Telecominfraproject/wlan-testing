@@ -348,6 +348,24 @@ class AndroidTests(android_libs):
             self.teardown()
             return "Fail", "Failed due to exception or Unable to find the API path"
 
+    def captive_portal(self, ssid, passkey):
+        global ip_address
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
+                                                    setup_perfecto_mobile, connData=self.connData)
+        try:
+            if ssid_with_internet is True:
+                ip_address = self.connect_captive_portal(ssid, setup, self.connData)
+                self.closeApp(self.connData["appPackage-android"], setup)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                return ip_address, ssid_with_internet
+            else:
+                self.teardown()
+        except Exception as e:
+            print(e)
+            self.teardown()
+
 
 if __name__ == '__main__':
     perfecto_data = {
