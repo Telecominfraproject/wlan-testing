@@ -5,6 +5,8 @@
 """
 import importlib
 import json
+import random
+import string
 import time
 
 import allure
@@ -240,6 +242,13 @@ class tip_2x:
         for i in range(0, len(self.device_under_tests_info)):
             self.pre_apply_check(idx=i)  # Do check AP before pushing the configuration
 
+            S = 9
+            instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
+            for i in range(len(self.device_under_tests_info)):
+                self.get_dut_library_object().run_generic_command(
+                    cmd="logger start testcase: " + instance_name,
+                    idx=i)
+
             # Check the latest uuid
             r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
             uuid_before_apply = r_data["latest"]
@@ -309,6 +318,17 @@ class tip_2x:
             time.sleep(30)
 
             self.post_apply_check(idx=i)  # Do check AP after pushing the configuration
+
+            for i in range(len(self.device_under_tests_info)):
+                self.get_dut_library_object().run_generic_command(
+                    cmd="logger stop testcase: " + instance_name,
+                    idx=i)
+                ap_logs = self.get_dut_library_object().get_logread(
+                    start_ref="start testcase: " + instance_name,
+                    stop_ref="stop testcase: " + instance_name)
+                allure.attach(name='Logs - ' + self.device_under_tests_info[i]["identifier"],
+                              body=str(ap_logs))
+
             ret_val[self.device_under_tests_info[i]["identifier"]] = self.get_applied_ssid_info(idx=i,
                                                                                                 profile_object=profile_object)
         return ret_val
