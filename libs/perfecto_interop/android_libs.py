@@ -1112,28 +1112,6 @@ class android_libs(perfecto_interop):
                     print("Device IP address is :", ip_address_element_text)
                 except:
                     print("IP address element not found")
-                # ------------------------------- Forget SSID ----------------
-                # try:
-                #     self.check_if_no_internet_popup(driver)
-                #     forget_ssid = driver.find_element_by_xpath(
-                #         "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
-                #     forget_ssid.click()
-                #     print("Forgetting ssid")
-                #
-                #     # ------------------------------- Wifi Switch ----------------
-                #     try:
-                #         print("clicking on wifi switch")
-                #         get_switch_element = driver.find_element_by_xpath(
-                #             "//*[@resource-id='com.android.settings:id/switch_widget']")
-                #         driver.implicitly_wait(2)
-                #         get_switch_element.click()
-                #     except:
-                #         print("couldn't click on wifi switch")
-                #     # allure.attach(name= body=str("couldn't click on wifi switch"))
-                # except:
-                #     print("Couldn't forget ssid")
-                #     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                #     return ssid_with_internet
             except:
                 print("Couldn't get into Additional settings")
         return ip_address_element_text
@@ -1474,6 +1452,198 @@ class android_libs(perfecto_interop):
             # allure.attach(name="Speed Test logs: ", body=str("Launching Safari Failed"))
             # allure.attach(name="Speed Test logs: ", body=str("Error log: " + e))
         return currentResult
+
+    def connect_captive_portal(self, ssid, setup_perfectoMobile, connData):
+        report = setup_perfectoMobile[1]
+        driver = setup_perfectoMobile[0]
+        device_model_name = self.getDeviceModelName(setup_perfectoMobile)
+        print("Selected Device Model: " + device_model_name)
+        wifi_name = ssid
+        ssid_with_internet = False
+        if device_model_name != "Pixel 4":
+            # ---------------------Clicking on ssid for captive portal login--------
+            try:
+                time.sleep(2)
+                report.step_start("Selecting Wifi: " + wifi_name)
+                wifi_selection_element = WebDriverWait(driver, 35).until(
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + wifi_name + "']")))
+                wifi_selection_element.click()
+            except NoSuchElementException:
+                print("Not connected to Captive portal Ssid.. ")
+            try:
+                time.sleep(2)
+                report.step_start("Click Accept Terms Button")
+                print("Click Accept Terms Button")
+                join_btn_element = driver.find_element_by_xpath("//*[@text='Accept Terms of Service']")
+                join_btn_element.click()
+            except NoSuchElementException:
+                print(" Couldn't press Accept terms button")
+            try:
+                time.sleep(2)
+                report.step_start("Click Continue Button")
+                print("Click Continue Button")
+                join_btn_element = driver.find_element_by_xpath("//*[@text='Continue']")
+                join_btn_element.click()
+            except NoSuchElementException:
+                print(" Couldn't press Continue button")
+            try:
+                time.sleep(2)
+                report.step_start("Click Last Terms if needed")
+                print("Click Last Terms if needed")
+                join_btn_element = driver.find_element_by_xpath("//*[@text='Done']")
+                join_btn_element.click()
+            except NoSuchElementException:
+                print(" Couldn't find the last terms page")
+
+            # Verify if WiFi is connected
+            # -------------------------------------------------------
+            if self.get_phone_information(setup_perfectoMobile=setup_perfectoMobile,
+                                     search_this="osVersion") != "12":
+                try:
+                    report.step_start("Verify if Wifi is Connected")
+                    wifi_internet_err_msg = WebDriverWait(driver, 35).until(
+                        EC.presence_of_element_located((MobileBy.XPATH,
+                                                        "//*[@resource-id='android:id/summary' and @text='Connected']/"
+                                                        "parent::*/android.widget.TextView[@text='" + wifi_name + "']")))
+                    ssid_with_internet = True
+                    print("Wifi Successfully Connected")
+                    # time.sleep(5)
+                    self.check_if_no_internet_popup(driver)
+                except:
+                    try:
+                        self.check_if_no_internet_popup(driver)
+                        wifi_internet_err_msg = WebDriverWait(driver, 35).until(
+                            EC.presence_of_element_located((MobileBy.XPATH,
+                                                            "//*[@resource-id='com.android.settings:id/summary' and "
+                                                            "@text='Connected without internet']/parent::*/android."
+                                                            "widget.TextView[@text='"
+                                                            + wifi_name + "']")))
+                        print("Wifi Successfully Connected without internet")
+                        self.check_if_no_internet_popup(driver)
+                    except:
+                        try:
+                            report.step_start("Verify if Wifi is Connected - 2")
+                            wifi_internet_err_msg = WebDriverWait(driver, 60).until(
+                                EC.presence_of_element_located((
+                                    MobileBy.XPATH,
+                                    "//*[@resource-id='com.android.settings:id/summary' and @text='Connected']/"
+                                    "parent::*/android.widget.TextView[@text='" + wifi_name + "']")))
+                            ssid_with_internet = True
+                            print("Wifi Successfully Connected")
+                        except NoSuchElementException:
+                            print("Wifi Connection Error: " + wifi_name)
+                            self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                            return ssid_with_internet
+            else:
+                try:
+                    report.step_start(
+                        "Verifying wifi connection status connected/connected without internet")
+                    self.check_if_no_internet_popup(driver)
+                    self.check_if_no_internet_popup(driver)
+
+                    wifi_connection_name = WebDriverWait(driver, 50).until(
+                        EC.presence_of_element_located((MobileBy.XPATH,
+                                                        "//*[@resource-id='com.android.settings:id/connected_list']/"
+                                                        "android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/"
+                                                        "android.widget.LinearLayout[1]/android.widget.RelativeLayout[2]"
+                                                        "/android.widget.TextView[1]")))
+                    if wifi_connection_name.text == wifi_name:
+                        wifi_connection_status = WebDriverWait(driver, 50).until(
+                            EC.presence_of_element_located((MobileBy.XPATH,
+                                                            "//*[@resource-id='com.android.settings:id/summary']"
+                                                            )))
+                        if wifi_connection_status.text == "Connected":
+                            ssid_with_internet = True
+                            print("Connected with internet")
+
+                        else:
+                            ssid_with_internet = False
+                            print("Wifi Successfully Connected without internet")
+                            self.check_if_no_internet_popup(driver)
+                        # Go into additional details here
+                    else:
+                        # Connected to some other wifi, makes sense to close app and fail this testcase
+                        self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                        return ssid_with_internet
+                except:
+                    self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                    return ssid_with_internet
+        else:
+            try:
+                report.step_start("Selecting Wifi: " + wifi_name)
+                wifiSelectionElement = WebDriverWait(driver, 35).until(
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='" + wifi_name + "']")))
+                wifiSelectionElement.click()
+                self.check_if_no_internet_popup(driver)
+            except Exception as e:
+                print("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
+            try:
+                time.sleep(20)
+                report.step_start("Click Accept Terms Button")
+                print("Click Accept Terms Button")
+                join_btn_element = driver.find_element_by_xpath("//*[@text='Accept Terms of Service']")
+                join_btn_element.click()
+            except NoSuchElementException:
+                print(" Couldn't press Accept terms button")
+            try:
+                time.sleep(2)
+                report.step_start("Click Continue Button")
+                print("Click Continue Button")
+                join_btn_element = driver.find_element_by_xpath("//*[@text='Continue']")
+                join_btn_element.click()
+            except NoSuchElementException:
+                print(" Couldn't press Continue button")
+            try:
+                time.sleep(2)
+                report.step_start("Click Last Terms if needed")
+                print("Click Last Terms if needed")
+                join_btn_element = driver.find_element_by_xpath("//*[@text='Done']")
+                join_btn_element.click()
+            except NoSuchElementException:
+                print(" Couldn't find the last terms page")
+
+            # Verify if WiFi is connected
+            # -------------------------------------------------------
+            try:
+                report.step_start("Verify if Wifi is Connected")
+                wifi_internet_err_msg = WebDriverWait(driver, 35).until(
+                    EC.presence_of_element_located((MobileBy.XPATH,
+                                                    "//*[@resource-id='android:id/summary' and @text='Connected']/"
+                                                    "parent::*/android.widget.TextView[@text='" + wifi_name + "']")))
+                ssid_with_internet = True
+                print("Wifi Successfully Connected")
+                # time.sleep(5)
+                self.check_if_no_internet_popup(driver)
+            except:
+                try:
+                    print("Not able to verify the connected WiFi. Scrolling up.")
+                    self.scroll_up(setup_perfectoMobile)
+                    self.scroll_up(setup_perfectoMobile)
+                    # self.check_if_no_internet_popup(driver)
+                    wifi_internet_err_msg = WebDriverWait(driver, 35).until(
+                        EC.presence_of_element_located((MobileBy.XPATH,
+                                                        "//*[@resource-id='com.android.settings:id/summary' and "
+                                                        "@text='Connected without internet']/parent::*/android.widget."
+                                                        "TextView[@text='" + wifi_name + "']")))
+                    print("Wifi Successfully Connected without internet")
+                    self.check_if_no_internet_popup(driver)
+                except:
+                    try:
+                        report.step_start("Verify if Wifi is Connected")
+                        print("Verifying after scrolling")
+                        self.scroll_up(setup_perfectoMobile)
+                        wifi_internet_err_msg = WebDriverWait(driver, 60).until(
+                            EC.presence_of_element_located((
+                                MobileBy.XPATH,
+                                "//*[@resource-id='android:id/summary' and @text='Connected']/parent::*/"
+                                "android.widget.TextView[@text='" + wifi_name + "']")))
+                        ssid_with_internet = True
+                        print("Wifi Successfully Connected")
+                    except NoSuchElementException:
+                        print("Wifi Connection Error: " + wifi_name)
+                        self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                        return ssid_with_internet
+
 if __name__ == '__main__':
     perfecto_data = {
         "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks",
