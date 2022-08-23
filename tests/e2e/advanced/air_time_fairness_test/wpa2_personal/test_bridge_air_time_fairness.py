@@ -89,7 +89,7 @@ class TestAtfBridge(object):
                 if wifi_cap:
                     wct_obj = lf_test.wifi_capacity(instance_name="atf_sta1_greenfieldmode_sta2_atten30dB_2g", mode=mode,
                                       vlan_id=vlan, download_rate=down, batch_size="1", stations=f"{sta}", create_stations=False,
-                                      upload_rate=up, protocol=proto, duration="6000", sort="linear")
+                                      upload_rate=up, protocol=proto, duration="60000", sort="linear")
                     report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
                     lf_tools.attach_report_graphs(report_name=report_name)
                     entries = os.listdir("../reports/" + report_name + '/')
@@ -100,7 +100,7 @@ class TestAtfBridge(object):
                     lf_test.layer3_traffic(station_name=sta[0:1], tcp_traff=False, udp_traff=True, start_both_traffic=False,
                                            side_a_min_bps=0, side_b_min_bps=int(down[0]), udp_clean=False)
                     thrpt[thrpt_key] = lf_test.layer3_traffic(station_name=sta[1:2], tcp_traff=False, udp_traff=True,
-                                                              start_both_traffic=False, start_traffic_time=10, side_a_min_bps=0,
+                                                              start_both_traffic=False, start_traffic_time=60, side_a_min_bps=0,
                                                               side_b_min_bps=int(down[1]), udp_clean=False)[0]
 
             #station_0 TCP down throughtput
@@ -189,7 +189,7 @@ class TestAtfBridge(object):
                 if wifi_cap:
                     wct_obj = lf_test.wifi_capacity(instance_name="atf_5g", mode=mode, vlan_id=vlan, download_rate=down,
                                                     batch_size="1", stations=f"{sta}", create_stations=False,
-                                                    upload_rate=up, protocol=proto, duration="6000", sort="linear")
+                                                    upload_rate=up, protocol=proto, duration="60000", sort="linear")
                     report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
                     lf_tools.attach_report_graphs(report_name=report_name)
                     entries = os.listdir("../reports/" + report_name + '/')
@@ -202,7 +202,7 @@ class TestAtfBridge(object):
                                            start_both_traffic=False,
                                            side_a_min_bps=0, side_b_min_bps=int(down[0]), udp_clean=False)
                     thrpt[thrpt_key] = lf_test.layer3_traffic(station_name=sta[1:2], tcp_traff=False, udp_traff=True,
-                                                              start_both_traffic=False, start_traffic_time=10,
+                                                              start_both_traffic=False, start_traffic_time=60,
                                                               side_a_min_bps=0,
                                                               side_b_min_bps=int(down[1]), udp_clean=False)[0]
 
