@@ -431,8 +431,7 @@ class tip_2x:
                     a["bandwidth"] = temp[j][1]
                     a["frequency"] = temp[j][2]
                 ret_val[dut]["radio_data"][j] = a
-        return "ret_val"
-
+        return ret_val
     """
         setup_special_configuration - Method to configure APs in mesh operating modes with multiple SSID's and multiple AP's
                                     This covers, mesh and other roaming scenarios which includes any special type of modes
