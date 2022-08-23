@@ -90,6 +90,7 @@ class tip_2x:
         self.device_under_tests_info = device_under_tests_info
         self.setup_metadata()
         self.setup_objects()
+        self.setup_environment_properties()
 
     """
         Controller and Access Point specific metadata that is related to OpenWifi 2.x
@@ -150,13 +151,14 @@ class tip_2x:
 
     def setup_configuration_data(self, configuration=None,
                                  requested_combination=None):
-        if configuration is None:
+        c_data = configuration.copy()
+        if c_data is None:
             pytest.exit("No Configuration Received")
         if requested_combination is None:
             pytest.exit("No requested_combination Received")
         rf_data = None
-        if configuration.keys().__contains__("rf"):
-            rf_data = configuration["rf"]
+        if c_data.keys().__contains__("rf"):
+            rf_data = c_data["rf"]
         # base_band_keys = ["2G", "5G", "6G", "5G-lower", "5G-upper"]
         base_dict = dict.fromkeys(self.supported_bands)
         for i in base_dict:
@@ -170,39 +172,38 @@ class tip_2x:
         for i in list(base_dict.values()):
             for j in i:
                 temp.append(j)
-        temp_conf = configuration["ssid_modes"].copy()
+        temp_conf = c_data["ssid_modes"].copy()
         for i in temp_conf:
             if self.tip_2x_specific_encryption_translation[i] not in temp:
-                configuration["ssid_modes"].pop(i)
+                c_data["ssid_modes"].pop(i)
 
-        temp_conf = configuration["ssid_modes"].copy()
-        print(configuration)
+        temp_conf = c_data["ssid_modes"].copy()
         print(self.tip_2x_specific_encryption_translation)
         for i in temp_conf:
             for j in range(len(temp_conf[i])):
                 for k in temp_conf[i][j]["appliedRadios"]:
                     if self.tip_2x_specific_encryption_translation[i] not in base_dict[k]:
-                        configuration["ssid_modes"][i][j]["appliedRadios"].remove(k)
-                        if configuration["ssid_modes"][i][j]["appliedRadios"] == []:
-                            configuration["ssid_modes"][i][j] = {}  # .popi.popitem())  # .popitem()
+                        c_data["ssid_modes"][i][j]["appliedRadios"].remove(k)
+                        if c_data["ssid_modes"][i][j]["appliedRadios"] == []:
+                            c_data["ssid_modes"][i][j] = {}  # .popi.popitem())  # .popitem()
 
-        for i in configuration["ssid_modes"]:
-            configuration["ssid_modes"][i] = [x for x in configuration["ssid_modes"][i] if x != {}]
-        for ssids in configuration["ssid_modes"]:
-            for i in configuration["ssid_modes"][ssids]:
+        for i in c_data["ssid_modes"]:
+            c_data["ssid_modes"][i] = [x for x in c_data["ssid_modes"][i] if x != {}]
+        for ssids in c_data["ssid_modes"]:
+            for i in c_data["ssid_modes"][ssids]:
                 if i is not {}:
                     i["security"] = self.tip_2x_specific_encryption_translation[ssids]
-        temp_conf = configuration.copy()
+        temp_conf = c_data.copy()
         for i in range(0, len(self.device_under_tests_info)):
-            if configuration["mode"] not in self.device_under_tests_info[i]["supported_modes"]:
-                pytest.skip(configuration["mode"] + " is not Supported by DUT")
-            for enc in configuration["ssid_modes"]:
-                for idx in configuration["ssid_modes"][enc]:
+            if c_data["mode"] not in self.device_under_tests_info[i]["supported_modes"]:
+                pytest.skip(c_data["mode"] + " is not Supported by DUT")
+            for enc in c_data["ssid_modes"]:
+                for idx in c_data["ssid_modes"][enc]:
                     check = all(
                         item in self.device_under_tests_info[i]["supported_bands"] for item in idx["appliedRadios"])
                     if not check:
                         temp_conf["ssid_modes"][enc].remove(idx)
-        for key in configuration["rf"]:
+        for key in c_data["rf"]:
             if key not in self.device_under_tests_info[i]["supported_bands"]:
                 print(key)
                 temp_conf["rf"][key] = None
@@ -216,11 +217,11 @@ class tip_2x:
 
     def setup_basic_configuration(self, configuration=None,
                                   requested_combination=None):
-        final_configuration = self.setup_configuration_data(configuration=configuration,
-                                                            requested_combination=requested_combination)
+        f_conf = self.setup_configuration_data(configuration=configuration,
+                                               requested_combination=requested_combination)
 
-        logging.info("Selected Configuration: " + str(json.dumps(final_configuration, indent=2)))
-
+        logging.info("Selected Configuration: " + str(json.dumps(f_conf, indent=2)))
+        final_configuration = f_conf.copy()
         # Setup Mode
         profile_object = UProfileUtility(sdk_client=self.controller_library_object)
         if final_configuration["mode"] in self.supported_modes:
@@ -336,9 +337,6 @@ class tip_2x:
 
         temp_data = ret_val.copy()
         for dut in temp_data:
-            ret_val[dut] = dict.fromkeys()
-        temp_data = ret_val.copy()
-        for dut in temp_data:
             ret_val[dut] = dict.fromkeys(["ssid_data", "radio_data"])
             ret_val[dut]["radio_data"] = temp_data[dut][-1]
             temp_data[dut].pop(-1)
@@ -362,7 +360,7 @@ class tip_2x:
                     a["bandwidth"] = temp[j][1]
                     a["frequency"] = temp[j][2]
                 ret_val[dut]["radio_data"][j] = a
-        return ret_val
+        return "ret_val"
 
     """
         setup_special_configuration - Method to configure APs in mesh operating modes with multiple SSID's and multiple AP's
@@ -519,9 +517,9 @@ class tip_2x:
         version_info["ow_gw"] = self.controller_library_object.get_sdk_version_gw()
         version_info["ow_sec"] = self.controller_library_object.get_sdk_version_sec()
         version_info["ow_prov"] = self.controller_library_object.get_sdk_version_prov()
-        version_info["ow_rrm"] = self.controller_library_object.get_sdk_version_owrrm()
-        version_info["ow_analytics"] = self.controller_library_object.get_sdk_version_ow_analytics()
-        version_info["ow_sub"] = self.controller_library_object.get_sdk_version_owsub()
+        # version_info["ow_rrm"] = self.controller_library_object.get_sdk_version_owrrm()
+        # version_info["ow_analytics"] = self.controller_library_object.get_sdk_version_ow_analytics()
+        # version_info["ow_sub"] = self.controller_library_object.get_sdk_version_owsub()
         return version_info
 
     # TODO: Get the vlans info such as vlan-ids
@@ -548,7 +546,7 @@ class tip_2x:
         self.dut_library_object.check_serial_connection(idx=idx)
         self.dut_library_object.setup_serial_environment(idx=idx)
         self.dut_library_object.verify_certificates(idx=idx)
-        ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx)
+        ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False)
         if not ret_val["connected"] or ret_val["connected"] is None:
             # TODO: check the connectivity (if it is not connected, then check the lanforge wan port and bring it
             #  up if lanforge eth is in down state. Also check the link state of eth port with ip address
@@ -572,9 +570,9 @@ class tip_2x:
             if not ret_val["connected"] or ret_val["connected"] is None:
                 logging.error("Dang !!!, AP is still in Disconnected State. Your Config Messed up.")
                 logging.error("Failed the post apply check on: " + self.device_under_tests_info[idx]["identifier"])
-                self.dut_library_object.check_connectivity(idx=idx)
+                self.dut_library_object.check_connectivity(idx=idx, attach_allure=False)
         self.dut_library_object.check_connectivity(idx=idx)
-        r_data = self.dut_library_object.get_wifi_status(idx=idx)
+        r_data = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
         logging.info("Checking Wifi Status after Config Apply...")
         for radio in r_data:
             if not r_data[radio]["up"]:

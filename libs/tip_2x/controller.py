@@ -37,7 +37,9 @@ class ConfigureController:
         self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
         if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
             time.sleep(60)
-            self.gw_host, self.fms_host, self.prov_host = self.get_gw_endpoint()
+            self.gw_host, self.fms_host, \
+            self.prov_host, self.owrrm_host, \
+            self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
             if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
                 self.logout()
                 logging.info(self.gw_host, self.fms_host + self.prov_host)

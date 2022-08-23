@@ -13,6 +13,11 @@ from typing import Any, Callable, Optional
 ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
 ALLUREDIR_OPTION = '--alluredir'
 
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+log_filename = "logs/pytest_logs.log"
+os.makedirs(os.path.dirname(log_filename), exist_ok=True)
+file_handler = logging.FileHandler(log_filename, mode="w", encoding=None, delay=False)
+
 try:
     import importlib
 
@@ -126,17 +131,22 @@ def get_markers(request, get_security_flags):
 
 
 @pytest.fixture(scope="session")
-def get_target_object(request, get_testbed_details):
+def get_target_object(request, get_testbed_details, add_allure_environment_property: Callable) -> None:
     """yields the testbed option selection"""
     t_object = None
     try:
         t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"],
                           device_under_tests_info=get_testbed_details["device_under_tests"])
+        if not request.config.getoption("--skip-env"):
+            if get_testbed_details["target"] == "tip_2x":
+                t_object.setup_environment_properties(add_allure_environment_property=
+                                                               add_allure_environment_property)
+
     except Exception as e:
         t_object = None
         logging.error(
-            "Exception is setting up Target Library Object: " + e + " Check the lab_info.json for the Data and ")
-        pytest.exit("Exception is setting up Target Library Object: " + e)
+            "Exception is setting up Target Library Object: " + str(e) + " Check the lab_info.json for the Data and ")
+        pytest.exit("Exception is setting up Target Library Object: " + str(e))
 
     def teardown_target():
         if t_object is not None:
@@ -199,15 +209,6 @@ def execution_number(request):
     if number == 1:
         mode = "NAT-LAN"
     yield mode
-
-
-@pytest.fixture(scope="session")
-def add_env_properties(request, get_testbed_details, get_target_object,
-                       add_allure_environment_property: Callable) -> None:
-    if not request.config.getoption("--skip-env"):
-        if get_testbed_details["target"] == "tip_2x":
-            get_target_object.setup_environment_properties(add_allure_environment_property=
-                                                           add_allure_environment_property)
 
 
 @pytest.fixture(scope='session', autouse=True)
