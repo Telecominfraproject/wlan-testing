@@ -986,7 +986,7 @@ class RunTest:
                                   ssid=ssid,
                                   input=input_data,
                                   security=security,
-                                  upstream_resource=self.upstream_resource)
+                                  resource=int(self.upstream_resource))
         self.sta_url_map = None
         self.multi_obj.build()
         self.multi_obj.start()
