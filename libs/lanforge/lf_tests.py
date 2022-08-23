@@ -36,7 +36,7 @@ import time
 import string
 import random
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 from pull_report import Report
 from scp_util import SCP_File
 import pyshark as ps
@@ -1193,9 +1193,9 @@ class RunTest:
         self.mesh_obj.run()
         return self.mesh_obj
 
-    def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
-                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
-        radio = self.twog_radios[0]
+    def attenuator_serial_2g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", atn_val=400,
+                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None, radio='1.1.wiphy0'):
+        radio = radio
         # index 0 of atten_serial_radio will ser no of 1st 2g radio and index 1 will ser no of 2nd and 3rd 2g radio
         atten_serial_radio = []
         atten_serial = self.attenuator_serial()
@@ -1205,7 +1205,7 @@ class RunTest:
         signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
         atten_sr = atten_serial[0].split(".")
         for i in range(4):
-            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            self.attenuator_modify(int(atten_sr[2]), i, atn_val)
             time.sleep(0.5)
         signal2 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
         if abs(int(signal2.split(" ")[0])) - abs(int(signal1.split(" ")[0])) >= 5:
@@ -1215,9 +1215,9 @@ class RunTest:
         self.Client_disconnect(station_name=station_name)
         return atten_serial_radio
 
-    def attenuator_serial_5g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE",
-                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None):
-        radio = self.fiveg_radios[0]
+    def attenuator_serial_5g_radio(self, ssid="[BLANK]", passkey="[BLANK]", security="wpa2", mode="BRIDGE", atn_val=400,
+                                   vlan_id=100, sta_mode=0, station_name=[], lf_tools_obj=None, radio='1.1.wiphy1'):
+        radio = radio
         # index 0 of atten_serial_radio will ser no of 1st 5g radio and index 1 will ser no of 2nd and 3rd 5g radio
         atten_serial_radio = []
         atten_serial = self.attenuator_serial()
@@ -1227,7 +1227,7 @@ class RunTest:
         signal1 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
         atten_sr = atten_serial[0].split(".")
         for i in range(4):
-            self.attenuator_modify(int(atten_sr[2]), i, 400)
+            self.attenuator_modify(int(atten_sr[2]), i, atn_val)
             time.sleep(0.5)
         signal2 = lf_tools_obj.station_data_query(station_name=station_name[0], query="signal")
         if abs(int(signal2.split(" ")[0])) - abs(int(signal1.split(" ")[0])) >= 5:
@@ -2024,89 +2024,151 @@ class RunTest:
         except Exception as e:
             print(e)
 
-    def layer3_traffic(self, ssid_num=8, band="2.4 Ghz", station_name=[]):
+    def monitor(self, duration_sec, monitor_interval, created_cx, col_names, iterations):
+        try:
+            duration_sec = Realm.parse_time(duration_sec).seconds
+        except:
+            if (duration_sec is None) or (duration_sec <= 1):
+                raise ValueError("L3CXProfile::monitor wants duration_sec > 1 second")
+            if (duration_sec <= monitor_interval):
+                raise ValueError("L3CXProfile::monitor wants duration_sec > monitor_interval")
+        if created_cx == None:
+            raise ValueError("Monitor needs a list of Layer 3 connections")
+        if (monitor_interval is None):
+            raise ValueError("L3CXProfile::monitor wants monitor_interval ")
+
+        # monitor columns
+        start_time = datetime.now()
+        end_time = start_time + timedelta(seconds=duration_sec)
+        # bps-rx-a (download) and bps-rx-b(upload) values are taken
+        self.bps_rx_a, self.bps_rx_b, self.bps_rx, index = [], [], {}, -1
+        bps_rx_a_avg, bps_rx_b_avg = [], []
+        [(self.bps_rx_a.append([]), self.bps_rx_b.append([])) for i in range(len(created_cx))]
+        for test in range(1 + iterations):
+            while datetime.now() < end_time:
+                index += 1
+                response = list(self.json_get('/cx/%s?fields=%s' % (','.join(created_cx), ",".join(col_names))).values())[2:]
+                self.bps_rx[index] = list(map(lambda i: [float(f"{x / (1E6):.2f}") for x in i.values()], response))
+                time.sleep(monitor_interval)
+        # bps_rx list is calculated
+        print("rx rate values are with [bps-rx-a, bps-rx-b] :-\n", self.bps_rx, "\n\n")
+        for index, key in enumerate(self.bps_rx):
+            for i in range(len(self.bps_rx[key])):
+                if self.staConnect.l3_udp_profile.side_b_min_bps != '0' and self.staConnect.l3_udp_profile.side_b_min_bps != 0:
+                    self.bps_rx_a[i].append(self.bps_rx[key][i][0])
+                if self.staConnect.l3_udp_profile.side_a_min_bps != '0' and self.staConnect.l3_udp_profile.side_a_min_bps != 0:
+                    self.bps_rx_b[i].append(self.bps_rx[key][i][1])
+        print(f"bps-rx-a values-: \n{self.bps_rx_a}\nbps-rx-b values-: \n{self.bps_rx_b}")
+        if self.staConnect.l3_udp_profile.side_a_min_bps != '0' and self.staConnect.l3_udp_profile.side_a_min_bps != 0:
+            bps_rx_b_avg = [float(f"{sum(i) / len(i): .2f}") for i in self.bps_rx_b]
+        if self.staConnect.l3_udp_profile.side_b_min_bps != '0' and self.staConnect.l3_udp_profile.side_b_min_bps != 0:
+            bps_rx_a_avg = [float(f"{sum(i) / len(i): .2f}") for i in self.bps_rx_a]
+        return bps_rx_a_avg, bps_rx_b_avg
+
+    def layer3_traffic(self, station_name=[], tcp_traff=True, udp_traff=True, start_both_traffic=True, side_a_min_bps=256000,
+                       side_b_min_bps=256000,cleanup_on_exit=True, udp_clean=True,tcp_clecn=True, start_traffic_time=None):
         self.staConnect = StaConnect2(self.lanforge_ip, self.lanforge_port, debug_=self.debug)
         self.staConnect.station_profile = self.staConnect.new_station_profile()
         self.staConnect.resource = 1
         self.staConnect.station_names = station_name
         self.staConnect.runtime_secs = 40
         self.staConnect.bringup_time_sec = 80
-        self.staConnect.cleanup_on_exit = True
+        self.staConnect.cleanup_on_exit = cleanup_on_exit
         self.staConnect.station_profile.up = True
         self.staConnect.use_existing_sta = True
-        allure.attach(name="Definition",
-                      body="Max-SSID test intends to verify stability of Wi-Fi device " \
-                         "where the AP is configured with max no.of SSIDs with different security modes.")
-        allure.attach(name="Procedure",
-                      body=f"This test case definition states that we need to push the basic bridge mode config on the "
-                           f"AP to be tested by configuring it with maximum {ssid_num} SSIDs in {band} radio. "
-                           f"Create client on each SSIDs and run Layer-3 traffic. Pass/ fail criteria: "
-                           f"The client created should get associated to the AP")
-        # Create UDP endpoints
-        self.staConnect.l3_udp_profile = self.staConnect.new_l3_cx_profile()
-        self.staConnect.l3_udp_profile.report_timer = 1000
-        self.staConnect.l3_udp_profile.name_prefix = "udp"
-        self.staConnect.cx_profile.name_prefix = "udp"
-        self.staConnect.pre_cleanup()
-        self.staConnect.l3_udp_profile.create(endp_type="lf_udp",
-                                   side_a=station_name,
-                                   side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
-                                   suppress_related_commands=True)
-
-        # Create TCP endpoints
-        self.staConnect.l3_tcp_profile = self.staConnect.new_l3_cx_profile()
-        self.staConnect.l3_tcp_profile.report_timer = 1000
-        self.staConnect.l3_tcp_profile.name_prefix = "tcp"
-        self.staConnect.cx_profile.name_prefix = "tcp"
-        self.staConnect.pre_cleanup()
-        self.staConnect.l3_tcp_profile.create(endp_type="lf_tcp",
-                                   side_a=station_name,
-                                   side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
-                                   suppress_related_commands=True)
-        self.staConnect.start()
-        print("napping %f sec" % self.staConnect.runtime_secs)
-        time.sleep(self.staConnect.runtime_secs)
-        count = 0
-        report_obj = Report()
-        for station_info in self.staConnect.resulting_stations:
-            self.allure_report_table_format(dict_data=[self.staConnect.resulting_stations[station_info]["interface"]],
-                                            key="Interface", value=["Value"],
-                                            name=str(
-                                                self.staConnect.resulting_stations[station_info]["interface"]['alias']))
-            data_table, dict_table = "", {}
-            # dict_data = self.staConnect.resulting_stations[station_info]["interface"]
-            # dict_table["Interface"] = list(dict_data.keys())
-            # dict_table["Value"] = list(dict_data.values())
-            # try:
-            #     data_table = report_obj.table2(table=dict_table, headers='keys')
-            # except Exception as e:
-            #     print(e)
-            # allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=data_table)
-            data_table = ""
-            dict_table.clear()
-            cx = list(self.staConnect.l3_tcp_profile.created_cx.keys())[count]
-            dict_data = self.staConnect.json_get(f"/cx/{cx}")
-            dict_table["Cross-connect"] = list(dict_data[cx].keys())
-            dict_table["tcp-Value"] = list(dict_data[cx].values())
-            try:
-                data_table = report_obj.table2(table=dict_table, headers='keys')
-            except Exception as e:
-                print(e)
-            cx = list(self.staConnect.l3_udp_profile.created_cx.keys())[count]
-            dict_data = self.staConnect.json_get(f"/cx/{cx}")
-            dict_table["udp-Value"] = list(dict_data[cx].values())
-            try:
-                data_table = report_obj.table2(table=dict_table, headers='keys')
-            except Exception as e:
-                print(e)
-            allure.attach(name="cx-" + str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=str(data_table))
-            # self.allure_report_table_format(dict_data=[self.staConnect.resulting_stations[station_info]["interface"]],
-            #                                 key="Interface", value=["Value"],
-            #                                 name=str(
-            #                                     self.staConnect.resulting_stations[station_info]["interface"]['alias']))
-            count += 1
-        self.staConnect.stop()
-        self.staConnect.cleanup()
+        if udp_traff:
+            # Create UDP endpoints
+            self.staConnect.l3_udp_profile = self.staConnect.new_l3_cx_profile()
+            self.staConnect.l3_udp_profile.report_timer = 1000
+            self.staConnect.l3_udp_profile.side_a_min_bps = side_a_min_bps
+            self.staConnect.l3_udp_profile.side_b_min_bps = side_b_min_bps
+            self.staConnect.l3_udp_profile.name_prefix = "udp"
+            self.staConnect.cx_profile.name_prefix = "udp"
+            if udp_clean:
+                self.staConnect.pre_cleanup()
+            self.staConnect.l3_udp_profile.create(endp_type="lf_udp", side_a=station_name,
+                                       side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
+                                       suppress_related_commands=True)
+        if tcp_traff:
+            # Create TCP endpoints
+            self.staConnect.l3_tcp_profile = self.staConnect.new_l3_cx_profile()
+            self.staConnect.l3_tcp_profile.report_timer = 1000
+            self.staConnect.l3_tcp_profile.side_a_min_bps = side_a_min_bps
+            self.staConnect.l3_tcp_profile.side_b_min_bps = side_b_min_bps
+            self.staConnect.l3_tcp_profile.name_prefix = "tcp"
+            self.staConnect.cx_profile.name_prefix = "tcp"
+            if tcp_clecn:
+                self.staConnect.pre_cleanup()
+            self.staConnect.l3_tcp_profile.create(endp_type="lf_tcp", side_a=station_name,
+                                       side_b="%d.%s" % (self.staConnect.resource, self.upstream_port),
+                                       suppress_related_commands=True)
+        if start_both_traffic:
+            self.staConnect.start()
+            print("napping %f sec" % self.staConnect.runtime_secs)
+            time.sleep(self.staConnect.runtime_secs)
+            count = 0
+            report_obj = Report()
+            for station_info in self.staConnect.resulting_stations:
+                self.allure_report_table_format(dict_data=[self.staConnect.resulting_stations[station_info]["interface"]],
+                                                key="Interface", value=["Value"],
+                                                name=str(
+                                                    self.staConnect.resulting_stations[station_info]["interface"]['alias']))
+                data_table, dict_table = "", {}
+                # dict_data = self.staConnect.resulting_stations[station_info]["interface"]
+                # dict_table["Interface"] = list(dict_data.keys())
+                # dict_table["Value"] = list(dict_data.values())
+                # try:
+                #     data_table = report_obj.table2(table=dict_table, headers='keys')
+                # except Exception as e:
+                #     print(e)
+                # allure.attach(name=str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=data_table)
+                data_table = ""
+                dict_table.clear()
+                cx = list(self.staConnect.l3_tcp_profile.created_cx.keys())[count]
+                dict_data = self.staConnect.json_get(f"/cx/{cx}")
+                dict_table["Cross-connect"] = list(dict_data[cx].keys())
+                dict_table["tcp-Value"] = list(dict_data[cx].values())
+                try:
+                    data_table = report_obj.table2(table=dict_table, headers='keys')
+                except Exception as e:
+                    print(e)
+                cx = list(self.staConnect.l3_udp_profile.created_cx.keys())[count]
+                dict_data = self.staConnect.json_get(f"/cx/{cx}")
+                dict_table["udp-Value"] = list(dict_data[cx].values())
+                try:
+                    data_table = report_obj.table2(table=dict_table, headers='keys')
+                except Exception as e:
+                    print(e)
+                allure.attach(name="cx-" + str(self.staConnect.resulting_stations[station_info]["interface"]['alias']), body=str(data_table))
+                # self.allure_report_table_format(dict_data=[self.staConnect.resulting_stations[station_info]["interface"]],
+                #                                 key="Interface", value=["Value"],
+                #                                 name=str(
+                #                                     self.staConnect.resulting_stations[station_info]["interface"]['alias']))
+                count += 1
+            self.staConnect.stop()
+            self.staConnect.cleanup()
+        elif start_traffic_time:
+            # cx = list(self.staConnect.l3_udp_profile.created_cx.keys())
+            cx_prof = list(self.staConnect.json_get(f"/cx").keys())[2:]
+            [self.staConnect.l3_udp_profile.created_cx.setdefault(i,"Endpoints")
+                   for i in cx_prof if i not in self.staConnect.l3_udp_profile.created_cx.keys()]
+            # self.staConnect.json_post("/cli-json/clear_cx_counters", {"cx_name": 'all'})
+            self.staConnect.l3_udp_profile.start_cx()
+            time.sleep(20)
+            timeout = 50
+            while timeout:
+                timeout -= 1
+                check_run_state = list(self.staConnect.json_get('/cx/%s?fields=%s' % (','.join(
+                    self.staConnect.l3_udp_profile.created_cx.keys()), ",".join(['bps rx a', 'bps rx b']))).values())[2:]
+                for i in check_run_state:
+                    if list(i.values()).count(0) != len(i):
+                        timeout = 0
+                        break
+                time.sleep(5)
+            monitor_values = self.monitor(duration_sec=int(start_traffic_time)+10, monitor_interval=1,
+                                 created_cx=self.staConnect.l3_udp_profile.created_cx.keys(),
+                                 col_names=['bps rx a', 'bps rx b'], iterations=0)
+            return monitor_values
 
 
 
