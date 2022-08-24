@@ -75,284 +75,635 @@ Create_lab_info_json()
   {
 
 "CONFIGURATION" : {
+        "basic-01" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
+            },
+            "device_under_tests": [{
+                "model": "wallys_dr40x9",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": null,
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi5",
+                "identifier": "c44bd1005b30",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port": ' $basic1_lab_ctlr ',
+                "serial_tty": "/dev/ttyAP8",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port": ' $basic1_8080 ',
+                    "ssh_port": ' $basic1_22 ',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
+                        }
+                    },
+                    "lan_ports": {
+
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.6",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
+                }
+            }
+        },
+        "basic-02" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
+            },
+            "device_under_tests": [{
+                "model": "hfcl_ion4",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": null,
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi5",
+                "identifier": "0006aee53b84",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port":  ' $basic2_lab_ctlr ' ,
+                "serial_tty": "/dev/ttyAP5",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port": ' $basic2_8080 ',
+                    "ssh_port": ' $basic2_22 ',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
+                        }
+                    },
+                    "lan_ports": {
+
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.7",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
+                }
+            }
+        },
+        "basic-03" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
+            },
+            "device_under_tests": [{
+                "model": "tp-link_ec420-g1",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": "1.1.eth1",
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi5",
+                "identifier": "001122090801",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port":  ' $basic3_lab_ctlr ' ,
+                "serial_tty": "/dev/ttyAP5",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port": ' $basic3_8080 ',
+                    "ssh_port": ' $basic3_22 ',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
+                        }
+                    },
+                    "lan_ports": {
+                        "1.1.eth1" : {
+                            "addressing": "dynamic"
+                        }
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.8",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
+                }
+            }
+        },
+        "basic-03a" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
+            },
+            "device_under_tests": [{
+                "model": "indio_um-305ac",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": "1.1.eth1",
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi5",
+                "identifier": "706dec0a8a79",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port":  ' $basic3_lab_ctlr ' ,
+                "serial_tty": "/dev/ttyAP6",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port": ' $basic3_8080 ',
+                    "ssh_port": ' $basic3_22 ',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
+                        }
+                    },
+                    "lan_ports": {
+                        "1.1.eth1" : {
+                            "addressing": "dynamic"
+                        }
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.8",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
+                }
+            }
+        },
         "basic-04" : {
-        "target": "tip_2x",
-        "controller" : {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
-            "username": "tip@ucentral.com",
-            "password": "OpenWifi%123"
-        },
-        "device_under_tests": [{
-            "model": "edgecore_ecw5211",
-            "supported_bands": ["2G", "5G"],
-            "supported_modes": ["BRIDGE", "NAT", "VLAN"],
-            "wan_port": "1.1.eth2",
-            "lan_port": "1.1.eth1",
-            "ssid": {
-                "2g-ssid": "OpenWifi",
-                "5g-ssid": "OpenWifi",
-                "6g-ssid": "OpenWifi",
-                "2g-password": "OpenWifi",
-                "5g-password": "OpenWifi",
-                "6g-password": "OpenWifi",
-                "2g-encryption": "WPA2",
-                "5g-encryption": "WPA2",
-                "6g-encryption": "WPA3",
-                "2g-bssid": "68:7d:b4:5f:5c:31",
-                "5g-bssid": "68:7d:b4:5f:5c:3c",
-                "6g-bssid": "68:7d:b4:5f:5c:38"
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
             },
-            "mode": "wifi5",
-            "identifier": "68215fda456d",
-            "method": "serial",
-            "host_ip": "localhost",
-            "host_username": "lanforge",
-            "host_password": "pumpkin77",
-            "host_ssh_port": ' $basic4_lab_ctlr ',
-            "serial_tty": "/dev/ttyAP5",
-            "firmware_version": "next-latest"
-        }],
-        "traffic_generator": {
-            "name": "lanforge",
-            "testbed": "basic",
-            "scenario": "dhcp-bridge",
-            "details": {
-                "manager_ip": "localhost",
-                "http_port":' $basic4_8080',
-                "ssh_port":' $basic4_22',
-                "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
-                "wan_ports": {
-                    "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
-                        "lease-first": 10,
-                        "lease-count": 10000,
-                        "lease-time": "6h"
+            "device_under_tests": [{
+                "model": "edgecore_ecw5211",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": "1.1.eth1",
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi5",
+                "identifier": "68215fda456d",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port": ' $basic4_lab_ctlr ',
+                "serial_tty": "/dev/ttyAP5",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port":' $basic4_8080',
+                    "ssh_port":' $basic4_22',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
                         }
-                    }
-                },
-                "lan_ports": {
-                    "1.1.eth1" : {
-                        "addressing": "dynamic"
-                    }
-                },
-                "uplink_nat_ports": {
-                    "1.1.eth3": {
-                        "addressing": "static",
-                        "ip": "10.28.2.9",
-                        "gateway_ip": "10.28.2.1/24",
-                        "ip_mask": "255.255.255.0",
-                        "dns_servers": "BLANK"
+                    },
+                    "lan_ports": {
+                        "1.1.eth1" : {
+                            "addressing": "dynamic"
+                        }
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.9",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
                     }
                 }
             }
-        }
-    },
+        },
+        "basic-04a" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
+            },
+            "device_under_tests": [{
+                "model": "hfcl_ion4xi",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": "1.1.eth1",
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi5",
+                "identifier": "0006ae6df11f",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port": ' $basic4_lab_ctlr ',
+                "serial_tty": "/dev/ttyAP5",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port":' $basic4_8080',
+                    "ssh_port":' $basic4_22',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
+                        }
+                    },
+                    "lan_ports": {
+                        "1.1.eth1" : {
+                            "addressing": "dynamic"
+                        }
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.9",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
+                }
+            }
+        },
         "basic-05" : {
-        "target": "tip_2x",
-        "controller" : {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
-            "username": "tip@ucentral.com",
-            "password": "OpenWifi%123"
-        },
-        "device_under_tests": [{
-            "model": "cig_wf188n",
-            "supported_bands": ["2G", "5G"],
-            "supported_modes": ["BRIDGE", "NAT", "VLAN"],
-            "wan_port": "1.1.eth2",
-            "lan_port": null,
-            "ssid": {
-                "2g-ssid": "OpenWifi",
-                "5g-ssid": "OpenWifi",
-                "6g-ssid": "OpenWifi",
-                "2g-password": "OpenWifi",
-                "5g-password": "OpenWifi",
-                "6g-password": "OpenWifi",
-                "2g-encryption": "WPA2",
-                "5g-encryption": "WPA2",
-                "6g-encryption": "WPA3",
-                "2g-bssid": "68:7d:b4:5f:5c:31",
-                "5g-bssid": "68:7d:b4:5f:5c:3c",
-                "6g-bssid": "68:7d:b4:5f:5c:38"
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
             },
-            "mode": "wifi6",
-            "identifier": "0000c1018812",
-            "method": "serial",
-            "host_ip": "localhost",
-            "host_username": "lanforge",
-            "host_password": "pumpkin77",
-            "host_ssh_port":' $basic5_lab_ctlr',
-            "serial_tty": "/dev/ttyAP1",
-            "firmware_version": "next-latest"
-        }],
-        "traffic_generator": {
-            "name": "lanforge",
-            "testbed": "basic",
-            "scenario": "dhcp-bridge",
-            "details": {
-                "manager_ip": "localhost",
-                "http_port":' $basic5_8080',
-                "ssh_port":' $basic5_22',
-                "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
-                "wan_ports": {
-                    "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
-                        "lease-first": 10,
-                        "lease-count": 10000,
-                        "lease-time": "6h"
+            "device_under_tests": [{
+                "model": "cig_wf188n",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": null,
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi6",
+                "identifier": "0000c1018812",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port":' $basic5_lab_ctlr',
+                "serial_tty": "/dev/ttyAP1",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port":' $basic5_8080',
+                    "ssh_port":' $basic5_22',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
                         }
-                    }
-                },
-                "lan_ports": {
+                    },
+                    "lan_ports": {
 
-                },
-                "uplink_nat_ports": {
-                    "1.1.eth1": {
-                        "addressing": "static",
-                        "ip": "10.28.2.16",
-                        "gateway_ip": "10.28.2.1/24",
-                        "ip_mask": "255.255.255.0",
-                        "dns_servers": "BLANK"
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth1": {
+                            "addressing": "static",
+                            "ip": "10.28.2.16",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
                     }
                 }
             }
-        }
-    },
-    "basic-06" : {
-        "target": "tip_2x",
-        "controller" : {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
-            "username": "tip@ucentral.com",
-            "password": "OpenWifi%123"
         },
-        "device_under_tests": [{
-            "model": "edgecore_eap102",
-            "supported_bands": ["2G", "5G"],
-            "supported_modes": ["BRIDGE", "NAT", "VLAN"],
-            "wan_port": "1.1.eth2",
-            "lan_port": null,
-            "ssid": {
-                "2g-ssid": "OpenWifi",
-                "5g-ssid": "OpenWifi",
-                "6g-ssid": "OpenWifi",
-                "2g-password": "OpenWifi",
-                "5g-password": "OpenWifi",
-                "6g-password": "OpenWifi",
-                "2g-encryption": "WPA2",
-                "5g-encryption": "WPA2",
-                "6g-encryption": "WPA3",
-                "2g-bssid": "68:7d:b4:5f:5c:31",
-                "5g-bssid": "68:7d:b4:5f:5c:3c",
-                "6g-bssid": "68:7d:b4:5f:5c:38"
+        "basic-06" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
             },
-            "mode": "wifi6",
-            "identifier": "903cb39d6918",
-            "method": "serial",
-            "host_ip": "localhost",
-            "host_username": "lanforge",
-            "host_password": "pumpkin77",
-            "host_ssh_port":' $basic6_lab_ctlr',
-            "serial_tty": "/dev/ttyAP2",
-            "firmware_version": "next-latest"
-        }],
-        "traffic_generator": {
-            "name": "lanforge",
-            "testbed": "basic",
-            "scenario": "dhcp-bridge",
-            "details": {
-                "manager_ip": "localhost",
-                "http_port":' $basic6_8080',
-                "ssh_port":' $basic6_22',
-                "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
-                "wan_ports": {
-                    "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
-                        "lease-first": 10,
-                        "lease-count": 10000,
-                        "lease-time": "6h"
+            "device_under_tests": [{
+                "model": "edgecore_eap102",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": null,
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi6",
+                "identifier": "903cb39d6918",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port":' $basic6_lab_ctlr',
+                "serial_tty": "/dev/ttyAP2",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port":' $basic6_8080',
+                    "ssh_port":' $basic6_22',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
                         }
-                    }
-                },
-                "lan_ports": {
+                    },
+                    "lan_ports": {
 
-                },
-                "uplink_nat_ports": {
-                    "1.1.eth3": {
-                        "addressing": "static",
-                        "ip": "10.28.2.17",
-                        "gateway_ip": "10.28.2.1/24",
-                        "ip_mask": "255.255.255.0",
-                        "dns_servers": "BLANK"
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.17",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
                     }
                 }
             }
-        }
-    },
+        },
         "advance-03" : {
-        "target": "tip_2x",
-        "controller" : {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
-            "username": "tip@ucentral.com",
-            "password": "OpenWifi%123"
-        },
-        "device_under_tests": [{
-            "model": "cig_wf196",
-            "supported_bands": ["2G", "5G", "6G"],
-            "supported_modes": ["BRIDGE", "NAT", "VLAN"],
-            "wan_port": "1.3.eth2",
-            "lan_port": null,
-            "ssid": {
-                "2g-ssid": "OpenWifi",
-                "5g-ssid": "OpenWifi",
-                "6g-ssid": "OpenWifi",
-                "2g-password": "OpenWifi",
-                "5g-password": "OpenWifi",
-                "6g-password": "OpenWifi",
-                "2g-encryption": "WPA2",
-                "5g-encryption": "WPA2",
-                "6g-encryption": "WPA3",
-                "2g-bssid": "68:7d:b4:5f:5c:31",
-                "5g-bssid": "68:7d:b4:5f:5c:3c",
-                "6g-bssid": "68:7d:b4:5f:5c:38"
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
             },
-            "mode": "wifi6e",
-            "identifier": "824f816011e4",
-            "method": "serial",
-            "host_ip": "localhost",
-            "host_username": "lanforge",
-            "host_password": "pumpkin77",
-            "host_ssh_port":' $advance3_lab_ctlr',
-            "serial_tty": "/dev/ttyAP0",
-            "firmware_version": "next-latest"
-        }],
-        "traffic_generator": {
-            "name": "lanforge",
-            "testbed": "basic",
-            "scenario": "dhcp-bridge",
-            "details": {
-                "manager_ip": "10.28.3.117",
-                "http_port": ' $advance3_8080',
-                "ssh_port": ' $advance3_22',
-                "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
-                "wan_ports": {
-                    "1.3.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
-                        "lease-first": 10,
-                        "lease-count": 10000,
-                        "lease-time": "6h"
+            "device_under_tests": [{
+                "model": "cig_wf196",
+                "supported_bands": ["2G", "5G", "6G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.3.eth2",
+                "lan_port": null,
+                "ssid": {
+                    "2g-ssid": "OpenWifi",
+                    "5g-ssid": "OpenWifi",
+                    "6g-ssid": "OpenWifi",
+                    "2g-password": "OpenWifi",
+                    "5g-password": "OpenWifi",
+                    "6g-password": "OpenWifi",
+                    "2g-encryption": "WPA2",
+                    "5g-encryption": "WPA2",
+                    "6g-encryption": "WPA3",
+                    "2g-bssid": "68:7d:b4:5f:5c:31",
+                    "5g-bssid": "68:7d:b4:5f:5c:3c",
+                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                },
+                "mode": "wifi6e",
+                "identifier": "824f816011e4",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port":' $advance3_lab_ctlr',
+                "serial_tty": "/dev/ttyAP0",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "10.28.3.117",
+                    "http_port": ' $advance3_8080',
+                    "ssh_port": ' $advance3_22',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.3.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
                         }
-                    }
-                },
-                "lan_ports": {
+                    },
+                    "lan_ports": {
 
-                },
-                "uplink_nat_ports": {
-                    "1.3.eth3": {
-                        "addressing": "static",
-                        "ip": "10.28.2.39",
-                        "gateway_ip": "10.28.2.1/24",
-                        "ip_mask": "255.255.255.0",
-                        "dns_servers": "BLANK"
+                    },
+                    "uplink_nat_ports": {
+                        "1.3.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.39",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
                     }
                 }
             }
         }
-    }
 },
 
 "PERFECTO_DETAILS" : {
@@ -612,12 +963,12 @@ if [ "$lab" = "basic-02" ]; then
     Create_lab_info_json
     ssh -C -L 8810:10.28.3.8:8080 -L 8811:10.28.3.8:22 -L 8812:10.28.3.100:22 -L 8813:10.28.3.8:5901 ubuntu@3.130.51.163
 fi
-if [ "$lab" = "basic-03" ]; then
+if [ "$lab" = "basic-03" ] || [ "$lab" = "basic-03a" ]; then
     echo "Initiating LAB Connection in basic-03"
     Create_lab_info_json
     ssh -C -L 8820:10.28.3.10:8080 -L 8821:10.28.3.10:22 -L 8822:10.28.3.100:22 -L 8823:10.28.3.10:5901 ubuntu@3.130.51.163
 fi
-if [ "$lab" = "basic-04" ]; then
+if [ "$lab" = "basic-04" ] || [ "$lab" = "basic-04a" ] ; then
     echo "Initiating LAB Connection in basic-04"
     Create_lab_info_json
     ssh -C -L 8830:10.28.3.12:8080 -L 8831:10.28.3.12:22 -L 8832:10.28.3.100:22 -L 8833:10.28.3.12:5901 ubuntu@3.130.51.163
