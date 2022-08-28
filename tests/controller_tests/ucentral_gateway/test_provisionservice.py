@@ -402,10 +402,23 @@ class TestProvAPIVenue(object):
         """
             Test the create venue in provision Service
         """
-        global venue_id
+        global venue_id, entity_id
+        payload = {"name": "Testing_prov",
+                   "rrm": "inherit",
+                   "description": "For testing Purposes through Automation",
+                   "notes": [{"note": "For testing Purposes through Automation"}],
+                   "parent": "0000-0000-0000"
+                   }
+        resp = setup_prov_controller.add_entity(payload)
+        if resp.status_code != 200:
+            assert False
+        entity = json.loads(resp.text)
+        print(entity)
+        entity_id = entity['id']
+
         payload = {
             "description": "For testing Purposes",
-            "entity": "b3ed4c95-1568-4854-90c0-9d92e7d5004e",
+            "entity": entity_id,
             "location": "",
                       "name": "Testing Prov",
                       "notes": [
@@ -456,8 +469,11 @@ class TestProvAPIVenue(object):
     @pytest.mark.prov_api_venue_test
     @allure.title("Delete Venue")
     def test_prov_service_delete_venue(self, setup_prov_controller, testbed):
-        global venue_id
+        global venue_id, entity_id
         resp = setup_prov_controller.delete_venue(venue_id)
+        if resp.status_code != 200:
+            assert False
+        resp = setup_prov_controller.delete_entity(entity_id)
         if resp.status_code != 200:
             assert False
 
