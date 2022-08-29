@@ -112,14 +112,14 @@ class TestAtfBridge(object):
             # station_2 TCP down throughtput
             wifi_cap(down="1Gbps", sta=f"{lf_sta[2]}", up="0Gbps", proto="TCP-IPv4", thrpt_key=f"{no_of_iter[3]}",wifi_cap=True,atn='170')
             # UDP traffic for station_0 of data-rate 40% of sta0_data_rate and station_1 of data-rate 40% of sta1_data_rate
-            wifi_cap(down=[(thrpt["sta0_tcp_dl"] * 0.01) * 4E7 ,(thrpt["sta1_tcp_dl"] * 0.01) * 4E7], sta=sta[0:2], up=0,
+            wifi_cap(down=[(thrpt["sta0_tcp_dl"] * 0.01) * 4E7 ,(thrpt["sta1_tcp_dl"] * 0.01) * 4E7], sta=sta[0:2], up="0Gbps",
                      thrpt_key=f"{no_of_iter[4]}", l3_trf=True)
             # UDP traffic for station_0 of data-rate 40% of sta0_data_rate and medium distance station_1 of data-rate 40% of sta1_data_rate
-            wifi_cap(down=[(thrpt["sta0_tcp_dl"] * 0.01) * 4E7,(thrpt["sta1_tcp_dl_atn"] * 0.01) * 4E7], sta=sta[0:2], up=0,
+            wifi_cap(down=[(thrpt["sta0_tcp_dl"] * 0.01) * 4E7,(thrpt["sta1_tcp_dl_atn"] * 0.01) * 4E7], sta=sta[0:2], up="0Gbps",
                      thrpt_key=f"{no_of_iter[5]}", l3_trf=True,atn=380)
             # UDP traffic for station_0 of data-rate 40% of sta0_data_rate and station_2 of data-rate 40% of sta2_data_rate
             wifi_cap(down=[(thrpt["sta0_tcp_dl"] * 0.01) * 4E7, (thrpt["sta2_tcp_dl"] * 0.01) * 4E7], sta=sta[0:3:2],
-                     up=0, thrpt_key=f"{no_of_iter[6]}", l3_trf=True)
+                     up="0Gbps", thrpt_key=f"{no_of_iter[6]}", l3_trf=True)
             print("Throughput values: \n",thrpt)
             allure.attach(name="Throughput Data", body="Throughput value : " + str(thrpt))
             lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
