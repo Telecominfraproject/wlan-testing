@@ -142,10 +142,12 @@ class SchemaCheck:
                                           value)
                     elif key == 'wan_port':
                         if type(value) == str:
-                            logging.info("Wan port key->values are present and eligible")
-                        else:
-                            logging.error("Wan port key->values which are present are not eligible", key, '->',
-                                          value)
+                            x = re.search("\d.\d.", value)
+                            if x is not None:
+                                logging.info("Wan port key->values are present and eligible")
+                            else:
+                                logging.error("Wan port key->values which are present are not eligible", key, '->',
+                                              value)
                     elif key == 'lan_port':
                         if value is None or type(value) == str:
                             if type(value) == str:
