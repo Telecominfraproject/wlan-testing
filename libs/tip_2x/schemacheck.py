@@ -148,7 +148,12 @@ class SchemaCheck:
                                           value)
                     elif key == 'lan_port':
                         if value is None or type(value) == str:
-                            logging.info("Lan port key->values are present and eligible")
+                            if type(value) == str:
+                                x = re.search("\d.\d.", value)
+                                if x is not None:
+                                    logging.info("Lan port key->values are present and eligible")
+                                else:
+                                    logging.error("Lan port key->values are present and not eligible")
                         else:
                             logging.error("Lan port key->values which are present are not eligible", key, '->',
                                           value)
@@ -442,7 +447,7 @@ if __name__ == '__main__':
                     'supported_bands': ['2G', '5G'],  # ['2G', '5G', '6G']
                     'supported_modes': ['BRIDGE', 'NAT', 'VLAN'],  # Will remain same
                     'wan_port': '1.1.eth2',  # Has to be
-                    'lan_port': None,  # Has to be null or none
+                    'lan_port': '1.1.eth2',  # Has to be null or none
                     'ssid': {  # Has to be seperate func
                         '2g-ssid': 'OpenWifi',
                         '5g-ssid': 'OpenWifi',
@@ -573,8 +578,8 @@ if __name__ == '__main__':
     }
     obj = SchemaCheck(var["CONFIGURATION"])
     obj.set_data()
-    obj.key_check()
-    obj.target_check()
-    obj.controller_check()
+    # obj.key_check()
+    # obj.target_check()
+    # obj.controller_check()
     obj.dut_keys_check()
-    obj.traffic_generator_keys_check()
+    # obj.traffic_generator_keys_check()
