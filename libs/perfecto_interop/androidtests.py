@@ -1,7 +1,5 @@
 import time
 from telnetlib import EC
-
-import allure
 import pytest
 import logging
 import re
@@ -15,7 +13,7 @@ from appium import webdriver
 from android_libs import android_libs
 
 
-class android_tests(android_libs):
+class AndroidTests(android_libs):
     setup_perfectoMobile = []
     android_devices = {
         "Galaxy S10.*": {
@@ -136,5 +134,5 @@ if __name__ == '__main__':
         "serial_tty": "/dev/ttyAP5",
         "firmware_version": "next-latest"
     }]
-    obj = android_tests(perfecto_data=perfecto_data, dut_data=access_point)
+    obj = AndroidTests(perfecto_data=perfecto_data, dut_data=access_point)
     print(obj.client_connectivity("ssid_wpa2_2g_RL_E1Z7206", "something"))
