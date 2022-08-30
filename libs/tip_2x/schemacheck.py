@@ -585,5 +585,5 @@ if __name__ == '__main__':
     obj.key_check()
     obj.target_check()
     obj.controller_check()
-    obj.dut_keys_check()
+    obj.dut_values_check()
     obj.traffic_generator_keys_check()

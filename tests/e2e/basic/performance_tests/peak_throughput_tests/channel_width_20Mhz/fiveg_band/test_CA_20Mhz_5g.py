@@ -338,7 +338,7 @@ setup_params_general4 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general4],
     indirect=True,
     scope="class"
@@ -441,7 +441,7 @@ setup_params_general5 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general5],
     indirect=True,
     scope="class"
@@ -544,7 +544,7 @@ setup_params_general6 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general6],
     indirect=True,
     scope="class"
@@ -647,7 +647,7 @@ setup_params_general7 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general7],
     indirect=True,
     scope="class"
@@ -751,7 +751,7 @@ setup_params_general8 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general8],
     indirect=True,
     scope="class"
@@ -855,7 +855,7 @@ setup_params_general9 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general9],
     indirect=True,
     scope="class"
@@ -958,7 +958,7 @@ setup_params_general10 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general10],
     indirect=True,
     scope="class"
@@ -1062,7 +1062,7 @@ setup_params_general11 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general11],
     indirect=True,
     scope="class"
@@ -1166,7 +1166,7 @@ setup_params_general12 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general12],
     indirect=True,
     scope="class"
@@ -1270,7 +1270,7 @@ setup_params_general13 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general13],
     indirect=True,
     scope="class"
@@ -1374,7 +1374,7 @@ setup_params_general14 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general14],
     indirect=True,
     scope="class"
@@ -1476,7 +1476,7 @@ setup_params_general15 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general15],
     indirect=True,
     scope="class"
@@ -1579,7 +1579,7 @@ setup_params_general16 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general16],
     indirect=True,
     scope="class"
@@ -1681,7 +1681,7 @@ setup_params_general17 = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general17],
     indirect=True,
     scope="class"
