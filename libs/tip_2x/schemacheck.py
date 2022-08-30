@@ -601,3 +601,4 @@ if __name__ == '__main__':
     obj.controller_check()
     obj.dut_values_check()
     obj.traffic_generator_keys_check()
+    
