@@ -156,6 +156,8 @@ class SchemaCheck:
                                     logging.info("Lan port key->values are present and eligible")
                                 else:
                                     logging.error("Lan port key->values are present and not eligible")
+                            else:
+                                logging.info("Lan port is null or None")
                         else:
                             logging.error("Lan port key->values which are present are not eligible", key, '->',
                                           value)
