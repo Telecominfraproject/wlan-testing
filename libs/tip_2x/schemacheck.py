@@ -2,11 +2,15 @@
 This class consists of functions which checks the schema of the configuration for lab
 Whether the schema contains all the necessary key-value pairs or not
 If not it will inform the required key-value pair
+End of the program called every function that checks all the schema data
 """
 import logging
 import re
 
 class SchemaCheck:
+    """
+    Global variables are declared for easy modification and checks of some data
+    """
     global target_var, dut_keys, tg_keys, testbed_name
     target_var = "tip_2x"
     testbed_name = 'basic'
