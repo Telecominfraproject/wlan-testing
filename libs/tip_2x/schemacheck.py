@@ -7,6 +7,7 @@ End of the program called every function that checks all the schema data
 import logging
 import re
 
+
 class SchemaCheck:
     """
     Global variables are declared for easy modification and checks of some data
@@ -72,7 +73,7 @@ class SchemaCheck:
         for a in range(self.len_testbed_list):
             for key in self.configuration[self.testbed_list[a]]['controller']:
                 lis.append(key)
-            print(self.testbed_list[a], '->', lis)
+            print(self.testbed_list[a], "->", lis)
             if lis == arr:
                 lis.clear()
                 print("All keys are present in the Controller data of schema")
@@ -104,13 +105,15 @@ class SchemaCheck:
                 self.dut_values_check()
             elif len(arr3[a]) == 1:
                 if arr3[a][0] == 'ssid':
-                    logging.warning("Ssid key is not present", self.testbed_list[a], '->', arr3[a])
+                    logging.warning("Ssid key is not present" + str(self.testbed_list[a]) + "->" + str(arr3[a]))
                     self.dut_values_check()
                 else:
-                    logging.error("Required keys of DUT are not present, Please include those", self.testbed_list[a],
-                                  '->', arr3[a])
+                    logging.error(
+                        "Required keys of DUT are not present, Please include those" + str(self.testbed_list[a])
+                        + "->" + str(arr3[a]))
             else:
-                logging.error("Not all Keys of DUT required are present", self.testbed_list[a], '->', arr3[a])
+                logging.error(
+                    "Not all Keys of DUT required are present" + str(self.testbed_list[a]) + "->" + str(arr3[a]))
 
     def dut_values_check(self):
         """
@@ -127,27 +130,31 @@ class SchemaCheck:
                         if type(value) == str:
                             logging.info("Model key->values are present and eligible")
                         else:
-                            logging.error("Model key->values which are present are not eligible", key, '->', value)
+                            logging.error(
+                                "Model key->values which are present are not eligible" + str(key) + "->" + str(value))
                     elif key == 'supported_bands':
                         if type(value) == list:
                             logging.info("Supported bands key->values are present and eligible")
                         else:
-                            logging.error("Supported bands key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error(
+                                "Supported bands key->values which are present are not eligible" + str(key) + "->" +
+                                str(value))
                     elif key == 'supported_modes':
                         if type(value) == list:
                             logging.info("Supported modes key->values are present and eligible")
                         else:
-                            logging.error("Supported modes key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error(
+                                "Supported modes key->values which are present are not eligible" + str(key) + "->" +
+                                str(value))
                     elif key == 'wan_port':
                         if type(value) == str:
                             x = re.search("\d.\d.", value)
                             if x is not None:
                                 logging.info("Wan port key->values are present and eligible")
                             else:
-                                logging.error("Wan port key->values which are present are not eligible", key, '->',
-                                              value)
+                                logging.error(
+                                    "Wan port key->values which are present are not eligible" + str(key) + "->" +
+                                    str(value))
                     elif key == 'lan_port':
                         if value is None or type(value) == str:
                             if type(value) == str:
@@ -159,69 +166,75 @@ class SchemaCheck:
                             else:
                                 logging.info("Lan port is null or None")
                         else:
-                            logging.error("Lan port key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error("Lan port key->values which are present are not eligible" + str(key) + "->" +
+                                          str(value))
                     elif key == 'ssid':
                         if type(value) == dict:
                             self.ssid_data_check()
                             logging.info("Ssid key->values are present and eligible")
                         else:
-                            logging.error("Ssid  key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error("Ssid  key->values which are present are not eligible" + str(key) + "->" +
+                                          str(value))
                     elif key == 'mode':
                         if type(value) == str:
                             logging.info("Mode key->values are present and eligible")
                         else:
-                            logging.error("Mode key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error("Mode key->values which are present are not eligible" + str(key) + "->" +
+                                          str(value))
                     elif key == 'identifier':
                         if type(value) == str and type(value) is not None:
                             logging.info("Identifier key->values are present and eligible")
                         else:
-                            logging.error("Identifier key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error(
+                                "Identifier key->values which are present are not eligible" + str(key) + "->" +
+                                str(value))
                     elif key == 'method':
                         if type(value) == str and (value == 'serial' or value == 'ssh' or value == 'telnet'):
                             logging.info("Method key->values are present and eligible")
                         else:
-                            logging.error("Method key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error("Method key->values which are present are not eligible" + str(key) + "->" +
+                                          str(value))
                     elif key == 'host_ip':
                         if type(value) == str:
                             logging.info("Host IP key->values are present and eligible")
                         else:
-                            logging.error("Host IP key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error("Host IP key->values which are present are not eligible" + str(key) + "->" +
+                                          str(value))
                     elif key == 'host_username':
                         if type(value) == str:
                             logging.info("Host Username key->values are present and eligible")
                         else:
-                            logging.error("Host Username key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error(
+                                "Host Username key->values which are present are not eligible" + str(key) + "->" +
+                                str(value))
                     elif key == 'host_password':
                         if type(value) == str:
                             logging.info("Host Password key->values are present and eligible")
                         else:
-                            logging.error("Host Password key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error(
+                                "Host Password key->values which are present are not eligible" + str(key) + "->" +
+                                str(value))
                     elif key == 'host_ssh_port':
                         if type(value) == int:
                             logging.info("Host ssh Port key->values are present and eligible")
                         else:
-                            logging.error("Host ssh Port key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error(
+                                "Host ssh Port key->values which are present are not eligible" + str(key) + "->" +
+                                str(value))
                     elif key == 'serial_tty':
                         if type(value) == str:
                             logging.info("Serial tty key->values are present and eligible")
                         else:
-                            logging.error("Serial tty key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error(
+                                "Serial tty key->values which are present are not eligible" + str(key) + "->" +
+                                str(value))
                     elif key == 'firmware_version':
                         if type(value) == str:
                             logging.info("Firmware version key->values are present and eligible")
                         else:
-                            logging.error("Firmware version key->values which are present are not eligible", key, '->',
-                                          value)
+                            logging.error(
+                                "Firmware version key->values which are present are not eligible" + str(key) + "->" +
+                                str(value))
 
     def traffic_generator_keys_check(self):
         """
@@ -234,7 +247,7 @@ class SchemaCheck:
         for count in range(self.len_testbed_list):
             for key in self.configuration[self.testbed_list[count]]['traffic_generator']:
                 lis.append(key)
-            print(self.testbed_list[count], '->', lis)
+            print(self.testbed_list[count], "->", lis)
             if lis == tg_keys:
                 lis.clear()
                 print("All keys are present in the Traffic generator data of schema")
@@ -262,27 +275,27 @@ class SchemaCheck:
                 if type(value) == str:
                     logging.info("Name key->value are present and Eligible")
                 else:
-                    logging.error("Name key->values which are present are not eligible", key, '->',
-                                  value)
+                    logging.error("Name key->values which are present are not eligible" + str(key) + "->" +
+                                  str(value))
             elif key == 'testbed':
                 if type(value) == str and value == testbed_name:
                     logging.info("Testbed key->value are present and Eligible")
                 else:
-                    logging.error("Testbed key->values which are present are not eligible", key, '->',
-                                  value)
+                    logging.error("Testbed key->values which are present are not eligible" + str(key) + "->" +
+                                  str(value))
             elif key == 'scenario':
                 if type(value) == str and (value == 'dhcp-bridge' or value == 'dhcp-external'):
                     logging.info("Scenario key->value are present and Eligible")
                 else:
-                    logging.error("Scenario key->values which are present are not eligible", key, '->',
-                                  value)
+                    logging.error("Scenario key->values which are present are not eligible" + str(key) + "->" +
+                                  str(value))
             elif key == 'details':
                 if type(value) == dict:
                     self.tg_details_data_keys_check(count)
                     logging.info("Details key->value are present and Eligible")
                 else:
-                    logging.error("Details key->values which are present are not eligible", key, '->',
-                                  value)
+                    logging.error("Details key->values which are present are not eligible" + str(key) + "->" +
+                                  str(value))
 
     def tg_details_data_keys_check(self, count):
         """
@@ -294,7 +307,7 @@ class SchemaCheck:
         lis = []
         for key in self.configuration[self.testbed_list[count]]['traffic_generator']['details']:
             lis.append(key)
-        print(self.testbed_list[count], '->', lis)
+        print(self.testbed_list[count], "->", lis)
         if lis == tg_details_keys:
             lis.clear()
             print("All keys are present in the Traffic generator Details data of schema")
@@ -315,24 +328,25 @@ class SchemaCheck:
                 if type(value) == str:
                     logging.info("Manager ip  key->value are present and Eligible")
                 else:
-                    logging.error("Manager ip key->values which are present are not eligible", key, '->',
-                                  value)
+                    logging.error("Manager ip key->values which are present are not eligible" + str(key) + "->" +
+                                  str(value))
             elif key == 'http_port':
                 if type(value) == int:
                     logging.info("Http port  key->value are present and Eligible")
                 else:
-                    logging.error("Http port key->values which are present are not eligible", key, '->',
-                                  value)
+                    logging.error("Http port key->values which are present are not eligible" + str(key) + "->" +
+                                  str(value))
             elif key == 'ssh_port':
                 if type(value) == int:
                     logging.info("Ssh port  key->value are present and Eligible")
                 else:
-                    logging.error("Ssh port key->values which are present are not eligible", key, '->',
-                                  value)
+                    logging.error("Ssh port key->values which are present are not eligible" + str(key) + "->" +
+                                  str(value))
             elif key == 'setup':
                 if type(value) == dict:
                     key2 = self.configuration[self.testbed_list[count]]['traffic_generator']['details']['setup']
-                    value2 = self.configuration[self.testbed_list[count]]['traffic_generator']['details']['setup']['method']
+                    value2 = self.configuration[self.testbed_list[count]]['traffic_generator']['details']['setup'][
+                        'method']
                     if key2 == 'method':
                         if type(value2) == str:
                             if value2 == 'build':
@@ -341,13 +355,13 @@ class SchemaCheck:
                                 if key2['DB'] == str:
                                     logging.info("Method - Load key->value are present and Eligible")
                         else:
-                            logging.error("Method key->values which are present are not eligible", key,
-                                          '->',
-                                          value)
+                            logging.error("Method key->values which are present are not eligible" + str(key) +
+                                          "->" +
+                                          str(value))
                     logging.info("Setup  key->value are present and Eligible")
                 else:
-                    logging.error("Setup key->values which are present are not eligible", key, '->',
-                                  value)
+                    logging.error("Setup key->values which are present are not eligible" + str(key) + "->" +
+                                  str(value))
             elif key == 'wan_ports':
                 if type(value) == dict:
                     self.tg_ports_data_keys_check(key, count)
@@ -377,12 +391,12 @@ class SchemaCheck:
             if type(key1) == str and type(value1) == dict:
                 x = re.search("\d.\d.", key1)
                 if x is not None:
-                    logging.info("Key of", key, "->", key1, "is eligible")
+                    logging.info("Key of" + str(key) + "->" + str(key1) + "is eligible")
                     self.tg_ports_addressing_check(value1)
                 else:
-                    logging.error("Key of", key, "->", key1, "is not eligible")
+                    logging.error("Key of" + str(key) + "->" + str(key1) + "is not eligible")
             else:
-                logging.error("Key of", key, "->", key1, "is not eligible and is not a string")
+                logging.error("Key of" + str(key) + "->" + str(key1) + "is not eligible and is not a string")
 
     @staticmethod
     def tg_ports_addressing_check(value):
