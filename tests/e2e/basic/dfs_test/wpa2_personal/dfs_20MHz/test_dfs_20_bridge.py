@@ -45,7 +45,6 @@ class TestDFSChannel52Bw20(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_52_bw_20
-    @pytest.mark.jkkk
     @allure.title("Test for Channel 52 and bandwidth 20")
     def test_dfs_channel_52_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                   get_target_object,
