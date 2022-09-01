@@ -986,7 +986,7 @@ class RunTest:
                                   ssid=ssid,
                                   input=input_data,
                                   security=security,
-                                  upstream_resource=self.upstream_resource)
+                                  resource=int(self.upstream_resource))
         self.sta_url_map = None
         self.multi_obj.build()
         self.multi_obj.start()
@@ -1037,6 +1037,7 @@ class RunTest:
                         pf = 'PASS'
                     else:
                         pf = 'FAIL'
+                        result1 = 'Fail'
                     table_data.append([i[item]['alias'], '100', f'{exp1[0]}.{exp1[1]}.X.X', i[item]['ip'], i[item]['mac'],
                                        f'{pf}'])
                 elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta200':
@@ -1046,6 +1047,7 @@ class RunTest:
                             pf = 'PASS'
                         else:
                             pf = 'FAIL'
+                            result1 = 'Fail'
                         table_data.append([i[item]['alias'], '200', f'{exp2[0]}.{exp2[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
                 elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta00':
                     exp3 = temp['sta00'].split('.')
@@ -1055,12 +1057,14 @@ class RunTest:
                             pf = 'PASS'
                         else:
                             pf = 'FAIL'
+                            result1 = 'Fail'
                         table_data.append([i[item]['alias'], 'WAN upstream', f'{exp3[0]}.{exp3[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
                     elif mode == "NAT":
                         if exp3[0] == '192' and exp3[1] == '168':
                             pf = 'PASS'
                         else:
                             pf = 'FAIL'
+                            result1 = 'Fail'
                         table_data.append([i[item]['alias'], 'LAN upstream', f'192.168.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
         print(table_data)
         # attach test data in a table to allure
