@@ -142,7 +142,6 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         assert True
 
 
-
 setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -273,7 +272,6 @@ class Test20Mhz5GChannel40PeakThroughput(object):
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
-
 
 
 setup_params_general3 = {
@@ -407,7 +405,6 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         assert True
 
 
-
 setup_params_general4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -424,6 +421,7 @@ setup_params_general4 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_48
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general4],
@@ -539,7 +537,6 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         assert True
 
 
-
 setup_params_general5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -556,6 +553,7 @@ setup_params_general5 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_52
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general5],
@@ -671,7 +669,6 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         assert True
 
 
-
 setup_params_general6 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -688,6 +685,7 @@ setup_params_general6 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_56
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general6],
@@ -803,7 +801,6 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         assert True
 
 
-
 setup_params_general7 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -820,6 +817,7 @@ setup_params_general7 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_60
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general7],
@@ -935,7 +933,6 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         assert True
 
 
-
 setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -953,6 +950,7 @@ setup_params_general8 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_64
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general8],
@@ -1068,7 +1066,6 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         assert True
 
 
-
 setup_params_general9 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -1086,6 +1083,7 @@ setup_params_general9 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_100
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general9],
@@ -1201,7 +1199,6 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         assert True
 
 
-
 setup_params_general10 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -1218,6 +1215,7 @@ setup_params_general10 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_104
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general10],
@@ -1350,6 +1348,7 @@ setup_params_general11 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_108
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general11],
@@ -1482,6 +1481,7 @@ setup_params_general12 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_112
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general12],
@@ -1614,6 +1614,7 @@ setup_params_general13 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_116
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general13],
@@ -1746,6 +1747,7 @@ setup_params_general14 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_114
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general14],
@@ -1876,6 +1878,7 @@ setup_params_general15 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_136
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general15],
@@ -2137,6 +2140,7 @@ setup_params_general17 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_144
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general17],

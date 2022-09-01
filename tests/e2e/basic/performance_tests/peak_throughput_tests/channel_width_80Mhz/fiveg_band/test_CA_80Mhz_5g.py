@@ -141,6 +141,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
                                        num_stations={"5G": 1})
         assert True
 
+
 setup_params_general5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -157,6 +158,7 @@ setup_params_general5 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_52
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general5],
@@ -289,6 +291,7 @@ setup_params_general9 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_100
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general9],
@@ -421,6 +424,7 @@ setup_params_general14 = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@pytest.mark.channel_132
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general14],
