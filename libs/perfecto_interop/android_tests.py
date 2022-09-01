@@ -1,15 +1,3 @@
-import time
-from telnetlib import EC
-import pytest
-import logging
-import re
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from appium.webdriver.common.mobileby import MobileBy
-from selenium.webdriver.support import expected_conditions as EC
-from appium import webdriver
-
 from android_libs import android_libs
 
 

@@ -1,31 +1,26 @@
 import logging
-import os
-import re
 import time
 import warnings
 
 import allure
 import pytest
 import urllib3
+from appium import webdriver
 from appium.webdriver import webdriver
-from perfecto.model.model import Job, Project
-from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestContext, TestResultFactory)
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from appium.webdriver.common.mobileby import MobileBy
+from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestContext)
+from perfecto.model.model import Job, Project
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
-from appium import webdriver
-from perfecto_interop import perfecto_interop
-from appium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
 
 
-class android_libs(perfecto_interop):
+
+class android_libs:
     global driver, perfecto_execution_context
 
     def __init__(self, perfecto_data=None, dut_data=None):
-        super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
+        # super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
         self.connData = self.get_ToggleAirplaneMode_data(self.android_devices["Galaxy S10.*"])
@@ -886,9 +881,9 @@ class android_libs(perfecto_interop):
         if device_model_name != "Pixel 4":
             logging.info("Selected Model is not Pixel 4")
             report.step_start("Getting IP address")
-        # Get into Additional Details
-        # To Get an IP Address
-        # -------------------------------------------------------
+            # Get into Additional Details
+            # To Get an IP Address
+            # -------------------------------------------------------
             if self.get_phone_information(setup_perfectoMobile,
                                           search_this="osVersion") != "12":
                 try:
@@ -1498,7 +1493,7 @@ class android_libs(perfecto_interop):
             # Verify if WiFi is connected
             # -------------------------------------------------------
             if self.get_phone_information(setup_perfectoMobile=setup_perfectoMobile,
-                                     search_this="osVersion") != "12":
+                                          search_this="osVersion") != "12":
                 try:
                     report.step_start("Verify if Wifi is Connected")
                     wifi_internet_err_msg = WebDriverWait(driver, 35).until(
@@ -1643,6 +1638,7 @@ class android_libs(perfecto_interop):
                         print("Wifi Connection Error: " + wifi_name)
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet
+
 
 if __name__ == '__main__':
     perfecto_data = {
