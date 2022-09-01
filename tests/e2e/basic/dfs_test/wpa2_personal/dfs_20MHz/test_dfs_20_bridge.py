@@ -30,70 +30,37 @@ setup_params_general1 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general1],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-52")
+@pytest.mark.usefixtures("setup_configuration")
 class TestDFSChannel52Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6472", name="WIFI-6472")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_52_bw_20
-    def test_dfs_channel_52_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @pytest.mark.jkkk
+    @allure.title("Test for Channel 52 and bandwidth 20")
+    def test_dfs_channel_52_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                  get_target_object,
+                                  num_stations, setup_configuration):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general1["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # count = 0
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     else:
-        #         count = count + 1
-        #         if count > 5:
-        #             break
-        #     time.sleep(5)
-        # if count > 5:
-        #     assert False, "AP is disconnected"
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general2 = {
@@ -118,70 +85,35 @@ setup_params_general2 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general2],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-100")
 class TestDFSChannel100Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6473", name="WIFI-6473")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_100_bw_20
-    def test_dfs_channel_100_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 100 and bandwidth 20")
+    def test_dfs_channel_100_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                   num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general2["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        # print("station", station)
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # count = 0
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     else:
-        #         count = count + 1
-        #         if count > 5:
-        #             break
-        #     time.sleep(5)
-        # if count > 5:
-        #     assert False, "AP is disconnected"
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general3 = {
@@ -206,19 +138,24 @@ setup_params_general3 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general3],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-104")
 class TestDFSChannel104Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6474", name="WIFI-6474")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_104_bw_20
-    def test_dfs_channel_104_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 104 and bandwidth 20")
+    def test_dfs_channel_104_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                   num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -226,50 +163,11 @@ class TestDFSChannel104Bw20(object):
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        # print("station", station)
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # count = 0
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     else:
-        #         count = count + 1
-        #         if count > 5:
-        #             break
-        #     time.sleep(5)
-        # if count > 5:
-        #     assert False, "AP is disconnected"
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general4 = {
@@ -294,63 +192,35 @@ setup_params_general4 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general4],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-56")
 class TestDFSChannel56Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6475", name="WIFI-6475")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_56_bw_20
-    def test_dfs_channel_56_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 56 and bandwidth 20")
+    def test_dfs_channel_56_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                  num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general4["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        # print("station", station)
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     time.sleep(1)
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general5 = {
@@ -375,70 +245,35 @@ setup_params_general5 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general5],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-60")
 class TestDFSChannel60Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6476", name="WIFI-6476")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_60_bw_20
-    def test_dfs_channel_60_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 60 and bandwidth 20")
+    def test_dfs_channel_60_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                  num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general5["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        print("station", station)
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # count = 0
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     else:
-        #         count = count + 1
-        #         if count > 5:
-        #             break
-        #     time.sleep(5)
-        # if count > 5:
-        #     assert False, "AP is disconnected"
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general6 = {
@@ -463,63 +298,35 @@ setup_params_general6 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general6],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-64")
 class TestDFSChannel64Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6477", name="WIFI-6477")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_64_bw_20
-    def test_dfs_channel_64_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 64 and bandwidth 20")
+    def test_dfs_channel_64_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                  num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general6["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        print("station", station)
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     time.sleep(1)
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general7 = {
@@ -544,70 +351,35 @@ setup_params_general7 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general7],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-108")
 class TestDFSChannel108Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6478", name="WIFI-6478")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_108_bw_20
-    def test_dfs_channel_108_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 108 and bandwidth 20")
+    def test_dfs_channel_108_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                   num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general7["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        # print("station", station)
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # count = 0
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     else:
-        #         count = count + 1
-        #         if count > 5:
-        #             break
-        #     time.sleep(5)
-        # if count > 5:
-        #     assert False, "AP is disconnected"
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general8 = {
@@ -632,145 +404,36 @@ setup_params_general8 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general8],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-112")
 class TestDFSChannel112Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6479", name="WIFI-6479")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_112_bw_20
-    def test_dfs_channel_112_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 112 and bandwidth 20")
+    def test_dfs_channel_112_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                   num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general8["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        print("station", station)
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # count = 0
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     else:
-        #         count = count + 1
-        #         if count > 5:
-        #             break
-        #     time.sleep(5)
-        # if count > 5:
-        #     assert False, "AP is disconnected"
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
-
-# setup_params_general9 = {
-#     "mode": "BRIDGE",
-#     "ssid_modes": {
-#         "wpa2_personal": [
-#             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
-#         ]
-#     },
-#     "dfs": {
-#         "channel": 124,
-#         "channel_bandwidth": 20
-#     },
-#     "rf": {},
-#     "radius": False
-# }
-# @pytest.mark.parametrize(
-#     'setup_profiles',
-#     [setup_params_general9],
-#     indirect=True,
-#     scope="class"
-# )
-# @pytest.mark.usefixtures("setup_profiles")
-#
-# class TestDFSChannel124Bw20(object):
-#     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6480", name="WIFI-6480")
-#     @pytest.mark.wpa2_personal
-#     @pytest.mark.fiveg
-#     @pytest.mark.dfs_channel_124_bw_20
-#     def test_dfs_channel_124_bw_20(self, lf_test, lf_tools, station_names_fiveg, dfs_start):
-#         lf_tools.reset_scenario()
-#         profile_data = setup_params_general9["ssid_modes"]["wpa2_personal"][0]
-#         ssid_name = profile_data["ssid_name"]
-#         security_key = profile_data["security_key"]
-#         channel = setup_params_general9["dfs"]["channel"]
-#         security = "wpa2"
-#         band = "fiveg"
-#         mode = "BRIDGE"
-#         vlan = 1
-#         dfs_fail = True
-#         print("station_names_fiveg :", station_names_fiveg)
-#         station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-#                                          passkey=security_key, mode=mode, band=band,
-#                                          station_name=station_names_fiveg, vlan_id=vlan)
-#         print("station", station)
-#         channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-#         print("channel before dfs: ", channel1)
-#         if channel1 == str(channel):
-#             dfs_start.dfs()
-#             time.sleep(15)
-#         else:
-#             print("Station not connected to applied channel")
-#             allure.attach(name="log Data", body="Station not connected to applied channel")
-#             assert False
-#         channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-#         log = dfs_start.dfs_logread()
-#         if channel1 != channel2:
-#             print(log)
-#             print("channel after dfs: ", channel2)
-#             allure.attach(name="log Data", body=log)
-#         else:
-#             print(log)
-#             print("dfs not happened")
-#             allure.attach(name="log Data", body=log)
-#             dfs_fail = False
-#         dfs_start.reboot()
-#         time.sleep(200)
-#         while True:
-#             connected, latest, active = dfs_start.get_ucentral_status()
-#             if connected is True:
-#                 print("status is connected after reboot: ", connected)
-#                 break
-#             time.sleep(1)
-#         if not dfs_fail:
-#             assert False
 
 setup_params_general10 = {
     "mode": "BRIDGE",
@@ -794,72 +457,35 @@ setup_params_general10 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general10],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-132")
 class TestDFSChannel132Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6481", name="WIFI-6481")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_132_bw_20
-    def test_dfs_channel_132_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 132 and bandwidth 20")
+    def test_dfs_channel_132_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                   num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general10["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general10["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-
-        print("station", station)
-
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # count = 0
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     else:
-        #         count = count + 1
-        #         if count > 5:
-        #             break
-        #     time.sleep(5)
-        # if count > 5:
-        #     assert False, "AP is disconnected"
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general11 = {
@@ -884,75 +510,35 @@ setup_params_general11 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general11],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-136")
 class TestDFSChannel136Bw20(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6482", name="WIFI-6482")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_136_bw_20
-    def test_dfs_channel_136_bw_20(self, get_lanforge_library, station_names_fiveg):
+    @allure.title("Test for Channel 136 and bandwidth 20")
+    def test_dfs_channel_136_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                   num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general11["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = get_lanforge_library.Client_Connect(ssid=ssid_name, security=security,
-                                                      passkey=security_key, mode=mode, band=band,
-                                                      station_name=station_names_fiveg, vlan_id=vlan)
-        # var =  get_station_data()
-        # {"1.1.wlan0": {"channel" : 52}, "1.1.wlan1": }
-        # if var["channel"]
-        # get_cx_data()
-        #
-        print("station", station)
-        # channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # print("channel before dfs: ", channel1)
-        # if channel1 == str(channel):
-        #     dfs_start.dfs()
-        #     time.sleep(15)
-        # else:
-        #     print("Station not connected to applied channel")
-        #     allure.attach(name="log Data", body="Station not connected to applied channel")
-        #     assert False
-        # channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        # log = dfs_start.dfs_logread()
-        # if channel1 != channel2:
-        #     print(log)
-        #     print("channel after dfs: ", channel2)
-        #     allure.attach(name="log Data", body=log)
-        # else:
-        #     print(log)
-        #     print("dfs not happened")
-        #     allure.attach(name="log Data", body=log)
-        #     dfs_fail = False
-        # dfs_start.reboot()
-        # time.sleep(200)
-        # count = 0
-        # while True:
-        #     connected, latest, active = dfs_start.get_ucentral_status()
-        #     if connected is True:
-        #         print("status is connected after reboot: ", connected)
-        #         break
-        #     else:
-        #         count = count + 1
-        #         if count > 5:
-        #             break
-        #     time.sleep(5)
-        # if count > 5:
-        #     assert False, "AP is disconnected"
-        # if not dfs_fail:
-        #     assert False
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
+        time.sleep(200)
 
 
 setup_params_general12 = {
@@ -977,70 +563,34 @@ setup_params_general12 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general12],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-140")
 class TestDFSChannel140Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6483", name="WIFI-6483")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_140_bw_20
-    def test_dfs_channel_140_bw_20(self, lf_test, lf_tools, station_names_fiveg, dfs_start):
-        lf_tools.reset_scenario()
+    @allure.title("Test for Channel 140 and bandwidth 20")
+    def test_dfs_channel_140_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                   num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general12["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general12["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-                                         passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-        print("station", station)
-        channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        print("channel before dfs: ", channel1)
-        if channel1 == str(channel):
-            dfs_start.dfs()
-            time.sleep(15)
-        else:
-            print("Station not connected to applied channel")
-            allure.attach(name="log Data", body="Station not connected to applied channel")
-            assert False
-        channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        log = dfs_start.dfs_logread()
-        if channel1 != channel2:
-            print(log)
-            print("channel after dfs: ", channel2)
-            allure.attach(name="log Data", body=log)
-        else:
-            print(log)
-            print("dfs not happened")
-            allure.attach(name="log Data", body=log)
-            dfs_fail = False
-        dfs_start.reboot()
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
         time.sleep(200)
-        count = 0
-        while True:
-            connected, latest, active = dfs_start.get_ucentral_status()
-            if connected is True:
-                print("status is connected after reboot: ", connected)
-                break
-            else:
-                count = count + 1
-                if count > 5:
-                    break
-            time.sleep(5)
-        if count > 5:
-            assert False, "AP is disconnected"
-        if not dfs_fail:
-            assert False
 
 
 setup_params_general13 = {
@@ -1065,67 +615,31 @@ setup_params_general13 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general13],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
+@allure.parent_suite("OpenWifi DFS Test")
+@allure.suite("BRIDGE Mode(20 MHz)")
+@allure.sub_suite("Channel-144")
 class TestDFSChannel144Bw20(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6484", name="WIFI-6484")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_144_bw_20
-    def test_dfs_channel_144_bw_20(self, lf_test, lf_tools, station_names_fiveg, dfs_start):
-        lf_tools.reset_scenario()
+    @allure.title("Test for Channel 144 and bandwidth 20")
+    def test_dfs_channel_144_bw_20(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                   num_stations, setup_configuration, get_target_object):
         profile_data = setup_params_general13["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        channel = setup_params_general13["rf"]["5G"]["channel"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        vlan = 1
-        dfs_fail = True
-        print("station_names_fiveg :", station_names_fiveg)
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-                                         passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-        print("station", station)
-        channel1 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        print("channel before dfs: ", channel1)
-        if channel1 == str(channel):
-            dfs_start.dfs()
-            time.sleep(15)
-        else:
-            print("Station not connected to applied channel")
-            allure.attach(name="log Data", body="Station not connected to applied channel")
-            assert False
-        channel2 = lf_tools.station_data_query(station_name=station_names_fiveg[0], query="channel")
-        log = dfs_start.dfs_logread()
-        if channel1 != channel2:
-            print(log)
-            print("channel after dfs: ", channel2)
-            allure.attach(name="log Data", body=log)
-        else:
-            print(log)
-            print("dfs not happened")
-            allure.attach(name="log Data", body=log)
-            dfs_fail = False
-        dfs_start.reboot()
+        get_test_library.dfs_test(ssid=ssid_name, security=security,
+                                  passkey=security_key, mode=mode, band=band,
+                                  num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
+        get_target_object.reboot()
         time.sleep(200)
-        count = 0
-        while True:
-            connected, latest, active = dfs_start.get_ucentral_status()
-            if connected is True:
-                print("status is connected after reboot: ", connected)
-                break
-            else:
-                count = count + 1
-                if count > 5:
-                    break
-            time.sleep(5)
-        if count > 5:
-            assert False, "AP is disconnected"
-        if not dfs_fail:
-            assert False
