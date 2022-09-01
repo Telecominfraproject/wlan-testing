@@ -361,6 +361,7 @@ class tip_2x:
                     a["frequency"] = temp[j][2]
                 ret_val[dut]["radio_data"][j] = a
         return ret_val
+
     """
         setup_special_configuration - Method to configure APs in mesh operating modes with multiple SSID's and multiple AP's
                                     This covers, mesh and other roaming scenarios which includes any special type of modes
@@ -877,6 +878,21 @@ class tip_2x:
                         logging.info("firmware upgraded failed: ", target_revision)
                     break
         return upgrade_status
+
+    def simulate_radar(self, idx=0):
+        """Simulate radar command for DFS"""
+        ret = self.dut_library_object.dfs(idx=idx)
+        return ret
+
+    def get_dfs_logs(self, idx=0):
+        """Get the ap logs after Simulate radar command"""
+        logs = self.dut_library_object.dfs_logread(idx=idx)
+        return logs
+
+    def reboot(self, idx=0):
+        """Reboot the AP"""
+        ret = self.dut_library_object.reboot(idx=idx)
+        return ret
 
 
 if __name__ == '__main__':
