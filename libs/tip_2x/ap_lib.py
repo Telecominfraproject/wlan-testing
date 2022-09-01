@@ -302,7 +302,11 @@ class APLIBS:
         pass
 
     def reboot(self, idx=0):
-        pass
+        output = self.run_generic_command(cmd="reboot", idx=idx,
+                                          print_log=False,
+                                          attach_allure=False,
+                                          expected_attachment_type=allure.attachment_type.JSON)
+        return output
 
     def get_active_firmware(self, idx=0):
         pass
@@ -361,6 +365,65 @@ class APLIBS:
                 flag = 0
         ap_logs = "\n".join(log_data)
         return ap_logs
+
+    def dfs(self, idx=0, print_log=True, attach_allure=False):
+        type_ = self.device_under_tests_data[idx]["mode"]
+        cmd = None
+        if type_.lower() == "wifi5":
+            cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
+            output = self.run_generic_command(cmd=cmd1, idx=idx,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
+                                              expected_attachment_type=allure.attachment_type.JSON)
+
+            ret = output.split("\n")
+            status_count = int(ret.count("True"))
+            logging.info("Status count: ", status_count)
+            if status_count == 1:
+                cmd = "cd && cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
+            else:
+                cmd = "cd && cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+        elif type_.lower() == "wifi6" or type_.lower() == "wifi6e":
+            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
+        output = self.run_generic_command(cmd=cmd, idx=idx,
+                                          print_log=print_log,
+                                          attach_allure=attach_allure,
+                                          expected_attachment_type=allure.attachment_type.JSON)
+        return output
+
+    def dfs_logread(self, idx=0, print_log=True, attach_allure=False):
+        """get simulate radar command logs"""
+        type_ = self.device_under_tests_data[idx]["mode"]
+        if type_.lower() == "wifi5":
+            cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath10k/dfs_simulate_radar ] && echo "True" || echo "False"'
+            output = self.run_generic_command(cmd=cmd1, idx=idx,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
+                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info("DFS logread output: " + str(output))
+            if output.__contains__("False"):
+                cmd = "cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && logread | grep DFS"
+            else:
+                cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
+            # cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
+            # print("cmd: ", cmd)
+        elif type_.lower() == "wifi6" or type_.lower() == "wifi6e":
+            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
+        try:
+            output = self.run_generic_command(cmd=cmd, idx=idx,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
+                                              expected_attachment_type=allure.attachment_type.JSON)
+            ret = output.split("\n")
+            logread = ret[-6:]
+            logs = ""
+            for i in logread:
+                logs = logs + i + "\n"
+        except Exception as e:
+            print(e)
+            logs = ""
+        logging.info("Simulate radar logs: " + str(logs))
+        return logs
 
 
 if __name__ == '__main__':
