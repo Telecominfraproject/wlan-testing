@@ -8,7 +8,8 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.peak_throughput_tests, pytest.mark.bridge, pytest.mark.fiveg, pytest.mark.wpa3_personal]
+pytestmark = [pytest.mark.peak_throughput_tests, pytest.mark.bridge, pytest.mark.fiveg, pytest.mark.channel_width_20,
+              pytest.mark.wpa3_personal]
 
 setup_params_general1 = {
     "mode": "BRIDGE",
