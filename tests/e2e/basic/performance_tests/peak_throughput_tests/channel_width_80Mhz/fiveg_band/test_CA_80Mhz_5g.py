@@ -36,7 +36,7 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz5GChannel36PeakThroughput(object):
+class Test80Mhz5GChannel36PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -168,7 +168,7 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz5GChannel52PeakThroughput(object):
+class Test80Mhz5GChannel52PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -301,7 +301,7 @@ setup_params_general9 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz5GChannel100PeakThroughput(object):
+class Test80Mhz5GChannel100PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -434,7 +434,7 @@ setup_params_general14 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz5GChannel132PeakThroughput(object):
+class Test80Mhz5GChannel132PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
