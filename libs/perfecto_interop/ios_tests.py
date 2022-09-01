@@ -1,38 +1,23 @@
-import logging
-from ast import Str
-from logging import exception
-import unittest
-import warnings
-from _pytest.outcomes import fail
-from perfecto.test import TestResultFactory
-import pytest
-import sys
-import time
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
-from appium.webdriver.common.mobileby import MobileBy
-from selenium.webdriver.support import expected_conditions as EC
-import allure
 from ios_libs import ios_libs
+
 
 class ios_tests(ios_libs):
     ios_devices = {
         "iPhone-11": {
-                        "model-iOS": "iPhone-11",
-                        "bundleId-iOS": "com.apple.Preferences",
-                        "platformName-iOS": "iOS",
-                        "bundleId-iOS-Settings": "com.apple.Preferences",
-                        "bundleId-iOS-Ping": "com.deftapps.ping",
-                        "browserType-iOS": "Safari",
-                        "bundleId-iOS-Safari": "com.apple.mobilesafari",
-                        "platformName-android": "Android",
-                        "appPackage-android": "com.android.settings",
-                        "jobName": "Interop-iphone-11",
-                        "jobNumber": 38
-                    }
+            "model-iOS": "iPhone-11",
+            "bundleId-iOS": "com.apple.Preferences",
+            "platformName-iOS": "iOS",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Ping": "com.deftapps.ping",
+            "browserType-iOS": "Safari",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "platformName-android": "Android",
+            "appPackage-android": "com.android.settings",
+            "jobName": "Interop-iphone-11",
+            "jobNumber": 38
+        }
     }
+
     def __init__(self, perfecto_data=None, dut_data=None):
         super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
         self.perfecto_data = perfecto_data
@@ -44,7 +29,7 @@ class ios_tests(ios_libs):
         global ip_address
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
-                                                      setup_perfecto_mobile, connData=self.connData)
+        setup_perfecto_mobile, connData=self.connData)
         try:
             if ssid_with_internet is True:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
@@ -61,7 +46,7 @@ class ios_tests(ios_libs):
     def client_connectivity(self, ssid, passkey):
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
-                                                      setup_perfecto_mobile, connData=self.connData)
+        setup_perfecto_mobile, connData=self.connData)
         try:
             if ssid_with_internet is True:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
@@ -75,6 +60,7 @@ class ios_tests(ios_libs):
             print(e)
             self.teardown()
 
+
 if __name__ == '__main__':
     perfecto_data = {
         "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks",
@@ -83,18 +69,18 @@ if __name__ == '__main__':
         "reportTags": "TestTag",
         "perfectoURL": "tip",
         "iPhone-11": {
-                    "model-iOS": "iPhone-11",
-                    "bundleId-iOS": "com.apple.Preferences",
-                    "platformName-iOS": "iOS",
-                    "bundleId-iOS-Settings": "com.apple.Preferences",
-                    "bundleId-iOS-Ping": "com.deftapps.ping",
-                    "browserType-iOS": "Safari",
-                    "bundleId-iOS-Safari": "com.apple.mobilesafari",
-                    "platformName-android": "Android",
-                    "appPackage-android": "com.android.settings",
-                    "jobName": "Interop-iphone-11",
-                    "jobNumber": 38
-                    }
+            "model-iOS": "iPhone-11",
+            "bundleId-iOS": "com.apple.Preferences",
+            "platformName-iOS": "iOS",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Ping": "com.deftapps.ping",
+            "browserType-iOS": "Safari",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "platformName-android": "Android",
+            "appPackage-android": "com.android.settings",
+            "jobName": "Interop-iphone-11",
+            "jobNumber": 38
+        }
     }
     access_point = [{
         "model": "edgecore_eap101",

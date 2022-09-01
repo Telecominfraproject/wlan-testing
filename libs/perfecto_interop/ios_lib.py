@@ -4,22 +4,15 @@
         1. controller_data/sdk_base_url
         2. login credentials
 """
-from ast import Str
-from logging import exception
-import unittest
-import warnings
-from _pytest.outcomes import fail
-from perfecto.test import TestResultFactory
-import pytest
-import sys
 import time
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
-from appium.webdriver.common.mobileby import MobileBy
-from selenium.webdriver.support import expected_conditions as EC
+
 import allure
+from appium.webdriver.common.mobileby import MobileBy
+from perfecto.test import TestResultFactory
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 def openApp(appName, setup_perfectoMobile):

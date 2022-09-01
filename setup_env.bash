@@ -128,7 +128,31 @@ except ImportError as e:
     sys.exit(\"Python Import Error: \" + str(e))
 " >> tests/imports.py
    echo -e "########################################################################################################################" >> tests/imports.py
-    # TODO Create a perfecto pip module baseline method
+    cd libs/perfecto_interop
+    $PYTHON setup.py bdist_wheel
+    $PIP install dist/*.whl --force-reinstall
+    cd ../../
+    echo -e "########################################################################################################################" >> tests/imports.py
+    echo -e "\"\"\"
+    Target Name:perfecto_interop
+    Author Name:$author
+    Organization:$org
+    Register ID:2
+    Email:$email
+    description:Perfecto Based Interop Library
+\"\"\"" >> tests/imports.py
+  echo -e "
+try:
+    perfecto_interop = importlib.import_module(\"perfecto_interop\")
+    android_tests = perfecto_interop.android_tests
+    ios_tests = perfecto_interop.ios_tests
+except ImportError as e:
+    print(e)
+    sys.exit(\"Python Import Error: \" + str(e))
+" >> tests/imports.py
+   echo -e "########################################################################################################################" >> tests/imports.py
+
+
   fi
 fi
 WLAN_TESTING_PATH=$(pwd)"/tests/"

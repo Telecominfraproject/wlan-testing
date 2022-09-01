@@ -27,6 +27,9 @@ try:
     lf_libs = imports.lf_libs
     lf_tests = imports.lf_tests
     scp_file = imports.scp_file
+    perfecto_interop = imports.perfecto_interop
+    android_tests = imports.android_tests
+    ios_tests = imports.ios_tests
     configuration = importlib.import_module("configuration")
     CONFIGURATION = configuration.CONFIGURATION
 except ImportError as e:
@@ -62,6 +65,20 @@ def pytest_addoption(parser):
         action="store_true",
         default=False,
         help="skip adding to env data"
+    )
+
+    parser.addoption(
+        "--use-perfecto-android",
+        action="store_true",
+        default=False,
+        help="Use Interop Android Test Package for tests"
+    )
+
+    parser.addoption(
+        "--use-perfecto-ios",
+        action="store_true",
+        default=False,
+        help="Use Interop IoS Test Package for tests"
     )
 
 
@@ -140,7 +157,7 @@ def get_target_object(request, get_testbed_details, add_allure_environment_prope
         if not request.config.getoption("--skip-env"):
             if get_testbed_details["target"] == "tip_2x":
                 t_object.setup_environment_properties(add_allure_environment_property=
-                                                               add_allure_environment_property)
+                                                      add_allure_environment_property)
 
     except Exception as e:
         t_object = None
@@ -190,12 +207,29 @@ def get_dut_versions(fixtures_ver, run_lf, cc_1):
 
 
 @pytest.fixture(scope="session")
-def get_test_library(get_testbed_details):
-    obj = lf_tests(lf_data=get_testbed_details["traffic_generator"],
-                   dut_data=get_testbed_details["device_under_tests"],
-                   log_level=logging.DEBUG,
-                   run_lf=False,
-                   influx_params=None)
+def is_test_library_perfecto_android(request):
+    interop = request.config.getoption("--use-perfecto-android")
+    yield interop
+
+
+@pytest.fixture(scope="session")
+def is_test_library_perfecto_ios(request):
+    interop = request.config.getoption("--use-perfecto-ios")
+    yield interop
+
+
+@pytest.fixture(scope="session")
+def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios):
+    if is_test_library_perfecto_android:
+        obj = android_tests()
+    elif is_test_library_perfecto_ios:
+        obj = ios_tests()
+    else:
+        obj = lf_tests(lf_data=get_testbed_details["traffic_generator"],
+                       dut_data=get_testbed_details["device_under_tests"],
+                       log_level=logging.DEBUG,
+                       run_lf=False,
+                       influx_params=None)
     yield obj
 
 

@@ -1,32 +1,24 @@
 import logging
-import os
-import re
-from ast import Str
-from logging import exception
-import unittest
+import time
 import warnings
 
-import urllib3
-from _pytest.outcomes import fail
-from appium.webdriver import webdriver
-from perfecto.model.model import Job, Project
-from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestContext, TestResultFactory)
-import pytest
-import sys
-import time
-from appium import webdriver
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
-from appium.webdriver.common.mobileby import MobileBy
-from selenium.webdriver.support import expected_conditions as EC
 import allure
-from perfecto_interop import perfecto_interop
-class ios_libs(perfecto_interop):
+import pytest
+import urllib3
+from appium import webdriver
+from appium.webdriver import webdriver
+from appium.webdriver.common.mobileby import MobileBy
+from perfecto import (PerfectoExecutionContext, PerfectoReportiumClient, TestContext)
+from perfecto.model.model import Job, Project
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+
+
+class ios_libs:
     global driver, perfecto_execution_context, deviceModel
     def __init__(self, perfecto_data=None, dut_data=None):
-        super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
         pass
