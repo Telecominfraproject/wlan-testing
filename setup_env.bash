@@ -88,7 +88,8 @@ then
       $PIP install dist/*.whl --force-reinstall
       cd ../../
     fi
-    echo -e "\"\"\"\nRegistered Target Imports\n\"\"\"\nimport sys\nimport importlib\n\nsys.path.append('/usr/local/bin')\n\n" >> tests/imports.py
+    x=$(whoami)
+    echo -e "\"\"\"\nRegistered Target Imports\n\"\"\"\nimport sys\nimport importlib\n\nsys.path.append('/usr/local/bin')\n\nsys.path.append('/home/$x/.local//bin/')\n\nsys.path.append('/home/$x/.local/lib/python3.8/site-packages/')\n\n" >> tests/imports.py
     echo -e "########################################################################################################################" >> tests/imports.py
     echo -e "\"\"\"
     Target Name:$target
