@@ -324,9 +324,11 @@ class APLIBS:
                                           expected_attachment_type=allure.attachment_type.JSON)
 
         try_again = False
+
         try:
             data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
         except Exception as e:
+            data = output
             logging.error("error in converting the ubus call ucentral status output to json" + output)
             try_again = True
         if try_again or len(data.keys()) != 3:
@@ -337,6 +339,7 @@ class APLIBS:
             try:
                 data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
             except Exception as e:
+                output
                 logging.error("error in converting the ubus call ucentral status output to json" + output)
         ret_val = data
         return ret_val
