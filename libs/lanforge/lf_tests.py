@@ -1592,6 +1592,103 @@ class RunTest:
         print(f"Lanforge-radio Country changed {_country_num}")
         self.local_realm.json_post("/cli-json/set_wifi_radio", _data=data)
 
+    def tr398(self,radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="", mode="BRIDGE",
+              vlan_id=1, skip_2g=True, skip_5g=False, instance_name="", test=None, move_to_influx=False):
+        #User can select one or more TR398 tests
+        if type(test) == str:
+            test = [test]
+        raw_line = []
+        skip_twog = '1' if skip_2g else '0'
+        skip_fiveg = '1' if skip_5g else '0'
+        if mode == "BRIDGE" or mode == "NAT":
+            upstream_port = self.upstream_port
+        else:
+            upstream_port = self.upstream_port + "." + str(vlan_id)
+        print("Upstream Port: ", self.upstream_port)
+        tr398_tests = [['Calibrate Attenuators', '0'], ['Receiver Sensitivity', '0'], ['Maximum Connection', '0'],
+                       ['Maximum Throughput', '0'], ['Airtime Fairness', '0'], ['Range Versus Rate', '0'],
+                       ['Spatial Consistency', '0'], ['Multiple STAs Performance', '0'], ['Multiple Assoc Stability', '0'],
+                       ['Downlink MU-MIMO', '0'], ['AP Coexistence', '0'], ['Long Term Stability', '0']]
+        for t in test:
+            if [t,"0"] in tr398_tests:
+                tr398_tests[tr398_tests.index([t,"0"])] = [t,"1"]
+        tr398_tests.extend([['Skip 2.4Ghz Tests', f'{skip_twog}'], ['Skip 5Ghz Tests', f'{skip_fiveg}'],
+                                   ['2.4Ghz Channel', 'AUTO'], ['5Ghz Channel', 'AUTO']])
+        if len(radios_2g) >= 3 and len(radios_5g) >= 3:
+            for i in range(6):
+                if i == 0 or i == 2:
+                    raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                if i == 1 or i == 3:
+                    raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                if i == 4 or i == 5:
+                    raw_line.append([f'radio-{i}: {radios_5g[2] if i == 4 else radios_2g[2]}'])
+        elif len(radios_2g) >= 2 and len(radios_5g) >= 2 and len(radios_ax) >= 2:
+            for i in range(6):
+                if i == 0 or i == 2:
+                    raw_line.append([f'radio-{i}: {radios_5g[0] if i == 0 else radios_5g[1]}'])
+                if i == 1 or i == 3:
+                    raw_line.append([f'radio-{i}: {radios_2g[0] if i == 1 else radios_2g[1]}'])
+                if i == 4 or i == 5:
+                    raw_line.append([f'radio-{i}: {radios_ax[0] if i == 4 else radios_ax[1]}'])
+
+        if len(raw_line) != 6:
+            raw_line = [['radio-0: 1.1.5 wiphy1'], ['radio-1: 1.1.4 wiphy0'], ['radio-2: 1.1.7 wiphy3'],
+                        ['radio-3: 1.1.6 wiphy2'], ['radio-4: 1.1.8 wiphy4'], ['radio-5: 1.1.9 wiphy5']]
+        instance_name = "tr398-instance-{}".format(str(random.randint(0, 100000)))
+        if not os.path.exists("tr398-test-config.txt"):
+            with open("tr398-test-config.txt", "wt") as f:
+                for i in raw_line:
+                    f.write(str(i[0]) + "\n")
+                f.close()
+
+        self.cvtest_obj = TR398Test(lf_host=self.lanforge_ip,
+                                    lf_port=self.lanforge_port,
+                                    lf_user="lanforge",
+                                    lf_password="lanforge",
+                                    instance_name=instance_name,
+                                    config_name="cv_dflt_cfg",
+                                    upstream="1.1." + upstream_port,
+                                    pull_report=True,
+                                    local_lf_report_dir=self.local_report_path,
+                                    load_old_cfg=False,
+                                    dut2=dut_2g,
+                                    dut5=dut_5g,
+                                    raw_lines_file="tr398-test-config.txt",
+                                    enables=[],
+                                    disables=[],
+                                    raw_lines=[],
+                                    sets=tr398_tests,
+                                    test_rig=dut_name
+                                    )
+        self.cvtest_obj.result = True
+        self.cvtest_obj.setup()
+        self.cvtest_obj.run()
+        if os.path.exists("tr398-test-config.txt"):
+            os.remove("tr398-test-config.txt")
+        if move_to_influx:
+            try:
+                report_name = "../reports/" + self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+                influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+                                     influx_port=self.influx_params["influx_port"],
+                                     influx_org=self.influx_params["influx_org"],
+                                     influx_token=self.influx_params["influx_token"],
+                                     influx_bucket=self.influx_params["influx_bucket"],
+                                     path=report_name)
+
+                influx.glob()
+            except Exception as e:
+                print(e)
+                pass
+        # report_name = self.cvtest_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        # influx = CSVtoInflux(influx_host=self.influx_params["influx_host"],
+        #                      influx_port=self.influx_params["influx_port"],
+        #                      influx_org=self.influx_params["influx_org"],
+        #                      influx_token=self.influx_params["influx_token"],
+        #                      influx_bucket=self.influx_params["influx_bucket"],
+        #                      path=report_name)
+        # influx.glob()
+        return self.cvtest_obj
+
     def downlink_mu_mimo(self, radios_2g=[], radios_5g=[], radios_ax=[], dut_name="TIP", dut_5g="", dut_2g="",
                          mode="BRIDGE", vlan_id=1, skip_2g=True, skip_5g=False):
         raw_line = []
