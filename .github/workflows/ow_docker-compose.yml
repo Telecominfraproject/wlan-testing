@@ -149,9 +149,20 @@ jobs:
          chmod +x cli
          ./cli test_service ${{ needs.deploy-virtual-ap-instance.outputs.serial_number }}
 
+  keep-controller-up:
+    name: Keep OpenWiFi Cloud SDK instance alive for live tests
+    needs: [deploy-controller, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run sleep to keep everything up
+        run: |
+          echo "Instance IP - ${{ needs.deploy-controller.outputs.instance_public_ip }}"
+          echo "gateway_url - ${{ needs.deploy-controller.outputs.gateway_url }}"
+          sleep 3000
+
   destroy-controller:
     name: Destroy OpenWiFi cloud SDK instance
-    needs: [deploy-controller, test]
+    needs: [deploy-controller, test, keep-controller-up]
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-2
@@ -164,7 +175,7 @@ jobs:
 
   terminate-virtual-ap-instance:
     name: Terminate virtual AP instance
-    needs: [deploy-virtual-ap-instance, test]
+    needs: [deploy-virtual-ap-instance, test, keep-controller-up]
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
