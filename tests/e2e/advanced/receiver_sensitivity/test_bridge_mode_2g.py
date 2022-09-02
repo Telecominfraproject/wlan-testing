@@ -43,50 +43,89 @@ class TestRxSensitivityBRIDGE2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss1
-    def test_client_wpa2_personal_bridge_mcs0_nss1_2g(self, lf_test, station_names_twog, create_lanforge_chamberview_dut,
+    @pytest.mark.rx_sens_tr398
+    def test_client_wpa2_personal_bridge_mcs0_nss1_2g(self, lf_test, lf_tools, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity Bridge Mode
            pytest -m "rx_sensitivity_test and bridge and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        attenuator = setup_params_general["attenuator"]["attenuator"]
-        attenuator2 = setup_params_general["attenuator"]["attenuator2"]
+        # profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        # ssid_name = profile_data["ssid_name"]
+        # security_key = profile_data["security_key"]
+        # security = "wpa2"
+        # attenuator = setup_params_general["attenuator"]["attenuator"]
+        # attenuator2 = setup_params_general["attenuator"]["attenuator2"]
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
         dut_name = create_lanforge_chamberview_dut
-        raw_lines = [['txo_preamble: VHT'],
-                     ['txo_mcs: 0 CCK, OFDM, HT, VHT'],
-                     ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
-                     ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2],
-                     ["show_3s: 1"], ['txo_txpower: 17'],
-                     ["show_ll_graphs: 1"], ["show_log: 1"]]
+        dut_5g, dut_2g = "", ""
+        radios_2g, radios_5g, radios_ax = [], [], []
+        data = lf_tools.json_get(_req_url="/port?fields=alias,port,mode")
+        data = data['interfaces']
+        port, port_data = "", []
+        for i in data:
+            for j in i:
+                if i[j]['mode'] != '':
+                    port_data.append(i)
 
-        station = lf_test.Client_Connect(ssid=ssid_name, security=security,
-                                         passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_twog, vlan_id=vlan)
-
-        if station:
-            dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
-                                            instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS0_NSS0",
-                                            vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
-            report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            entries = os.listdir("../reports/" + report_name + '/')
-            pdf = False
-            for i in entries:
-                if ".pdf" in i:
-                    pdf = i
-            if pdf:
-                allure.attach.file(source="../reports/" + report_name + "/" + pdf,
-                                   name=get_configuration["access_point"][0]["model"] + "_dataplane")
-            print("Test Completed... Cleaning up Stations")
-            lf_test.Client_disconnect(station_name=station_names_twog)
-            assert station
-        else:
-            assert False
+        for item in range(len(port_data)):
+            for p in port_data[item]:
+                temp = port_data[item][p]['port'].split('.')
+                temp = list(map(int, temp))
+                temp = list(map(str, temp))
+                port = ".".join(temp)
+                # print(port)
+                if port_data[item][p]['mode'] == '802.11bgn-AC':
+                    radios_2g.append(port + " " + port_data[item][p]['alias'])
+                if port_data[item][p]['mode'] == '802.11an-AC':
+                    radios_5g.append(port + " " + port_data[item][p]['alias'])
+                if port_data[item][p]['mode'] == '802.11abgn-AX':
+                    radios_ax.append(port + " " + port_data[item][p]['alias'])
+        # lf_tools.dut_idx_mapping = {'0': ['mu-mimo-open-5g', '[BLANK]', 'open', '5G', '90:3c:b3:9d:69:5a'],
+        #                             '1': ['mu-mimo-open-2g', '[BLANK]', 'open', '2G', '90:3c:b3:9d:69:5b']}
+        for i in lf_tools.dut_idx_mapping:
+            if lf_tools.dut_idx_mapping[i][3] == "5G":
+                dut_5g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4] + ' (1)'
+                print(dut_5g)
+            if lf_tools.dut_idx_mapping[i][3] == "2G":
+                dut_2g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4] + ' (2)'
+                print(dut_2g)
+        # raw_lines = [['txo_preamble: VHT'],
+        #              ['txo_mcs: 0 CCK, OFDM, HT, VHT'],
+        #              ['spatial_streams: 1'], ['bandw_options: 20'], ['txo_sgi: ON'],
+        #              ['txo_retries: No Retry'], ['attenuator: %s' % attenuator], ['attenuator2: %s' % attenuator2],
+        #              ["show_3s: 1"], ['txo_txpower: 17'],
+        #              ["show_ll_graphs: 1"], ["show_log: 1"]]
+        #
+        # station = lf_test.Client_Connect(ssid=ssid_name, security=security,
+        #                                  passkey=security_key, mode=mode, band=band,
+        #                                  station_name=station_names_twog, vlan_id=vlan)
+        #
+        # if station:
+        #     dp_obj = lf_test.rx_sensitivity(station_name=station_names_twog, mode=mode,
+        #                                     instance_name="TIP_PERF_RX_SEN_WPA2_BRIDGE_2G_MCS0_NSS0",
+        #                                     vlan_id=vlan, dut_name=dut_name, raw_lines=raw_lines)
+        #     report_name = dp_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+        #     entries = os.listdir("../reports/" + report_name + '/')
+        #     pdf = False
+        #     for i in entries:
+        #         if ".pdf" in i:
+        #             pdf = i
+        #     if pdf:
+        #         allure.attach.file(source="../reports/" + report_name + "/" + pdf,
+        #                            name=get_configuration["access_point"][0]["model"] + "_dataplane")
+        #     print("Test Completed... Cleaning up Stations")
+        #     lf_test.Client_disconnect(station_name=station_names_twog)
+        #     assert station
+        # else:
+        #     assert False
+        instance_name = "rx_sens_TR398"
+        tr398_obj = lf_test.tr398(radios_2g=radios_2g, radios_5g=radios_5g, radios_ax=radios_ax,
+                                  dut_name=create_lanforge_chamberview_dut, dut_5g=dut_5g, dut_2g=dut_2g, mode=mode,
+                                  vlan_id=vlan, skip_2g=False, skip_5g=True, instance_name=instance_name, test="Receiver Sensitivity",
+                                  move_to_influx=False)
+        assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2447", name="WIFI-2447")
     @pytest.mark.wpa2_personal
