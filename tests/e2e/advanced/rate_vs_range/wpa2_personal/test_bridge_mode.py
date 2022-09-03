@@ -12,7 +12,7 @@ import pytest
 import allure
 import os.path
 
-pytestmark = [pytest.mark.advance, pytest.mark.ratevsrange, pytest.mark.bridge]
+pytestmark = [pytest.mark.advance, pytest.mark.ratevsrange, pytest.mark.bridge, pytest.mark.report]
 
 
 setup_params_general = {
