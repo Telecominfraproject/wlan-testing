@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.advance, pytest.mark.downlink_mu_mimo, pytest.mark.bridge, pytest.mark.open]
+pytestmark = [pytest.mark.advance, pytest.mark.downlink_mu_mimo, pytest.mark.bridge, pytest.mark.open, pytest.mark.report]
 
 setup_params_general = {
     "mode": "BRIDGE",

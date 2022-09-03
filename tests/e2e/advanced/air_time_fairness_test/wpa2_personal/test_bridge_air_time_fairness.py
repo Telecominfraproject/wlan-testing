@@ -5,7 +5,7 @@ import time
 import pandas as pd
 import logging
 
-pytestmark = [pytest.mark.advance, pytest.mark.atf, pytest.mark.bridge]
+pytestmark = [pytest.mark.advance, pytest.mark.atf, pytest.mark.bridge, pytest.mark.report]
 
 setup_params_general = {
     "mode": "BRIDGE",
