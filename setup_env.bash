@@ -2,7 +2,7 @@
 # Setup python environment variable and pip environment variable like
 # export PYTHON=/usr/bin/python3
 # export PIP=/usr/bin/pip3
-#sh setup_env.bash -t tip_2x -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
+#sh setup_env.bash -t dut_lib_template -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
 set -e
 
 helpFunction()
@@ -85,7 +85,7 @@ then
     touch tests/imports.py
     if [ $target == "tip_2x" ]
     then
-      cd libs/tip_2x
+      cd libs/dut_lib_template
       $PYTHON setup.py bdist_wheel
       $PIP install dist/*.whl --force-reinstall
       cd ../../

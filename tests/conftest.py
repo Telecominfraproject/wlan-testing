@@ -168,7 +168,7 @@ def get_target_object(request, get_testbed_details, add_allure_environment_prope
         t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"],
                           device_under_tests_info=get_testbed_details["device_under_tests"])
         if not request.config.getoption("--skip-env"):
-            if get_testbed_details["target"] == "tip_2x":
+            if get_testbed_details["target"] == "dut_lib_template":
                 t_object.setup_environment_properties(add_allure_environment_property=
                                                       add_allure_environment_property)
 

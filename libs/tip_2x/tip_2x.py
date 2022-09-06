@@ -38,13 +38,13 @@ class tip_2x:
     controller_data = {}
     device_under_tests_info = []
     """
-        OpenWifi 2.x Specific Variables that will be only scoped in tip_2x Library
+        OpenWifi 2.x Specific Variables that will be only scoped in dut_lib_template Library
 
     """
     ow_sec_url = ""
     ow_sec_login_username = ""
     ow_sec_login_password = ""
-    target = "tip_2x"
+    target = "dut_lib_template"
     controller_library_object = object()
     prov_library_object = object()
     firmware_library_object = object()
@@ -82,8 +82,8 @@ class tip_2x:
                  device_under_tests_info=[], logging_level=logging.INFO):
         logging.basicConfig(format='%(asctime)s - %(message)s', level=logging_level)
         if target != self.target:
-            logging.error("Target version is : " + target + " Expected target is tip_2x")
-            pytest.exit("Target should be 'tip_2x', Current Target is : " + target)
+            logging.error("Target version is : " + target + " Expected target is dut_lib_template")
+            pytest.exit("Target should be 'dut_lib_template', Current Target is : " + target)
         if controller_data is None:
             controller_data = {}
         self.controller_data = controller_data
@@ -98,8 +98,8 @@ class tip_2x:
 
     def setup_metadata(self):
         logging.info(
-            "Setting up the Controller metadata for tip_2x Library: " + str(json.dumps(self.controller_data, indent=2)))
-        logging.info("Setting up the DUT metadata for tip_2x Library: " + str(
+            "Setting up the Controller metadata for dut_lib_template Library: " + str(json.dumps(self.controller_data, indent=2)))
+        logging.info("Setting up the DUT metadata for dut_lib_template Library: " + str(
             json.dumps(self.device_under_tests_info, indent=2)))
         logging.info("Number of DUT's in lab_info.json: " + str(len(self.device_under_tests_info)))
         self.ow_sec_url = self.controller_data["url"]
@@ -900,7 +900,7 @@ class tip_2x:
 
 if __name__ == '__main__':
     basic_05 = {
-        "target": "tip_2x",
+        "target": "dut_lib_template",
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",
