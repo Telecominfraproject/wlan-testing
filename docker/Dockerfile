@@ -1,4 +1,8 @@
 FROM python:3.8
+# Version of cloudsdk to be tested
+ARG CLOUDSDK_LIBRARY=tip_2x
+ARG TEST_DEVICE_NAME=all
+
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     tshark \
     && rm -rf /var/lib/apt/lists/*
@@ -10,5 +14,9 @@ COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 COPY tests /wlan-testing/tests
 COPY libs /wlan-testing/libs
+COPY setup_env.bash /wlan-testing/setup_env.bash
+ENV PYTHON=/usr/local/bin/python3
+ENV PIP=/usr/local/bin/pip3
+RUN /wlan-testing/setup_env.bash -t $CLOUDSDK_LIBRARY -d $TEST_DEVICE_NAME -n "TIP Automation" -o TIP -e tip-automation@telecominfraproject.com -i "TIP OpenWIFI Library"
 WORKDIR /wlan-testing
-ENTRYPOINT ["bash"]
+ENTRYPOINT ["/bin/bash"]

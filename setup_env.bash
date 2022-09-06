@@ -1,8 +1,10 @@
-#!/usr/bin/bash
+#!/bin/bash
 # Setup python environment variable and pip environment variable like
 # export PYTHON=/usr/bin/python3
 # export PIP=/usr/bin/pip3
 #sh setup_env.bash -t tip_2x -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
+set -e
+
 helpFunction()
 {
    echo "Open Wifi CICD Test Automation Installation"
@@ -99,7 +101,7 @@ then
     Email:$email
     description:$description
 \"\"\"" >> tests/imports.py
-  echo -e "
+    echo -e "
 try:
     target = importlib.import_module(\"tip_2x\")
     target = target.tip_2x
@@ -117,7 +119,7 @@ except ImportError as e:
     Email:$email
     description:Candela LANforge Based Library
 \"\"\"" >> tests/imports.py
-  echo -e "
+    echo -e "
 try:
     lanforge_libs = importlib.import_module(\"lanforge_scripts.lf_libs.lf_libs\")
     lf_libs = lanforge_libs.lf_libs
@@ -128,7 +130,7 @@ except ImportError as e:
     print(e)
     sys.exit(\"Python Import Error: \" + str(e))
 " >> tests/imports.py
-   echo -e "########################################################################################################################" >> tests/imports.py
+    echo -e "########################################################################################################################" >> tests/imports.py
     cd libs/perfecto_interop
     $PYTHON setup.py bdist_wheel
     $PIP install dist/*.whl --force-reinstall
@@ -142,7 +144,7 @@ except ImportError as e:
     Email:$email
     description:Perfecto Based Interop Library
 \"\"\"" >> tests/imports.py
-  echo -e "
+    echo -e "
 try:
     perfecto_interop = importlib.import_module(\"perfecto_interop\")
     android_tests = perfecto_interop.android_tests
@@ -151,9 +153,7 @@ except ImportError as e:
     print(e)
     sys.exit(\"Python Import Error: \" + str(e))
 " >> tests/imports.py
-   echo -e "########################################################################################################################" >> tests/imports.py
-
-
+     echo -e "########################################################################################################################" >> tests/imports.py
   fi
 fi
 WLAN_TESTING_PATH=$(pwd)"/tests/"
