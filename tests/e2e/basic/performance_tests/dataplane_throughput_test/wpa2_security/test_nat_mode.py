@@ -43,7 +43,7 @@ class TestDataplaneThroughputNAT(object):
     def test_tcp_udp_wpa2_personal_nat_2g_band_ac_station(self, get_test_library, get_dut_logs_per_test_case,
                                                           get_test_device_logs,
                                                           get_target_object,
-                                                          num_stations):
+                                                          num_stations, setup_configuration):
         """Dataplane THroughput nat Mode
            pytest -m "dataplane_throughput_test and nat and wpa2_personal and twog"
         """
@@ -67,7 +67,7 @@ class TestDataplaneThroughputNAT(object):
     def test_tcp_udp_wpa2_personal_nat_5g_band_ac_station(self, get_test_library, get_dut_logs_per_test_case,
                                                           get_test_device_logs,
                                                           get_target_object,
-                                                          num_stations):
+                                                          num_stations, setup_configuration):
         """Dataplane THroughput nat Mode
            pytest -m "dataplane_throughput_test and nat and wpa2_personal and fiveg"
         """

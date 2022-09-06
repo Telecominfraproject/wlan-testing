@@ -42,7 +42,7 @@ class TestDataplaneThroughputBRIDGE(object):
     def test_tcp_upd_open_bridge_2g_band(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs,
                                          get_target_object,
-                                         num_stations):
+                                         num_stations, setup_configuration):
         """Dataplane THroughput BRIDGE Mode.
            pytest -m "dataplane_throughput_test and BRIDGE and open and twog"
         """
@@ -65,7 +65,7 @@ class TestDataplaneThroughputBRIDGE(object):
     def test_tcp_upd_open_bridge_5g_band(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs,
                                          get_target_object,
-                                         num_stations):
+                                         num_stations, setup_configuration):
         """Dataplane THroughput BRIDGE Mode
            pytest -m "dataplane_throughput_test and BRIDGE and open and fiveg"
         """

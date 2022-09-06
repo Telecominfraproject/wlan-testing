@@ -43,7 +43,7 @@ class TestDataplaneThroughputVLAN(object):
     def test_tcp_upd_wpa2_personal_vlan_2g_band(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs,
                                                 get_target_object,
-                                                num_stations):
+                                                num_stations, setup_configuration):
         """Dataplane THroughput VLAN Mode
            pytest -m "dataplane_throughput_test and vlan and wpa2_personal and twog"
         """
@@ -68,7 +68,7 @@ class TestDataplaneThroughputVLAN(object):
     def test_tcp_upd_wpa2_personal_vlan_5g_band(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs,
                                                 get_target_object,
-                                                num_stations):
+                                                num_stations, setup_configuration):
         """Dataplane THroughput VLAN Mode
            pytest -m "dataplane_throughput_test and vlan and wpa2_personal and fiveg"
         """
