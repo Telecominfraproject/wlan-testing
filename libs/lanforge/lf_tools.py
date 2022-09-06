@@ -49,6 +49,7 @@ class ChamberView:
         self.access_point_data = access_point_data
         self.run_lf = run_lf
         self.cc_1 = cc_1
+        self.version = ap_version
         print("testbed", testbed)
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "Non-mesh":
@@ -89,7 +90,10 @@ class ChamberView:
                         self.dut_name = access_point_data[ap]["model"]
                         print(self.dut_name)
                         self.ap_model = access_point_data[ap]["model"]
-                        self.version = access_point_data[ap]["version"].split("/")[-1]
+                        if "/" in access_point_data[ap]["version"]:
+                            self.version = access_point_data[ap]["version"].split("/")[-1]
+                        else:
+                            self.version = " - "
                         self.serial = access_point_data[ap]["serial"]
                         self.ssid_data = None
                         if self.run_lf:
@@ -211,11 +215,11 @@ class ChamberView:
                 self.dut_name = testbed
                 self.ap_model = access_point_data[0]["model"]
                 self.ap_hw_info = access_point_data[0]["mode"]
-                try:
+                if len(self.ap_version) >= 1 and "/" in self.ap_version[0]:
                     self.version = self.ap_version[0].split(" / ")[1].split("\r\n\n")[0]
                     print("AP version", self.version)
-                except Exception as e:
-                    print(e)
+                else:
+                    self.version = " - "
                 self.serial = access_point_data[0]["serial"]
                 self.ssid_data = None
                 if self.run_lf:
@@ -714,7 +718,10 @@ class ChamberView:
             self.dut_name = "tip-" + str(ap["type"])
             print(self.dut_name)
             self.ap_model = ap["model"]
-            self.version = ap["version"].split("/")[-1]
+            if "/" in ap["version"]:
+                self.version = ap["version"].split("/")[-1]
+            else:
+                self.version=" - "
             self.serial = ap["serial"]
             self.CreateDut = DUT(lfmgr=self.lanforge_ip,
                                  port=self.lanforge_port,
@@ -736,7 +743,10 @@ class ChamberView:
             self.dut_name = ap["model"]
             print(self.dut_name)
             self.ap_model = ap["model"]
-            self.version = ap["version"].split("/")[-1]
+            if "/" in ap["version"]:
+                self.version=ap["version"].split("/")[-1]
+            else:
+                self.version=" - "
             self.serial = ap["serial"]
             self.CreateDut = DUT(lfmgr=self.lanforge_ip,
                                  port=self.lanforge_port,
