@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 # Setup python environment variable and pip environment variable like
 # export PYTHON=/usr/bin/python3
 # export PIP=/usr/bin/pip3
