@@ -62,7 +62,7 @@ class TestDataplaneThroughputBRIDGE(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3674", name="WIFI-3674")
     @pytest.mark.fiveg
     def test_tcp_upd_wpa3_personal_bridge_5g_band(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs,
+                                                  get_test_device_logs, client_type,
                                                   get_target_object,
                                                   num_stations, setup_configuration):
         """Dataplane THroughput BRIDGE Mode
