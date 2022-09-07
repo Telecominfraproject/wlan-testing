@@ -9,14 +9,14 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.dataplane_throughput_test,
-              pytest.mark.bridge]
+              pytest.mark.bridge, pytest.mark.open]
 
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "open": [
-            {"ssid_name": "open", "appliedRadios": ["2G"]},
-            {"ssid_name": "open", "appliedRadios": ["5G"]}]},
+            {"ssid_name": "open_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "open_dataplane_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
@@ -37,7 +37,6 @@ class TestDataplaneThroughputBRIDGE(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
-    @pytest.mark.open
     @pytest.mark.twog
     def test_tcp_upd_open_bridge_2g_band(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs,
@@ -46,7 +45,7 @@ class TestDataplaneThroughputBRIDGE(object):
         """Dataplane THroughput BRIDGE Mode.
            pytest -m "dataplane_throughput_test and BRIDGE and open and twog"
         """
-        profile_data = {"ssid_name": "open", "appliedRadios": ["2G"]}
+        profile_data = {"ssid_name": "open_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "open"
         mode = "BRIDGE"
@@ -60,7 +59,6 @@ class TestDataplaneThroughputBRIDGE(object):
                                                    )
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3674", name="WIFI-3674")
-    @pytest.mark.open
     @pytest.mark.fiveg
     def test_tcp_upd_open_bridge_5g_band(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs,
@@ -69,7 +67,7 @@ class TestDataplaneThroughputBRIDGE(object):
         """Dataplane THroughput BRIDGE Mode
            pytest -m "dataplane_throughput_test and BRIDGE and open and fiveg"
         """
-        profile_data = {"ssid_name": "open", "appliedRadios": ["5G"]}
+        profile_data = {"ssid_name": "open_dataplane_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "open"
         mode = "BRIDGE"
