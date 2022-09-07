@@ -39,9 +39,9 @@ class TestDataplaneThroughputNAT(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
     @pytest.mark.twog
     def test_tcp_upd_open_nat_2g_band(self, get_test_library, get_dut_logs_per_test_case,
-                                         get_test_device_logs,
-                                         get_target_object,
-                                         num_stations, setup_configuration):
+                                      get_test_device_logs, client_type,
+                                      get_target_object,
+                                      num_stations, setup_configuration):
         """Dataplane THroughput NAT Mode.
            pytest -m "dataplane_throughput_test and NAT and open and twog"
         """
@@ -61,9 +61,9 @@ class TestDataplaneThroughputNAT(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3674", name="WIFI-3674")
     @pytest.mark.fiveg
     def test_tcp_upd_open_nat_5g_band(self, get_test_library, get_dut_logs_per_test_case,
-                                         get_test_device_logs,
-                                         get_target_object,
-                                         num_stations, setup_configuration):
+                                      get_test_device_logs, client_type,
+                                      get_target_object,
+                                      num_stations, setup_configuration):
         """Dataplane THroughput NAT Mode
            pytest -m "dataplane_throughput_test and NAT and open and fiveg"
         """
