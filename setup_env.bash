@@ -95,7 +95,7 @@ then
     touch tests/imports.py
     if [ $target == "tip_2x" ]
     then
-      cd dut_lib_template
+      cd libs/tip_2x
       $PYTHON setup.py bdist_wheel
       $PIP install dist/*.whl --force-reinstall
       cd ../
