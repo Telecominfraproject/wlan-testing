@@ -46,7 +46,7 @@ class TestDataplaneThroughputBRIDGE(object):
         """Dataplane THroughput BRIDGE Mode.
            pytest -m "dataplane_throughput_test and BRIDGE and open and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["open"][0]
+        profile_data = {"ssid_name": "open", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "open"
         mode = "BRIDGE"
@@ -69,7 +69,7 @@ class TestDataplaneThroughputBRIDGE(object):
         """Dataplane THroughput BRIDGE Mode
            pytest -m "dataplane_throughput_test and BRIDGE and open and fiveg"
         """
-        profile_data = setup_params_general["ssid_modes"]["open"][1]
+        profile_data = {"ssid_name": "open", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "open"
         mode = "BRIDGE"

@@ -47,7 +47,7 @@ class TestDataplaneThroughputNAT(object):
         """Dataplane THroughput nat Mode
            pytest -m "dataplane_throughput_test and nat and open and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["open"][0]
+        profile_data = {"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "open"
         mode = "NAT"
@@ -70,7 +70,7 @@ class TestDataplaneThroughputNAT(object):
         """Dataplane THroughput nat Mode
            pytest -m "dataplane_throughput_test and nat and open and fiveg"
         """
-        profile_data = setup_params_general["ssid_modes"]["open"][1]
+        profile_data = {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "open"
         mode = "NAT"

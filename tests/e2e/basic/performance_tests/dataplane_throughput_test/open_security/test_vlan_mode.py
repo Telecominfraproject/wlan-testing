@@ -45,9 +45,8 @@ class TestDataplaneThroughputVLAN(object):
         """Dataplane THroughput VLAN Mode
            pytest -m "dataplane_throughput_test and VLAN and open and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["open"][0]
+        profile_data = {"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100}
         ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
         security = "open"
         mode = "VLAN"
         band = "twog"
@@ -70,9 +69,8 @@ class TestDataplaneThroughputVLAN(object):
         """Dataplane THroughput VLAN Mode
            pytest -m "dataplane_throughput_test and VLAN and open and fiveg"
         """
-        profile_data = setup_params_general["ssid_modes"]["open"][1]
+        profile_data = {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}
         ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
         security = "open"
         mode = "VLAN"
         band = "fiveg"
