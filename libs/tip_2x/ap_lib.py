@@ -430,7 +430,7 @@ class APLIBS:
 
 if __name__ == '__main__':
     basic_05 = {
-        "target": "tip_2x",
+        "target": "dut_lib_template",
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
             "username": "tip@ucentral.com",

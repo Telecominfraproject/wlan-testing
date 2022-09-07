@@ -1455,7 +1455,6 @@ class UProfileUtility:
                 for keys in radio_config[band]:
                     base_radio_config_6g[keys] = radio_config[band][keys]
 
-
         self.base_profile_config["radios"].append(base_radio_config_2g)
         self.base_profile_config["radios"].append(base_radio_config_5g)
         # self.base_profile_config["radios"].append(base_radio_config_6g)

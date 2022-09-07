@@ -59,6 +59,12 @@ def pytest_addoption(parser):
         default="lanforge",
         help="Test Traffic Generator which can be used,  lanforge | perfecto"
     )
+    parser.addoption(
+        "--run-lf",
+        action="store_true",
+        default=False,
+        help="Test Traffic Generator which can be used,  lanforge | perfecto"
+    )
 
     parser.addoption(
         "--skip-env",
@@ -85,6 +91,13 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="session")
 def get_lab_info():
     yield configuration
+
+
+@pytest.fixture(scope="session")
+def run_lf(request):
+    """yields the testbed option selection"""
+    run_lf = request.config.getoption("--run-lf")
+    yield run_lf
 
 
 @pytest.fixture(scope="session")
@@ -155,7 +168,7 @@ def get_target_object(request, get_testbed_details, add_allure_environment_prope
         t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"],
                           device_under_tests_info=get_testbed_details["device_under_tests"])
         if not request.config.getoption("--skip-env"):
-            if get_testbed_details["target"] == "tip_2x":
+            if get_testbed_details["target"] == "dut_lib_template":
                 t_object.setup_environment_properties(add_allure_environment_property=
                                                       add_allure_environment_property)
 
@@ -219,7 +232,7 @@ def is_test_library_perfecto_ios(request):
 
 
 @pytest.fixture(scope="session")
-def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios):
+def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios, run_lf):
     if is_test_library_perfecto_android:
         obj = android_tests()
     elif is_test_library_perfecto_ios:
@@ -228,7 +241,7 @@ def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_t
         obj = lf_tests(lf_data=get_testbed_details["traffic_generator"],
                        dut_data=get_testbed_details["device_under_tests"],
                        log_level=logging.DEBUG,
-                       run_lf=False,
+                       run_lf=run_lf,
                        influx_params=None)
     yield obj
 

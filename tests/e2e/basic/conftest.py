@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.fixture(scope="class")
-def setup_configuration(request, get_markers, get_target_object):
+def setup_configuration(request, get_markers, get_target_object, run_lf):
     # Predefined selected markers and selected configuration
 
     conf = dict(request.param)
@@ -13,7 +13,9 @@ def setup_configuration(request, get_markers, get_target_object):
             requested_combination.append(get_markers[key])
 
     # Method to setup the basic configuration
-    data = get_target_object.setup_basic_configuration(configuration=configuration,
-                                                       requested_combination=requested_combination)
+    data = {}
+    if not run_lf:
+        data = get_target_object.setup_basic_configuration(configuration=configuration,
+                                                           requested_combination=requested_combination)
 
     yield data
