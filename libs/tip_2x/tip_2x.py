@@ -548,7 +548,7 @@ class tip_2x:
         self.dut_library_object.verify_certificates(idx=idx)
         ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False)
         wifi_status = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=True)
-        allure.attach(name="wifi_status_before_apply: ", body=wifi_status, attachment_type=allure.attachment_type.TEXT)
+        allure.attach(name="wifi_status_before_apply: ", body=str(wifi_status))
         if not ret_val["connected"] or ret_val["connected"] is None:
             # TODO: check the connectivity (if it is not connected, then check the lanforge wan port and bring it
             #  up if lanforge eth is in down state. Also check the link state of eth port with ip address
@@ -575,7 +575,7 @@ class tip_2x:
                 self.dut_library_object.check_connectivity(idx=idx, attach_allure=False)
         self.dut_library_object.check_connectivity(idx=idx)
         r_data = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
-        allure.attach(name="wifi_status_after_apply: ", body=r_data, attachment_type=allure.attachment_type.TEXT)
+        allure.attach(name="wifi_status_after_apply: ", body=str(r_data))
         logging.info("Checking Wifi Status after Config Apply...")
         for radio in r_data:
             if not r_data[radio]["up"]:
