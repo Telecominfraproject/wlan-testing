@@ -95,10 +95,10 @@ then
     touch tests/imports.py
     if [ $target == "tip_2x" ]
     then
-      cd libs/dut_lib_template
+      cd dut_lib_template
       $PYTHON setup.py bdist_wheel
       $PIP install dist/*.whl --force-reinstall
-      cd ../../
+      cd ../
     fi
     x=$(whoami)
     echo -e "\"\"\"\nRegistered Target Imports\n\"\"\"\nimport sys\nimport importlib\n\nsys.path.append('/usr/local/bin')\n\nsys.path.append('/home/$x/.local//bin/')\n\nsys.path.append('/home/$x/.local/lib/python3.8/site-packages/')\n\n" >> tests/imports.py
