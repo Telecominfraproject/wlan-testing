@@ -65,10 +65,11 @@ class TestMultipskBridge(object):
         security="wpa"
         mode="BRIDGE"
         band="twog"
-        mpsk_data={100: {"num_stations": 1, "passkey": profile_data["multi-psk"][0]["key"]}}
+        mpsk_data={profile_data["multi-psk"][0]["vlan-id"]: {"num_stations": 1,
+                                                             "passkey": profile_data["multi-psk"][0]["key"]}}
         get_test_library.multi_psk_test(band=band, mpsk_data=mpsk_data, ssid=ssid, bssid="['BLANK']",
                                         passkey=security_key,
-                                        encryption=security, mode=mode, num_sta=1, dut_data=None)
+                                        encryption=security, mode=mode, num_sta=1, dut_data=setup_configuration)
 
     @pytest.mark.multipsk
     @pytest.mark.wpa2_personal
@@ -91,4 +92,4 @@ class TestMultipskBridge(object):
                    200: {"num_stations": 1, "passkey": profile_data["multi-psk"][1]["key"]}}
         get_test_library.multi_psk_test(band=band, mpsk_data=mpsk_data, ssid=ssid, bssid="['BLANK']",
                                         passkey=security_key,
-                                        encryption=security, mode=mode, num_sta=1, dut_data=None)
+                                        encryption=security, mode=mode, num_sta=1, dut_data=setup_configuration)
