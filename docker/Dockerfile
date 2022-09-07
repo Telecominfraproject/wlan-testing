@@ -10,8 +10,8 @@ RUN mkdir ~/.pip
 RUN echo "[global]" > ~/.pip/pip.conf
 RUN echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
 RUN echo "extra-index-url = https://tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple/" >> ~/.pip/pip.conf
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+COPY requirements.txt /wlan-testing/requirements.txt
+RUN pip3 install -r /wlan-testing/requirements.txt
 COPY tests /wlan-testing/tests
 COPY libs /wlan-testing/libs
 COPY setup_env.bash /wlan-testing/setup_env.bash

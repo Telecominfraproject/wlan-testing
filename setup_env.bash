@@ -15,8 +15,15 @@ helpFunction()
    echo -e "\t-e Author Email Address eg. tip_2x"
    echo -e "\t-i Description Info eg. tip_2x"
    echo -e "\t-d Test Device Name eg. lanforge | perfecto | all"
+   echo
+   echo -e "Required environment variables:"
+   echo -e "\tPYTHON - full path to Python3 executable (minimal version is 3.8). Example value - /usr/bin/python3"
+   echo -e "\tPIP - full path to PIP3 executable. Example value - /usr/bin/pip3"
    exit 1 # Exit script after printing help
 }
+
+[[ -z ${PYTHON+x} ]] && echo "You must set the variable PYTHON in order to use this script." && echo && helpFunction && exit 1
+[[ -z ${PIP+x} ]] && echo "You must set the variable PIP in order to use this script." && echo && helpFunction && exit 1
 
 while getopts "t:n:o:e:i:d:" opt
 do
@@ -70,18 +77,21 @@ then
   if [ -d ../wlan-lanforge-scripts ]
   then
     cd ../wlan-lanforge-scripts
-    $PIP uninstall ../lanforge_scripts/dist/*.whl
-    rm -rf ../lanforge_scripts
+    if [ -d ../lanforge_scripts ]
+    then
+      $PIP uninstall ../lanforge_scripts/dist/*.whl
+      rm -rf ../lanforge_scripts
+    fi
     bash to_pip.sh
     $PIP install ../lanforge_scripts/dist/*.whl #--force-reinstall
     echo "Installed LANforge PIP Module"
     cd ../wlan-testing/
-    mkdir ~/.pip
+    mkdir -p ~/.pip
     echo "[global]" > ~/.pip/pip.conf
     echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
     echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple" >> ~/.pip/pip.conf
     $PIP install -r requirements.txt
-    rm tests/imports.py
+    rm -f tests/imports.py
     touch tests/imports.py
     if [ $target == "tip_2x" ]
     then
@@ -158,7 +168,7 @@ except ImportError as e:
 fi
 WLAN_TESTING_PATH=$(pwd)"/tests/"
 echo $WLAN_TESTING_PATH
-rm tests/pytest.ini
+rm -f tests/pytest.ini
 touch tests/pytest.ini
 echo -e "[pytest]
 python_files = test_*.py setup_*.py
