@@ -72,6 +72,11 @@ def pytest_addoption(parser):
         default=False,
         help="skip adding to env data"
     )
+    parser.addoption(
+        "--client-type",
+        default="ac",
+        help="Select the client type for test ac | ax"
+    )
 
     parser.addoption(
         "--use-perfecto-android",
@@ -112,6 +117,13 @@ def num_stations(request):
     """yields the testbed option selection"""
     num_stations = request.config.getoption("--num_stations")
     yield num_stations
+
+
+@pytest.fixture(scope="session")
+def client_type(request):
+    """yields the testbed option selection"""
+    client_type = request.config.getoption("--client-type")
+    yield client_type
 
 
 @pytest.fixture(scope="session")
