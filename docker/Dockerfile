@@ -14,6 +14,7 @@ COPY requirements.txt /wlan-testing/requirements.txt
 RUN pip3 install -r /wlan-testing/requirements.txt
 COPY tests /wlan-testing/tests
 COPY libs /wlan-testing/libs
+COPY dut_lib_template /wlan-testing/dut_lib_template
 COPY setup_env.bash /wlan-testing/setup_env.bash
 ENV PYTHON=/usr/local/bin/python3
 ENV PIP=/usr/local/bin/pip3
