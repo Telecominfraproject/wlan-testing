@@ -8,14 +8,14 @@ setup_params_enterprise = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa_enterprise": [
-            {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], },
-            {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa2_enterprise": [
-            {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_enterprise": [
-            {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+            {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
 
     "rf": {},
     "radius": True
@@ -48,7 +48,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
 
-        profile_data = {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"]}
+        profile_data = {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
