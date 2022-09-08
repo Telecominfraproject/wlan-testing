@@ -2,7 +2,7 @@
 # Setup python environment variable and pip environment variable like
 # export PYTHON=/usr/bin/python3
 # export PIP=/usr/bin/pip3
-#sh setup_env.bash -t dut_lib_template -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
+#sh setup_env.bash -t tip_2x -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
 set -e
 
 helpFunction()

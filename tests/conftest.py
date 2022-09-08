@@ -207,8 +207,8 @@ def get_testbed_details(selected_testbed, request):
     if request.config.getini("firmware") != "0":
         version = request.config.getini("firmware")
         version_list = version.split(",")
-        for i in range(len(CONFIGURATION[selected_testbed]["access_point"])):
-            CONFIGURATION[selected_testbed]["access_point"][i]["version"] = version_list[0]
+        for i in range(len(CONFIGURATION[selected_testbed]["device_under_tests"])):
+            CONFIGURATION[selected_testbed]["device_under_tests"][i]["version"] = version_list[0]
     allure.attach(name="Testbed Details", body=str(json.dumps(CONFIGURATION[selected_testbed], indent=2)),
                   attachment_type=allure.attachment_type.JSON)
     yield CONFIGURATION[selected_testbed]
