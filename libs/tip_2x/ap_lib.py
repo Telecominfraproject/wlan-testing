@@ -112,28 +112,27 @@ class APLIBS:
 
         return output
 
-    def ubus_call_ucentral_status(self, idx=0, print_log=True, attach_allure=True):
+    def ubus_call_ucentral_status(self, idx=0, print_log=True, attach_allure=True, retry=5):
         ret_val = dict.fromkeys(["connected", "latest", "active"])
-        output = self.run_generic_command(cmd="ubus call ucentral status", idx=idx,
-                                          print_log=print_log,
-                                          attach_allure=attach_allure,
-                                          expected_attachment_type=allure.attachment_type.JSON)
-        try_again = False
-        data = {}
-        try:
-            data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
-        except Exception as e:
-            logging.error("error in converting the ubus call ucentral status output to json" + output)
-            try_again = True
-        if try_again or len(data.keys()) != 3:
+        for i in range(0, retry):
+            ret_val = dict.fromkeys(["connected", "latest", "active"])
             output = self.run_generic_command(cmd="ubus call ucentral status", idx=idx,
                                               print_log=print_log,
                                               attach_allure=attach_allure,
                                               expected_attachment_type=allure.attachment_type.JSON)
+
             try:
                 data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
             except Exception as e:
                 logging.error("error in converting the ubus call ucentral status output to json" + output)
+                data = {}
+            if (data.keys().__contains__("connected") or data.keys().__contains__("disconnected")) and \
+                data.keys().__contains__("latest") and \
+                data.keys().__contains__("active"):
+                break
+            else:
+                logging.error("Error in ubus call ucentral status: " + str(output))
+
         if data.keys().__contains__("connected"):
             ret_val["connected"] = True
         if data.keys().__contains__("disconnected"):
@@ -517,7 +516,7 @@ if __name__ == '__main__':
     }
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.NOTSET)
     obj = APLIBS(dut_data=basic["device_under_tests"])
-    obj.get_active_config()
+    obj.ubus_call_ucentral_status()
     # obj.exit_from_uboot()
     # obj.setup_serial_environment()
 
