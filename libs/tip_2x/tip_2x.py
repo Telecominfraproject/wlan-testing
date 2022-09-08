@@ -667,6 +667,7 @@ class tip_2x:
             else:
                 logging.info(radio + " is up and running")
 
+
     def setup_environment_properties(self, add_allure_environment_property=None):
         if add_allure_environment_property is None:
             return
