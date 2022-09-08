@@ -551,7 +551,7 @@ class tip_2x:
         self.dut_library_object.check_serial_connection(idx=idx)
         self.dut_library_object.setup_serial_environment(idx=idx)
         self.dut_library_object.verify_certificates(idx=idx)
-        ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False)
+        ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False, retry=10)
         wifi_status = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
         allure.attach(name="wifi_status_before_apply: ", body=str(wifi_status))
         if not ret_val["connected"] or ret_val["connected"] is None:
@@ -569,7 +569,7 @@ class tip_2x:
                     ifconfig - check if up0v0 has ip address
                     wifi status - check if all phy radios are up
         """
-        ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx)
+        ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, retry=10)
         if not ret_val["connected"] or ret_val["connected"] is None:
             logging.error(" AP Went to Disconnected State after Applying Config, Checking again after 30 Seconds")
             time.sleep(30)
@@ -588,6 +588,7 @@ class tip_2x:
                 pytest.fail(radio + " is in down State after config apply")
             else:
                 logging.info(radio + " is up and running")
+
 
     def setup_environment_properties(self, add_allure_environment_property=None):
         if add_allure_environment_property is None:
