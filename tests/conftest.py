@@ -32,7 +32,6 @@ try:
     ios_tests = imports.ios_tests
     configuration = importlib.import_module("configuration")
     CONFIGURATION = configuration.CONFIGURATION
-    RADIUS_SERVER_DATA = configuration.RADIUS_SERVER_DATA
 except ImportError as e:
     print(e)
     sys.exit("Python Import Error: " + str(e))
@@ -178,10 +177,10 @@ def get_target_object(request, get_testbed_details, add_allure_environment_prope
     """yields the testbed option selection"""
     t_object = None
     try:
-        t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"],
+        t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"], configuration=configuration,
                           device_under_tests_info=get_testbed_details["device_under_tests"])
         if not request.config.getoption("--skip-env"):
-            if get_testbed_details["target"] == "dut_lib_template":
+            if get_testbed_details["target"] == "tip_2x":
                 t_object.setup_environment_properties(add_allure_environment_property=
                                                       add_allure_environment_property)
 
@@ -274,7 +273,7 @@ def execution_number(request):
 @pytest.fixture(scope="session")
 def radius_info():
     """yields the radius server information from lab info file"""
-    yield RADIUS_SERVER_DATA
+    yield configuration.RADIUS_SERVER_DATA
 
 
 @pytest.fixture(scope='session', autouse=True)

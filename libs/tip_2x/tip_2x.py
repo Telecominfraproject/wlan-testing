@@ -78,7 +78,7 @@ class tip_2x:
                                               "wpa3_enterprise_192": "wpa3-192"
                                               }
 
-    def __init__(self, controller_data=None, target=None,
+    def __init__(self, controller_data=None, target=None, configuration=None,
                  device_under_tests_info=[], logging_level=logging.INFO):
         logging.basicConfig(format='%(asctime)s - %(message)s', level=logging_level)
         if target != self.target:
@@ -87,6 +87,7 @@ class tip_2x:
         if controller_data is None:
             controller_data = {}
         self.controller_data = controller_data
+        self.configuration = configuration
         self.device_under_tests_info = device_under_tests_info
         self.setup_metadata()
         self.setup_objects()
@@ -237,7 +238,11 @@ class tip_2x:
             profile_object.set_radio_config()
         for ssid in final_configuration["ssid_modes"]:
             for ssid_data in final_configuration["ssid_modes"][ssid]:
-                profile_object.add_ssid(ssid_data=ssid_data)
+                if final_configuration["radius"]:
+                    profile_object.add_ssid(ssid_data=ssid_data, radius=True, radius_auth_data=self.configuration.RADIUS_SERVER_DATA,
+                                            radius_accounting_data=self.configuration.RADIUS_ACCOUNTING_DATA)
+                else:
+                    profile_object.add_ssid(ssid_data=ssid_data, radius=False)
         logging.info(
             "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
         # Setup Config Apply on all AP's
@@ -971,26 +976,25 @@ if __name__ == '__main__':
                  target=basic_05["target"])
 
     # var.setup_objects()
-    setup_params_general_two = {
+    setup_params_enterprise = {
         "mode": "BRIDGE",
         "ssid_modes": {
-            "wpa3_personal": [
-                {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa3_p_6g_br", "appliedRadios": ["6G"], "security_key": "something"}],
-            "wpa3_personal_mixed": [
-                {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
-            "wpa_wpa2_personal_mixed": [
-                {"ssid_name": "ssid_wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]
-        },
+            "wpa_enterprise": [
+                {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
+            "wpa2_enterprise": [
+                {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
+            "wpa3_enterprise": [
+                {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
+
         "rf": {},
-        "radius": False
+        "radius": True
     }
     target = [['6G', 'wpa3_personal']]
-    d = var.setup_configuration_data(configuration=setup_params_general_two, requested_combination=target)
-    # d = var.setup_basic_configuration(configuration=setup_params_general_two, requested_combination=target)
+    # d = var.setup_configuration_data(configuration=setup_params_general_two, requested_combination=target)
+    d = var.setup_basic_configuration(configuration=setup_params_enterprise, requested_combination=target)
     print(d)
     # var.setup_firmware()
     # var.teardown_objects()
