@@ -160,9 +160,17 @@ class APLIBS:
         try:
             data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
             logging.info("Latest config is : " + str(data))
+            allure.attach(name="cat /etc/ucentral/ucentral.cfg." + str(latest_uuid),
+                          body=str(json.dumps(data, indent=2)),
+                          attachment_type=allure.attachment_type.JSON)
         except Exception as e:
+            data = output
             logging.error("error in converting the output to json" + output)
             try_again = True
+            allure.attach(name="cat /etc/ucentral/ucentral.cfg." + str(latest_uuid),
+                          body=str(data),
+                          attachment_type=allure.attachment_type.JSON)
+
         return latest_json
 
     def get_active_config(self, idx=0, print_log=True, attach_allure=False):
@@ -181,12 +189,18 @@ class APLIBS:
         try:
             data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
             logging.info("Active config is : " + str(data))
+            allure.attach(name="cat /etc/ucentral/ucentral.cfg." + str(active_uuid),
+                          body=str(json.dumps(data, indent=2)),
+                          attachment_type=allure.attachment_type.JSON)
         except Exception as e:
-            data = ""
+            data = output
             logging.error("error in converting the output to json" + output)
             try_again = True
+            allure.attach(name="cat /etc/ucentral/ucentral.cfg." + str(active_uuid),
+                          body=str(data),
+                          attachment_type=allure.attachment_type.JSON)
         print(data)
-        allure.attach(name="cat /etc/ucentral/ucentral.cfg." + str(active_uuid), body=str(data), attachment_type=allure.attachment_type.JSON)
+
         return active_json
 
     def get_iwinfo(self, idx=0, print_log=True, attach_allure=True):

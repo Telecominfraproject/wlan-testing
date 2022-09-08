@@ -290,7 +290,7 @@ class tip_2x:
                 logging.info("uuid_after_apply: " + str(uuid_after_apply))
                 self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
                 pytest.fail("Config sent from Gateway is not received by AP")
-            self.dut_library_object.get_latest_config_recieved(idx=i, print_log=True, attach_allure=True)
+            self.dut_library_object.get_latest_config_recieved(idx=i, print_log=True, attach_allure=False)
 
             r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
             latest_uuid = r_data["latest"]
@@ -314,7 +314,7 @@ class tip_2x:
                 logging.info("uuid_after_apply: " + str(uuid_after_apply))
                 self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
                 pytest.fail("Config sent from Gateway is Received by AP, But not Applied by AP")
-            self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=True)
+            self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=False)
 
             logging.info("Config is Properly Applied on AP, Waiting for 30 Seconds for All interfaces to come up")
             # wait time interfaces to come up
@@ -547,7 +547,7 @@ class tip_2x:
         self.dut_library_object.setup_serial_environment(idx=idx)
         self.dut_library_object.verify_certificates(idx=idx)
         ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False)
-        wifi_status = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=True)
+        wifi_status = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
         allure.attach(name="wifi_status_before_apply: ", body=str(wifi_status))
         if not ret_val["connected"] or ret_val["connected"] is None:
             # TODO: check the connectivity (if it is not connected, then check the lanforge wan port and bring it
