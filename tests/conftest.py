@@ -32,6 +32,7 @@ try:
     ios_tests = imports.ios_tests
     configuration = importlib.import_module("configuration")
     CONFIGURATION = configuration.CONFIGURATION
+    RADIUS_SERVER_DATA = configuration.RADIUS_SERVER_DATA
 except ImportError as e:
     print(e)
     sys.exit("Python Import Error: " + str(e))
@@ -268,6 +269,12 @@ def execution_number(request):
     if number == 1:
         mode = "NAT-LAN"
     yield mode
+
+
+@pytest.fixture(scope="session")
+def radius_info():
+    """yields the radius server information from lab info file"""
+    yield RADIUS_SERVER_DATA
 
 
 @pytest.fixture(scope='session', autouse=True)

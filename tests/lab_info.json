@@ -3,7 +3,7 @@
 
 "CONFIGURATION" : {
         "basic-01" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -72,7 +72,7 @@
             }
         },
         "basic-02" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -141,7 +141,7 @@
             }
         },
         "basic-03" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -212,7 +212,7 @@
             }
         },
         "basic-03a" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -283,7 +283,7 @@
             }
         },
         "basic-04" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -354,7 +354,7 @@
             }
         },
         "basic-04a" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -425,7 +425,7 @@
             }
         },
         "basic-05" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -494,7 +494,7 @@
             }
         },
         "basic-06" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -563,7 +563,7 @@
             }
         },
         "advance-03" : {
-            "target": "tip_2x",
+            "target": "dut_lib_template",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",

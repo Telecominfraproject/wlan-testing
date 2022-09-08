@@ -8,7 +8,7 @@ setup_params_enterprise = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa_enterprise": [
-            {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
+            {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], },
             {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
         "wpa2_enterprise": [
             {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
@@ -25,13 +25,13 @@ setup_params_enterprise = {
 @allure.suite(suite_name="OpenWifi Sanity LF")
 @allure.sub_suite(sub_suite_name="Bridge Mode EAP TLS Client Connectivity : Suite-A")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_enterprise],
     indirect=True,
     scope="class"
 )
 @pytest.mark.uc_sanity
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestBridgeModeEnterpriseTLSSuiteA(object):
     """ SuiteA Enterprise Test Cases
             pytest -m "client_connectivity and bridge and enterprise and tls"
@@ -39,33 +39,34 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_tls_wpa_enterprise_2g(self, get_ap_logs, get_lf_logs,
-                                   station_names_twog, setup_profiles, lf_test, update_report,
-                                   test_cases, radius_info, exit_on_fail, get_ap_channel):
+    @pytest.mark.jk
+    def test_tls_wpa_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
+                                   get_test_device_logs,
+                                   get_target_object,
+                                   num_stations, setup_configuration, radius_info):
         """ wpa enterprise 2g
                     pytest -m "client_connectivity and bridge and enterprise and tts and twog"
                 """
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][0]
+        profile_data = {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
-        print("output of get_ap_channel ", get_ap_channel)
-        channel = get_ap_channel[0]["2G"]
-        print("ssid 2G channel:- ", channel)
-        vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                             mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                             identity=identity, station_name=station_names_twog,
-                                             key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              extra_securities=extra_secu,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd,
+                                                                              identity=identity, num_sta=1,
+                                                                              key_mgmt=key_mgmt,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
