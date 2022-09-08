@@ -380,7 +380,7 @@ class APLIBS:
 
             ret = output.split("\n")
             status_count = int(ret.count("True"))
-            logging.info("Status count: ", status_count)
+            logging.info("Status count: " + str(status_count))
             if status_count == 1:
                 cmd = "cd && cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
             else:
