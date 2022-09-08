@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='dut_lib_template',
+    name='tip_2x',
     version='0.1',
     scripts=['tip_2x.py', 'controller.py', 'ap_lib.py', 'SetupLibrary.py', 'openwrt_ctl.py'],
     author="Shivam Thakur",
