@@ -2,7 +2,7 @@
 # Setup python environment variable and pip environment variable like
 # export PYTHON=/usr/bin/python3
 # export PIP=/usr/bin/pip3
-#sh setup_env.bash -t dut_lib_template -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
+#sh setup_env.bash -t tip_2x -d all -n "Shivam Thakur" -o TIP -e shivam.thakur@candelatech.com -i "TIP OpenWIFI 2.X Library"
 helpFunction()
 {
    echo "Setup SSH Tunnel for TIP Labs"
@@ -76,7 +76,7 @@ Create_lab_info_json()
 
 "CONFIGURATION" : {
         "basic-01" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -145,7 +145,7 @@ Create_lab_info_json()
             }
         },
         "basic-02" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -214,7 +214,7 @@ Create_lab_info_json()
             }
         },
         "basic-03" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -285,7 +285,7 @@ Create_lab_info_json()
             }
         },
         "basic-03a" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -356,7 +356,7 @@ Create_lab_info_json()
             }
         },
         "basic-04" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -427,7 +427,7 @@ Create_lab_info_json()
             }
         },
         "basic-04a" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -498,7 +498,7 @@ Create_lab_info_json()
             }
         },
         "basic-05" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -567,7 +567,7 @@ Create_lab_info_json()
             }
         },
         "basic-06" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -636,7 +636,7 @@ Create_lab_info_json()
             }
         },
         "advance-03" : {
-            "target": "dut_lib_template",
+            "target": "tip_2x",
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
@@ -803,11 +803,11 @@ Create_lab_info_json()
     }
 },
 "RADIUS_SERVER_DATA" : {
-    "ip": "10.10.1.221",
+    "ip": "10.28.3.100",
     "port": 1812,
     "secret": "testing123",
-    "user": "user",
-    "password": "password",
+    "user": "nolaradius",
+    "password": "nolastart",
     "pk_password": "whatever"
 },
 
