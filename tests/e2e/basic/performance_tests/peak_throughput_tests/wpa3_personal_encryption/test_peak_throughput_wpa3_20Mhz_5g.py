@@ -45,7 +45,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -62,7 +62,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -79,7 +79,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -96,7 +96,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -113,7 +113,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -130,7 +130,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -177,7 +177,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_40", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -194,7 +194,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_40", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -211,7 +211,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_40", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -228,7 +228,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_40", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -245,7 +245,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_40", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -262,7 +262,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_40", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -308,7 +308,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -325,7 +325,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -342,7 +342,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -359,7 +359,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -376,7 +376,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -393,7 +393,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -440,7 +440,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_48", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -457,7 +457,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_48", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -474,7 +474,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_48", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -491,7 +491,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_48", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -508,7 +508,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_48", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -525,7 +525,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_48", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -572,7 +572,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -589,7 +589,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -606,7 +606,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -623,7 +623,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -640,7 +640,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -657,7 +657,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -704,7 +704,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_56", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -721,7 +721,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_56", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -738,7 +738,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_56", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -755,7 +755,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_56", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -772,7 +772,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_56", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -789,7 +789,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_56", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -833,10 +833,11 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @pytest.mark.aaa
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -853,7 +854,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -870,7 +871,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -887,7 +888,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -904,7 +905,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -921,7 +922,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -969,7 +970,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -986,7 +987,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1003,7 +1004,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1020,7 +1021,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1037,7 +1038,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1054,7 +1055,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1102,7 +1103,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1119,7 +1120,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1136,7 +1137,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1153,7 +1154,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1170,7 +1171,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1187,7 +1188,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1234,7 +1235,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_104", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1251,7 +1252,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_104", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1268,7 +1269,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_104", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1285,7 +1286,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_104", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1302,7 +1303,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_104", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1319,7 +1320,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_104", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1367,7 +1368,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1384,7 +1385,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1401,7 +1402,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1418,7 +1419,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1435,7 +1436,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1452,7 +1453,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1500,7 +1501,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_112", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1517,7 +1518,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_112", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1534,7 +1535,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_112", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1551,7 +1552,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_112", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1568,7 +1569,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_112", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1585,7 +1586,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_112", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1633,7 +1634,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_116", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1650,7 +1651,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_116", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1667,7 +1668,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_116", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1684,7 +1685,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_116", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1701,7 +1702,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_116", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1718,7 +1719,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_116", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1766,7 +1767,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1783,7 +1784,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1800,7 +1801,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1817,7 +1818,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1834,7 +1835,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1851,7 +1852,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1897,7 +1898,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1914,7 +1915,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1931,7 +1932,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1948,7 +1949,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1965,7 +1966,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1982,7 +1983,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2028,7 +2029,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2045,7 +2046,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2062,7 +2063,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2079,7 +2080,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2096,7 +2097,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2113,7 +2114,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2159,7 +2160,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_144", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2176,7 +2177,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_144", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2193,7 +2194,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_144", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2210,7 +2211,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
     def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_144", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2227,7 +2228,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_144", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2244,7 +2245,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
+            pytest -m "wifi_capacity_test and bridge and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_5g_144", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
