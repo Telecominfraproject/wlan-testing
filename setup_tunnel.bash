@@ -178,7 +178,7 @@ Create_lab_info_json()
                 "host_username": "lanforge",
                 "host_password": "pumpkin77",
                 "host_ssh_port":  ' $basic2_lab_ctlr ' ,
-                "serial_tty": "/dev/ttyAP5",
+                "serial_tty": "/dev/ttyAP11",
                 "firmware_version": "next-latest"
             }],
             "traffic_generator": {
