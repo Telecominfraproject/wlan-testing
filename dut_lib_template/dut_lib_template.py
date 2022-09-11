@@ -64,19 +64,19 @@ class dut_lib_template:
                             "wpa3_enterprise_mixed",
                             "wpa3_enterprise_192"
                             ]
-    tip_2x_specific_encryption_translation = {"open": "none",
-                                              "wpa": "psk",
-                                              "wpa2_personal": "psk2",
-                                              "wpa3_personal": "sae",
-                                              "wpa3_personal_mixed": "sae-mixed",
-                                              "wpa_wpa2_personal_mixed": "psk-mixed",
-                                              "wpa_enterprise": "wpa",
-                                              "wpa2_enterprise": "wpa2",
-                                              "wpa3_enterprise": "wpa3",
-                                              "wpa_wpa2_enterprise_mixed": "wpa-mixed",
-                                              "wpa3_enterprise_mixed": "wpa3-mixed",
-                                              "wpa3_enterprise_192": "wpa3-192"
-                                              }
+    dut_lib_specific_encryption_translation = {"open": "none",
+                                               "wpa": "psk",
+                                               "wpa2_personal": "psk2",
+                                               "wpa3_personal": "sae",
+                                               "wpa3_personal_mixed": "sae-mixed",
+                                               "wpa_wpa2_personal_mixed": "psk-mixed",
+                                               "wpa_enterprise": "wpa",
+                                               "wpa2_enterprise": "wpa2",
+                                               "wpa3_enterprise": "wpa3",
+                                               "wpa_wpa2_enterprise_mixed": "wpa-mixed",
+                                               "wpa3_enterprise_mixed": "wpa3-mixed",
+                                               "wpa3_enterprise_192": "wpa3-192"
+                                               }
 
     def __init__(self, controller_data=None, target=None,
                  device_under_tests_info=[], logging_level=logging.INFO):
@@ -150,6 +150,10 @@ class dut_lib_template:
     def get_dut_max_clients(self):
         pass
 
+    """
+        standard method for translating the configurations from pytest: no need to change this
+    """
+
     def setup_configuration_data(self, configuration=None,
                                  requested_combination=None):
         """Predefined function for getting configuration data for applied data"""
@@ -167,24 +171,24 @@ class dut_lib_template:
             base_dict[i] = []
         for i in requested_combination:
             if i[0] in self.supported_bands:
-                base_dict[i[0]].append(self.tip_2x_specific_encryption_translation[i[1]])
+                base_dict[i[0]].append(self.dut_lib_specific_encryption_translation[i[1]])
             if i[1] in self.supported_bands:
-                base_dict[i[1]].append((self.tip_2x_specific_encryption_translation[i[0]]))
+                base_dict[i[1]].append((self.dut_lib_specific_encryption_translation[i[0]]))
         temp = []
         for i in list(base_dict.values()):
             for j in i:
                 temp.append(j)
         temp_conf = c_data["ssid_modes"].copy()
         for i in temp_conf:
-            if self.tip_2x_specific_encryption_translation[i] not in temp:
+            if self.dut_lib_specific_encryption_translation[i] not in temp:
                 c_data["ssid_modes"].pop(i)
 
         temp_conf = c_data["ssid_modes"].copy()
-        print(self.tip_2x_specific_encryption_translation)
+        print(self.dut_lib_specific_encryption_translation)
         for i in temp_conf:
             for j in range(len(temp_conf[i])):
                 for k in temp_conf[i][j]["appliedRadios"]:
-                    if self.tip_2x_specific_encryption_translation[i] not in base_dict[k]:
+                    if self.dut_lib_specific_encryption_translation[i] not in base_dict[k]:
                         c_data["ssid_modes"][i][j]["appliedRadios"].remove(k)
                         if c_data["ssid_modes"][i][j]["appliedRadios"] == []:
                             c_data["ssid_modes"][i][j] = {}  # .popi.popitem())  # .popitem()
@@ -194,7 +198,7 @@ class dut_lib_template:
         for ssids in c_data["ssid_modes"]:
             for i in c_data["ssid_modes"][ssids]:
                 if i is not {}:
-                    i["security"] = self.tip_2x_specific_encryption_translation[ssids]
+                    i["security"] = self.dut_lib_specific_encryption_translation[ssids]
         temp_conf = c_data.copy()
         for i in range(0, len(self.device_under_tests_info)):
             if c_data["mode"] not in self.device_under_tests_info[i]["supported_modes"]:
@@ -224,6 +228,10 @@ class dut_lib_template:
 
         logging.info("Selected Configuration: " + str(json.dumps(f_conf, indent=2)))
         final_configuration = f_conf.copy()
+        """
+            Write your logic here to setup the configuration on dut
+        """
+
         # Setup Mode
 
         # Setup Radio Scenario
@@ -232,36 +240,29 @@ class dut_lib_template:
         ret_val = dict()
         for i in range(0, len(self.device_under_tests_info)):
             self.pre_apply_check(idx=i)  # Do check AP before pushing the configuration
-
+            # Write your logic here to push the configuration on DUT.
             self.post_apply_check(idx=i)  # Do check AP after pushing the configuration
-
             ret_val[self.device_under_tests_info[i]["identifier"]] = {}
 
-        temp_data = ret_val.copy()
-        for dut in temp_data:
-            ret_val[dut] = dict.fromkeys(["ssid_data", "radio_data"])
-            ret_val[dut]["radio_data"] = temp_data[dut][-1]
-            temp_data[dut].pop(-1)
-            n = len(temp_data[dut])
-            lst = list(range(0, n))
-            ret_val[dut]["ssid_data"] = dict.fromkeys(lst)
-            for j in ret_val[dut]["ssid_data"]:
-                a = temp_data[dut][j].copy()
-                a = dict.fromkeys(["ssid", "encryption", "password", "band", "bssid"])
-                a["ssid"] = temp_data[dut][j][0]
-                a["encryption"] = temp_data[dut][j][1]
-                a["password"] = temp_data[dut][j][2]
-                a["band"] = temp_data[dut][j][3]
-                a["bssid"] = temp_data[dut][j][4]
-                ret_val[dut]["ssid_data"][j] = a
-            temp = ret_val[dut]["radio_data"].copy()
-            for j in temp:
-                a = dict.fromkeys(["channel", "bandwidth", "frequency"])
-                if temp[j] != None:
-                    a["channel"] = temp[j][0]
-                    a["bandwidth"] = temp[j][1]
-                    a["frequency"] = temp[j][2]
-                ret_val[dut]["radio_data"][j] = a
+        # Write the Logic to create the data in below format. This should be returned from this function
+        """
+            dut = {
+                '903cb36c4301': 
+                    {'ssid_data': 
+                        {0: {'ssid': 'ssid_wpa_2g_br', 'encryption': 'wpa', 'password': 'something', 'band': '2G', 'bssid': '90:3C:B3:6C:43:04'}
+                    }, 
+                    'radio_data':{
+                            '2G': 
+                                {'channel': 6, 'bandwidth': 20, 'frequency': 2437}, 
+                            '5G': 
+                                {'channel': None, 'bandwidth': None, 'frequency': None}, 
+                            '6G': 
+                                {'channel': None, 'bandwidth': None, 'frequency': None}
+                            }
+                    }
+                }
+
+        """
         return ret_val
 
     """
@@ -338,75 +339,6 @@ class dut_lib_template:
         """
         return r_val
 
-    def get_dut_channel_data(self, idx):
-        try:
-            d = self.dut_library_object.run_generic_command(cmd="iw dev | grep channel", idx=idx)
-            d = d.replace("\n", "").replace("\t", "").replace(" ", "").split("channel")
-            d.pop(0)
-            d = list(set(d))
-            data = dict.fromkeys(["2G", "5G", "6G"])
-            for i in d:
-                channel = int(i.split("(")[0])
-                bandwidth = int(i.split(":")[1].split("MHz")[0])
-                center_freq = int(i.split(":")[-1].replace("MHz", ""))
-                if 2401 < center_freq < 2495:
-                    data["2G"] = [channel, bandwidth, center_freq]
-                elif center_freq in [5955, 5975, 5995] and channel <= 9:
-                    data["6G"] = [channel, bandwidth, center_freq]
-                elif 5030 < center_freq < 5990:
-                    data["5G"] = [channel, bandwidth, center_freq]
-                elif 5995 < center_freq < 7125:
-                    data["6G"] = [channel, bandwidth, center_freq]
-                else:
-                    pass
-        except Exception as e:
-            logging.error("Exception in getting DUT Channel and bw data, Retrying again!")
-            try:
-                d = self.dut_library_object.run_generic_command(cmd="iw dev | grep channel", idx=idx)
-                d = d.replace("\n", "").replace("\t", "").replace(" ", "").split("channel")
-                d.pop(0)
-                data = dict.fromkeys(["2G", "5G", "6G"])
-                for i in d:
-                    channel = int(i.split("(")[0])
-                    bandwidth = int(i.split(":")[1].split("MHz")[0])
-                    center_freq = int(i.split(":")[-1].replace("MHz", ""))
-                    if 2401 < center_freq < 2495:
-                        data["2G"] = [channel, bandwidth, center_freq]
-                    elif center_freq in [5955, 5975, 5995] and channel <= 9:
-                        data["6G"] = [channel, bandwidth, center_freq]
-                    elif 5030 < center_freq < 5990:
-                        data["5G"] = [channel, bandwidth, center_freq]
-                    elif 5995 < center_freq < 7125:
-                        data["6G"] = [channel, bandwidth, center_freq]
-                    else:
-                        pass
-            except Exception as e:
-                logging.error("Exception in getting DUT Channel and bw data.")
-        return data
-
-    def get_applied_ssid_info(self, profile_object=None, idx=0):
-        if profile_object is None:
-            logging.error("Profile object is None, Unable to fetch ssid info from AP")
-            return None
-        ssid_info_sdk = profile_object.get_ssid_info()
-        ap_wifi_data = self.dut_library_object.get_iwinfo(idx=idx)
-        channel_info = self.get_dut_channel_data(idx=idx)
-        o = ap_wifi_data.split()
-        iwinfo_bssid_data = {}
-        for i in range(len(o)):
-            if o[i].__contains__("ESSID"):
-                if o[i + 9].__contains__("2.4"):
-                    band = "2G"
-                else:
-                    band = "5G"
-                iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
-        for p in iwinfo_bssid_data:
-            for q in ssid_info_sdk:
-                if iwinfo_bssid_data[p][0] == q[0] and iwinfo_bssid_data[p][2] == q[3]:
-                    q.append(iwinfo_bssid_data[p][1])
-        ssid_info_sdk.append(channel_info)
-        return ssid_info_sdk
-
     def get_dut_version(self):
         """
             get_dut_version
@@ -445,6 +377,8 @@ class dut_lib_template:
             pytest.fail("Write the message here for why post apply is failed")
 
     def setup_environment_properties(self, add_allure_environment_property=None):
+        # Write the logic to add data to environment data
+
         if add_allure_environment_property is None:
             return
         add_allure_environment_property('Cloud-Controller-SDK-URL', self.controller_data.get("url"))
@@ -466,7 +400,7 @@ class dut_lib_template:
         add_allure_environment_property('Serial-Number/s', ", ".join(identifiers))
 
     def setup_firmware(self):
-        # Query AP Firmware
+        # Write the logic to upgrade the firmware on DUT
         upgrade_status = []
         return upgrade_status
 
@@ -499,6 +433,7 @@ if __name__ == '__main__':
             "supported_bands": ["2G", "5G", "6G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
             "wan_port": "1.1.eth2",
+            "lan_port": "1.1.eth1",
             "ssid": {
                 "mode": "BRIDGE",
                 "2g-ssid": "OpenWifi",
@@ -515,25 +450,25 @@ if __name__ == '__main__':
                 "6g-bssid": "68:7d:b4:5f:5c:38"
             },
             "mode": "wifi6",
-            "identifier": "0000c1018812",
-            "method": "serial",
-            "host_ip": "10.28.3.103",
+            "identifier": "0000c1018812",       # identifier is important and should be unique for each dut within the device_under_tests in single testbed
+            "method": "serial",                 # serial | ssh | telnet
+            "host_ip": "10.28.3.103",           # if method == serial, then host_ip - ip for remote system where dut is connected via serial
             "host_username": "lanforge",
             "host_password": "pumpkin77",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyAP1",
+            "serial_tty": "/dev/ttyAP1",        # if method == serial, then tty port for this dut
             "firmware_version": "next-latest"
         }],
         "traffic_generator": {
             "name": "lanforge",
             "testbed": "basic",
-            "scenario": "dhcp-bridge",
+            "scenario": "dhcp-bridge",      # dhcp-bridge | dhcp-external
             "details": {
                 "manager_ip": "10.28.3.28",
                 "http_port": 8080,
                 "ssh_port": 22,
-                "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
-                "wan_ports": {
+                "setup": {"method": "build", "DB": "Test_Scenario_Automation"},     # method - build | load
+                "wan_ports": {  # addressing - dhcp-server | static | dynamic
                     "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
                         "lease-first": 10,
                         "lease-count": 10000,
@@ -555,8 +490,8 @@ if __name__ == '__main__':
         }
     }
     var = dut_lib_template(controller_data=basic_05["controller"],
-                 device_under_tests_info=basic_05["device_under_tests"],
-                 target=basic_05["target"])
+                           device_under_tests_info=basic_05["device_under_tests"],
+                           target=basic_05["target"])
 
     # var.setup_objects()
     setup_params_general_two = {
