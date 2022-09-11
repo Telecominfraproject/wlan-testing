@@ -938,7 +938,11 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
 setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
+<<<<<<< HEAD
         "wpa3_personal": [{"ssid_name": "ssid_wpa3_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
+=======
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_64", "appliedRadios": ["5G"], "security_key": "something"}
+>>>>>>> Addded peak_throughput_tests in nat mode
                           ]},
     "rf": {
         "5G": {

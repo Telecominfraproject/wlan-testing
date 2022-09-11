@@ -28,9 +28,12 @@ setup_params_general1 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+<<<<<<< HEAD
 @allure.parent_suite("Throughput Benchmark Test")
 @allure.suite("5 Ghz Band")
 @allure.sub_suite("BRIDGE Mode")
+=======
+>>>>>>> Addded peak_throughput_tests in nat mode
 @pytest.mark.channel_36
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -46,6 +49,7 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+<<<<<<< HEAD
     @pytest.mark.ow_sanity_lf
     @pytest.mark.performance
     @allure.title("Single client TCP Download wifi capacity 80Mhz Bw")
@@ -53,12 +57,23 @@ class Test80Mhz5GChannel36PeakThroughput(object):
                                        get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """ Single client TCP download Wifi Capacity Test 5GHz band 80MHz bandwidth wpa2 personal security BRIDGE mode
             pytest -m "ow_sanity_lf and channel_36"
+=======
+    @pytest.mark.aaa
+    def test_client_wpa2_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+                                       get_test_device_logs, num_stations, setup_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+>>>>>>> Addded peak_throughput_tests in nat mode
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_bridge_tcp_bidirectional", mode=mode,
+<<<<<<< HEAD
                                        download_rate="1.5Gbps", batch_size="1",
+=======
+                                       download_rate="1Gbps", batch_size="1",
+>>>>>>> Addded peak_throughput_tests in nat mode
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
@@ -66,8 +81,11 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+<<<<<<< HEAD
     @pytest.mark.performance
     @allure.title("Single client UDP Download wifi capacity 80Mhz Bw")
+=======
+>>>>>>> Addded peak_throughput_tests in nat mode
     def test_client_wpa2_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -83,6 +101,7 @@ class Test80Mhz5GChannel36PeakThroughput(object):
                                        num_stations={"5G": 1})
         assert True
 
+<<<<<<< HEAD
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10673", name="WIFI-10673")
     @pytest.mark.tcp_bidirectional
     @pytest.mark.performance
@@ -91,6 +110,14 @@ class Test80Mhz5GChannel36PeakThroughput(object):
     def test_client_wpa2_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
+=======
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
+    @pytest.mark.tcp_bidirectional
+    def test_client_wpa2_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+                                                  get_test_device_logs, num_stations, setup_configuration):
+        """ Wifi Capacity Test BRIDGE mode
+            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+>>>>>>> Addded peak_throughput_tests in nat mode
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -104,8 +131,11 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+<<<<<<< HEAD
     @pytest.mark.performance
     @allure.title("Single client UDP Bidirectional wifi capacity 80Mhz Bw")
+=======
+>>>>>>> Addded peak_throughput_tests in nat mode
     def test_client_wpa2_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -123,8 +153,11 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+<<<<<<< HEAD
     @pytest.mark.performance
     @allure.title("Single client TCP Upload wifi capacity 80Mhz Bw")
+=======
+>>>>>>> Addded peak_throughput_tests in nat mode
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -142,8 +175,11 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+<<<<<<< HEAD
     @pytest.mark.performance
     @allure.title("Single client UDP Upload wifi capacity 80Mhz Bw")
+=======
+>>>>>>> Addded peak_throughput_tests in nat mode
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
