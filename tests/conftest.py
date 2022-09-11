@@ -173,28 +173,30 @@ def get_markers(request, get_security_flags):
 
 
 @pytest.fixture(scope="session")
-def get_target_object(request, get_testbed_details, add_allure_environment_property: Callable) -> None:
+def get_target_object(request, run_lf, get_testbed_details, add_allure_environment_property: Callable) -> None:
     """yields the testbed option selection"""
+
     t_object = None
-    try:
-        t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"], configuration=configuration,
-                          device_under_tests_info=get_testbed_details["device_under_tests"])
-        if not request.config.getoption("--skip-env"):
-            if get_testbed_details["target"] == "tip_2x":
-                t_object.setup_environment_properties(add_allure_environment_property=
-                                                      add_allure_environment_property)
+    if not run_lf:
+        try:
+            t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"], configuration=configuration,
+                              device_under_tests_info=get_testbed_details["device_under_tests"])
+            if not request.config.getoption("--skip-env"):
+                if get_testbed_details["target"] == "tip_2x":
+                    t_object.setup_environment_properties(add_allure_environment_property=
+                                                          add_allure_environment_property)
 
-    except Exception as e:
-        t_object = None
-        logging.error(
-            "Exception is setting up Target Library Object: " + str(e) + " Check the lab_info.json for the Data and ")
-        pytest.exit("Exception is setting up Target Library Object: " + str(e))
+        except Exception as e:
+            t_object = None
+            logging.error(
+                "Exception is setting up Target Library Object: " + str(e) + " Check the lab_info.json for the Data and ")
+            pytest.exit("Exception is setting up Target Library Object: " + str(e))
 
-    def teardown_target():
-        if t_object is not None:
-            t_object.teardown_objects()
+        def teardown_target():
+            if t_object is not None:
+                t_object.teardown_objects()
 
-    request.addfinalizer(teardown_target)
+        request.addfinalizer(teardown_target)
     yield t_object
 
 
@@ -298,25 +300,26 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
 
 
 @pytest.fixture(scope="function")
-def get_dut_logs_per_test_case(request, get_testbed_details, get_target_object):
-    S = 9
-    instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
-    for i in range(len(get_testbed_details["device_under_tests"])):
-        get_target_object.get_dut_library_object().run_generic_command(cmd="logger start testcase: " + instance_name,
-                                                                       idx=i)
-
-    def collect_logs():
+def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_object):
+    if not run_lf:
+        S = 9
+        instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         for i in range(len(get_testbed_details["device_under_tests"])):
-            get_target_object.get_dut_library_object().run_generic_command(
-                cmd="logger stop testcase: " + instance_name,
-                idx=i)
-            ap_logs = get_target_object.get_dut_library_object().get_logread(
-                start_ref="start testcase: " + instance_name,
-                stop_ref="stop testcase: " + instance_name)
-            allure.attach(name='Logs - ' + get_testbed_details["device_under_tests"][i]["identifier"],
-                          body=str(ap_logs))
+            get_target_object.get_dut_library_object().run_generic_command(cmd="logger start testcase: " + instance_name,
+                                                                           idx=i)
 
-    request.addfinalizer(collect_logs)
+        def collect_logs():
+            for i in range(len(get_testbed_details["device_under_tests"])):
+                get_target_object.get_dut_library_object().run_generic_command(
+                    cmd="logger stop testcase: " + instance_name,
+                    idx=i)
+                ap_logs = get_target_object.get_dut_library_object().get_logread(
+                    start_ref="start testcase: " + instance_name,
+                    stop_ref="stop testcase: " + instance_name)
+                allure.attach(name='Logs - ' + get_testbed_details["device_under_tests"][i]["identifier"],
+                              body=str(ap_logs))
+
+        request.addfinalizer(collect_logs)
 
 
 @pytest.fixture(scope="function")

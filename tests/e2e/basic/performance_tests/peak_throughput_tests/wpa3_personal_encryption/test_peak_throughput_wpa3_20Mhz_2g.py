@@ -14,7 +14,7 @@ pytestmark = [pytest.mark.peak_throughput_tests, pytest.mark.bridge, pytest.mark
 setup_params_general_1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_1", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_1", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -26,7 +26,7 @@ setup_params_general_1 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_1
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -42,15 +42,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -59,15 +59,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -76,15 +76,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -93,15 +93,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -110,15 +110,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -127,15 +127,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -146,7 +146,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 setup_params_general_2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_2", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_2", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -158,7 +158,7 @@ setup_params_general_2 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_2
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -167,22 +167,22 @@ setup_params_general_2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test20Mhz2GChannel1PeakThroughput(object):
+class Test20Mhz2GChannel2PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -191,15 +191,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -208,15 +208,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -225,15 +225,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -242,15 +242,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -259,15 +259,15 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -278,7 +278,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 setup_params_general_3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_3", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_3", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -290,7 +290,7 @@ setup_params_general_3 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_3
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -306,15 +306,15 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -323,15 +323,15 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -340,15 +340,15 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -357,15 +357,15 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -374,15 +374,15 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -391,15 +391,15 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -410,7 +410,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 setup_params_general_4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_4", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_4", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -422,7 +422,7 @@ setup_params_general_4 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_3
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -438,15 +438,15 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -455,15 +455,15 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -472,15 +472,15 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -489,15 +489,15 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -506,15 +506,15 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -523,15 +523,15 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -542,7 +542,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 setup_params_general_5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_5", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_5", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -554,7 +554,7 @@ setup_params_general_5 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_3
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -570,15 +570,15 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -587,15 +587,15 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -604,15 +604,15 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -621,15 +621,15 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -638,15 +638,15 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -655,15 +655,15 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -674,7 +674,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 setup_params_general_6 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_6", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_6", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -686,7 +686,7 @@ setup_params_general_6 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_6
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -702,15 +702,15 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -719,15 +719,15 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -736,15 +736,15 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -753,15 +753,15 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -770,15 +770,15 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -787,15 +787,15 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -806,7 +806,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 setup_params_general_7 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_7", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_7", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -818,7 +818,7 @@ setup_params_general_7 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_7
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -827,7 +827,7 @@ setup_params_general_7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA20Mhz2GChannel7PeakThroughput(object):
+class Test20Mhz2GChannel7PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -835,15 +835,15 @@ class TestCountryCA20Mhz2GChannel7PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @pytest.mark.aaa
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -852,15 +852,15 @@ class TestCountryCA20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -869,15 +869,15 @@ class TestCountryCA20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -886,15 +886,15 @@ class TestCountryCA20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -903,15 +903,15 @@ class TestCountryCA20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -920,15 +920,15 @@ class TestCountryCA20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -939,7 +939,7 @@ class TestCountryCA20Mhz2GChannel7PeakThroughput(object):
 setup_params_general_8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_8", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_8", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -950,7 +950,7 @@ setup_params_general_8 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_8
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -959,7 +959,7 @@ setup_params_general_8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
+class Test20Mhz2GChannel8PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -967,15 +967,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @pytest.mark.aaa
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -984,15 +984,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1001,15 +1001,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1018,15 +1018,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1035,15 +1035,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1052,15 +1052,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1071,19 +1071,19 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 setup_params_general_9 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_9", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_9", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
 
             'channel-width': 20,
-            "channel": 60}
+            "channel": 9}
     },
     "radius": False
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_9
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1092,7 +1092,7 @@ setup_params_general_9 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
+class Test20Mhz2GChannel9PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -1100,15 +1100,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @pytest.mark.aaa
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1117,15 +1117,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1134,15 +1134,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1151,15 +1151,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1168,15 +1168,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1185,15 +1185,15 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1204,18 +1204,18 @@ class TestCountryCA20Mhz2GChannel60PeakThroughput(object):
 setup_params_general_10 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_10", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_10", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
             'channel-width': 20,
-            "channel": 60}
+            "channel": 10}
     },
     "radius": False
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_10
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1224,7 +1224,7 @@ setup_params_general_10 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA20Mhz2GChannel10PeakThroughput(object):
+class Test20Mhz2GChannel10PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -1232,15 +1232,15 @@ class TestCountryCA20Mhz2GChannel10PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @pytest.mark.aaa
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1249,15 +1249,15 @@ class TestCountryCA20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1266,15 +1266,15 @@ class TestCountryCA20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1283,15 +1283,15 @@ class TestCountryCA20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1300,15 +1300,15 @@ class TestCountryCA20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1317,15 +1317,15 @@ class TestCountryCA20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1336,7 +1336,7 @@ class TestCountryCA20Mhz2GChannel10PeakThroughput(object):
 setup_params_general_11 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_personal": [{"ssid_name": "ssid_wpa3_2g_11", "appliedRadios": ["2G"], "security_key": "something"}]},
+        "wpa3_personal": [{"ssid_name": "ssid_wpa3_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}]},
     "rf": {
         "2G": {
             'band': '2G',
@@ -1347,7 +1347,7 @@ setup_params_general_11 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_11
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1356,7 +1356,7 @@ setup_params_general_11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA20Mhz2GChannel11PeakThroughput(object):
+class Test20Mhz2GChannel11PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -1364,15 +1364,15 @@ class TestCountryCA20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @pytest.mark.aaa
-    def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1381,15 +1381,15 @@ class TestCountryCA20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1398,15 +1398,15 @@ class TestCountryCA20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1415,15 +1415,15 @@ class TestCountryCA20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_bidirectional", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1432,15 +1432,15 @@ class TestCountryCA20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1449,15 +1449,15 @@ class TestCountryCA20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
             pytest -m "wifi_capacity_test and BRIDGE and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = {"ssid_name": "ssid_wpa3_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
+        get_test_library.wifi_capacity(instance_name="test_client_wpa3_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,

@@ -26,7 +26,7 @@ setup_params_general_1 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_1
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -35,7 +35,7 @@ setup_params_general_1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz2GChannel1PeakThroughput(object):
+class Test20Mhz2GChannel1PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -158,7 +158,7 @@ setup_params_general_2 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_2
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -167,7 +167,7 @@ setup_params_general_2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz2GChannel1PeakThroughput(object):
+class Test20Mhz2GChannel2PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -290,7 +290,7 @@ setup_params_general_3 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_3
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -299,7 +299,7 @@ setup_params_general_3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz2GChannel3PeakThroughput(object):
+class Test20Mhz2GChannel3PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -422,7 +422,7 @@ setup_params_general_4 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_3
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -431,7 +431,7 @@ setup_params_general_4 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz2GChannel4PeakThroughput(object):
+class Test20Mhz2GChannel4PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -554,7 +554,7 @@ setup_params_general_5 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_3
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -563,7 +563,7 @@ setup_params_general_5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz2GChannel5PeakThroughput(object):
+class Test20Mhz2GChannel5PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -686,7 +686,7 @@ setup_params_general_6 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_6
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -695,7 +695,7 @@ setup_params_general_6 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test40Mhz2GChannel6PeakThroughput(object):
+class Test20Mhz2GChannel6PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -818,7 +818,7 @@ setup_params_general_7 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_7
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -827,7 +827,7 @@ setup_params_general_7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA40Mhz2GChannel7PeakThroughput(object):
+class Test20Mhz2GChannel7PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -950,7 +950,7 @@ setup_params_general_8 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_8
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -959,7 +959,7 @@ setup_params_general_8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA40Mhz2GChannel60PeakThroughput(object):
+class Test20Mhz2GChannel8PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -1077,13 +1077,13 @@ setup_params_general_9 = {
             'band': '2G',
 
             'channel-width': 40,
-            "channel": 60}
+            "channel": 9}
     },
     "radius": False
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_9
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1092,7 +1092,7 @@ setup_params_general_9 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA40Mhz2GChannel60PeakThroughput(object):
+class Test20Mhz2GChannel9PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -1209,13 +1209,13 @@ setup_params_general_10 = {
         "2G": {
             'band': '2G',
             'channel-width': 40,
-            "channel": 60}
+            "channel": 10}
     },
     "radius": False
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_10
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1224,7 +1224,7 @@ setup_params_general_10 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA40Mhz2GChannel10PeakThroughput(object):
+class Test20Mhz2GChannel10PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
@@ -1347,7 +1347,7 @@ setup_params_general_11 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_11
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1356,7 +1356,7 @@ setup_params_general_11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestCountryCA40Mhz2GChannel11PeakThroughput(object):
+class Test20Mhz2GChannel11PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
