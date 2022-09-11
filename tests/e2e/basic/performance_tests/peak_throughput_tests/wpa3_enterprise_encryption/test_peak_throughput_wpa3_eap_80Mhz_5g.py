@@ -27,7 +27,7 @@ setup_params_general1 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_36
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -160,7 +160,7 @@ setup_params_general5 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_52
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -293,7 +293,7 @@ setup_params_general9 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_100
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -426,7 +426,7 @@ setup_params_general14 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("PEAK THROUGHPUT TESTS")
 @pytest.mark.channel_132
 @pytest.mark.parametrize(
     'setup_configuration',
