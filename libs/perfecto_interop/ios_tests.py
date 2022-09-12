@@ -18,43 +18,62 @@ class ios_tests(ios_libs):
         }
     }
 
-    def __init__(self, perfecto_data=None, dut_data=None):
-        super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
+    def __init__(self, perfecto_data=None, dut_data=None, device=None, testcase=None):
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
-        self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS())
-        self.connData = self.get_ToggleAirplaneMode_data(self.ios_devices["iPhone-11"])
+        self.device = device
+        self.testcase_name = testcase
+        self.connData = self.get_ToggleAirplaneMode_data(get_device_configuration=self.perfecto_data[device])
 
     def client_connect(self, ssid, passkey):
         global ip_address
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
+                                                                       self.perfecto_data[self.device],
+                                                                       perfecto_data=self.perfecto_data,
+                                                                       testcase=self.testcase_name))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
-        setup_perfecto_mobile, connData=self.connData)
+                                                      setup_perfecto_mobile, connData=self.connData)
         try:
-            if ssid_with_internet is True:
+            if ssid_with_internet is not None:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
                 self.teardown()
-                return ip_address, ssid_with_internet
+                print(ip_address, ssid_with_internet)
+                if ip_address is not None:
+                    return "PASS", "Device got the IP address"
+                else:
+                    return "FAIL", "Device didn't get the IP address"
+                    self.teardown()
             else:
+                return "FAIL", "SSID didn't get the Internet"
                 self.teardown()
         except Exception as e:
             print(e)
             self.teardown()
 
-    def client_connectivity(self, ssid, passkey):
+    def client_connectivity_test(self, ssid, security=None, dut_data=None, passkey=None, mode=None, band=None, num_sta=None):
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
+                                                                       self.perfecto_data[self.device],
+                                                                       perfecto_data=self.perfecto_data,
+                                                                       testcase=self.testcase_name))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
-        setup_perfecto_mobile, connData=self.connData)
+                                                      setup_perfecto_mobile, connData=self.connData)
         try:
-            if ssid_with_internet is True:
+            if ssid_with_internet is not None:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 current_result = self.run_speed_test(setup_perfecto_mobile, self.connData)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
                 self.teardown()
-                return current_result, ssid_with_internet
+                if current_result is True:
+                    return "PASS", "Device connected to SSID and ran Internet speed test"
+                else:
+                    return "Fail", "Device didn't get connected to SSID"
+                    self.teardown()
             else:
+                return "FAIL", "SSID didn't get the Internet"
                 self.teardown()
         except Exception as e:
             print(e)

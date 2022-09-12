@@ -1,9 +1,10 @@
 import logging
 import time
 import warnings
-
+from time import gmtime, strftime
 import allure
 import pytest
+import requests
 import urllib3
 from appium import webdriver
 from appium.webdriver import webdriver
@@ -13,7 +14,7 @@ from perfecto.model.model import Job, Project
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
+from xml.etree import ElementTree as ET
 
 
 class ios_libs:
@@ -47,11 +48,113 @@ class ios_libs:
         setup_perfectoMobile[1].step_start("Closing App: " + appName)
         params = {'identifier': appName}
         setup_perfectoMobile[0].execute_script('mobile:application:close', params)
-    def setup_perfectoMobile_iOS(self):
+
+    def get_ToggleAirplaneMode_data(self, get_device_configuration):
+
+        passPoint_data = {
+            "webURL": "https://www.google.com",
+            "lblSearch": "//*[@class='gLFyf']",
+            "elelSearch": "(//*[@class='sbic sb43'])[1]",
+            "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
+            "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
+            "bundleId-iOS-Safari": get_device_configuration["bundleId-iOS-Safari"],
+            "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
+            "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
+            # Android
+            "platformName-android": get_device_configuration["platformName-android"],
+            "appPackage-android": get_device_configuration["appPackage-android"]
+        }
+        return passPoint_data
+
+    def report_client(self, value):
+        global reporting_client  # declare a to be a global
+        reporting_client = value  # this sets the global value of a
+
+    def reportPerfecto(testCaseName, testCaseStatus, testErrorMsg, reportURL):
+        global testCaseNameList  # declare a to be a global
+        global testCaseStatusList
+        global testCaseErrorMsg
+        global testCaseReportURL
+
+        testCaseNameList.append(testCaseName)
+        testCaseStatusList.append(testCaseStatus)
+        testCaseErrorMsg.append(str(testErrorMsg))
+        testCaseReportURL.append(reportURL)
+
+    def response_device(self, model):
+        securityToken = self.perfecto_data["securityToken"]
+        perfectoURL = self.perfecto_data["perfectoURL"]
+        url = f"https://{perfectoURL}.perfectomobile.com/services/handsets?operation=list&securityToken={securityToken}&model={model}"
+        resp = requests.get(url=url)
+        return ET.fromstring(resp.content)
+
+    def get_attribute_device(self, responseXml, attribute):
+        try:
+            return responseXml.find('handset').find(attribute).text
+        except:
+            print(f"Unable to get value of {attribute} from response")
+            return ""
+
+    # Checks to see if a particular handset is available
+    def is_device_available(self, model):
+        try:
+            response_xml = self.response_device(model)
+        except:
+            print("Unable to get response.")
+            raise Exception("Unable to get response.")
+        device_available = self.get_attribute_device(response_xml, 'available')
+        print("Result:" + device_available)
+        if device_available == 'true':
+            return True
+        else:
+            allocated_to = self.get_attribute_device(response_xml, 'allocatedTo')
+            print("The device is currently allocated to:" + allocated_to)
+            return False
+
+    # Checks whether the device is available or not.If the device is not available rechecks depending upon the
+
+    # Checks whether the device is available or not.If the device is not available rechecks depending upon the
+    # 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
+    def is_device_Available_timeout(self, model):
+        device_available = self.is_device_available(model)
+        timer_value = 5
+        timer_threshold = 80
+        if not device_available:
+            while timer_value <= timer_threshold:
+                print("Last checked at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+                print(f"Waiting for: {timer_value} min(s)")
+                time.sleep(timer_value * 60)
+                print("Checking now at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+                device_available = self.is_device_available(model)
+                if device_available:
+                    return True
+                else:
+                    timer_value = timer_value + 5
+
+            if timer_value > timer_threshold:
+                return False
+            else:
+                return True
+        else:
+            return True
+
+    def get_device_attribuites(self, model, attribute):
+        try:
+            response_xml = self.response_device(model)
+        except:
+            print("Unable to get response.")
+            raise Exception("Unable to get response.")
+        try:
+            attribute_value = self.get_attribute_device(response_xml, str(attribute))
+        except:
+            attribute_value = False
+        return attribute_value
+
+    def setup_perfectoMobile_iOS(self, get_device_configuration, perfecto_data, testcase):
         global perfecto_execution_context, driver, deviceModel
+        from appium import webdriver
         driver = None
         reporting_client = None
-        get_device_configuration = self.get_device_configuration()
         warnings.simplefilter("ignore", ResourceWarning)
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -60,7 +163,7 @@ class ios_libs:
             'model': get_device_configuration["model-iOS"],
             'browserName': 'safari',
             # 'automationName' : 'Appium',
-            'securityToken': self.perfecto_data["securityToken"],
+            'securityToken': perfecto_data["securityToken"],
             'useAppiumForWeb': 'false',
             'autoAcceptAlerts': 'true',
             # 'bundleId' : request.config.getini("bundleId-iOS"),
@@ -73,7 +176,7 @@ class ios_libs:
             pytest.exit("Exiting Pytest")
 
         driver = webdriver.Remote(
-            'https://' + self.perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+            'https://' + perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
             capabilities)
         driver.implicitly_wait(2)
 
@@ -88,18 +191,18 @@ class ios_libs:
         #     print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
         #     # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
-        projectname = self.perfecto_data["projectName"]
-        projectversion = self.perfecto_data["projectVersion"]
+        projectname = perfecto_data["projectName"]
+        projectversion = perfecto_data["projectVersion"]
         jobname = get_device_configuration["jobName"]
         jobnumber = get_device_configuration["jobNumber"]
-        tags = self.perfecto_data["reportTags"]
-        testCaseName = "TestCaseName_hari_ios_check"
+        tags = perfecto_data["reportTags"]
+        test_case_name = testcase
 
         print("\nSetting Perfecto ReportClient....")
         perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),
                                                               Project(projectname, projectversion))
         reporting_client = PerfectoReportiumClient(perfecto_execution_context)
-        reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
+        reporting_client.test_start(test_case_name, TestContext([], "Perforce"))
         self.report_client(reporting_client)
         try:
             params = {'property': 'model'}
