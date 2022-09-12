@@ -5187,6 +5187,15 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                                 "//*[@text='IP address']/parent::*/android.widget.TextView[@resource-id='android:id/summary']")
                             ip_address_element_text = ip_address_element.text
                             print("Device IP address is :", ip_address_element_text)
+
+                            # --------------------------- Go back to Wifi Page -----------
+                            try:
+                                back_to_wifi_page_element = driver.find_element_by_xpath(
+                                    "//*[@content-desc='Navigate up']")
+                                back_to_wifi_page_element.click()
+                            except:
+                                print("Couldn't find back Button")
+
                         except:
                             print("IP address element not found")
                         # ------------------------------- Forget SSID ----------------
@@ -5217,6 +5226,7 @@ def captive_portal_and(request, WifiName, WifiPass, setup_perfectoMobile, connDa
                 except:
                     print("No Switch element found")
                 # ---------------------To Turn on WIFi Switch if already OFF-------------------------------
+
 
             except:
                 print("Couldn't find wifi Button")
