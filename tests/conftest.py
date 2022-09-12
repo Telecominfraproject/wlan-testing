@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 import string
 import sys
 import random
@@ -32,6 +33,7 @@ try:
     ios_tests = imports.ios_tests
     configuration = importlib.import_module("configuration")
     CONFIGURATION = configuration.CONFIGURATION
+    PERFECTO_DETAILS = configuration.PERFECTO_DETAILS
 except ImportError as e:
     print(e)
     sys.exit("Python Import Error: " + str(e))
@@ -117,6 +119,22 @@ def num_stations(request):
     """yields the testbed option selection"""
     num_stations = request.config.getoption("--num_stations")
     yield num_stations
+
+
+@pytest.fixture(scope="session")
+def device(request):
+    """yields the device option selection"""
+    var = request.config.getoption("--device")
+    yield var
+
+
+@pytest.fixture(scope="session")
+def get_device_configuration(device, request):
+    """yields the selected device information from lab info file (configuration.py)"""
+
+    logging.info("Selected the lab Info data: " + str((PERFECTO_DETAILS[device])))
+    print(PERFECTO_DETAILS[device])
+    yield PERFECTO_DETAILS[device]
 
 
 @pytest.fixture(scope="session")
@@ -244,19 +262,54 @@ def is_test_library_perfecto_ios(request):
     interop = request.config.getoption("--use-perfecto-ios")
     yield interop
 
+@pytest.fixture(scope="session")
+def interop_testcase_name(request):
+    test_case_full_name = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+    n_current_test_method_name_split = re.sub(r'\[.*?\]\ *', "", test_case_full_name)
+    try:
+        test_case_name = n_current_test_method_name_split.replace('test_', '')
+        print("\n\nExecuting TestCase: " + test_case_name)
+    except Exception as e:
+        test_case_name = n_current_test_method_name_split
+        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+        # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/"
+    yield test_case_name
+
 
 @pytest.fixture(scope="session")
-def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios, run_lf):
+def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios, request,
+                     get_device_configuration, interop_testcase_name, device, run_lf):
     if is_test_library_perfecto_android:
-        obj = android_tests()
+        obj = android_tests.AndroidTests(perfecto_data=PERFECTO_DETAILS,
+                                         dut_data=get_testbed_details["device_under_tests"], device=device,
+                                         testcase=interop_testcase_name)
+
     elif is_test_library_perfecto_ios:
-        obj = ios_tests()
+        obj = ios_tests.ios_tests(perfecto_data=PERFECTO_DETAILS, dut_data=get_testbed_details["device_under_tests"],
+                                  device=device, testcase=interop_testcase_name)
     else:
         obj = lf_tests(lf_data=get_testbed_details["traffic_generator"],
                        dut_data=get_testbed_details["device_under_tests"],
                        log_level=logging.DEBUG,
                        run_lf=run_lf,
                        influx_params=None)
+    def teardown_test():
+        if is_test_library_perfecto_android:
+            try:
+                obj.teardown()
+            except Exception as e:
+                print(e)
+                logging.error("Exception in teardown")
+        elif is_test_library_perfecto_ios:
+            try:
+                obj.teardown()
+            except Exception as e:
+                print(e)
+                logging.error("Exception in teardown")
+        else:
+            pass
+
+    request.addfinalizer(teardown_test)
     yield obj
 
 
