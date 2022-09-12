@@ -199,12 +199,6 @@ def client_type(request):
     yield client_type
 
 
-@pytest.fixture(scope="session")
-def client_type(request):
-    """yields the testbed option selection"""
-    client_type = request.config.getoption("--client-type")
-    yield client_type
-
 
 @pytest.fixture(scope="session")
 def get_security_flags():
