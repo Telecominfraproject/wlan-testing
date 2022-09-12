@@ -880,7 +880,7 @@
                 "testbed": "basic",
                 "scenario": "dhcp-bridge",
                 "details": {
-                    "manager_ip": "10.28.3.102",
+                    "manager_ip": "10.28.3.22",
                     "http_port":  8080,
                     "ssh_port":  22,
                     "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
@@ -949,7 +949,7 @@
                 "testbed": "basic",
                 "scenario": "dhcp-bridge",
                 "details": {
-                    "manager_ip": "10.28.3.102",
+                    "manager_ip": "10.28.3.22",
                     "http_port":  8080,
                     "ssh_port":  22,
                     "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
