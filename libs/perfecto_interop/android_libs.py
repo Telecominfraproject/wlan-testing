@@ -1,9 +1,10 @@
 import logging
 import time
 import warnings
-
+from time import gmtime, strftime
 import allure
 import pytest
+import requests
 import urllib3
 from appium import webdriver
 from appium.webdriver import webdriver
@@ -13,17 +14,108 @@ from perfecto.model.model import Job, Project
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
+from xml.etree import ElementTree as ET
 
 
 class android_libs:
     global driver, perfecto_execution_context
-
+    android_devices = {
+        "Galaxy S20": {
+            "platformName-android": "Android",
+            "model-android": "Galaxy S20",
+            "appPackage-android": "com.android.settings",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "jobName": "Interop-Galaxy-S20",
+            "jobNumber": 38
+        },
+        "Galaxy S10.*": {
+            "platformName-android": "Android",
+            "model-android": "Galaxy S10.*",
+            "appPackage-android": "com.android.settings",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "jobName": "Interop-Galaxy-S10",
+            "jobNumber": 38
+        },
+        "Galaxy S9": {
+            "platformName-android": "Android",
+            "model-android": "Galaxy S9",
+            "appPackage-android": "com.android.settings",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "jobName": "Interop-Galaxy-S9",
+            "jobNumber": 38
+        },
+        "Pixel 4": {
+            "platformName-android": "Android",
+            "model-android": "Pixel 4",
+            "appPackage-android": "com.android.settings",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "jobName": "Interop-pixel-4",
+            "jobNumber": 38
+        }
+    }
+    ios_devices = {
+        "iPhone-11": {
+            "model-iOS": "iPhone-11",
+            "bundleId-iOS": "com.apple.Preferences",
+            "platformName-iOS": "iOS",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Ping": "com.deftapps.ping",
+            "browserType-iOS": "Safari",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "platformName-android": "Android",
+            "appPackage-android": "com.android.settings",
+            "jobName": "Interop-iphone-11",
+            "jobNumber": 38
+        },
+        "iPhone-12": {
+            "model-iOS": "iPhone-12",
+            "bundleId-iOS": "com.apple.Preferences",
+            "platformName-iOS": "iOS",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Ping": "com.deftapps.ping",
+            "browserType-iOS": "Safari",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "platformName-android": "Android",
+            "appPackage-android": "com.android.settings",
+            "jobName": "Interop-iphone-12",
+            "jobNumber": 38
+        },
+        "iPhone-7": {
+            "model-iOS": "iPhone-7",
+            "bundleId-iOS": "com.apple.Preferences",
+            "platformName-iOS": "iOS",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Ping": "com.deftapps.ping",
+            "browserType-iOS": "Safari",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "platformName-android": "Android",
+            "appPackage-android": "com.android.settings",
+            "jobName": "Interop-iphone-7",
+            "jobNumber": 38
+        },
+        "iPhone-XR": {
+            "model-iOS": "iPhone-XR",
+            "bundleId-iOS": "com.apple.Preferences",
+            "platformName-iOS": "iOS",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Ping": "com.deftapps.ping",
+            "browserType-iOS": "Safari",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "platformName-android": "Android",
+            "appPackage-android": "com.android.settings",
+            "jobName": "Interop-iphone-XR",
+            "jobNumber": 38
+        }
+    }
     def __init__(self, perfecto_data=None, dut_data=None):
         # super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
-        self.connData = self.get_ToggleAirplaneMode_data(self.android_devices["Galaxy S10.*"])
+        self.connData = self.get_ToggleAirplaneMode_data()
         print("connData------", self.connData)
         pass
 
@@ -176,12 +268,116 @@ class android_libs:
         print("device information for " + search_this + " is: ", device_information)
         return device_information
 
-    def setup_perfectoMobile_android(self):
+
+    def get_ToggleAirplaneMode_data(self, get_device_configuration):
+
+        passPoint_data = {
+            "webURL": "https://www.google.com",
+            "lblSearch": "//*[@class='gLFyf']",
+            "elelSearch": "(//*[@class='sbic sb43'])[1]",
+            "BtnRunSpeedTest": "//*[text()='RUN SPEED TEST']",
+            "bundleId-iOS-Settings": get_device_configuration["bundleId-iOS-Settings"],
+            "bundleId-iOS-Safari": get_device_configuration["bundleId-iOS-Safari"],
+            "downloadMbps": "//*[@id='knowledge-verticals-internetspeedtest__download']/P[@class='spiqle']",
+            "UploadMbps": "//*[@id='knowledge-verticals-internetspeedtest__upload']/P[@class='spiqle']",
+            # Android
+            "platformName-android": get_device_configuration["platformName-android"],
+            "appPackage-android": get_device_configuration["appPackage-android"]
+        }
+        return passPoint_data
+
+    def report_client(self, value):
+        global reporting_client  # declare a to be a global
+        reporting_client = value  # this sets the global value of a
+
+    def reportPerfecto(testCaseName, testCaseStatus, testErrorMsg, reportURL):
+        global testCaseNameList  # declare a to be a global
+        global testCaseStatusList
+        global testCaseErrorMsg
+        global testCaseReportURL
+
+        testCaseNameList.append(testCaseName)
+        testCaseStatusList.append(testCaseStatus)
+        testCaseErrorMsg.append(str(testErrorMsg))
+        testCaseReportURL.append(reportURL)
+
+    def response_device(self, model):
+        securityToken = self.perfecto_data["securityToken"]
+        perfectoURL = self.perfecto_data["perfectoURL"]
+        url = f"https://{perfectoURL}.perfectomobile.com/services/handsets?operation=list&securityToken={securityToken}&model={model}"
+        resp = requests.get(url=url)
+        return ET.fromstring(resp.content)
+
+    def get_attribute_device(self, responseXml, attribute):
+        try:
+            return responseXml.find('handset').find(attribute).text
+        except:
+            print(f"Unable to get value of {attribute} from response")
+            return ""
+
+    # Checks to see if a particular handset is available
+    def is_device_available(self, model):
+        try:
+            responseXml = self.response_device(model)
+        except:
+            print("Unable to get response.")
+            raise Exception("Unable to get response.")
+        device_available = self.get_attribute_device(responseXml, 'available')
+        print("Result:" + device_available)
+        if device_available == 'true':
+            return True
+        else:
+            allocated_to = self.get_attribute_device(responseXml, 'allocatedTo')
+            print("The device is currently allocated to:" + allocated_to)
+            return False
+
+    # Checks whether the device is available or not.If the device is not available rechecks depending upon the
+
+    # Checks whether the device is available or not.If the device is not available rechecks depending upon the
+    # 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
+    def is_device_Available_timeout(self, model):
+        device_available = self.is_device_available(model)
+        timer_value = 5
+        timer_threshold = 80
+        if not device_available:
+            while timer_value <= timer_threshold:
+                print("Last checked at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+                print(f"Waiting for: {timer_value} min(s)")
+                time.sleep(timer_value * 60)
+                print("Checking now at:" + strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+                device_available = self.is_device_available(model)
+                if device_available:
+                    return True
+                else:
+                    timer_value = timer_value + 5
+
+            if timer_value > timer_threshold:
+                return False
+            else:
+                return True
+        else:
+            return True
+
+    def get_device_attribuites(self, model, attribute):
+        try:
+            responseXml = self.response_device(model)
+        except:
+            print("Unable to get response.")
+            raise Exception("Unable to get response.")
+        try:
+            attribute_value = self.get_attribute_device(responseXml, str(attribute))
+        except:
+            attribute_value = False
+        return attribute_value
+
+    def setup_perfectoMobile_android(self, get_device_configuration, perfecto_data, testcase):
+        from appium import webdriver
         global perfecto_execution_context, driver
         driver = None
         reporting_client = None
-        get_device_configuration = self.get_device_configuration()
         print("Device CONFIG:", get_device_configuration)
+        print("Testcase Name", testcase)
+        print("Perfect data:", perfecto_data)
         warnings.simplefilter("ignore", ResourceWarning)
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -190,7 +386,7 @@ class android_libs:
             'model': get_device_configuration["model-android"],
             'browserName': 'mobileOS',
             # 'automationName' : 'Appium',
-            'securityToken': self.perfecto_data["securityToken"],
+            'securityToken': perfecto_data["securityToken"],
             'useAppiumForWeb': 'false',
             'useAppiumForHybrid': 'false',
             # 'bundleId' : request.config.getini("appPackage-android"),
@@ -200,7 +396,7 @@ class android_libs:
             print("Unable to get device.")
             pytest.exit("Exiting Pytest")
         driver = webdriver.Remote(
-            'https://' + self.perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
+            'https://' + perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
             capabilities)
         driver.implicitly_wait(2)
 
@@ -215,12 +411,12 @@ class android_libs:
         #     print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
         #     # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
-        projectname = self.perfecto_data["projectName"]
-        projectversion = self.perfecto_data["projectVersion"]
+        projectname = perfecto_data["projectName"]
+        projectversion = perfecto_data["projectVersion"]
         jobname = get_device_configuration["jobName"]
         jobnumber = get_device_configuration["jobNumber"]
-        tags = self.perfecto_data["reportTags"]
-        testCaseName = "TestCaseName_Hari_check"
+        tags = perfecto_data["reportTags"]
+        test_case_name = testcase
         print("-----------------------------------------------")
         print(projectname, projectversion, jobnumber, jobname, tags)
         print("-----------------------------------------------")
@@ -228,7 +424,7 @@ class android_libs:
         perfecto_execution_context = PerfectoExecutionContext(driver, tags, Job(jobname, jobnumber),
                                                               Project(projectname, projectversion))
         reporting_client = PerfectoReportiumClient(perfecto_execution_context)
-        reporting_client.test_start(testCaseName, TestContext([], "Perforce"))
+        reporting_client.test_start(test_case_name, TestContext([], "Perforce"))
         self.report_client(reporting_client)
 
         try:
@@ -449,7 +645,7 @@ class android_libs:
                         for k in range(9):
                             available_ssids = self.get_all_available_ssids(driver, device_model_name)
                             print("active_ssid_list: ", available_ssids)
-                            logging.info("Available Ssids:", available_ssids)
+                            logging.info("Available Ssids:" + str(available_ssids))
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
                                 if wifi_name not in available_ssids:
@@ -464,11 +660,10 @@ class android_libs:
                                 print("couldn't find wifi in available ssid")
                                 logging.error("couldn't find wifi in available ssid")
                         if not ssid_found:
-                            print("could not found " + wifi_name + " in device")
+                            print("could not found " + str(wifi_name) + " in device")
                             logging.error("Couldn't find the SSID")
                             # allure.attach(name= body=str("could not found" + wifi_name + " in device"))
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-
                             return ssid_with_internet, setup_perfectoMobile
                     except:
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)

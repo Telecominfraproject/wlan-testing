@@ -12,53 +12,89 @@ class AndroidTests(android_libs):
             "bundleId-iOS-Safari": "com.apple.mobilesafari",
             "jobName": "Interop-Galaxy-S10",
             "jobNumber": 38
-        }}
+        },
+        "Galaxy S20": {
+            "platformName-android": "Android",
+            "model-android": "Galaxy S20",
+            "appPackage-android": "com.android.settings",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "jobName": "Interop-Galaxy-S20",
+            "jobNumber": 38
+        }
+    }
 
-    def __init__(self, perfecto_data=None, dut_data=None):
-        super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
+    def __init__(self, perfecto_data=None, dut_data=None, device=None, testcase=None):
+        # super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
-        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android())
-        self.connData = self.get_ToggleAirplaneMode_data(self.android_devices["Galaxy S10.*"])
+        self.device = device
+        self.testcase_name = testcase
+        self.connData = self.get_ToggleAirplaneMode_data(get_device_configuration=self.perfecto_data[device])
         print("connData------", self.connData)
 
     def client_connect(self, ssid, passkey):
         global ip_address
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
+                                                                           self.perfecto_data[self.device],
+                                                                           perfecto_data=self.perfecto_data,
+                                                                           testcase=self.testcase_name))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
         try:
-            if ssid_with_internet is True:
+            if ssid_with_internet is not None:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
                 self.teardown()
-                return ip_address, ssid_with_internet
+                print(ip_address, ssid_with_internet)
+                if ip_address is not None:
+                    return "PASS", "Device got the IP address"
+                else:
+                    return "FAIL", "Device didn't get the IP address"
+                    self.teardown()
             else:
+                return "FAIL", "SSID didn't get the Internet"
                 self.teardown()
         except Exception as e:
+            return "Fail", "Failed due to exception or Unable to find the API path"
             print(e)
             self.teardown()
 
-    def client_connectivity(self, ssid, passkey):
+    def client_connectivity_test(self, ssid, security=None, dut_data=None, passkey=None, mode=None, band=None, num_sta=None):
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
+                                                                           self.perfecto_data[self.device],
+                                                                           perfecto_data=self.perfecto_data,
+                                                                           testcase=self.testcase_name))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
         try:
-            if ssid_with_internet is True:
+            if ssid_with_internet is not None:
                 self.closeApp(self.connData["appPackage-android"], setup)
                 current_result = self.run_speed_test(setup_perfecto_mobile, self.connData)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
                 self.teardown()
-                return current_result, ssid_with_internet
+                if current_result is True:
+                    return "PASS", "Device connected to SSID and ran Internet speed test"
+                else:
+                    return "Fail", "Device didn't get connected to SSID"
+                    self.teardown()
             else:
+                return "FAIL", "SSID didn't get the Internet"
                 self.teardown()
         except Exception as e:
+            return "Fail", "Failed due to exception or Unable to find the API path"
             print(e)
             self.teardown()
 
     def captive_portal(self, ssid, passkey):
         global ip_address
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
+                                                                           self.perfecto_data[self.device],
+                                                                           perfecto_data=self.perfecto_data,
+                                                                           testcase=self.testcase_name))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                     setup_perfecto_mobile, connData=self.connData)
@@ -83,13 +119,13 @@ if __name__ == '__main__':
         "projectVersion": "1.0",
         "reportTags": "TestTag",
         "perfectoURL": "tip",
-        "Galaxy S10.*": {
+        "Galaxy S20": {
             "platformName-android": "Android",
-            "model-android": "Galaxy S10.*",
+            "model-android": "Galaxy S20",
             "appPackage-android": "com.android.settings",
             "bundleId-iOS-Settings": "com.apple.Preferences",
             "bundleId-iOS-Safari": "com.apple.mobilesafari",
-            "jobName": "Interop-Galaxy-S10",
+            "jobName": "Interop-Galaxy-S20",
             "jobNumber": 38
         }
     }
@@ -122,5 +158,7 @@ if __name__ == '__main__':
         "serial_tty": "/dev/ttyAP5",
         "firmware_version": "next-latest"
     }]
-    obj = AndroidTests(perfecto_data=perfecto_data, dut_data=access_point)
-    print(obj.client_connectivity("ssid_wpa2_2g_RL_E1Z7206", "something"))
+    obj = AndroidTests(perfecto_data=perfecto_data, dut_data=access_point, device=perfecto_data["Galaxy S20"], testcase=
+                       "Test_perfecto_check")
+    print(obj.client_connectivity_test("ssid_open_2g_br", security=None,
+                                       dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
