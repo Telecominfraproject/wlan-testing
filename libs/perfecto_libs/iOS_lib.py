@@ -3611,7 +3611,7 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
 
     return downloadSpeed, uploadSpeed
 
-def ookla_speed_test_iOS(request, setup_perfectoMobile, ,get_APToMobileDevice_data):
+def ookla_speed_test_iOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
     driver = setup_perfectoMobile[0]
     driver.switch_to.context('NATIVE_APP')
     openApp( 'com.ookla.speedtest', setup_perfectoMobile)
