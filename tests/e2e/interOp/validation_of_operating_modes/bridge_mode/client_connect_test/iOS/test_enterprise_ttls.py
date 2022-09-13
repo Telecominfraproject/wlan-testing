@@ -90,8 +90,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -128,8 +128,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -167,8 +167,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -205,8 +205,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -244,8 +244,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -282,8 +282,8 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -362,8 +362,8 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -399,8 +399,8 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -437,8 +437,8 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
@@ -475,8 +475,8 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         # ssidPassword = profile_data["security_key"]
         print("SSID_NAME: " + ssidName)
         # print ("SSID_PASS: " + ssidPassword)
-        ttls_passwd = "password"
-        identity = "user"
+        ttls_passwd = radius_info["password"]
+        identity = radius_info["user"]
         get_vif_state.append(ssidName)
         if ssidName not in get_vif_state:
             allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
