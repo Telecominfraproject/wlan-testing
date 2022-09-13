@@ -3609,5 +3609,22 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     except NoSuchElementException:
         print("Access Point Verification NOT Completed, checking Connection....")
 
+    return downloadSpeed, uploadSpeed
 
+def ookla_speed_test_iOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
+    driver = setup_perfectoMobile[0]
+    driver.switch_to.context('NATIVE_APP')
+    openApp( 'com.ookla.speedtest', setup_perfectoMobile)
+    driver.find_element_by_xpath("//*[@label='GO']").click()
+    # Wait untill 2 minutes for the test to complete
+    WebDriverWait(driver, 120).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@value='Test Again']")))
+    result = driver.find_element_by_xpath("//XCUIElementTypeOther[contains(@label,'Download Speed')]").text
+    print(result)
+    downloadSpeed = result.split('Download Speed, ')[1].split('. ')[0]
+    uploadSpeed = result.split('Upload speed, ')[1].split('. ')[0]
+    downloadSpeed = str(downloadSpeed)[0:4]
+    uploadSpeed = str(uploadSpeed)[0:4]
+    print(f"Download speed: {downloadSpeed}")
+    print(f"Upload speed: {uploadSpeed}")
     return downloadSpeed, uploadSpeed
