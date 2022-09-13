@@ -7553,7 +7553,8 @@ def ookla_speed_test_android(request, setup_perfectoMobile, get_APToMobileDevice
     driver = setup_perfectoMobile[0]
     driver.switch_to.context('NATIVE_APP')
     openApp('org.zwanoo.android.speedtest', setup_perfectoMobile)
-    driver.find_element_by_xpath("//*[@resource-id='org.zwanoo.android.speedtest:id/go_button']").click()
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='org.zwanoo.android.speedtest:id/go_button']"))).click()
     # Wait untill 2 minutes for the test to complete
     WebDriverWait(driver, 120).until(
         EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Test Again']")))
