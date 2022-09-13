@@ -22,7 +22,7 @@ from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_Airplan
     get_ip_address_and, verifyUploadDownloadSpeed_android, wifi_connect, wifi_disconnect_and_forget, captive_portal_and
 
 pytestmark = [pytest.mark.sanity, pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and, pytest.mark.internal_captive_portal
-              ,pytest.mark.regression_interop, pytest.mark.nat, pytest.mark.ow_sanity_interop]
+              ,pytest.mark.regression_interop, pytest.mark.nat]
 
 setup_params_general = {
     "mode": "NAT",
