@@ -3623,6 +3623,8 @@ def ookla_speed_test_iOS(request, setup_perfectoMobile, get_APToMobileDevice_dat
     print(result)
     downloadSpeed = result.split('Download Speed, ')[1].split('. ')[0]
     uploadSpeed = result.split('Upload speed, ')[1].split('. ')[0]
+    downloadSpeed = str(downloadSpeed)[0:4]
+    uploadSpeed = str(uploadSpeed)[0:4]
     print(f"Download speed: {downloadSpeed}")
     print(f"Upload speed: {uploadSpeed}")
     return downloadSpeed, uploadSpeed
