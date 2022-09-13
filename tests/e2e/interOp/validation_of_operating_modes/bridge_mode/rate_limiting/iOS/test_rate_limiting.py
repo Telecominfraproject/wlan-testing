@@ -20,7 +20,7 @@ if 'perfecto_libs' not in sys.path:
 
 from iOS_lib import closeApp, openApp, get_WifiIPAddress_iOS, ForgetWifiConnection, ping_deftapps_iOS, \
     Toggle_AirplaneMode_iOS, set_APconnMobileDevice_iOS, verify_APconnMobileDevice_iOS, Toggle_WifiMode_iOS, tearDown,\
-    return_upload_download_speed_iOS, get_ip_address_ios, wifi_connect, wifi_disconnect_and_forget
+    return_upload_download_speed_iOS, get_ip_address_ios, wifi_connect, wifi_disconnect_and_forget, ookla_speed_test_iOS
 
 pytestmark = [pytest.mark.interop, pytest.mark.ios, pytest.mark.interop_ios,
               pytest.mark.rate_limiting, pytest.mark.bridge]
@@ -130,7 +130,7 @@ class TestRateLimitingBridge(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        down_speed, up_speed = return_upload_download_speed_iOS(request, setup_perfectoMobile_iOS, connData)
+        down_speed, up_speed = ookla_speed_test_iOS(request, setup_perfectoMobile_iOS, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -163,7 +163,7 @@ class TestRateLimitingBridge(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        down_speed, up_speed = return_upload_download_speed_iOS(request, setup_perfectoMobile_iOS, connData)
+        down_speed, up_speed = ookla_speed_test_iOS(request, setup_perfectoMobile_iOS, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -195,7 +195,7 @@ class TestRateLimitingBridge(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        down_speed, up_speed = return_upload_download_speed_iOS(request, setup_perfectoMobile_iOS, connData)
+        down_speed, up_speed = ookla_speed_test_iOS(request, setup_perfectoMobile_iOS, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -227,7 +227,7 @@ class TestRateLimitingBridge(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        down_speed, up_speed = return_upload_download_speed_iOS(request, setup_perfectoMobile_iOS, connData)
+        down_speed, up_speed = ookla_speed_test_iOS(request, setup_perfectoMobile_iOS, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -259,7 +259,7 @@ class TestRateLimitingBridge(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        down_speed, up_speed = return_upload_download_speed_iOS(request, setup_perfectoMobile_iOS, connData)
+        down_speed, up_speed = ookla_speed_test_iOS(request, setup_perfectoMobile_iOS, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -291,7 +291,7 @@ class TestRateLimitingBridge(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
-        down_speed, up_speed = return_upload_download_speed_iOS(request, setup_perfectoMobile_iOS, connData)
+        down_speed, up_speed = ookla_speed_test_iOS(request, setup_perfectoMobile_iOS, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_iOS, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
