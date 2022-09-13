@@ -82,7 +82,7 @@ class TestBridgeModeConnectSuiteA(object):
         mode = "BRIDGE"
         band = "fiveg"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -105,7 +105,7 @@ class TestBridgeModeConnectSuiteA(object):
         mode = "BRIDGE"
         band = "twog"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -126,7 +126,7 @@ class TestBridgeModeConnectSuiteA(object):
         mode = "BRIDGE"
         band = "fiveg"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -147,7 +147,7 @@ class TestBridgeModeConnectSuiteA(object):
         mode = "BRIDGE"
         band = "twog"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -155,7 +155,6 @@ class TestBridgeModeConnectSuiteA(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.hari
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connect Test with wpa2_personal encryption 5 GHz Band")
     def test_bridge_wpa2_personal_5g_client_connect(self, get_test_device_logs, get_dut_logs_per_test_case,
@@ -228,7 +227,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         mode = "BRIDGE"
         band = "twog"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -249,7 +248,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         mode = "BRIDGE"
         band = "fiveg"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -270,7 +269,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         band = "sixg"
         mode = "BRIDGE"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -292,7 +291,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         mode = "BRIDGE"
         band = "twog"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -337,7 +336,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         mode = "BRIDGE"
         band = "twog"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 
@@ -360,6 +359,6 @@ class TestBridgeModeConnectSuiteTwo(object):
         mode = "BRIDGE"
         band = "fiveg"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
