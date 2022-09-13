@@ -7548,3 +7548,17 @@ def return_upload_download_speed_android(request, setup_perfectoMobile, get_APTo
         print("Access Point Verification NOT Completed, checking Connection....")
 
     return downloadSpeed, uploadSpeed
+
+def ookla_speed_test_android(request, setup_perfectoMobile, get_APToMobileDevice_data):
+    driver = setup_perfectoMobile[0]
+    driver.switch_to.context('NATIVE_APP')
+    openApp('org.zwanoo.android.speedtest', setup_perfectoMobile)
+    driver.find_element_by_xpath("//*[@resource-id='org.zwanoo.android.speedtest:id/go_button']").click()
+    # Wait untill 2 minutes for the test to complete
+    WebDriverWait(driver, 120).until(
+        EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Test Again']")))
+    downloadSpeed = driver.find_element_by_xpath("//*[@text='DOWNLOAD']/parent::*/android.widget.TextView[3]").text
+    uploadSpeed = driver.find_element_by_xpath("//*[@text='UPLOAD']/parent::*/android.widget.TextView[3]").text
+    print(f"Download speed: {downloadSpeed}")
+    print(f"Upload speed: {uploadSpeed}")
+    return downloadSpeed, uploadSpeed
