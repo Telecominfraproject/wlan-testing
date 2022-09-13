@@ -131,11 +131,12 @@ def device(request):
 @pytest.fixture(scope="session")
 def get_device_configuration(device, request):
     """yields the selected device information from lab info file (configuration.py)"""
-
-    logging.info("Selected the lab Info data: " + str((PERFECTO_DETAILS[device])))
-    print(PERFECTO_DETAILS[device])
-    yield PERFECTO_DETAILS[device]
-
+    if device != "lanforge":
+        logging.info("Selected the lab Info data: " + str((PERFECTO_DETAILS[device])))
+        print(PERFECTO_DETAILS[device])
+        yield PERFECTO_DETAILS[device]
+    else:
+        yield ""
 
 @pytest.fixture(scope="session")
 def client_type(request):
