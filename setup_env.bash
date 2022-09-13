@@ -213,6 +213,7 @@ markers =
     ow_sanity_interop: OpenWifi Sanity with Interop
 
     ;   Test Suites, It Contains
+    client_connect_tests: Client Connect Test Cases with bridge|nat|vlan modes across 2.4|5|6 GHz bands with Various Encryptions
     client_connectivity_tests: Client Connectivity Test Cases with bridge|nat|vlan modes across 2.4|5|6 GHz bands with Various Encryptions
     dfs_tests: Dynamic Frequency Selection Test Cases
     multi_psk_tests: Multi PSK Test Cases
