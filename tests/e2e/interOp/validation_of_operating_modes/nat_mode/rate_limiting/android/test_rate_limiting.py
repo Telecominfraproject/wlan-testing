@@ -21,7 +21,7 @@ pytestmark = [pytest.mark.interop, pytest.mark.android, pytest.mark.interop_and,
               pytest.mark.rate_limiting, pytest.mark.nat]
 
 from android_lib import closeApp, set_APconnMobileDevice_android, Toggle_AirplaneMode_android, ForgetWifiConnection, openApp, \
-    get_ip_address_and, return_upload_download_speed_android, wifi_connect, wifi_disconnect_and_forget
+    get_ip_address_and, return_upload_download_speed_android, wifi_connect, wifi_disconnect_and_forget, ookla_speed_test_android
 
 setup_params_general = {
     "mode": "NAT",
@@ -128,7 +128,7 @@ class TestRateLimitingNAT(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-        down_speed, up_speed = return_upload_download_speed_android(request, setup_perfectoMobile_android, connData)
+        down_speed, up_speed = ookla_speed_test_android(request, setup_perfectoMobile_android, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -161,7 +161,7 @@ class TestRateLimitingNAT(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-        down_speed, up_speed = return_upload_download_speed_android(request, setup_perfectoMobile_android, connData)
+        down_speed, up_speed = ookla_speed_test_android(request, setup_perfectoMobile_android, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -193,7 +193,7 @@ class TestRateLimitingNAT(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-        down_speed, up_speed = return_upload_download_speed_android(request, setup_perfectoMobile_android, connData)
+        down_speed, up_speed = ookla_speed_test_android(request, setup_perfectoMobile_android, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -225,7 +225,7 @@ class TestRateLimitingNAT(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-        down_speed, up_speed = return_upload_download_speed_android(request, setup_perfectoMobile_android, connData)
+        down_speed, up_speed = ookla_speed_test_android(request, setup_perfectoMobile_android, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -257,7 +257,7 @@ class TestRateLimitingNAT(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-        down_speed, up_speed = return_upload_download_speed_android(request, setup_perfectoMobile_android, connData)
+        down_speed, up_speed = ookla_speed_test_android(request, setup_perfectoMobile_android, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
@@ -289,7 +289,7 @@ class TestRateLimitingNAT(object):
         connData = get_ToggleAirplaneMode_data
 
         wifi_connect(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
-        down_speed, up_speed = return_upload_download_speed_android(request, setup_perfectoMobile_android, connData)
+        down_speed, up_speed = ookla_speed_test_android(request, setup_perfectoMobile_android, connData)
         wifi_disconnect_and_forget(request, ssidName, ssidPassword, setup_perfectoMobile_android, connData)
         print(down_speed, up_speed)
         if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
