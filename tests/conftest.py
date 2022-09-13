@@ -138,6 +138,7 @@ def get_device_configuration(device, request):
     else:
         yield ""
 
+
 @pytest.fixture(scope="session")
 def client_type(request):
     """yields the testbed option selection"""
@@ -198,7 +199,8 @@ def get_target_object(request, run_lf, get_testbed_details, add_allure_environme
     t_object = None
     if not run_lf:
         try:
-            t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"], configuration=configuration,
+            t_object = target(controller_data=get_testbed_details["controller"], target=get_testbed_details["target"],
+                              configuration=configuration,
                               device_under_tests_info=get_testbed_details["device_under_tests"])
             if not request.config.getoption("--skip-env"):
                 if get_testbed_details["target"] == "tip_2x":
@@ -208,7 +210,8 @@ def get_target_object(request, run_lf, get_testbed_details, add_allure_environme
         except Exception as e:
             t_object = None
             logging.error(
-                "Exception is setting up Target Library Object: " + str(e) + " Check the lab_info.json for the Data and ")
+                "Exception is setting up Target Library Object: " + str(
+                    e) + " Check the lab_info.json for the Data and ")
             pytest.exit("Exception is setting up Target Library Object: " + str(e))
 
         def teardown_target():
@@ -263,6 +266,7 @@ def is_test_library_perfecto_ios(request):
     interop = request.config.getoption("--use-perfecto-ios")
     yield interop
 
+
 @pytest.fixture(scope="session")
 def interop_testcase_name(request):
     test_case_full_name = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
@@ -294,6 +298,7 @@ def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_t
                        log_level=logging.DEBUG,
                        run_lf=run_lf,
                        influx_params=None)
+
     def teardown_test():
         if is_test_library_perfecto_android:
             try:
@@ -359,8 +364,9 @@ def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_
         S = 9
         instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
         for i in range(len(get_testbed_details["device_under_tests"])):
-            get_target_object.get_dut_library_object().run_generic_command(cmd="logger start testcase: " + instance_name,
-                                                                           idx=i)
+            get_target_object.get_dut_library_object().run_generic_command(
+                cmd="logger start testcase: " + instance_name,
+                idx=i)
 
         def collect_logs():
             for i in range(len(get_testbed_details["device_under_tests"])):
