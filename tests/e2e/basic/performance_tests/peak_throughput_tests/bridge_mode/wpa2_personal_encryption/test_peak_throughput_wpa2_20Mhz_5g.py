@@ -938,12 +938,11 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
 setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g_64", "appliedRadios": ["5G"], "security_key": "something"}
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {
         "5G": {
             'band': '5G',
-
             'channel-width': 20,
             "channel": 64}
     },

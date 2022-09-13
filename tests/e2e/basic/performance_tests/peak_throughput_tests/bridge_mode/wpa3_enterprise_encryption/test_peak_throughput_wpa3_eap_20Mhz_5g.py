@@ -938,7 +938,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
 setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa3_enterprise": [{"ssid_name": "ssid_wpa3_eap_eap_2g_64", "appliedRadios": ["5G"], "security_key": "something"}
+        "wpa3_enterprise": [{"ssid_name": "ssid_wpa3_eap_eap_5g_64", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {
         "5G": {
