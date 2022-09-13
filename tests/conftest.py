@@ -67,6 +67,12 @@ def pytest_addoption(parser):
         default=False,
         help="Test Traffic Generator which can be used,  lanforge | perfecto"
     )
+    parser.addoption(
+        "--skip-lf",
+        action="store_true",
+        default=False,
+        help="Skips the Lanforge Usage"
+    )
 
     parser.addoption(
         "--skip-env",
@@ -105,6 +111,12 @@ def run_lf(request):
     """yields the testbed option selection"""
     run_lf = request.config.getoption("--run-lf")
     yield run_lf
+
+@pytest.fixture(scope="session")
+def skip_lf(request):
+    """yields the testbed option selection"""
+    skip_lf = request.config.getoption("--skip-lf")
+    yield skip_lf
 
 
 @pytest.fixture(scope="session")
@@ -383,22 +395,23 @@ def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_
 
 
 @pytest.fixture(scope="function")
-def get_test_device_logs(request, get_testbed_details, get_target_object):
-    ip = get_testbed_details["traffic_generator"]["details"]["manager_ip"]
-    port = get_testbed_details["traffic_generator"]["details"]["ssh_port"]
+def get_test_device_logs(request, get_testbed_details, get_target_object, skip_lf):
+    if not skip_lf:
+        ip = get_testbed_details["traffic_generator"]["details"]["manager_ip"]
+        port = get_testbed_details["traffic_generator"]["details"]["ssh_port"]
 
-    def collect_logs_tg():
-        log_0 = "/home/lanforge/lanforge_log_0.txt"
-        log_1 = "/home/lanforge/lanforge_log_1.txt"
-        obj = scp_file(ip=ip, port=port, username="root", password="lanforge", remote_path=log_0,
-                       local_path=".")
-        obj.pull_file()
-        allure.attach.file(source="lanforge_log_0.txt",
-                           name="lanforge_log_0")
-        obj = scp_file(ip=ip, port=port, username="root", password="lanforge", remote_path=log_1,
-                       local_path=".")
-        obj.pull_file()
-        allure.attach.file(source="lanforge_log_1.txt",
-                           name="lanforge_log_1")
+        def collect_logs_tg():
+            log_0 = "/home/lanforge/lanforge_log_0.txt"
+            log_1 = "/home/lanforge/lanforge_log_1.txt"
+            obj = scp_file(ip=ip, port=port, username="root", password="lanforge", remote_path=log_0,
+                           local_path=".")
+            obj.pull_file()
+            allure.attach.file(source="lanforge_log_0.txt",
+                               name="lanforge_log_0")
+            obj = scp_file(ip=ip, port=port, username="root", password="lanforge", remote_path=log_1,
+                           local_path=".")
+            obj.pull_file()
+            allure.attach.file(source="lanforge_log_1.txt",
+                               name="lanforge_log_1")
 
-    request.addfinalizer(collect_logs_tg)
+        request.addfinalizer(collect_logs_tg)
