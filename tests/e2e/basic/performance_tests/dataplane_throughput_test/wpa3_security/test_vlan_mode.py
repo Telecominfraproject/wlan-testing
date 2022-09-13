@@ -38,7 +38,11 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestDataplaneThroughputVLAN(object):
     """Dataplane THroughput VLAN Mode
+<<<<<<< HEAD
        pytest -m "dataplane_tests and wpa3_personal and vlan"
+=======
+       pytest -m "dataplane_throughput_test and wpa3_personal and vlan"
+>>>>>>> Changed marker expression in description
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
@@ -50,7 +54,11 @@ class TestDataplaneThroughputVLAN(object):
                                                 get_target_object,
                                                 num_stations, setup_configuration):
         """Dataplane THroughput VLAN Mode
+<<<<<<< HEAD
            pytest -m "dataplane_tests and vlan and wpa3_personal and twog"
+=======
+           pytest -m "dataplane_throughput_test and vlan and wpa3_personal and twog"
+>>>>>>> Changed marker expression in description
         """
         profile_data = {"ssid_name": "wpa3_personal_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
@@ -78,7 +86,11 @@ class TestDataplaneThroughputVLAN(object):
                                                 get_target_object,
                                                 num_stations, setup_configuration):
         """Dataplane THroughput VLAN Mode
+<<<<<<< HEAD
            pytest -m "dataplane_tests and vlan and wpa3_personal and fiveg"
+=======
+           pytest -m "dataplane_throughput_test and vlan and wpa3_personal and fiveg"
+>>>>>>> Changed marker expression in description
         """
         profile_data = {"ssid_name": "wpa3_personal_dataplane_5g", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}

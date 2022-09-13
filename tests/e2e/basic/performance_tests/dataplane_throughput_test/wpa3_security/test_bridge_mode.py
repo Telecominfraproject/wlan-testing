@@ -37,7 +37,11 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestDataplaneThroughputBRIDGE(object):
     """Dataplane THroughput BRIDGE Mode
+<<<<<<< HEAD
        pytest -m "dataplane_tests and wpa3_personal and bridge"
+=======
+       pytest -m "dataplane_throughput_test and wpa3_personal and bridge"
+>>>>>>> Changed marker expression in description
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
@@ -75,7 +79,11 @@ class TestDataplaneThroughputBRIDGE(object):
                                                   get_target_object,
                                                   num_stations, setup_configuration):
         """Dataplane THroughput BRIDGE Mode
+<<<<<<< HEAD
            pytest -m "dataplane_tests and bridge and wpa3_personal and fiveg"
+=======
+           pytest -m "dataplane_throughput_test and bridge and wpa3_personal and fiveg"
+>>>>>>> Changed marker expression in description
         """
         profile_data = {"ssid_name": "wpa3_personal_dataplane_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
