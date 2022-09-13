@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "wallys_dr40x9,hfcl_ion4xe,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196"
+        default: "wallys_dr40x9,hfcl_ion4xe,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c4,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -62,7 +62,7 @@ jobs:
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "::set-output name=marker_expressions::${MARKER_EXPRESSIONS}"
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'wallys_dr40x9,hfcl_ion4xe,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196' }}"
+          AP_MODELS="${{ github.event.inputs.ap_models || 'wallys_dr40x9,hfcl_ion4xe,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c4,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196' }}"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "::set-output name=ap_models::${AP_MODELS}"
 
@@ -1207,16 +1207,16 @@ jobs:
         if: always()
         run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
-  test-cig-wf194c:
+  test-cig-wf194c4:
     needs: ["vars", "build"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf194c')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf194c4')"
     env:
       CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
       CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
       CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-      AP_MODEL: cig_wf194c
+      AP_MODEL: cig_wf194c4
     steps:
       - name: Set AP model output
         id: ap_model
@@ -1960,7 +1960,7 @@ jobs:
         run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-udaya-a5-id2:
-    needs: [ "vars", "build", "test-cig-wf194c" ]
+    needs: [ "vars", "build", "test-cig-wf194c4" ]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'udaya_a5-id2')"
@@ -2339,7 +2339,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-wallys-dr40x9, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2, test-cig-wf196]
+    needs: [vars, test-wallys-dr40x9, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c4, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2, test-cig-wf196]
     strategy:
       fail-fast: false
       matrix:
@@ -2408,7 +2408,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-wallys-dr40x9, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2, test-cig-wf196]
+    needs: [test-wallys-dr40x9, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-cig-wf194c4, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2, test-cig-wf196]
     runs-on: ubuntu-latest
     if: always()
     steps:
