@@ -33,7 +33,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestDataplaneThroughputNAT(object):
     """Dataplane THroughput NAT Mode
-       pytest -m "dataplane_throughput_test and wpa and NAT"
+       pytest -m "dataplane_throughput_test and wpa and nat"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
@@ -43,13 +43,13 @@ class TestDataplaneThroughputNAT(object):
                                      get_target_object,
                                      num_stations, setup_configuration):
         """Dataplane THroughput NAT Mode.
-           pytest -m "dataplane_throughput_test and NAT and wpa and twog"
+           pytest -m "dataplane_throughput_test and nat and wpa and twog"
         """
         profile_data = {"ssid_name": "wpa_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         security_key = profile_data["security_key"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         band = "twog"
         influx_tags = "dataplane-tcp-udp-nat-wpa-2.4G"
         get_test_library.dataplane_throughput_test(ssid=ssid_name, security=security, passkey=security_key,
@@ -66,13 +66,13 @@ class TestDataplaneThroughputNAT(object):
                                      get_target_object,
                                      num_stations, setup_configuration):
         """Dataplane THroughput NAT Mode
-           pytest -m "dataplane_throughput_test and NAT and wpa and fiveg"
+           pytest -m "dataplane_throughput_test and nat and wpa and fiveg"
         """
         profile_data = {"ssid_name": "wpa_dataplane_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         security_key = profile_data["security_key"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         band = "fiveg"
         influx_tags = "dataplane-tcp-udp-nat-wpa-5G"
         get_test_library.dataplane_throughput_test(ssid=ssid_name, security=security, passkey=security_key,

@@ -33,7 +33,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestDataplaneThroughputNAT(object):
     """Dataplane THroughput NAT Mode
-       pytest -m "dataplane_throughput_test and open and NAT"
+       pytest -m "dataplane_throughput_test and open and nat"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
@@ -43,12 +43,12 @@ class TestDataplaneThroughputNAT(object):
                                       get_target_object,
                                       num_stations, setup_configuration):
         """Dataplane THroughput NAT Mode.
-           pytest -m "dataplane_throughput_test and NAT and open and twog"
+           pytest -m "dataplane_throughput_test and nat and open and twog"
         """
         profile_data = {"ssid_name": "open_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "open"
-        mode = "NAT"
+        mode = "NAT-WAN"
         band = "twog"
         influx_tags = "dataplane-tcp-udp-nat-open-2.4G"
         get_test_library.dataplane_throughput_test(ssid=ssid_name, security=security,
@@ -65,12 +65,12 @@ class TestDataplaneThroughputNAT(object):
                                       get_target_object,
                                       num_stations, setup_configuration):
         """Dataplane THroughput NAT Mode
-           pytest -m "dataplane_throughput_test and NAT and open and fiveg"
+           pytest -m "dataplane_throughput_test and nat and open and fiveg"
         """
         profile_data = {"ssid_name": "open_dataplane_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "open"
-        mode = "NAT"
+        mode = "NAT-WAN"
         band = "fiveg"
         influx_tags = "dataplane-tcp-udp-nat-open-5G"
         get_test_library.dataplane_throughput_test(ssid=ssid_name, security=security,
