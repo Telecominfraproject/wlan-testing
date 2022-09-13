@@ -32,7 +32,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestDataplaneThroughputVLAN(object):
     """Dataplane THroughput VLAN Mode
-       pytest -m "dataplane_throughput_test and wpa and VLAN"
+       pytest -m "dataplane_throughput_test and wpa and vlan"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
@@ -42,7 +42,7 @@ class TestDataplaneThroughputVLAN(object):
                                       get_target_object,
                                       num_stations, setup_configuration):
         """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_throughput_test and VLAN and wpa and twog"
+           pytest -m "dataplane_throughput_test and vlan and wpa and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100}
         ssid_name = profile_data["ssid_name"]
@@ -66,7 +66,7 @@ class TestDataplaneThroughputVLAN(object):
                                       get_target_object,
                                       num_stations, setup_configuration):
         """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_throughput_test and VLAN and wpa and fiveg"
+           pytest -m "dataplane_throughput_test and vlan and wpa and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}
         ssid_name = profile_data["ssid_name"]
