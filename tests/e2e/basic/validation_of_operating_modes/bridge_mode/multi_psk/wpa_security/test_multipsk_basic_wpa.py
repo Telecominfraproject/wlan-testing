@@ -9,7 +9,7 @@ import time
 import pytest
 import allure
 
-pytestmark = [pytest.mark.ow_regression_lf, pytest.mark.ow_sanity_lf, pytest.mark.ow_multipsk_tests_lf,
+pytestmark = [pytest.mark.ow_regression_lf, pytest.mark.ow_sanity_lf, pytest.mark.multi_psk_tests,
               pytest.mark.bridge]
 
 setup_params_general = {
