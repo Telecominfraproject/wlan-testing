@@ -73,7 +73,7 @@ class AndroidTests(android_libs):
         try:
             if ssid_with_internet is not None:
                 self.closeApp(self.connData["appPackage-android"], setup)
-                current_result = self.run_speed_test(setup_perfecto_mobile, self.connData)
+                current_result = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
                 self.teardown()
                 if current_result is True:
