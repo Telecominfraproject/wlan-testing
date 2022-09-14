@@ -365,18 +365,19 @@
                 "wan_port": "1.1.eth2",
                 "lan_port": "1.1.eth1",
                 "ssid": {
-                    "2g-ssid": "OpenWifi",
-                    "5g-ssid": "OpenWifi",
-                    "6g-ssid": "OpenWifi",
-                    "2g-password": "OpenWifi",
-                    "5g-password": "OpenWifi",
-                    "6g-password": "OpenWifi",
-                    "2g-encryption": "WPA2",
-                    "5g-encryption": "WPA2",
-                    "6g-encryption": "WPA3",
-                    "2g-bssid": "68:7d:b4:5f:5c:31",
-                    "5g-bssid": "68:7d:b4:5f:5c:3c",
-                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                       "mode": "BRIDGE",
+                        "ssid_modes": {
+                            "wpa2_personal": [
+                                {"ssid_name": "ssid_wpa2_5g_36",
+                                "band": "5G",
+                                "bssid": "aaaaa",
+                                "security_key": "something"}]},
+                        "rf": {
+                            "5G": {
+                                "channel-width": 80,
+                                "channel": 36
+                            }
+                        }
                 },
                 "mode": "wifi5",
                 "identifier": "68215fda456d",

@@ -469,6 +469,22 @@ class android_libs:
                 print(" -- Exception Not Able To Quit --")
                 print(e)
 
+    def speed_test(self, setup_perfectoMobile):
+        driver = setup_perfectoMobile[0]
+        driver.switch_to.context('NATIVE_APP')
+        self.openApp('org.zwanoo.android.speedtest', setup_perfectoMobile)
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located(
+                (MobileBy.XPATH, "//*[@resource-id='org.zwanoo.android.speedtest:id/go_button']"))).click()
+        # Wait untill 2 minutes for the test to complete
+        WebDriverWait(driver, 120).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Test Again']")))
+        downloadSpeed = driver.find_element_by_xpath("//*[@text='DOWNLOAD']/parent::*/android.widget.TextView[3]").text
+        uploadSpeed = driver.find_element_by_xpath("//*[@text='UPLOAD']/parent::*/android.widget.TextView[3]").text
+        print(f"Download speed: {downloadSpeed}")
+        print(f"Upload speed: {uploadSpeed}")
+        return downloadSpeed, uploadSpeed
+
     # ------------------Functions related to perfecto Android libs such as Wifi connect, Get IP address, Forget Wifi----
     def wifi_connect(self, ssid, passkey, setup_perfectoMobile, connData):
         print("\n-------------------------------------")

@@ -281,6 +281,25 @@ class ios_libs:
         # time.sleep(2)
         setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
         time.sleep(3)
+
+    def speed_test(self, setup_perfectoMobile):
+        driver = setup_perfectoMobile[0]
+        driver.switch_to.context('NATIVE_APP')
+        self.openApp('com.ookla.speedtest', setup_perfectoMobile)
+        driver.find_element_by_xpath("//*[@label='GO']").click()
+        # Wait untill 2 minutes for the test to complete
+        WebDriverWait(driver, 120).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@value='Test Again']")))
+        result = driver.find_element_by_xpath("//XCUIElementTypeOther[contains(@label,'Download Speed')]").text
+        print(result)
+        download_speed = result.split('Download Speed, ')[1].split('. ')[0]
+        upload_speed = result.split('Upload speed, ')[1].split('. ')[0]
+        download_speed = str(download_speed)[0:4]
+        upload_speed = str(upload_speed)[0:4]
+        print(f"Download speed: {download_speed}")
+        print(f"Upload speed: {upload_speed}")
+        return download_speed, upload_speed
+
     def wifi_connect(self, ssid, passkey, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
         print("Select Wifi/Get IP Address IOS Connection")

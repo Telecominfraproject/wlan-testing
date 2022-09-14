@@ -1,21 +1,21 @@
 """
 
-    Performance Test: Multi-psk Test: Bridge Mode
-     pytest -m "multipsk and wpa_personal and twog" -s -vvv --skip-testrail --testbed=basic-03 --alluredir=../allure_reports
+    Performance Test: Multi-psk Test: NAT-WAN Mode
+     pytest -m "multipsk and wpa2_personal and twog" -s -vvv --skip-testrail --testbed=basic-03 --alluredir=../allure_reports
         wifi-3493
 """
 import allure
 import pytest
 
 pytestmark = [pytest.mark.multi_psk_tests,
-              pytest.mark.bridge,
-              pytest.mark.wpa,
+              pytest.mark.nat,
+              pytest.mark.wpa2_personal,
               pytest.mark.twog]
 
 setup_params_general = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
-        "wpa": [
+        "wpa2_personal": [
             {"ssid_name": "MDU-Wi-Fi-2g",
              "appliedRadios": ["2G"],
              "security": "psk2",
@@ -36,7 +36,7 @@ setup_params_general = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -44,15 +44,15 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestMultipskBridgeWPA(object):
+class TestMultipskNAT(object):
 
     @pytest.mark.vlan1
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
-    def test_client_wpa_2g_vlan1(self, get_test_library, get_dut_logs_per_test_case,
-                                 get_test_device_logs, num_stations, setup_configuration):
+    def test_client_wpa2_2g_vlan1(self, get_test_library, get_dut_logs_per_test_case,
+                                  get_test_device_logs, num_stations, setup_configuration):
         """
-                    BRIDGE Mode Multipsk Test with wpa encryption 2.4 GHz Band
-                    pytest -m "multi_psk_tests and bridge and wpa_personal and twogvlan1 and twog"
+                    NAT Mode Multipsk Test with wpa encryption 2.4 GHz Band
+                    pytest -m "multi_psk_tests and NAT and wpa_personal and twogvlan1 and twog"
         """
         profile_data = {"ssid_name": "MDU-Wi-Fi-2g",
                         "appliedRadios": ["2G"],
@@ -71,8 +71,8 @@ class TestMultipskBridgeWPA(object):
                         }
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "wpa"
-        mode = "BRIDGE"
+        security = "wpa2"
+        mode = "NAT-WAN"
         band = "twog"
         mpsk_data = {"default": {"num_stations": 1, "passkey": profile_data["security_key"]},
                      100: {"num_stations": 1, "passkey": profile_data["multi-psk"][0]["key"]}}
@@ -81,13 +81,14 @@ class TestMultipskBridgeWPA(object):
                                         passkey=security_key,
                                         encryption=security, mode=mode, num_sta=1, dut_data=setup_configuration)
 
+
     @pytest.mark.vlan2
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
-    def test_client_wpa_2g_vlan2(self, get_test_library, get_dut_logs_per_test_case,
-                                 get_test_device_logs, num_stations, setup_configuration):
+    def test_client_wpa2_2g_vlan2(self, get_test_library, get_dut_logs_per_test_case,
+                                  get_test_device_logs, num_stations, setup_configuration):
         """
-            BRIDGE Mode Multipsk Test with wpa encryption 2.4 GHz Band
-            pytest -m "multi_psk_tests and bridge and wpa and twogvlan2 and twog"
+            nat Mode Multipsk Test with wpa encryption 2.4 GHz Band
+            pytest -m "multi_psk_tests and nat and wpa2_personal and twogvlan2 and twog"
         """
         profile_data = {"ssid_name": "MDU-Wi-Fi-2g",
                         "appliedRadios": ["2G"],
@@ -106,8 +107,8 @@ class TestMultipskBridgeWPA(object):
                         }
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        security = "wpa"
-        mode = "BRIDGE"
+        security = "wpa2"
+        mode = "NAT-WAN"
         band = "twog"
         mpsk_data = {"default": {"num_stations": 1, "passkey": profile_data["security_key"]},
                      100: {"num_stations": 1, "passkey": profile_data["multi-psk"][0]["key"]},

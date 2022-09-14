@@ -1,5 +1,5 @@
 import pytest
-
+import logging
 
 @pytest.fixture(scope="class")
 def setup_configuration(request, get_markers, get_target_object, run_lf):
@@ -17,5 +17,5 @@ def setup_configuration(request, get_markers, get_target_object, run_lf):
     if not run_lf:
         data = get_target_object.setup_basic_configuration(configuration=configuration,
                                                            requested_combination=requested_combination)
-
+    logging.info("dut_data after config applied: " + str(data))
     yield data
