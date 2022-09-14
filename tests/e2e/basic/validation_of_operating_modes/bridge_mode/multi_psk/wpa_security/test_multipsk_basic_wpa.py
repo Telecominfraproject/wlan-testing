@@ -80,6 +80,7 @@ class TestMultipskBridgeWPA(object):
         get_test_library.multi_psk_test(band=band, mpsk_data=mpsk_data, ssid=ssid, bssid="['BLANK']",
                                         passkey=security_key,
                                         encryption=security, mode=mode, num_sta=1, dut_data=setup_configuration)
+        assert True
 
     @pytest.mark.vlan2
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
@@ -115,3 +116,4 @@ class TestMultipskBridgeWPA(object):
         get_test_library.multi_psk_test(band=band, mpsk_data=mpsk_data, ssid=ssid, bssid="['BLANK']",
                                         passkey=security_key,
                                         encryption=security, mode=mode, num_sta=1, dut_data=setup_configuration)
+        assert True
