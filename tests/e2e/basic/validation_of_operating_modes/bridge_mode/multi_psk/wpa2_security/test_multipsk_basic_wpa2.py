@@ -40,12 +40,12 @@ setup_params_general = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMultipskBridge(object):
 
     @pytest.mark.multipsk
@@ -62,7 +62,7 @@ class TestMultipskBridge(object):
         profile_data=setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid=profile_data["ssid_name"]
         security_key=profile_data["security_key"]
-        security="wpa"
+        security="wpa2"
         mode="BRIDGE"
         band="twog"
         mpsk_data={profile_data["multi-psk"][0]["vlan-id"]: {"num_stations": 1,
@@ -85,7 +85,7 @@ class TestMultipskBridge(object):
         profile_data=setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid=profile_data["ssid_name"]
         security_key=profile_data["security_key"]
-        security="wpa"
+        security="wpa2"
         mode="BRIDGE"
         band="twog"
         mpsk_data={100: {"num_stations": 1, "passkey": profile_data["multi-psk"][0]["key"]},

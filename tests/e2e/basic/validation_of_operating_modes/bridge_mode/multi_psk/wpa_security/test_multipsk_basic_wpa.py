@@ -38,12 +38,12 @@ setup_params_general = {
 
 @allure.feature("BRIDGE MODE MULTIPSK")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMultipskBridge(object):
 
     @pytest.mark.multipsk
