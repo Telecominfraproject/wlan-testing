@@ -51,16 +51,17 @@ class AndroidTests(android_libs):
                 print(ip_address, ssid_with_internet)
                 if ip_address is not None:
                     return "PASS", "Device got the IP address"
-                else:
-                    return "FAIL", "Device didn't get the IP address"
                     self.teardown()
+                else:
+                    self.teardown()
+                    return "FAIL", "Device didn't get the IP address"
             else:
-                return "FAIL", "SSID didn't get the Internet"
                 self.teardown()
+                return "FAIL", "SSID didn't get the Internet"
         except Exception as e:
-            return "Fail", "Failed due to exception or Unable to find the API path"
             print(e)
             self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
 
     def client_connectivity_test(self, ssid, security=None, dut_data=None, passkey=None, mode=None, band=None, num_sta=None):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
@@ -71,23 +72,23 @@ class AndroidTests(android_libs):
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
         try:
-            if ssid_with_internet is not None:
+            if ssid_with_internet is True:
                 self.closeApp(self.connData["appPackage-android"], setup)
-                current_result = self.speed_test(setup_perfecto_mobile)
+                down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
                 self.teardown()
-                if current_result is True:
+                if down_speed is not None and up_speed is not None:
                     return "PASS", "Device connected to SSID and ran Internet speed test"
                 else:
-                    return "Fail", "Device didn't get connected to SSID"
                     self.teardown()
+                    return "Fail", "Device didn't get connected to SSID"
             else:
-                return "FAIL", "SSID didn't get the Internet"
                 self.teardown()
+                return "FAIL", "SSID didn't get the Internet"
         except Exception as e:
-            return "Fail", "Failed due to exception or Unable to find the API path"
             print(e)
             self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
 
     def captive_portal(self, ssid, passkey):
         global ip_address
@@ -119,13 +120,13 @@ if __name__ == '__main__':
         "projectVersion": "1.0",
         "reportTags": "TestTag",
         "perfectoURL": "tip",
-        "Galaxy S20": {
+        "Galaxy S10.*": {
             "platformName-android": "Android",
-            "model-android": "Galaxy S20",
+            "model-android": "Galaxy S10.*",
             "appPackage-android": "com.android.settings",
             "bundleId-iOS-Settings": "com.apple.Preferences",
             "bundleId-iOS-Safari": "com.apple.mobilesafari",
-            "jobName": "Interop-Galaxy-S20",
+            "jobName": "Interop-Galaxy-S10",
             "jobNumber": 38
         }
     }
@@ -158,7 +159,7 @@ if __name__ == '__main__':
         "serial_tty": "/dev/ttyAP5",
         "firmware_version": "next-latest"
     }]
-    obj = AndroidTests(perfecto_data=perfecto_data, dut_data=access_point, device=perfecto_data["Galaxy S20"], testcase=
-                       "Test_perfecto_check")
-    print(obj.client_connectivity_test("ssid_open_2g_br", security=None,
+    obj = AndroidTests(perfecto_data=perfecto_data, dut_data=access_point, device="Galaxy S10.*",
+                       testcase="Test_perfecto_check")
+    print(obj.client_connectivity_test("ssid_wpa2_2g_RL_55K5113", security=None,
                                        dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
