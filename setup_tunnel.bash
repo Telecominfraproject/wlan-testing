@@ -695,7 +695,7 @@ Create_lab_info_json()
                     "uplink_nat_ports": {
                         "1.3.eth3": {
                             "addressing": "static",
-                            "ip": "10.28.2.39",
+                            "ip": "10.28.2.29",
                             "gateway_ip": "10.28.2.1/24",
                             "ip_mask": "255.255.255.0",
                             "dns_servers": "BLANK"
