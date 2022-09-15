@@ -832,7 +832,7 @@
                     "uplink_nat_ports": {
                         "1.1.eth3": {
                             "addressing": "static",
-                            "ip": "10.28.2.14",
+                            "ip": "10.28.2.15",
                             "gateway_ip": "10.28.2.1/24",
                             "ip_mask": "255.255.255.0",
                             "dns_servers": "BLANK"
