@@ -180,8 +180,7 @@ setup_params_general_two_br = {
     "ssid_modes": {
         "wpa3_personal": [
             {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_6g_br", "appliedRadios": ["6G"], "security_key": "something"}],
+            {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_personal_mixed": [
             {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
             {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
@@ -252,26 +251,6 @@ class TestBridgeModeConnectSuiteTwo(object):
 
         assert passes == "PASS", result
 
-    @pytest.mark.wpa3_personal
-    @pytest.mark.sixg
-    @allure.story('wpa3_personal 6 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa3_personal encryption 6 GHz Band")
-    def test_bridge_wpa3_personal_6g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
-                                                         get_test_device_logs, num_stations, setup_configuration):
-        """
-            BRIDGE Mode Client ConnectTest with wpa3_personal encryption 6 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa3_personal and sixg"
-        """
-        profile_data = {"ssid_name": "ssid_wpa3_p_6g_br", "appliedRadios": ["6G"], "security_key": "something"}
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa3"
-        band = "sixg"
-        mode = "BRIDGE"
-
-        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
-
-        assert passes == "PASS", result
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
