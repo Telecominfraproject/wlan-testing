@@ -125,3 +125,4 @@ class TestDataplaneThroughputBRIDGE(object):
                                                    influx_tags=influx_tags, move_to_influx=False,
                                                    dut_data=setup_configuration
                                                    )
+
