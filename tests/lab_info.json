@@ -264,7 +264,7 @@
                 "host_ip": "10.28.3.100",
                 "host_username": "lanforge",
                 "host_password": "pumpkin77",
-                "host_ssh_port":   22  ,
+                "host_ssh_port":   8821,
                 "serial_tty": "/dev/ttyAP3",
                 "firmware_version": "next-latest"
             }],
@@ -273,9 +273,9 @@
                 "testbed": "basic",
                 "scenario": "dhcp-bridge",
                 "details": {
-                    "manager_ip": "10.28.3.10",
-                    "http_port":  8080 ,
-                    "ssh_port":  22 ,
+                    "manager_ip": "localhost",
+                    "http_port":  8820 ,
+                    "ssh_port":  8821 ,
                     "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
                     "wan_ports": {
                         "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
@@ -335,7 +335,7 @@
                 "host_ip": "10.28.3.100",
                 "host_username": "lanforge",
                 "host_password": "pumpkin77",
-                "host_ssh_port":   22  ,
+                "host_ssh_port":   8822,
                 "serial_tty": "/dev/ttyAP6",
                 "firmware_version": "next-latest"
             }],
@@ -344,9 +344,9 @@
                 "testbed": "basic",
                 "scenario": "dhcp-bridge",
                 "details": {
-                    "manager_ip": "10.28.3.10",
-                    "http_port":  8080 ,
-                    "ssh_port":  22 ,
+                    "manager_ip": "localhost",
+                    "http_port":  8820,
+                    "ssh_port":  8821,
                     "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
                     "wan_ports": {
                         "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
@@ -1449,11 +1449,11 @@
     }
 },
 "RADIUS_SERVER_DATA" : {
-    "ip": "10.10.1.221",
+    "ip": "10.28.3.100",
     "port": 1812,
     "secret": "testing123",
-    "user": "user",
-    "password": "password",
+    "user": "nolaradius",
+    "password": "nolastart",
     "pk_password": "whatever"
 },
 
