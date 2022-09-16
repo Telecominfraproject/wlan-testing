@@ -16,19 +16,41 @@
                 "wan_port": "1.1.eth3",
                 "lan_port": null,
                 "ssid": {
-                    "2g-ssid": "OpenWifi",
-                    "5g-ssid": "OpenWifi",
-                    "6g-ssid": "OpenWifi",
-                    "2g-password": "OpenWifi",
-                    "5g-password": "OpenWifi",
-                    "6g-password": "OpenWifi",
-                    "2g-encryption": "WPA2",
-                    "5g-encryption": "WPA2",
-                    "6g-encryption": "WPA3",
-                    "2g-bssid": "68:7d:b4:5f:5c:31",
-                    "5g-bssid": "68:7d:b4:5f:5c:3c",
-                    "6g-bssid": "68:7d:b4:5f:5c:38"
-                },
+                          "mode": "BRIDGE",
+                          "ssid_data": {
+                            "0": {
+                              "ssid": "ssid_wpa2_2g",
+                              "encryption": "wpa2",
+                              "password": "something",
+                              "band": "fiveg",
+                              "bssid": "90:3C:B3:6C:43:05"
+                            },
+                              "1": {
+                                  "ssid": "ssid_wpa2_2g",
+                                  "encryption": "wpa2",
+                                  "password": "something",
+                                  "band": "twog",
+                                  "bssid": "90:3C:B3:6C:43:04"
+                              }
+                          },
+                          "radio_data": {
+                            "2G": {
+                              "channel": 1,
+                              "bandwidth": 20,
+                              "frequency": 2412
+                            },
+                            "5G": {
+                              "channel": 52,
+                              "bandwidth": 80,
+                              "frequency": 5290
+                            },
+                            "6G": {
+                              "channel": null,
+                              "bandwidth": null,
+                              "frequency": null
+                            }
+                          }
+                        },
                 "mode": "wifi6",
                 "identifier": "903cb36c4301",
                 "method": "serial",
@@ -365,18 +387,19 @@
                 "wan_port": "1.1.eth2",
                 "lan_port": "1.1.eth1",
                 "ssid": {
-                    "2g-ssid": "OpenWifi",
-                    "5g-ssid": "OpenWifi",
-                    "6g-ssid": "OpenWifi",
-                    "2g-password": "OpenWifi",
-                    "5g-password": "OpenWifi",
-                    "6g-password": "OpenWifi",
-                    "2g-encryption": "WPA2",
-                    "5g-encryption": "WPA2",
-                    "6g-encryption": "WPA3",
-                    "2g-bssid": "68:7d:b4:5f:5c:31",
-                    "5g-bssid": "68:7d:b4:5f:5c:3c",
-                    "6g-bssid": "68:7d:b4:5f:5c:38"
+                       "mode": "BRIDGE",
+                        "ssid_modes": {
+                            "wpa2_personal": [
+                                {"ssid_name": "ssid_wpa2_5g_36",
+                                "band": "5G",
+                                "bssid": "aaaaa",
+                                "security_key": "something"}]},
+                        "rf": {
+                            "5G": {
+                                "channel-width": 80,
+                                "channel": 36
+                            }
+                        }
                 },
                 "mode": "wifi5",
                 "identifier": "68215fda456d",
@@ -771,7 +794,6 @@
                 }
             }
         },
-
         "advance-02" : {
             "target": "tip_2x",
             "controller" : {
@@ -841,7 +863,6 @@
                 }
             }
         },
-
         "advance-03" : {
             "target": "tip_2x",
             "controller" : {

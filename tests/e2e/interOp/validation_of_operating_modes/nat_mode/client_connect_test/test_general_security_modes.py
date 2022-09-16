@@ -1,6 +1,6 @@
 """
 
-    Client Connect : BRIDGE Mode
+    Client Connect : Nat Mode
     pytest -m "client_connect_tests and nat and general"
 
 """
@@ -9,25 +9,25 @@ import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connect_tests, pytest.mark.bridge, pytest.mark.general]
+pytestmark = [pytest.mark.client_connect_tests, pytest.mark.nat, pytest.mark.general]
 
 setup_params_general = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                 {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
-        "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]},
+        "open": [{"ssid_name": "ssid_open_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+                 {"ssid_name": "ssid_open_5g_nat", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa": [{"ssid_name": "ssid_wpa_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "ssid_wpa_5g_nat", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "ssid_wpa2_5g_nat", "appliedRadios": ["5G"], "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.feature("NAT MODE CLIENT CONNECT")
 @allure.parent_suite("Client Connect Tests")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.suite(suite_name="NAT Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connect")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -36,28 +36,28 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeConnectSuiteA(object):
+class TestNatModeConnectSuiteA(object):
     """
-        Bridge Client Connect (open. wpa. wpa2_personal) (twog, fiveg)
-        pytest -m "client_connect_tests and bridge and general"
+        Nat Client Connect (open. wpa. wpa2_personal) (twog, fiveg)
+        pytest -m "client_connect_tests and nat and general"
     """
 
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('OPEN 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with open encryption 2.4 GHz Band")
+    @allure.title("Nat Mode Client Connect Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
-    def test_bridge_open_2g_client_connect(self, get_dut_logs_per_test_case, get_test_device_logs,
+    def test_nat_open_2g_client_connect(self, get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
         """
-            BRIDGE Mode Client Connect Test with open encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and general and open and twog"
+            NAT Mode Client Connect Test with open encryption 2.4 GHz Band
+            pytest -m "client_connect_tests and nat and general and open and twog"
         """
         profile_data = {"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "twog"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -67,19 +67,19 @@ class TestBridgeModeConnectSuiteA(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @allure.story('OPEN 5 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with open encryption 5 GHz Band")
+    @allure.title("NAT Mode Client Connect Test with open encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
-    def test_bridge_open_5g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
+    def test_nat_open_5g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs, num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with open encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and open and fiveg"
+            NAT Mode Client Connect Test with open encryption 5 GHz Band
+            pytest -m "client_connect_tests and nat and general and open and fiveg"
         """
         profile_data = {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "fiveg"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -90,19 +90,19 @@ class TestBridgeModeConnectSuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa encryption 2.4 GHz Band")
+    @allure.title("NAT Mode Client Connect Test with wpa encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
-    def test_bridge_wpa_2g_client_connect(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+    def test_nat_wpa_2g_client_connect(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                                num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and bridge and general and wpa and twog"
+            NAT Mode Client Connect Test with wpa encryption 2.4 GHz Band
+            pytest -m "client_connectivity_tests and nat and general and wpa and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "twog"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -112,18 +112,18 @@ class TestBridgeModeConnectSuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa encryption 5 GHz Band")
-    def test_bridge_wpa_5g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
+    @allure.title("NAT Mode Client Connect Test with wpa encryption 5 GHz Band")
+    def test_nat_wpa_5g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa and fiveg"
+            NAT Mode Client Connect Test with wpa encryption 5 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "fiveg"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -133,18 +133,18 @@ class TestBridgeModeConnectSuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band")
-    def test_bridge_wpa2_personal_2g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
+    @allure.title("NAT Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band")
+    def test_nat_wpa2_personal_2g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa2_personal and twog"
+            NAT Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa2_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "twog"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -156,18 +156,18 @@ class TestBridgeModeConnectSuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa2_personal encryption 5 GHz Band")
+    @allure.title("NAT Mode Client Connect Test with wpa2_personal encryption 5 GHz Band")
     def test_bridge_wpa2_personal_5g_client_connect(self, get_test_device_logs, get_dut_logs_per_test_case,
                                                     num_stations, setup_configuration, get_test_library):
         """
-            BRIDGE Mode Client Connect Test with wpa2_personal encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa2_personal and fiveg"
+            NAT Mode Client Connect Test with wpa2_personal encryption 5 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa2_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "fiveg"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -175,55 +175,55 @@ class TestBridgeModeConnectSuiteA(object):
         assert passes == "PASS", result
 
 
-setup_params_general_two_br = {
-    "mode": "BRIDGE",
+setup_params_general_two_nat = {
+    "mode": "NAT",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "ssid_wpa3_p_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_5g_nat", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "ssid_wpa3_p_m_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa3_p_m_5g_nat", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]
+            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_nat", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_nat", "appliedRadios": ["5G"], "security_key": "something"}]
     },
     "rf": {},
     "radius": False
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECT")
+@allure.feature("NAT MODE CLIENT CONNECT")
 @allure.parent_suite("Client Connect Tests")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.suite(suite_name="NAT Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connect")
 @pytest.mark.parametrize(
     'setup_configuration',
-    [setup_params_general_two_br],
+    [setup_params_general_two_nat],
     indirect=True,
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeConnectSuiteTwo(object):
+class TestNatModeConnectSuiteTwo(object):
     """ Client Connect SuiteA
-        pytest -m "client_connect_tests and bridge and suiteB"
+        pytest -m "client_connect_tests and nat and suiteB"
     """
 
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('wpa3_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa3_personal encryption 2.4 GHz Band")
-    def test_bridge_wpa3_personal_2g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
+    @allure.title("NAT Mode Client Connect Test with wpa3_personal encryption 2.4 GHz Band")
+    def test_nat_wpa3_personal_2g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa3_personal encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa3_personal and twog"
+            NAT Mode Client Connect Test with wpa3_personal encryption 2.4 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "twog"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -233,18 +233,18 @@ class TestBridgeModeConnectSuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('wpa3_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa3_personal encryption 5 GHz Band")
-    def test_bridge_wpa3_personal_5g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
+    @allure.title("NAT Mode Client Connect Test with wpa3_personal encryption 5 GHz Band")
+    def test_nat_wpa3_personal_5g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa3_personal encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa3_personal and fiveg"
+            NAT Mode Client Connect Test with wpa3_personal encryption 5 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "fiveg"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -255,19 +255,19 @@ class TestBridgeModeConnectSuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa3_personal_mixed 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa3_personal_mixed encryption 2.4 GHz Band")
-    def test_bridge_wpa3_personal_mixed_2g_client_connect(self, get_test_library,
+    @allure.title("NAT Mode Client Connect Test with wpa3_personal_mixed encryption 2.4 GHz Band")
+    def test_nat_wpa3_personal_mixed_2g_client_connect(self, get_test_library,
                                                                get_dut_logs_per_test_case, get_test_device_logs,
                                                                num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa3_personal_mixed encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa3_personal_mixed and twog"
+            NAT Mode Client Connect Test with wpa3_personal_mixed encryption 2.4 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa3_personal_mixed and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "twog"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -277,19 +277,19 @@ class TestBridgeModeConnectSuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa3_personal_mixed 5 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa3_personal_mixed encryption 5 GHz Band")
-    def test_bridge_wpa3_personal_mixed_5g_client_connect(self, get_test_library,
+    @allure.title("NAT Mode Client Connect Test with wpa3_personal_mixed encryption 5 GHz Band")
+    def test_nat_wpa3_personal_mixed_5g_client_connect(self, get_test_library,
                                                                get_dut_logs_per_test_case, get_test_device_logs,
                                                                num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa3_personal_mixed encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa3_personal_mixed and fiveg"
+            NAT Mode Client Connect Test with wpa3_personal_mixed encryption 5 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa3_personal_mixed and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "fiveg"
 
         passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -299,20 +299,20 @@ class TestBridgeModeConnectSuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band")
-    def test_bridge_wpa_wpa2_personal_mixed_2g_client_connect(self, get_test_library,
+    @allure.title("NAT Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band")
+    def test_nat_wpa_wpa2_personal_mixed_2g_client_connect(self, get_test_library,
                                                                    get_dut_logs_per_test_case, get_test_device_logs,
                                                                    num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa_wpa2_personal_mixed and twog"
+            NAT Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa_wpa2_personal_mixed and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "twog"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
@@ -322,20 +322,20 @@ class TestBridgeModeConnectSuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
-    @allure.title("BRIDGE Mode Client ConnectTest with wpa_wpa2_personal_mixed encryption 5 GHz Band")
-    def test_bridge_wpa_wpa2_personal_mixed_5g_client_connect(self, get_test_library,
+    @allure.title("NAT Mode Client ConnectTest with wpa_wpa2_personal_mixed encryption 5 GHz Band")
+    def test_nat_wpa_wpa2_personal_mixed_5g_client_connect(self, get_test_library,
                                                                    get_dut_logs_per_test_case, get_test_device_logs,
                                                                    num_stations, setup_configuration):
         """
-            BRIDGE Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa_wpa2_personal_mixed and fiveg"
+            NAT Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
+            pytest -m "client_connect_tests and nat and general and wpa_wpa2_personal_mixed and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        mode = "BRIDGE"
+        mode = "NAT"
         band = "fiveg"
 
         passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
