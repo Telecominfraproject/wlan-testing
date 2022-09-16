@@ -38,6 +38,9 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@allure.parent_suite("OpenWifi Multi Vlan Test")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("2.4 GHz Band")
 class TestVlanConfigTwogRadio(object):
 
     @pytest.mark.wpa
@@ -204,6 +207,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_open_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2160")
+    @allure.title("Test for station ip open ssid vlan 100")
     def test_station_ip_open_ssid_2g(self, lf_test, lf_tools,
                                       station_names_twog,
                                      test_cases, get_configuration):
@@ -259,6 +263,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2166")
+    @allure.title("Test for station ip WPA WPA2 personal ssid vlan 150")
     def test_station_ip_wpa_wpa2_personal_ssid_2g(self, lf_test,
                                                   lf_tools,  station_names_twog,
                                                   test_cases, get_configuration):
@@ -316,6 +321,7 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
+    @allure.title("Test for enable vlan WPA2 ssid vlan 200")
     def test_enable_vlan_wpa2_ssid_2g(self, lf_test, lf_tools,
                                                station_names_twog,
                                               test_cases, get_configuration):

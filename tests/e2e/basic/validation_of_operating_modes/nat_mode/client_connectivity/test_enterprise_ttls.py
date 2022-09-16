@@ -34,11 +34,15 @@ setup_params_enterprise = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@allure.parent_suite("OpenWifi Client Connectivity")
+@allure.suite(suite_name="NAT Mode")
+@allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-One")
 class TestNATModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
     @allure.story('open 2.4 GHZ Band')
+    @allure.title("Test for wpa enterprise 2.4 GHz")
     def test_wpa_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                station_names_twog, lf_test, update_report,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -63,6 +67,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
+    @allure.title("Test for wpa enterprise 5 GHz")
     def test_wpa_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                station_names_fiveg, lf_test, update_report,
                                test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -88,6 +93,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
+    @allure.title("Test for wpa2 enterprise 2.4 GHz")
     def test_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                 station_names_twog, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -112,6 +118,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
+    @allure.title("Test for wpa2 enterprise 5 GHz")
     def test_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                 station_names_fiveg, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -135,6 +142,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
+    @allure.title("Test for wpa3 enterprise 2.4 GHz")
     def test_wpa3_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                 station_names_twog, lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -158,6 +166,7 @@ class TestNATModeEnterpriseTTLSSuiteOne(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
+    @allure.title("Test for wpa3 enterprise 5 GHz")
     def test_wpa3_enterprise_5g(self, station_names_fiveg, get_ap_logs, get_lf_logs,
                                 lf_test, update_report,
                                 test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -203,10 +212,14 @@ setup_params_enterprise_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@allure.parent_suite("OpenWifi Client Connectivity")
+@allure.suite(suite_name="NAT Mode")
+@allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-Two")
 class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
+    @allure.title("Test for wpa wpa2 enterprise 2.4 GHz")
     def test_wpa_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
                                     station_names_twog, lf_test, update_report,
                                     test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -231,6 +244,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
+    @allure.title("Test for wpa wpa2 enterprise 5 GHz")
     def test_wpa_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
                                     station_names_fiveg, lf_test,
                                     update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -255,6 +269,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
+    @allure.title("Test for wpa3 enterprise mixed 2.4 GHz")
     def test_wpa3_enterprise_mixed_2g(self, get_ap_logs, get_lf_logs,
                                       station_names_twog, lf_test,
                                       update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
@@ -278,6 +293,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
+    @allure.title("Test for wpa3 enterprise mixed 5 GHz")
     def test_wpa3_enterprise_mixed_5g(self, get_ap_logs, get_lf_logs,
                                       station_names_fiveg, lf_test,
                                       update_report, exit_on_fail,

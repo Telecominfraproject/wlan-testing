@@ -32,7 +32,10 @@ setup_params_general = {
 }
 
 
-@allure.suite("regression")
+#@allure.suite("regression")
+@allure.parent_suite("OpenWifi Dynamic Vlan Test")
+@allure.suite("WPA2 Enterprise Security")
+@allure.sub_suite("5 GHz Band")
 @allure.feature("VLAN MODE wpa2_enterprise Dynamic Vlan")
 @pytest.mark.parametrize(
     'setup_profiles',
@@ -49,6 +52,7 @@ class TestDynamicVlan5GWpa2(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
+    @allure.title("Test for ssid vlan in the absence of radius vlan identifier")
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_5g_wpa2(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
                                                                 create_lanforge_chamberview_dut, lf_test,
                                                                 get_configuration,
