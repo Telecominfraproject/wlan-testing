@@ -127,7 +127,7 @@ class TestMultiVlan(object):
         """
         profile_data={"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 150}
         ssid_name=profile_data["ssid_name"]
-        security_key=profile_data["security_key"]
+        security_key="[BLANK]"
         security="open"
         mode="VLAN"
         band="twog"

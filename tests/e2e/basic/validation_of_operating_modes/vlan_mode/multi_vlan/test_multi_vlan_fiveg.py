@@ -50,7 +50,7 @@ class TestMultiVlan(object):
         """
         profile_data={"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}
         ssid_name=profile_data["ssid_name"]
-        security_key=profile_data["security_key"]
+        security_key="[BLANK]"
         security="open"
         mode="VLAN"
         band="fiveg"
