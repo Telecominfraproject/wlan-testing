@@ -292,7 +292,7 @@ class TestBridgeModeConnectSuiteTwo(object):
         mode = "BRIDGE"
         band = "fiveg"
 
-        passes, result = get_test_library.get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
+        passes, result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key)
 
         assert passes == "PASS", result
 

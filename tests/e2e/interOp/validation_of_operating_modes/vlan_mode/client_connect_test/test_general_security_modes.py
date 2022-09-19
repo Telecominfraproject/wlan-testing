@@ -97,7 +97,6 @@ class TestVLANModeConnectSuiteA(object):
 
         assert passes == "PASS", result
 
-    #
 
     @pytest.mark.wpa
     @pytest.mark.twog
@@ -178,7 +177,6 @@ class TestVLANModeConnectSuiteA(object):
 
         assert passes == "PASS", result
 
-    #
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
