@@ -112,6 +112,8 @@ class android_libs:
         }
     }
     def __init__(self, perfecto_data=None, dut_data=None):
+        logging_level = logging.INFO
+        logging.basicConfig(format='%(asctime)s - %(message)s', level=logging_level)
         # super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
@@ -704,7 +706,6 @@ class android_libs:
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet, setup_perfectoMobile
                     # -------------------------------------------------------
-
                     # Set password if Needed
                     # -------------------------------------------------------
                     try:
@@ -729,7 +730,8 @@ class android_libs:
                         report.step_start("Click Connect Button")
                         print("Click Connect")
                         logging.info("Click Connect")
-                        joinBTNElement = driver.find_element_by_xpath("//*[@text='Connect']")
+                        joinBTNElement = WebDriverWait(driver, 35).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Connect']")))
                         joinBTNElement.click()
                     except NoSuchElementException:
                         print("Connect Button Not Enabled...Verify if Password is set properly")

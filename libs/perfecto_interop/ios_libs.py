@@ -20,6 +20,8 @@ from xml.etree import ElementTree as ET
 class ios_libs:
     global driver, perfecto_execution_context, deviceModel
     def __init__(self, perfecto_data=None, dut_data=None):
+        logging_level = logging.INFO
+        logging.basicConfig(format='%(asctime)s - %(message)s', level=logging_level)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
         pass
