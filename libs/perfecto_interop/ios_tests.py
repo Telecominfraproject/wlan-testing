@@ -32,9 +32,9 @@ class ios_tests(ios_libs):
                                                                        perfecto_data=self.perfecto_data,
                                                                        testcase=self.testcase_name))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
-        ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
-                                                      setup_perfecto_mobile, connData=self.connData)
         try:
+            ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
+                                                      setup_perfecto_mobile, connData=self.connData)
             if ssid_with_internet is not None:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
@@ -59,9 +59,9 @@ class ios_tests(ios_libs):
                                                                        perfecto_data=self.perfecto_data,
                                                                        testcase=self.testcase_name))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
-        ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
-                                                      setup_perfecto_mobile, connData=self.connData)
         try:
+            ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
+                                                      setup_perfecto_mobile, connData=self.connData)
             if ssid_with_internet is not None:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 current_result = self.speed_test(setup_perfecto_mobile)
