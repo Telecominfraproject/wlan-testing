@@ -7553,13 +7553,33 @@ def ookla_speed_test_android(request, setup_perfectoMobile, get_APToMobileDevice
     driver = setup_perfectoMobile[0]
     driver.switch_to.context('NATIVE_APP')
     openApp('org.zwanoo.android.speedtest', setup_perfectoMobile)
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((MobileBy.XPATH, "//*[@resource-id='org.zwanoo.android.speedtest:id/go_button']"))).click()
-    # Wait untill 2 minutes for the test to complete
-    WebDriverWait(driver, 120).until(
-        EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Test Again']")))
-    downloadSpeed = driver.find_element_by_xpath("//*[@text='DOWNLOAD']/parent::*/android.widget.TextView[3]").text
-    uploadSpeed = driver.find_element_by_xpath("//*[@text='UPLOAD']/parent::*/android.widget.TextView[3]").text
+    try:
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located(
+                (MobileBy.XPATH, "//*[@resource-id='org.zwanoo.android.speedtest:id/go_button']"))).click()
+        # Wait until 2 minutes for the test to complete
+        WebDriverWait(driver, 120).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Test Again']")))
+        downloadSpeed = driver.find_element_by_xpath("//*[@text='DOWNLOAD']/parent::*/android.widget.TextView[3]").text
+        uploadSpeed = driver.find_element_by_xpath("//*[@text='UPLOAD']/parent::*/android.widget.TextView[3]").text
+    except:
+        print("Exception in running Speed test, Trying Again")
+        try:
+            WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='OK']"))).click()
+        except:
+            print("No Error Popup, Trying Again")
+        try:
+            WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located(
+                    (MobileBy.XPATH, "//*[@resource-id='org.zwanoo.android.speedtest:id/go_button']"))).click()
+            # Wait until 2 minutes for the test to complete
+            WebDriverWait(driver, 120).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Test Again']")))
+            downloadSpeed = driver.find_element_by_xpath("//*[@text='DOWNLOAD']/parent::*/android.widget.TextView[3]").text
+            uploadSpeed = driver.find_element_by_xpath("//*[@text='UPLOAD']/parent::*/android.widget.TextView[3]").text
+        except:
+            print("Exception in running Speed test")
     print(f"Download speed: {downloadSpeed}")
     print(f"Upload speed: {uploadSpeed}")
     return downloadSpeed, uploadSpeed

@@ -3616,16 +3616,34 @@ def ookla_speed_test_iOS(request, setup_perfectoMobile, get_APToMobileDevice_dat
     driver = setup_perfectoMobile[0]
     driver.switch_to.context('NATIVE_APP')
     openApp( 'com.ookla.speedtest', setup_perfectoMobile)
-    driver.find_element_by_xpath("//*[@label='GO']").click()
-    # Wait untill 2 minutes for the test to complete
-    WebDriverWait(driver, 120).until(
-            EC.presence_of_element_located((MobileBy.XPATH, "//*[@value='Test Again']")))
-    result = driver.find_element_by_xpath("//XCUIElementTypeOther[contains(@label,'Download Speed')]").text
+    try:
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='GO']"))).click()
+        # Wait untill 2 minutes for the test to complete
+        WebDriverWait(driver, 120).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@value='Test Again']")))
+        result = driver.find_element_by_xpath("//XCUIElementTypeOther[contains(@label,'Download Speed')]").text
+    except:
+        print("Exception in running Speed test, Trying Again")
+        try:
+            WebDriverWait(driver, 20).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='OK']"))).click()
+        except:
+            print("No Error Popup")
+        try:
+            WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='GO']"))).click()
+            # Wait until 2 minutes for the test to complete
+            WebDriverWait(driver, 120).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//*[@value='Test Again']")))
+            result = driver.find_element_by_xpath("//XCUIElementTypeOther[contains(@label,'Download Speed')]").text
+        except:
+            print("Exception in running Speed test")
     print(result)
-    downloadSpeed = result.split('Download Speed, ')[1].split('. ')[0]
-    uploadSpeed = result.split('Upload speed, ')[1].split('. ')[0]
-    downloadSpeed = str(downloadSpeed)[0:4]
-    uploadSpeed = str(uploadSpeed)[0:4]
-    print(f"Download speed: {downloadSpeed}")
-    print(f"Upload speed: {uploadSpeed}")
-    return downloadSpeed, uploadSpeed
+    download_speed = result.split('Download Speed, ')[1].split('. ')[0]
+    upload_speed = result.split('Upload speed, ')[1].split('. ')[0]
+    download_speed = str(download_speed)[0:4]
+    upload_speed = str(upload_speed)[0:4]
+    print(f"Download speed: {download_speed}")
+    print(f"Upload speed: {upload_speed}")
+    return download_speed, upload_speed
