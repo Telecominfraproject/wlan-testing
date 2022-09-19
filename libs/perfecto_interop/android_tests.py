@@ -112,6 +112,36 @@ class AndroidTests(android_libs):
             print(e)
             self.teardown()
 
+    def rate_limiting_test(self, ssid, passkey,up_rate=None,down_rate=None):
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
+                                                                           self.perfecto_data[self.device],
+                                                                           perfecto_data=self.perfecto_data,
+                                                                           testcase=self.testcase_name))
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
+                                                      setup_perfecto_mobile, connData=self.connData)
+        try:
+            if ssid_with_internet is True:
+                self.closeApp(self.connData["appPackage-android"], setup)
+                down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                if down_speed is not None and up_speed is not None:
+                    if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
+                        return "PASS", "Device connected to SSID and ran rate-limiting test"
+                    else:
+                        return "Fail", "Failed Rate-limiting test"
+                else:
+                    self.teardown()
+                    return "Fail", "Device didn't get connected to SSID"
+            else:
+                self.teardown()
+                return "FAIL", "SSID didn't get the Internet"
+        except Exception as e:
+            print(e)
+            self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
+
 
 if __name__ == '__main__':
     perfecto_data = {
@@ -161,5 +191,7 @@ if __name__ == '__main__':
     }]
     obj = AndroidTests(perfecto_data=perfecto_data, dut_data=access_point, device="Galaxy S10.*",
                        testcase="Test_perfecto_check")
-    print(obj.client_connectivity_test("ssid_wpa2_2g_RL_55K5113", security=None,
-                                       dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
+    # print(obj.client_connectivity_test("ssid_wpa2_2g_RL_55K5113", security=None,
+    #                                    dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
+
+    print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
