@@ -18,12 +18,12 @@ import allure
 class TestUcentralSecService(object):
 
     @allure.title("Get System Endpoints")
-    def test_secservice_system_endpoints(self, setup_controller):
+    def test_secservice_system_endpoints(self, get_target_object):
         """
             Test the system endpoints to verify list of services present
             WIFI-3449
         """
-        resp = setup_controller.request("sec", "systemEndpoints", "GET", None, None)
+        resp = get_target_object.controller_library_object.request("sec", "systemEndpoints", "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         #allure.attach(name="security systemEndpoints", body=body)
 
@@ -55,14 +55,14 @@ class TestUcentralSecService(object):
         assert (num_services == 2) and (uri_present == 2) and (authtype_present == 2)
 
     @allure.title("Get Security Version")
-    def test_secservice_get_version(self, setup_controller):
+    def test_secservice_get_version(self, get_target_object):
         """
             Test the system endpoint to verify the version of the service
             WIFI-3450
         """
 
         params = {'command': 'info'}
-        resp = setup_controller.request("sec", "system", "GET", params, None)
+        resp = get_target_object.controller_library_object.request("sec", "system", "GET", params, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         #allure.attach(name="security get version result", body=body)
 
@@ -76,14 +76,14 @@ class TestUcentralSecService(object):
             assert False
 
     @allure.title("Get Secutity Service Uptime")
-    def test_secservice_get_uptime(self, setup_controller):
+    def test_secservice_get_uptime(self, get_target_object):
         """
             Test the system endpoint to verify the uptime of the service
             WIFI-3451
         """
 
         params = {'command': 'info'}
-        resp = setup_controller.request("sec", "system", "GET", params, None)
+        resp = get_target_object.controller_library_object.request("sec", "system", "GET", params, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
         #allure.attach(name="security get uptime", body=body)
         if resp.status_code != 200:

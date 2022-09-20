@@ -9,7 +9,6 @@ import requests
 import json
 
 pytestmark = [pytest.mark.test_resources,
-              pytest.mark.ow_sanity_lf,
               pytest.mark.ow_sanity_interop,
               pytest.mark.sanity,
               pytest.mark.uc_sanity,
@@ -31,23 +30,23 @@ class TestResources(object):
     @pytest.mark.uc_sanity
     @pytest.mark.interop_uc_sanity
     @allure.testcase(name="test_controller_connectivity", url="")
-    def test_controller_connectivity(self, setup_controller, get_configuration):
+    def test_controller_connectivity(self, get_target_object, get_configuration):
         """Test case to verify cloud Controller Connectivity"""
 
-        login_response_json = setup_controller.login_resp.json()
-        response_code = setup_controller.login_resp.status_code
-        request_url = setup_controller.login_resp.request.url
+        login_response_json = get_target_object.controller_library_object.login_resp.json()
+        response_code = get_target_object.controller_library_object.login_resp.status_code
+        request_url = get_target_object.controller_library_object.login_resp.request.url
         print("Login_Request_URL: ", str(request_url))
         allure.attach(name="Login_Request_URL: ", body=str(request_url))
         print("response_code: ", response_code)
         allure.attach(name="Login Response Code: ", body=str(response_code))
         print("login_response_json: ", login_response_json)
-        allure.attach(name="Login Response JSON: ", body=str(setup_controller.login_resp.json()))
+        allure.attach(name="Login Response JSON: ", body=str(get_target_object.login_resp.json()))
         if response_code != 200:
             pytest.exit(
-                "exiting from pytest, login response is no 200: " + str(setup_controller.login_resp.status_code))
+                "exiting from pytest, login response is no 200: " + str(get_target_object.login_resp.status_code))
 
-        gw_system_info = setup_controller.get_system_gw()
+        gw_system_info = get_target_object.controller_library_object.get_system_gw()
         request_url = gw_system_info.request.url
         allure.attach(name="get_system_gw_request: ", body=str(request_url))
         gw_system_status = gw_system_info.status_code
@@ -59,7 +58,7 @@ class TestResources(object):
             allure.attach(name="Login_Request_URL: ", body=str(request_url))
             pytest.exit("gw_status_check response from gateway: " + str(gw_system_status))
 
-        fms_system_info = setup_controller.get_system_fms()
+        fms_system_info = get_target_object.controller_library_object.get_system_fms()
         request_url = fms_system_info.request.url
         allure.attach(name="get_system_fms_request: ", body=str(request_url))
         fms_system_status = fms_system_info.status_code
@@ -71,7 +70,7 @@ class TestResources(object):
             pytest.exit("fms_status_check response from fms: " + str(fms_system_status))
 
         # Provisioning system info
-        prov_system_info = setup_controller.get_system_prov()
+        prov_system_info = get_target_object.controller_library_object.get_system_prov()
         request_url = prov_system_info.request.url
         allure.attach(name="get_system_prov_request: ", body=str(request_url))
         prov_system_status = prov_system_info.status_code
@@ -84,26 +83,26 @@ class TestResources(object):
 
         # if gw_status_check != 200:
         #     for i in range(10):
-        #         if setup_controller.get_system_gw().status_code != 200 and i < 9:
+        #         if get_target_object.get_system_gw().status_code != 200 and i < 9:
         #             print("sleeping for 30 sec, gw service is down with response not equals to 200")
         #             time.sleep(30)
-        #         elif setup_controller.get_system_gw().status_code != 200 and i == 9:
+        #         elif get_target_object.get_system_gw().status_code != 200 and i == 9:
         #             pytest.exit("GW service is not up yet, exiting from pytest")
         #         else:
         #             break
         #
         # if fms_status_check != 200:
         #     for i in range(10):
-        #         if setup_controller.get_system_fms().status_code != 200 and i < 9:
+        #         if get_target_object.get_system_fms().status_code != 200 and i < 9:
         #             print("sleeping for 30 sec, fms service is down with response not equals to 200")
         #             time.sleep(30)
-        #         elif setup_controller.get_system_fms().status_code != 200 and i == 9:
+        #         elif get_target_object.get_system_fms().status_code != 200 and i == 9:
         #             pytest.exit("fms service is not up yet, exiting from pytest")
         #         else:
         #             break
         #
         # available_device_list = []
-        # devices = setup_controller.get_devices()
+        # devices = get_target_object.get_devices()
         # number_devices = len(devices["devices"])
         # for i in range(number_devices):
         #     available_device_list.append(devices["devices"][i]["serialNumber"])
@@ -112,7 +111,7 @@ class TestResources(object):
         # if get_configuration["access_point"][0]["serial"] not in available_device_list:
         #     for i in range(10):
         #         available_device_list = []
-        #         devices = setup_controller.get_devices()
+        #         devices = get_target_object.get_devices()
         #         number_devices = len(devices["devices"])
         #         for i in range(number_devices):
         #             available_device_list.append(devices["devices"][i]["serialNumber"])
@@ -152,7 +151,7 @@ class TestResources(object):
 
     @pytest.mark.test_access_points_connectivity
     @allure.testcase(name="test_access_points_connectivity", url="")
-    def test_access_points_connectivity(self, setup_controller, get_uci_show, test_access_point, get_configuration,
+    def test_access_points_connectivity(self, get_target_object, get_uci_show, test_access_point, get_configuration,
                                         test_ap_connection_status, fixtures_ver, get_apnos_logs):
         """Test case to verify Access Points Connectivity"""
         # print(test_ap_connection_status)
@@ -170,7 +169,7 @@ class TestResources(object):
         print("SDK On AP: ", str(get_uci_show.split("=")[1]))
         allure.attach(name="SDK Pointed by AP: ", body=str(get_uci_show.split("=")[1]))
         for ap in get_configuration["access_point"]:
-            out = setup_controller.get_device_by_serial_number(serial_number=ap["serial"])
+            out = get_target_object.controller_library_object.get_device_by_serial_number(serial_number=ap["serial"])
             out = out.json()
             if "ErrorCode" in out.keys():
                 print(out)
@@ -312,14 +311,14 @@ class TestFMS(object):
         assert True
 
     @pytest.mark.test_firmware_gw
-    def test_firmware_upgrade_status_gateway(self, get_apnos, get_configuration, setup_controller, get_ap_logs,
+    def test_firmware_upgrade_status_gateway(self, get_apnos, get_configuration, get_target_object, get_ap_logs,
                                              add_firmware_property_after_upgrade):
         status = []
         for ap in get_configuration['access_point']:
             ap_ssh = get_apnos(ap, pwd="../libs/apnos/", sdk="2.x")
             ap_version = ap_ssh.get_ap_version_ucentral()
             current_version_ap = str(ap_version).split()
-            data = setup_controller.get_device_by_serial_number(serial_number=ap['serial'])
+            data = get_target_object.controller_library_object.get_device_by_serial_number(serial_number=ap['serial'])
             data = data.json()
             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
             status.append(current_version_ap == data['firmware'].split())

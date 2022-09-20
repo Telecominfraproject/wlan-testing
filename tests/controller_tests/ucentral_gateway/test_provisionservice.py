@@ -9,6 +9,7 @@ import random
 
 import allure
 import pytest
+import logging
 
 
 @pytest.mark.ow_sanity_lf
@@ -29,18 +30,18 @@ class TestProvAPIInventory(object):
 
     @pytest.mark.prov_api
     @allure.title("Get All Inventory List")
-    def test_provservice_inventorylist(self, setup_prov_controller, get_configuration):
+    def test_provservice_inventorylist(self, get_target_object, get_testbed_details):
         """
             Test the device present in Provisioning UI
         """
-        resp = setup_prov_controller.get_inventory()
+        resp = get_target_object.prov_library_object.get_inventory()
         # print(resp.json())
         # allure.attach(name="Inventory", body=str(resp.json()), attachment_type=#allure.attachment_type.JSON)
         assert resp.status_code == 200
 
     @pytest.mark.owprov_api_inventory
     @allure.title("Create Inventory device")
-    def test_prov_service_create_inventory_device(self, setup_prov_controller, testbed):
+    def test_prov_service_create_inventory_device(self, get_target_object, selected_testbed):
         """
             Test the create device in provision Inventory
         """
@@ -62,20 +63,20 @@ class TestProvAPIInventory(object):
                         "deviceTypes": ["edgecore_eap101"]
                         }
                    }
-        resp = setup_prov_controller.add_device_to_inventory(device_name, payload)
+        resp = get_target_object.prov_library_object.add_device_to_inventory(device_name, payload)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.owprov_api_inventory
     @allure.title("Read Inventory device")
-    def test_prov_service_read_inventory_device(self, setup_prov_controller, testbed):
-        resp = setup_prov_controller.get_inventory_by_device(device_name)
+    def test_prov_service_read_inventory_device(self, get_target_object, selected_testbed):
+        resp = get_target_object.prov_library_object.get_inventory_by_device(device_name)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.owprov_api_inventory
     @allure.title("Edit Inventory device")
-    def test_prov_service_edit_inventory_device(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_inventory_device(self, get_target_object, selected_testbed):
         # This is for Edititng the information fo device in Inventory
         editing_payload = {
             "description": "For testing API through automation after editing",
@@ -87,17 +88,17 @@ class TestProvAPIInventory(object):
             "rrm": "inherit",
             "venue": ""
         }
-        resp = setup_prov_controller.edit_device_from_inventory(device_name, editing_payload)
+        resp = get_target_object.prov_library_object.edit_device_from_inventory(device_name, editing_payload)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_inventory_by_device(device_name)
+        resp = get_target_object.prov_library_object.get_inventory_by_device(device_name)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.owprov_api_inventory
     @allure.title("Delete Inventory device")
-    def test_prov_service_delete_inventory_device(self, setup_prov_controller, testbed):
-        resp = setup_prov_controller.delete_device_from_inventory(device_name)
+    def test_prov_service_delete_inventory_device(self, get_target_object, selected_testbed):
+        resp = get_target_object.prov_library_object.delete_device_from_inventory(device_name)
         if resp.status_code != 200:
             assert False
 
@@ -113,8 +114,8 @@ class TestProvAPISystemCommands(object):
 
     @pytest.mark.system_info_prov
     @allure.title("System Info OW Prov Service")
-    def test_system_info_prov(self, setup_prov_controller):
-        system_info = setup_prov_controller.get_system_prov()
+    def test_system_info_prov(self, get_target_object):
+        system_info = get_target_object.prov_library_object.get_system_prov()
         #print(system_info.json())
         #allure.attach(name="system info", body=str(system_info.json()), attachment_type=#allure.attachment_type.JSON)
         assert system_info.status_code == 200
@@ -130,13 +131,13 @@ class TestProvAPISystemCommands(object):
 class TestProvAPIEntity(object):
     @pytest.mark.prov_api_entity_test
     @allure.title("Read All Entities")
-    def test_read_all_entities(self, setup_prov_controller):
-        resp = setup_prov_controller.get_entity()
+    def test_read_all_entities(self, get_target_object):
+        resp = get_target_object.prov_library_object.get_entity()
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_entity_test
     @allure.title("Create Entity")
-    def test_prov_service_create_entity(self, setup_prov_controller, testbed):
+    def test_prov_service_create_entity(self, get_target_object, selected_testbed):
         """
             Test the create Entity in provision Service
         """
@@ -147,24 +148,24 @@ class TestProvAPIEntity(object):
                    "notes": [{"note": "For testing Purposes through Automation"}],
                    "parent": "0000-0000-0000"
                    }
-        resp = setup_prov_controller.add_entity(payload)
+        resp = get_target_object.prov_library_object.add_entity(payload)
         if resp.status_code != 200:
             assert False
         entity = json.loads(resp.text)
-        print(entity)
+        logging.info(entity)
         entity_id = entity['id']
 
     @pytest.mark.prov_api_entity_test
     @allure.title("Read Entity")
-    def test_prov_service_read_entity(self, setup_prov_controller, testbed):
+    def test_prov_service_read_entity(self, get_target_object, selected_testbed):
         global entity_id
-        resp = setup_prov_controller.get_entity_by_id(entity_id)
+        resp = get_target_object.prov_library_object.get_entity_by_id(entity_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_entity_test
     @allure.title("Edit Entity")
-    def test_prov_service_edit_entity(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_entity(self, get_target_object, selected_testbed):
         # This to edit Entity
         global entity_id
         editing_payload = {
@@ -176,18 +177,18 @@ class TestProvAPIEntity(object):
             "sourceIP": [],
             "uuid": entity_id
         }
-        resp = setup_prov_controller.edit_entity(editing_payload, entity_id)
+        resp = get_target_object.prov_library_object.edit_entity(editing_payload, entity_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_entity_by_id(entity_id)
+        resp = get_target_object.prov_library_object.get_entity_by_id(entity_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_entity_test
     @allure.title("Delete Entity")
-    def test_prov_service_delete_entity(self, setup_prov_controller, testbed):
+    def test_prov_service_delete_entity(self, get_target_object, selected_testbed):
         global entity_id
-        resp = setup_prov_controller.delete_entity(entity_id)
+        resp = get_target_object.prov_library_object.delete_entity(entity_id)
         if resp.status_code != 200:
             assert False
 
@@ -203,13 +204,13 @@ class TestProvAPIContact(object):
     # Contact related Test cases
     @pytest.mark.prov_api_contact_test
     @allure.title("Get All Contacts")
-    def test_get_contacts(self, setup_prov_controller):
-        resp = setup_prov_controller.get_contact()
+    def test_get_contacts(self, get_target_object):
+        resp = get_target_object.prov_library_object.get_contact()
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_contact_test
     @allure.title("Create Contact")
-    def test_prov_service_create_contact(self, setup_prov_controller, testbed):
+    def test_prov_service_create_contact(self, get_target_object, selected_testbed):
         """
             Test the create Contact in provision Service
         """
@@ -233,24 +234,24 @@ class TestProvAPIContact(object):
             "entity": "0000-0000-0000",
             "notes": [{"note": ""}]
         }
-        resp = setup_prov_controller.add_contact(payload)
+        resp = get_target_object.prov_library_object.add_contact(payload)
         if resp.status_code != 200:
             assert False
         contact = json.loads(resp.text)
-        print(contact)
+        logging.info(contact)
         contact_id = contact['id']
 
     @pytest.mark.prov_api_contact_test
     @allure.title("Read Contact")
-    def test_prov_service_read_contact(self, setup_prov_controller, testbed):
+    def test_prov_service_read_contact(self, get_target_object, selected_testbed):
         global contact_id
-        resp = setup_prov_controller.get_contact_by_id(contact_id)
+        resp = get_target_object.prov_library_object.get_contact_by_id(contact_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_contact_test
     @allure.title("Edit Contact")
-    def test_prov_service_edit_contact(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_contact(self, get_target_object, selected_testbed):
         # This to edit Contact
         global contact_id
         editing_payload = {
@@ -270,18 +271,18 @@ class TestProvAPIContact(object):
             "title": "Testing_contact",
             "type": "USER"
         }
-        resp = setup_prov_controller.edit_contact(editing_payload, contact_id)
+        resp = get_target_object.prov_library_object.edit_contact(editing_payload, contact_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_contact_by_id(contact_id)
+        resp = get_target_object.prov_library_object.get_contact_by_id(contact_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_contact_test
     @allure.title("Delete Contact")
-    def test_prov_service_delete_contact(self, setup_prov_controller, testbed):
+    def test_prov_service_delete_contact(self, get_target_object, selected_testbed):
         global contact_id
-        resp = setup_prov_controller.delete_contact(contact_id)
+        resp = get_target_object.prov_library_object.delete_contact(contact_id)
         if resp.status_code != 200:
             assert False
 
@@ -297,13 +298,13 @@ class TestProvAPILocation(object):
     # Location related Test cases
     @pytest.mark.prov_api_location
     @allure.title("Get All Locations")
-    def test_get_locations(self, setup_prov_controller):
-        resp = setup_prov_controller.get_location()
+    def test_get_locations(self, get_target_object):
+        resp = get_target_object.prov_library_object.get_location()
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_location_test
     @allure.title("Create Location")
-    def test_prov_service_create_location(self, setup_prov_controller, testbed):
+    def test_prov_service_create_location(self, get_target_object, selected_testbed):
         """
             Test the create location in provision Service
         """
@@ -325,24 +326,24 @@ class TestProvAPILocation(object):
             "entity": "0000-0000-0000",
             "notes": [{"note": "Testing purposes"}]
         }
-        resp = setup_prov_controller.add_location(payload)
+        resp = get_target_object.prov_library_object.add_location(payload)
         if resp.status_code != 200:
             assert False
         location = json.loads(resp.text)
-        print(location)
+        logging.info(location)
         location_id = location['id']
 
     @pytest.mark.prov_api_location_test
     @allure.title("Read Location")
-    def test_prov_service_read_location(self, setup_prov_controller, testbed):
+    def test_prov_service_read_location(self, get_target_object, selected_testbed):
         global location_id
-        resp = setup_prov_controller.get_location_by_id(location_id)
+        resp = get_target_object.prov_library_object.get_location_by_id(location_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_location_test
     @allure.title("Edit Location")
-    def test_prov_service_edit_location(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_location(self, get_target_object, selected_testbed):
         # This to edit Location
         global location_id
         editing_payload = {
@@ -364,19 +365,19 @@ class TestProvAPILocation(object):
             "state": "Andhra Pradesh",
             "type": "SERVICE"
         }
-        print(json.dumps(editing_payload))
-        resp = setup_prov_controller.edit_location(editing_payload, location_id)
+        logging.info(json.dumps(editing_payload))
+        resp = get_target_object.prov_library_object.edit_location(editing_payload, location_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_location_by_id(location_id)
+        resp = get_target_object.prov_library_object.get_location_by_id(location_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_location_test
     @allure.title("Delete Location")
-    def test_prov_service_delete_location(self, setup_prov_controller, testbed):
+    def test_prov_service_delete_location(self, get_target_object, selected_testbed):
         global location_id
-        resp = setup_prov_controller.delete_location(location_id)
+        resp = get_target_object.prov_library_object.delete_location(location_id)
         if resp.status_code != 200:
             assert False
 
@@ -392,20 +393,33 @@ class TestProvAPIVenue(object):
     # Venue related Test cases
     @pytest.mark.prov_api_venue
     @allure.title("Get All Venues")
-    def test_get_venue(self, setup_prov_controller):
-        resp = setup_prov_controller.get_venue()
+    def test_get_venue(self, get_target_object):
+        resp = get_target_object.prov_library_object.get_venue()
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_venue_test
     @allure.title("Create Venue")
-    def test_prov_service_create_venue(self, setup_prov_controller, testbed):
+    def test_prov_service_create_venue(self, get_target_object, selected_testbed):
         """
             Test the create venue in provision Service
         """
-        global venue_id
+        global venue_id, entity_id
+        payload = {"name": "Testing_prov",
+                   "rrm": "inherit",
+                   "description": "For testing Purposes through Automation",
+                   "notes": [{"note": "For testing Purposes through Automation"}],
+                   "parent": "0000-0000-0000"
+                   }
+        resp = get_target_object.prov_library_object.add_entity(payload)
+        if resp.status_code != 200:
+            assert False
+        entity = json.loads(resp.text)
+        logging.info(entity)
+        entity_id = entity['id']
+
         payload = {
             "description": "For testing Purposes",
-            "entity": "b3ed4c95-1568-4854-90c0-9d92e7d5004e",
+            "entity": entity_id,
             "location": "",
                       "name": "Testing Prov",
                       "notes": [
@@ -416,24 +430,24 @@ class TestProvAPIVenue(object):
                       "parent": "",
                       "rrm": "inherit"
                     }
-        resp = setup_prov_controller.add_venue(payload)
+        resp = get_target_object.prov_library_object.add_venue(payload)
         if resp.status_code != 200:
             assert False
         venue = json.loads(resp.text)
-        print(venue)
+        logging.info(venue)
         venue_id = venue['id']
 
     @pytest.mark.prov_api_venue_test
     @allure.title("Read Venue")
-    def test_prov_service_read_venue(self, setup_prov_controller, testbed):
+    def test_prov_service_read_venue(self, get_target_object, selected_testbed):
         global venue_id
-        resp = setup_prov_controller.get_venue_by_id(venue_id)
+        resp = get_target_object.prov_library_object.get_venue_by_id(venue_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_venue_test
     @allure.title("Edit Venue")
-    def test_prov_service_edit_venue(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_venue(self, get_target_object, selected_testbed):
         # This to edit venue
         global venue_id
         editing_payload = {
@@ -444,20 +458,23 @@ class TestProvAPIVenue(object):
                           "rrm": "inherit",
                           "sourceIP": []
                         }
-        resp = setup_prov_controller.edit_venue(editing_payload, venue_id)
+        resp = get_target_object.prov_library_object.edit_venue(editing_payload, venue_id)
         if resp.status_code != 200:
             assert False
         venue = json.loads(resp.text)
-        print(venue)
-        resp = setup_prov_controller.get_venue_by_id(venue_id)
+        logging.info(venue)
+        resp = get_target_object.prov_library_object.get_venue_by_id(venue_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_venue_test
     @allure.title("Delete Venue")
-    def test_prov_service_delete_venue(self, setup_prov_controller, testbed):
-        global venue_id
-        resp = setup_prov_controller.delete_venue(venue_id)
+    def test_prov_service_delete_venue(self, get_target_object, selected_testbed):
+        global venue_id, entity_id
+        resp = get_target_object.prov_library_object.delete_venue(venue_id)
+        if resp.status_code != 200:
+            assert False
+        resp = get_target_object.prov_library_object.delete_entity(entity_id)
         if resp.status_code != 200:
             assert False
 
@@ -471,13 +488,13 @@ class TestProvAPIVenue(object):
 class TestProvAPIMaps(object):
     @pytest.mark.prov_api_maps
     @allure.title("Get All Maps")
-    def test_read_all_map(self, setup_prov_controller):
-        resp = setup_prov_controller.get_map()
+    def test_read_all_map(self, get_target_object):
+        resp = get_target_object.prov_library_object.get_map()
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_maps
     @allure.title("Create Map")
-    def test_prov_service_create_map(self, setup_prov_controller, testbed):
+    def test_prov_service_create_map(self, get_target_object, selected_testbed):
         """
                     Test the create Map in provision Service
                 """
@@ -514,24 +531,24 @@ class TestProvAPIMaps(object):
                   "venue": "",
                   "visibility": "public"
                 }
-        resp = setup_prov_controller.add_map(payload)
+        resp = get_target_object.prov_library_object.add_map(payload)
         if resp.status_code != 200:
             assert False
         map = json.loads(resp.text)
-        print(map)
+        logging.info(map)
         map_id = map['id']
 
     @pytest.mark.prov_api_maps
     @allure.title("Read Map")
-    def test_prov_service_read_map(self, setup_prov_controller, testbed):
+    def test_prov_service_read_map(self, get_target_object, selected_testbed):
         global map_id
-        resp = setup_prov_controller.get_map_by_id(map_id)
+        resp = get_target_object.prov_library_object.get_map_by_id(map_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_maps
     @allure.title("Edit Map")
-    def test_prov_service_edit_map(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_map(self, get_target_object, selected_testbed):
         # This to edit Map
         global map_id
         editing_payload = {
@@ -566,18 +583,18 @@ class TestProvAPIMaps(object):
                           "venue": "",
                           "visibility": "public"
                         }
-        resp = setup_prov_controller.edit_map(editing_payload, map_id)
+        resp = get_target_object.prov_library_object.edit_map(editing_payload, map_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_map_by_id(map_id)
+        resp = get_target_object.prov_library_object.get_map_by_id(map_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_maps
     @allure.title("Delete Map")
-    def test_prov_service_delete_map(self, setup_prov_controller, testbed):
+    def test_prov_service_delete_map(self, get_target_object, selected_testbed):
         global map_id
-        resp = setup_prov_controller.delete_map(map_id)
+        resp = get_target_object.prov_library_object.delete_map(map_id)
         if resp.status_code != 200:
             assert False
 
@@ -591,13 +608,13 @@ class TestProvAPIMaps(object):
 class TestProvAPIOperators(object):
     @pytest.mark.prov_api_operator_test
     @allure.title("Get All Operators")
-    def test_read_all_operator(self, setup_prov_controller):
-        resp = setup_prov_controller.get_operator()
+    def test_read_all_operator(self, get_target_object):
+        resp = get_target_object.prov_library_object.get_operator()
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_operator_test
     @allure.title("Create Operator")
-    def test_prov_service_create_operator(self, setup_prov_controller, testbed):
+    def test_prov_service_create_operator(self, get_target_object, selected_testbed):
         """
             Test the create Operator in provision Service
         """
@@ -619,24 +636,24 @@ class TestProvAPIOperators(object):
                     }
                   ]
                 }
-        resp = setup_prov_controller.add_operator(payload)
+        resp = get_target_object.prov_library_object.add_operator(payload)
         if resp.status_code != 200:
             assert False
         operator = json.loads(resp.text)
-        print(operator)
+        logging.info(operator)
         operator_id = operator['id']
 
     @pytest.mark.prov_api_operator_test
     @allure.title("Read Operator")
-    def test_prov_service_read_operator(self, setup_prov_controller, testbed):
+    def test_prov_service_read_operator(self, get_target_object, selected_testbed):
         global operator_id
-        resp = setup_prov_controller.get_operator_by_id(operator_id)
+        resp = get_target_object.prov_library_object.get_operator_by_id(operator_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_operator_test
     @allure.title("Edit Operator")
-    def test_prov_service_edit_operator(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_operator(self, get_target_object, selected_testbed):
         # This to edit operator
         global operator_id
         editing_payload = {
@@ -651,18 +668,18 @@ class TestProvAPIOperators(object):
                           "registrationId": "12345",
                           "notes": []
                         }
-        resp = setup_prov_controller.edit_operator(editing_payload, operator_id)
+        resp = get_target_object.prov_library_object.edit_operator(editing_payload, operator_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_operator_by_id(operator_id)
+        resp = get_target_object.prov_library_object.get_operator_by_id(operator_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_operator_test
     @allure.title("Delete Operator")
-    def test_prov_service_delete_operator(self, setup_prov_controller, testbed):
+    def test_prov_service_delete_operator(self, get_target_object, selected_testbed):
         global operator_id
-        resp = setup_prov_controller.delete_operator(operator_id)
+        resp = get_target_object.prov_library_object.delete_operator(operator_id)
         if resp.status_code != 200:
             assert False
 
@@ -676,7 +693,7 @@ class TestProvAPIOperators(object):
 class TestProvAPIServiceClass(object):
     @pytest.mark.prov_api_service_class_test
     @allure.title("Get All Service class of an Operator")
-    def test_prov_service_read_all_service_class_on_operator(self, setup_prov_controller, testbed):
+    def test_prov_service_read_all_service_class_on_operator(self, get_target_object, selected_testbed):
         """
             Test the create Service class in provision Service (USE CASE)
         """
@@ -698,22 +715,22 @@ class TestProvAPIServiceClass(object):
                     }
                   ]
                 }
-        resp = setup_prov_controller.add_operator(payload)
+        resp = get_target_object.prov_library_object.add_operator(payload)
         if resp.status_code != 200:
             assert False
         operator = json.loads(resp.text)
-        print(operator)
+        logging.info(operator)
         operator_id = operator['id']
-        resp = setup_prov_controller.get_operator_by_id(operator_id)
+        resp = get_target_object.prov_library_object.get_operator_by_id(operator_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_service_class_by_operator_id(operator_id)
+        resp = get_target_object.prov_library_object.get_service_class_by_operator_id(operator_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_service_class_test
     @allure.title("Create Service class")
-    def test_prov_service_create_service_class(self, setup_prov_controller, testbed):
+    def test_prov_service_create_service_class(self, get_target_object, selected_testbed):
         global operator_id, service_class_id
         payload = {
                   "name": "Testing Purposes through API Automation",
@@ -729,24 +746,24 @@ class TestProvAPIServiceClass(object):
                   ],
                   "operatorId": operator_id
                 }
-        resp = setup_prov_controller.add_service_class(payload)
+        resp = get_target_object.prov_library_object.add_service_class(payload)
         if resp.status_code != 200:
             assert False
         service_class = json.loads(resp.text)
-        print(service_class)
+        logging.info(service_class)
         service_class_id = service_class['id']
 
     @pytest.mark.prov_api_service_class_test
     @allure.title("Read Service class")
-    def test_prov_service_read_service_class(self, setup_prov_controller, testbed):
+    def test_prov_service_read_service_class(self, get_target_object, selected_testbed):
         global operator_id, service_class_id
-        resp = setup_prov_controller.get_service_class_by_id(service_class_id)
+        resp = get_target_object.prov_library_object.get_service_class_by_id(service_class_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_service_class_test
     @allure.title("Edit Service class")
-    def test_prov_service_edit_service_class(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_service_class(self, get_target_object, selected_testbed):
         # This to edit operator
         global operator_id, service_class_id
         editing_payload = {
@@ -758,21 +775,21 @@ class TestProvAPIServiceClass(object):
                           "currency": "USD",
                           "notes": []
                         }
-        resp = setup_prov_controller.edit_service_class(editing_payload, service_class_id)
+        resp = get_target_object.prov_library_object.edit_service_class(editing_payload, service_class_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_service_class_by_id(service_class_id)
+        resp = get_target_object.prov_library_object.get_service_class_by_id(service_class_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_service_class_test
     @allure.title("Delete Service class")
-    def test_prov_service_delete_service_class(self, setup_prov_controller, testbed):
+    def test_prov_service_delete_service_class(self, get_target_object, selected_testbed):
         global operator_id, service_class_id
-        resp = setup_prov_controller.delete_service_class(service_class_id)
+        resp = get_target_object.prov_library_object.delete_service_class(service_class_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.delete_operator(operator_id)
+        resp = get_target_object.prov_library_object.delete_operator(operator_id)
         if resp.status_code != 200:
             assert False
 
@@ -786,13 +803,13 @@ class TestProvAPIServiceClass(object):
 class TestProvAPIConfigurations(object):
     @pytest.mark.prov_api_config
     @allure.title("Get All Configurations")
-    def test_read_all_configurations(self, setup_prov_controller):
-        resp = setup_prov_controller.get_configuration()
+    def test_read_all_configurations(self, get_target_object):
+        resp = get_target_object.prov_library_object.get_configuration()
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_config_test
     @allure.title("Create Configuration")
-    def test_prov_service_create_configuration(self, setup_prov_controller, testbed):
+    def test_prov_service_create_configuration(self, get_target_object, selected_testbed):
         """
             Test the create configuration in provision Service
         """
@@ -990,25 +1007,25 @@ class TestProvAPIConfigurations(object):
                     }
                   ]
                 }
-        resp = setup_prov_controller.add_configuration(payload)
+        resp = get_target_object.prov_library_object.add_configuration(payload)
         if resp.status_code != 200:
             assert False
         configuration = json.loads(resp.text)
-        print(configuration)
+        logging.info(configuration)
         configuration_id = configuration['id']
         modified = configuration['modified']
 
     @pytest.mark.prov_api_config_test
     @allure.title("Read Configuration")
-    def test_prov_service_read_configuration(self, setup_prov_controller, testbed):
+    def test_prov_service_read_configuration(self, get_target_object, selected_testbed):
         global configuration_id
-        resp = setup_prov_controller.get_configuration_by_id(configuration_id)
+        resp = get_target_object.prov_library_object.get_configuration_by_id(configuration_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_config_test
     @allure.title("Edit Configuration")
-    def test_prov_service_edit_configuration(self, setup_prov_controller, testbed):
+    def test_prov_service_edit_configuration(self, get_target_object, selected_testbed):
         # This to edit configuration
         global configuration_id, modified
         editing_payload = {
@@ -1222,17 +1239,17 @@ class TestProvAPIConfigurations(object):
                           "variables": [],
                           "venue": ""
                         }
-        resp = setup_prov_controller.edit_configuration(editing_payload, configuration_id)
+        resp = get_target_object.prov_library_object.edit_configuration(editing_payload, configuration_id)
         if resp.status_code != 200:
             assert False
-        resp = setup_prov_controller.get_configuration_by_id(configuration_id)
+        resp = get_target_object.prov_library_object.get_configuration_by_id(configuration_id)
         if resp.status_code != 200:
             assert False
 
     @pytest.mark.prov_api_config_test
     @allure.title("Delete Configuration")
-    def test_prov_service_delete_configuration(self, setup_prov_controller, testbed):
+    def test_prov_service_delete_configuration(self, get_target_object, selected_testbed):
         global configuration_id
-        resp = setup_prov_controller.delete_configuration(configuration_id)
+        resp = get_target_object.prov_library_object.delete_configuration(configuration_id)
         if resp.status_code != 200:
             assert False
