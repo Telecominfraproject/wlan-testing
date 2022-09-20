@@ -49,7 +49,6 @@ class TestDynamicVlan5GWpa2(object):
     @pytest.mark.absence_of_radius_vlan_identifier
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
     @allure.title("Test for ssid vlan in the absence of radius vlan identifier")
