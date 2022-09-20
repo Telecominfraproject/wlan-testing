@@ -3613,9 +3613,16 @@ def return_upload_download_speed_iOS(request, setup_perfectoMobile, get_APToMobi
     return downloadSpeed, uploadSpeed
 
 def ookla_speed_test_iOS(request, setup_perfectoMobile, get_APToMobileDevice_data):
+    report = setup_perfectoMobile[1]
     driver = setup_perfectoMobile[0]
     driver.switch_to.context('NATIVE_APP')
-    openApp( 'com.ookla.speedtest', setup_perfectoMobile)
+    openApp('com.ookla.speedtest', setup_perfectoMobile)
+    try:
+        report.step_start("Checking for continue")
+        WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='Continue']"))).click()
+    except:
+        print("Unable to see Continue permission")
     try:
         WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='GO']"))).click()
