@@ -42,6 +42,11 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @pytest.mark.ow_sanity_lf
+    @allure.parent_suite("Throughput Test")
+    @allure.suite("2.4 Ghz Band")
+    @allure.title("Single client TCP Download wifi capacity 40Mhz Bw")
+    @allure.sub_suite("BRIDGE Mode")
     def test_client_wpa2_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -51,7 +56,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
-                                       download_rate="1Gbps", batch_size="1",
+                                       download_rate="1.5Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
