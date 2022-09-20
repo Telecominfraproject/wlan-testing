@@ -79,6 +79,34 @@ class ios_tests(ios_libs):
             print(e)
             self.teardown()
 
+    def rate_limiting_test(self, ssid,passkey,up_rate=None,down_rate=None):
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
+                                                                       self.perfecto_data[self.device],
+                                                                       perfecto_data=self.perfecto_data,
+                                                                       testcase=self.testcase_name))
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
+                                                      setup_perfecto_mobile, connData=self.connData)
+        try:
+            if ssid_with_internet is not None:
+                self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
+                down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                if down_speed is not None and up_speed is not None:
+                    if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
+                        return "PASS", "Device connected to SSID and ran rate-limiting test"
+                    else:
+                        return "Fail", "Failed Rate-limiting test"
+                else:
+                    return "Fail", "Device didn't get connected to SSID"
+                    self.teardown()
+            else:
+                self.teardown()
+                return "FAIL", "SSID didn't get the Internet"
+        except Exception as e:
+            print(e)
+            self.teardown()
 
 if __name__ == '__main__':
     perfecto_data = {
@@ -130,5 +158,8 @@ if __name__ == '__main__':
         "serial_tty": "/dev/ttyAP5",
         "firmware_version": "next-latest"
     }]
-    obj = ios_tests(perfecto_data=perfecto_data, dut_data=access_point)
-    print(obj.client_connectivity("ssid_wpa2_2g_RL_E3V2240", "something"))
+    obj = ios_tests(perfecto_data=perfecto_data, dut_data=access_point,device="iPhone-11",
+                    testcase="Test_perfecto_check")
+    # print(obj.client_connectivity_test(ssid="ssid_wpa2_2g_RL_E3V2240", passkey="something"))
+    print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
+
