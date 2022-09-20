@@ -201,7 +201,6 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.valid_client_ip_twog_open
-    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_open_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2160")
     def test_station_ip_open_ssid_2g(self, lf_test, lf_tools,
@@ -256,7 +255,6 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @pytest.mark.test_station_ip_twog_wpa_wpa2
-    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2166")
     def test_station_ip_wpa_wpa2_personal_ssid_2g(self, lf_test,
@@ -313,7 +311,6 @@ class TestVlanConfigTwogRadio(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.enable_vlan_twog  # wifi-2172
-    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_station_ip_wpa2_personal_ssid_2g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
     def test_enable_vlan_wpa2_ssid_2g(self, lf_test, lf_tools,

@@ -10,6 +10,7 @@ import pytest
 pytestmark = [pytest.mark.multi_psk_tests,
               pytest.mark.nat,
               pytest.mark.wpa,
+              pytest.mark.ow_sanity_lf,
               pytest.mark.twog]
 
 setup_params_general = {
@@ -47,6 +48,7 @@ setup_params_general = {
 class TestMultipskNAT(object):
 
     @pytest.mark.vlan1
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     def test_client_wpa_2g_vlan1(self, get_test_library, get_dut_logs_per_test_case,
                                  get_test_device_logs, num_stations, setup_configuration):
@@ -81,7 +83,9 @@ class TestMultipskNAT(object):
                                         passkey=security_key,
                                         encryption=security, mode=mode, num_sta=1, dut_data=setup_configuration)
         assert True
+
     @pytest.mark.vlan2
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     def test_client_wpa_2g_vlan2(self, get_test_library, get_dut_logs_per_test_case,
                                  get_test_device_logs, num_stations, setup_configuration):
