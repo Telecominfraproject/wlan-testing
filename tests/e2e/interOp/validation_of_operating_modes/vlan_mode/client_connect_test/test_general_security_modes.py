@@ -47,7 +47,7 @@ class TestVLANModeConnectSuiteA(object):
     @pytest.mark.twog
     @allure.story('OPEN 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with open encryption 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4606", name="JIRA LINK")
     def test_vlan_open_2g_client_connect(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                               get_test_device_logs,
                                               setup_configuration):
@@ -74,7 +74,7 @@ class TestVLANModeConnectSuiteA(object):
     @pytest.mark.fiveg
     @allure.story('OPEN 5 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with open encryption 5 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4607", name="JIRA LINK")
     def test_vlan_open_5g_client_connect(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                               get_test_device_logs,
                                               setup_configuration):
@@ -102,7 +102,7 @@ class TestVLANModeConnectSuiteA(object):
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa encryption 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4609", name="JIRA LINK")
     def test_vlan_wpa_2g_client_connect(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                              get_test_device_logs,
                                              setup_configuration):
@@ -129,6 +129,7 @@ class TestVLANModeConnectSuiteA(object):
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4611", name="JIRA LINK")
     def test_vlan_wpa_5g_client_connect(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                              get_test_device_logs,
                                              setup_configuration):
@@ -155,6 +156,7 @@ class TestVLANModeConnectSuiteA(object):
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4612", name="JIRA LINK")
     def test_vlan_wpa2_personal_2g_client_connect(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        setup_configuration):
@@ -182,6 +184,7 @@ class TestVLANModeConnectSuiteA(object):
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa2_personal encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4613", name="JIRA LINK")
     def test_vlan_wpa2_personal_5g_client_connect(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        setup_configuration):
@@ -246,6 +249,7 @@ class TestVLANModeConnectSuiteTwo(object):
     @pytest.mark.twog
     @allure.story('wpa3_personal 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa3_personal encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4616", name="JIRA LINK")
     def test_vlan_wpa3_personal_2g_client_connect(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        setup_configuration):
@@ -272,6 +276,7 @@ class TestVLANModeConnectSuiteTwo(object):
     @pytest.mark.fiveg
     @allure.story('wpa3_personal 5 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa3_personal encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4617", name="JIRA LINK")
     def test_vlan_wpa3_personal_5g_client_connect(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        setup_configuration):
@@ -299,6 +304,7 @@ class TestVLANModeConnectSuiteTwo(object):
     @pytest.mark.twog
     @allure.story('wpa3_personal_mixed 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa3_personal_mixed encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4621", name="JIRA LINK")
     def test_vlan_wpa3_personal_mixed_2g_client_connect(self, get_test_library,
                                                              num_stations, get_dut_logs_per_test_case,
                                                              get_test_device_logs,
@@ -326,6 +332,7 @@ class TestVLANModeConnectSuiteTwo(object):
     @pytest.mark.fiveg
     @allure.story('wpa3_personal_mixed 5 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa3_personal_mixed encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4623", name="JIRA LINK")
     def test_vlan_wpa3_personal_mixed_5g_client_connect(self, get_test_library,
                                                              num_stations, get_dut_logs_per_test_case,
                                                              get_test_device_logs,
@@ -353,6 +360,7 @@ class TestVLANModeConnectSuiteTwo(object):
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4624", name="JIRA LINK")
     def test_vlan_wpa_wpa2_personal_mixed_2g_client_connect(self, get_test_library,
                                                                  num_stations, get_dut_logs_per_test_case,
                                                                  get_test_device_logs,
@@ -382,6 +390,7 @@ class TestVLANModeConnectSuiteTwo(object):
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
     @allure.title("VLAN Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4625", name="JIRA LINK")
     def test_vlan_wpa_wpa2_personal_mixed_5g_client_connect(self, get_test_library,
                                                                  num_stations, get_dut_logs_per_test_case,
                                                                  get_test_device_logs,
