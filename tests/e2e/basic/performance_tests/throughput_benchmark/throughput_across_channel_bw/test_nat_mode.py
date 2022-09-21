@@ -307,7 +307,6 @@ class TestThroughputAcrossBw80MhzNAT(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-9743", name="WIFI-9743")
-    @pytest.mark.ow_sanity_lf
     @allure.parent_suite("Throughput Test")
     @allure.suite("OpenWifi Throughput across channel bandwidth")
     @allure.title("Single client wifi capacity 80Mhz Bw")
