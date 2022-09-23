@@ -49,6 +49,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.twog
     @pytest.mark.upload
     @pytest.mark.batch_size_125
+    @pytest.mark.ingress
     @pytest.mark.ow_rate_limiting_tests_lf
     @allure.title("Test for Upload batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
@@ -81,6 +82,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.download
     @pytest.mark.batch_size_125
     @pytest.mark.ow_rate_limiting_tests_lf
+    @pytest.mark.ingress
     @allure.title("Test for Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                      get_test_device_logs, num_stations, setup_configuration):
