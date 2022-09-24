@@ -16,8 +16,8 @@ setup_params_general = {
              "security_key": "something",
              "vlan": 100,
              "rate-limit": {
-                 "ingress-rate": 100,
-                 "egress-rate": 100
+                 "ingress-rate": 5,
+                 "egress-rate": 5
              }
              },
             {"ssid_name": "ssid_wpa2_5g_br",
@@ -109,6 +109,7 @@ class TestRateLimitingVlan(object):
     @pytest.mark.up_dw
     @pytest.mark.batch_size_125
     @pytest.mark.ow_sanity_lf
+    @pytest.mark.ingress
     @pytest.mark.ow_rate_limiting_tests_lf
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
     def test_wpa2_personal_vlan_ssid_up_dw_batch_size_125_2g(self, lf_test, lf_tools):
@@ -126,8 +127,8 @@ class TestRateLimitingVlan(object):
         lf_tools.add_stations(band="2G", num_stations=5, dut=lf_tools.dut_name, ssid_name=ssid_name)
         lf_tools.Chamber_View()
         wct_obj = lf_test.wifi_capacity(instance_name="test_client_wpa2_vlan_up_dw_125", mode=mode, vlan_id=vlan,
-                                        download_rate="1Gbps", batch_size="1,2,5",
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000")
+                                        download_rate="100Mbps", batch_size="1,2,5",
+                                        upload_rate="100Mbps", protocol="UDP-IPv4", duration="60000")
 
         report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
