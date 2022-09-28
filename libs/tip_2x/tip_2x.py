@@ -239,8 +239,14 @@ class tip_2x:
         for ssid in final_configuration["ssid_modes"]:
             for ssid_data in final_configuration["ssid_modes"][ssid]:
                 if final_configuration["radius"]:
-                    profile_object.add_ssid(ssid_data=ssid_data, radius=True, radius_auth_data=self.configuration.RADIUS_SERVER_DATA,
-                                            radius_accounting_data=self.configuration.RADIUS_ACCOUNTING_DATA)
+                    if "radius_auth_data" in ssid_data:
+                        RADIUS_SERVER_DATA = ssid_data["radius_auth_data"]
+                        RADIUS_ACCOUNTING_DATA = ssid_data["radius_acc_data"]
+                    else:
+                        RADIUS_SERVER_DATA = self.configuration.RADIUS_SERVER_DATA
+                        RADIUS_ACCOUNTING_DATA = self.configuration.RADIUS_ACCOUNTING_DATA
+                    profile_object.add_ssid(ssid_data=ssid_data, radius=True, radius_auth_data=RADIUS_SERVER_DATA,
+                                            radius_accounting_data=RADIUS_ACCOUNTING_DATA)
                 else:
                     profile_object.add_ssid(ssid_data=ssid_data, radius=False)
         logging.info(
