@@ -1,6 +1,6 @@
 """
-    Rate Limiting : BRIDGE Mode
-    pytest -m "rate_limiting_tests and bridge and general"
+    Rate Limiting : VLAN Mode
+    pytest -m "rate_limiting_tests and vlan and general"
 
 """
 import logging
@@ -8,15 +8,16 @@ import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.rate_limiting_tests, pytest.mark.bridge, pytest.mark.general]
+pytestmark = [pytest.mark.rate_limiting_tests, pytest.mark.vlan, pytest.mark.general]
 
 setup_params_general = {
-    "mode": "BRIDGE",
+    "mode": "VLAN",
     "ssid_modes": {
         "wpa2_personal": [
             {"ssid_name": "ssid_wpa2_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -25,6 +26,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -35,6 +37,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -43,6 +46,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -53,6 +57,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa3_2g_RL",
              "appliedRadios": ["2G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -61,6 +66,7 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa3_5g_RL",
              "appliedRadios": ["5G"],
              "security_key": "something",
+             "vlan": 100,
              "rate-limit": {
                  "ingress-rate": 60,
                  "egress-rate": 10
@@ -72,9 +78,9 @@ setup_params_general = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE RATE LIMITING")
+@allure.feature("VLAN MODE RATE LIMITING")
 @allure.parent_suite("Rate Limiting Tests")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.suite(suite_name="VLAN Mode")
 @allure.sub_suite(sub_suite_name="General security mode Rate Limiting")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -83,22 +89,22 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestRateLimitingBridge(object):
+class TestRateLimitingVlan(object):
     """
-        Bridge Rate Limiting (wpa. wpa2. wpa3) (twog, fiveg)
-        pytest -m "rate_limiting_tests and bridge and general"
+        VLAN MODE Rate Limiting (wpa. wpa2. wpa3) (twog, fiveg)
+        pytest -m "rate_limiting_tests and vlan and general"
     """
 
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Rate Limiting Test with wpa encryption 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7008", name="JIRA LINK")
+    @allure.title("Vlan Mode Rate Limiting Test with wpa encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7016", name="JIRA LINK")
     def test_rate_limiting_wpa_2g(self, get_dut_logs_per_test_case, get_test_device_logs,
                                           num_stations, setup_configuration, get_test_library):
         """
-            BRIDGE Mode Rate Limiting Test with wpa encryption 2.4 GHz Band
-            pytest -m "rate_limiting_tests and bridge and general and wpa and twog"
+            VLAN Mode Rate Limiting Test with wpa encryption 2.4 GHz Band
+            pytest -m "rate_limiting_tests and vlan and general and wpa and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
@@ -106,7 +112,7 @@ class TestRateLimitingBridge(object):
         up_rate = profile_data["rate-limit"]["ingress-rate"]
         down_rate = profile_data["rate-limit"]["egress-rate"]
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
 
         passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
@@ -116,13 +122,13 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
-    @allure.title("BRIDGE Mode Rate Limiting Test with wpa encryption 5 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7009",name="JIRA LINK")
+    @allure.title("Vlan Mode Rate Limiting Test with wpa encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7017",name="JIRA LINK")
     def test_rate_limiting_wpa_5g(self, get_dut_logs_per_test_case, get_test_device_logs,
                                           num_stations, setup_configuration, get_test_library):
         """
-           BRIDGE Mode Rate Limiting Test with wpa encryption 5 GHz Band
-           pytest -m "rate_limiting_tests and bridge and general and wpa and fiveg"
+           VLAN Mode Rate Limiting Test with wpa encryption 5 GHz Band
+           pytest -m "rate_limiting_tests and vlan and general and wpa and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
@@ -130,7 +136,7 @@ class TestRateLimitingBridge(object):
         up_rate = profile_data["rate-limit"]["ingress-rate"]
         down_rate = profile_data["rate-limit"]["egress-rate"]
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "fiveg"
 
         passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
@@ -140,13 +146,13 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Rate Limiting Test with wpa2_personal encryption 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7008", name="JIRA LINK")
+    @allure.title("Vlan Mode Rate Limiting Test with wpa2_personal encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7016", name="JIRA LINK")
     def test_rate_limiting_wpa2_2g(self, get_dut_logs_per_test_case, get_test_device_logs,
                                           num_stations, setup_configuration, get_test_library):
         """
-            BRIDGE Mode Rate Limiting Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "rate_limiting_tests and bridge and general and wpa2_personal and twog"
+            VLAN Mode Rate Limiting Test with wpa2_personal encryption 2.4 GHz Band
+            pytest -m "rate_limiting_tests and vlan and general and wpa2_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -154,7 +160,7 @@ class TestRateLimitingBridge(object):
         up_rate = profile_data["rate-limit"]["ingress-rate"]
         down_rate = profile_data["rate-limit"]["egress-rate"]
         security = "wpa2"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
 
         passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
@@ -164,13 +170,13 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Rate Limiting Test with wpa2_personal encryption 5 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7009", name="JIRA LINK")
+    @allure.title("Vlan Mode Rate Limiting Test with wpa2_personal encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7017", name="JIRA LINK")
     def test_rate_limiting_wpa2_5g(self, get_dut_logs_per_test_case, get_test_device_logs,
                                           num_stations, setup_configuration, get_test_library):
         """
-           BRIDGE Mode Rate Limiting Test with wpa2_personal encryption 5 GHz Band
-           pytest -m "rate_limiting_tests and bridge and general and wpa2_personal and fiveg"
+           VLAN Mode Rate Limiting Test with wpa2_personal encryption 5 GHz Band
+           pytest -m "rate_limiting_tests and vlan and general and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -178,7 +184,7 @@ class TestRateLimitingBridge(object):
         up_rate = profile_data["rate-limit"]["ingress-rate"]
         down_rate = profile_data["rate-limit"]["egress-rate"]
         security = "wpa2"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "fiveg"
 
         passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
@@ -188,13 +194,13 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('wpa3_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Rate Limiting Test with wpa3_personal encryption 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7008", name="JIRA LINK")
+    @allure.title("Vlan Mode Rate Limiting Test with wpa3_personal encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7016", name="JIRA LINK")
     def test_rate_limiting_wpa3_2g(self, get_dut_logs_per_test_case, get_test_device_logs,
                                           num_stations, setup_configuration, get_test_library):
         """
-            BRIDGE Mode Rate Limiting Test with wpa3_personal encryption 2.4 GHz Band
-            pytest -m "rate_limiting_tests and bridge and general and wpa3_personal and twog"
+            VLAN Mode Rate Limiting Test with wpa3_personal encryption 2.4 GHz Band
+            pytest -m "rate_limiting_tests and vlan and general and wpa3_personal and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -202,7 +208,7 @@ class TestRateLimitingBridge(object):
         up_rate = profile_data["rate-limit"]["ingress-rate"]
         down_rate = profile_data["rate-limit"]["egress-rate"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
 
         passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
@@ -212,13 +218,13 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('wpa3_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Rate Limiting Test with wpa3_personal encryption 5 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7009", name="JIRA LINK")
+    @allure.title("Vlan Mode Rate Limiting Test with wpa3_personal encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7017", name="JIRA LINK")
     def test_rate_limiting_wpa3_5g(self, get_dut_logs_per_test_case, get_test_device_logs,
                                           num_stations, setup_configuration, get_test_library):
         """
-           BRIDGE Mode Rate Limiting Test with wpa3_personal encryption 5 GHz Band
-           pytest -m "rate_limiting_tests and bridge and general and wpa3_personal and fiveg"
+           VLAN Mode Rate Limiting Test with wpa3_personal encryption 5 GHz Band
+           pytest -m "rate_limiting_tests and vlan and general and wpa3_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -226,12 +232,10 @@ class TestRateLimitingBridge(object):
         up_rate = profile_data["rate-limit"]["ingress-rate"]
         down_rate = profile_data["rate-limit"]["egress-rate"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "fiveg"
 
         passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
                                                              down_rate=down_rate)
         assert passes == "PASS", result
-
-
 

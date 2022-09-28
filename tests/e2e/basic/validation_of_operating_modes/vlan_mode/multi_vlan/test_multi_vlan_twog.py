@@ -36,6 +36,9 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
+@allure.parent_suite("OpenWifi MULTI VLAN Test")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("2.4 Ghz")
 @pytest.mark.usefixtures("setup_configuration")
 class TestMultiVlan(object):
 
@@ -43,6 +46,7 @@ class TestMultiVlan(object):
     @pytest.mark.twog
     @pytest.mark.multi_vlan
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2160", name="WIFI-2160")
+    @allure.title("Test VLAN with Open Security Mode")
     def test_multi_vlan_open_2g(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration):
         """
@@ -69,6 +73,7 @@ class TestMultiVlan(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="WIFI-2168",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2168")
+    @allure.title("Test VLAN with WPA Security Mode")
     def test_multi_vlan_wpa_2g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration):
         """
@@ -95,6 +100,7 @@ class TestMultiVlan(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="WIFI-2156",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2156")
+    @allure.title("Test VLAN with WPA2 Personal Security Mode")
     def test_multi_vlan_wpa2_personal_2g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration):
         """
@@ -120,6 +126,7 @@ class TestMultiVlan(object):
     @pytest.mark.multi_vlan
     @allure.testcase(name="WIFI-2166",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2166")
+    @allure.title("Test VLAN with WPA-WPA2 Persoanl Security ")
     def test_multi_vlan_wpa_wpa2_personal_2g(self, get_test_library, get_dut_logs_per_test_case,
                                             get_test_device_logs, num_stations, setup_configuration):
         """
@@ -146,6 +153,7 @@ class TestMultiVlan(object):
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
+    @allure.title("Test Disabled VLAN with WPA2 Security Mode")
     def test_disable_vlan_wpa2_2g(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration):
         """
