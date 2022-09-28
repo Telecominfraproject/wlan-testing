@@ -348,6 +348,16 @@ def radius_info():
     """yields the radius server information from lab info file"""
     yield configuration.RADIUS_SERVER_DATA
 
+@pytest.fixture(scope="session")
+def rate_radius_info():
+    """yields the radius server information from lab info file"""
+    yield configuration.RATE_LIMITING_RADIUS_SERVER_DATA
+
+@pytest.fixture(scope="session")
+def rate_radius_accounting_info():
+    """yields the radius accounting information from lab info file"""
+    yield configuration.RATE_LIMITING_RADIUS_ACCOUNTING_DATA
+
 
 @pytest.fixture(scope='session', autouse=True)
 def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
