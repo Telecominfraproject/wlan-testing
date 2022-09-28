@@ -4,8 +4,11 @@ Rate LImiting with radius Bridge Mode Scenario
 
 import allure
 import pytest
-from configuration import RATE_LIMITING_RADIUS_SERVER_DATA
-from configuration import RATE_LIMITING_RADIUS_ACCOUNTING_DATA
+import importlib
+
+lf_library = importlib.import_module("configuration")
+RATE_LIMITING_RADIUS_SERVER_DATA = lf_library.RATE_LIMITING_RADIUS_SERVER_DATA
+RATE_LIMITING_RADIUS_ACCOUNTING_DATA = lf_library.RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
 pytestmark = [pytest.mark.ow_regression_lf,
               pytest.mark.ow_dynamic_qos_tests_lf,
@@ -40,93 +43,109 @@ setup_params_general = {
         ]
     },
     "rf": {},
-    "radius": False
+    "radius": True
 }
 
 
-@allure.feature("Bridge MODE Rate Limiting with radius server")
+@allure.parent_suite("OpenWifi Rate Limiting with Radius Test")
+@allure.suite("BRIDGE Mode")
+@allure.sub_suite("WPA2 Enterprise Security")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestRateLimitingWithRadiusBridge(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    # @pytest.mark.ow_sanity_lf
+    @pytest.mark.ow_sanity_lf
     @pytest.mark.twog_upload_per_ssid
+    @allure.title("Test for Upload per SSID 2.4 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
-    def test_radius_server_2g_upload_per_ssid(self, lf_test, lf_tools, rate_radius_info, rate_radius_accounting_info,
-                                              station_names_twog):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+    def test_radius_server_2g_upload_per_ssid(self, get_test_library, get_dut_logs_per_test_case,
+                                              get_test_device_logs,
+                                              get_target_object,
+                                              num_stations, setup_configuration, rate_radius_info,
+                                              rate_radius_accounting_info):
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 50,
+                            "egress-rate": 50
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        vlan = 1
         security = "wpa2"
         band = "twog"
         eap = "TTLS"
-        print("authentication", rate_radius_info)
-        print("accounting", rate_radius_accounting_info)
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
-        print(passes)
-        if passes:
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                                              identity=identity, num_sta=1,
+                                                                              dut_data=setup_configuration,
+                                                                              cleanup=False)
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
-            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_up_per_ssid", mode=mode, vlan_id=vlan,
-                                            download_rate="0bps", batch_size="1",
-                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
-                                            raw_lines=raw_lines)
+            get_test_library.wifi_capacity(instance_name="Test_Radius_2g_up_per_ssid", mode=mode,
+                                           download_rate="0Gbps", batch_size="1",
+                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
+                                           add_stations=False, raw_lines=raw_lines)
 
-            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
-            lf_tools.attach_report_graphs(report_name=report_name)
-            print("Test Completed... Cleaning up Stations")
         assert True
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.twog_download_perssid_persta
-    # @pytest.mark.ow_sanity_lf
+    @pytest.mark.ow_sanity_lf
+    @allure.title("Test for Download per SSID per Station 2.4GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5850", name="WIFI-5850")
-    def test_radius_server_2g_download_perssid_persta(self, lf_test, lf_tools, rate_radius_info,
-                                                      rate_radius_accounting_info,
-                                                      station_names_twog):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+    def test_radius_server_2g_download_perssid_persta(self, get_test_library, get_dut_logs_per_test_case,
+                                                      get_test_device_logs,
+                                                      get_target_object,
+                                                      num_stations, setup_configuration, rate_radius_info,
+                                                      rate_radius_accounting_info):
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 50,
+                            "egress-rate": 50
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        vlan = 1
         security = "wpa2"
         band = "twog"
         eap = "TTLS"
-        print("authentication", rate_radius_info)
-        print("accounting", rate_radius_accounting_info)
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        passes = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                     mode=mode, band=band,
-                                     eap=eap, ttls_passwd=ttls_passwd, identity=identity,
-                                     station_name=station_names_twog, ieee80211w=0, vlan_id=vlan, cleanup=False)
-        print(passes)
-        if passes:
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                                              identity=identity, num_sta=1,
+                                                                              dut_data=setup_configuration,
+                                                                              cleanup=False)
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
-            wct_obj = lf_test.wifi_capacity(instance_name="Test_Radius_2g_down_perssid_persta", mode=mode, vlan_id=vlan,
-                                            download_rate="1Gbps", batch_size="1",
-                                            upload_rate="0bps", protocol="TCP-IPv4", duration="60000",
-                                            raw_lines=raw_lines)
+            get_test_library.wifi_capacity(instance_name="Test_Radius_2g_down_perssid_persta", mode=mode,
+                                           download_rate="1Gbps", batch_size="1",
+                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                           move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
+                                           add_stations=False, raw_lines=raw_lines)
 
-            report_name = wct_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-
-            lf_tools.attach_report_graphs(report_name=report_name)
-            print("Test Completed... Cleaning up Stations")
         assert True
 
     @pytest.mark.wpa2_enterprise
