@@ -74,7 +74,7 @@ class TestRatevsRangeBridge(object):
                ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + "NONE"],
                ['attenuations: 0 100 210..+100..630'], ['chamber: DUT-Chamber'], ['tt_deg: 0']]
         if station:
-            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='10000',
+            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='60000',
                                        instance_name="MODEBRIDGE_RVR_11B_TWOG_modified",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -394,13 +394,18 @@ class TestRatevsRangeBridge(object):
         print("station", station)
         ser_no = lf_test.attenuator_serial()
         print(ser_no)
+        atn2 = ser_no[1].split(".")[2]
+        print(f"antenuation-2 : {atn2}")
+        for i in range(4):
+            lf_test.attenuator_modify(int(atn2[2]), i, 955)
+            time.sleep(0.5)
         val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 0 100 210..+30..540'],['attenuations2: 0 100 210..+30..540'],['chamber: DUT-Chamber'], ['tt_deg: 0']]
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: NONE'],
+               ['attenuations: 0 100 210..+30..540'],['chamber: DUT-Chamber'], ['tt_deg: 0']]
 
         if station:
             time.sleep(3)
-            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,download_rate="1Gpbs",
+            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,download_rate="100%",
                                         instance_name="MODEBRIDGE_RVR_11AC_FIVEG_modified",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
