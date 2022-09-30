@@ -130,7 +130,7 @@ def selected_testbed(request):
 def num_stations(request):
     """yields the testbed option selection"""
     num_stations = request.config.getoption("--num_stations")
-    yield num_stations
+    yield int(num_stations)
 
 
 @pytest.fixture(scope="session")
