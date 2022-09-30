@@ -56,7 +56,7 @@ jobs:
         run: |
           echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
           echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
-          echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller }}")
+          echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || 'qa01'}}")
 
           MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dataplane_throughput_test,single_station_dual_band_throughput,wifi_capacity_test' }}"
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
