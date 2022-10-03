@@ -701,6 +701,17 @@ class Fixtures_2x:
         output = ap_ssh.get_memory_profile()
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
+        #Adding Ifconfig, ip route show and ip addr show commands info before applying config
+        output = ap_ssh.run_generic_command(cmd="ifconfig")
+        output = '\n'.join(output)
+        allure.attach(name="ifconfig before applying config", body=str(output))
+        output = ap_ssh.run_generic_command(cmd="ip route show")
+        output = '\n'.join(output)
+        allure.attach(name="ip route show before applying config", body=str(output))
+        output = ap_ssh.run_generic_command(cmd="ip addr show")
+        output = '\n'.join(output)
+        allure.attach(name="ip addr show before applying config", body=str(output))
+
         time_1 = time.time()
 
         # Apply config
@@ -833,6 +844,16 @@ class Fixtures_2x:
         # Adding memory Profile code after applying config
         output = ap_ssh.get_memory_profile()
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
+        # Adding Ifconfig, ip route show and ip addr show commands info after applying config
+        output = ap_ssh.run_generic_command(cmd="ifconfig")
+        output = '\n'.join(output)
+        allure.attach(name="ifconfig after applying config", body=str(output))
+        output = ap_ssh.run_generic_command(cmd="ip route show")
+        output = '\n'.join(output)
+        allure.attach(name="ip route show after applying config", body=str(output))
+        output = ap_ssh.run_generic_command(cmd="ip addr show")
+        output = '\n'.join(output)
+        allure.attach(name="ip addr show after applying config", body=str(output))
 
         def teardown_session():
             wifi_status = ap_ssh.get_wifi_status()
