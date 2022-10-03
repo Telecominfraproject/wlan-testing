@@ -70,7 +70,7 @@ class Test_SpatialConsistency_Bridge(object):
             lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             print("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
-            pass_value = {"strong": 500}
+            pass_value = {"strong": 45}
             atn, deg = [10], [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330]  #
             if kpi in entries:
                 kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
@@ -81,12 +81,30 @@ class Test_SpatialConsistency_Bridge(object):
                     assert False, "Throughput value from kpi.csv is empty, Test failed"
                 else:
                     allure.attach(name="CSV Data", body="Throughput value : " + str(kpi_val))
-                    if float(str(kpi_val[0])[1:-1]) > float(45):
-                        print("Test passed successfully")
-                        assert True
-                    else:
+                    start, thrpt_val, pass_fail = 0, {}, []
+                    for i in pass_value:
+                        count = 0
+                        for j in range(start, len(kpi_val), len(atn)):
+                            thrpt_val[f"{atn[start]}atn-{deg[count]}deg"] = kpi_val[j][0]
+                            if kpi_val[j][0] >= pass_value[i]:
+                                pass_fail.append("PASS")
+                            else:
+                                pass_fail.append("FAIL")
+                            count += 1
+                        # start += 6
+                    print(thrpt_val, "\n", pass_fail)
+                    if "FAIL" in pass_fail:
                         print("Test failed due to lesser value")
                         assert False, "Test failed due to lesser value"
+                    else:
+                        print("Test passed successfully")
+                        assert True
+                    # if float(str(kpi_val[0])[1:-1]) > float(45):
+                    #     print("Test passed successfully")
+                    #     assert True
+                    # else:
+                    #     print("Test failed due to lesser value")
+                    #     assert False, "Test failed due to lesser value"
             else:
                 print("csv file does not exist, Test failed")
                 allure.attach(name="CSV Data", body="csv file does not exist")
