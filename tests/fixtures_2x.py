@@ -704,15 +704,13 @@ class Fixtures_2x:
 
         # Apply config
         try:
-            ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
-                                         stop_ref="stop testcase: " + instance_name)
+            ap_logs = ap_ssh.get_logread()
             allure.attach(body=ap_logs, name="AP Log Before config push: ")
             instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
 
-            print(instantiate_profile_obj.base_profile_config)
+            #print(instantiate_profile_obj.base_profile_config)
         except Exception as e:
-            ap_logs = ap_ssh.get_logread(start_ref="start testcase: " + instance_name,
-                                         stop_ref="stop testcase: " + instance_name)
+            ap_logs = ap_ssh.get_logread()
             allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
             allure.attach(body=str(e), name="Exception data after config push: ")
             print(e)
