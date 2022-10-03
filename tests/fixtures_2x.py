@@ -672,10 +672,9 @@ class Fixtures_2x:
         # Get ucentral status
         connected, latest, active = ap_ssh.get_ucentral_status()
 
-        if connected == False:
-            output = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
-            allure.attach(name="ubus call ucentral status: ", body=str(output))
-            # pytest.exit("AP is disconnected from UC Gateway")
+        output = ap_ssh.run_generic_command(cmd="ubus call ucentral status")
+        allure.attach(name="ubus call ucentral status: ", body=str(output))
+        # pytest.exit("AP is disconnected from UC Gateway")
 
         connected, latest, active = ap_ssh.get_ucentral_status()
         latest_old = latest
@@ -704,9 +703,18 @@ class Fixtures_2x:
         time_1 = time.time()
 
         # Apply config
-        instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
+        try:
+            ap_logs = ap_ssh.get_logread()
+            allure.attach(body=ap_logs, name="AP Log Before config push: ")
+            instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
 
-        print(instantiate_profile_obj.base_profile_config)
+            #print(instantiate_profile_obj.base_profile_config)
+        except Exception as e:
+            ap_logs = ap_ssh.get_logread()
+            allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
+            allure.attach(body=str(e), name="Exception data after config push: ")
+            print(e)
+
 
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
         config["uuid"] = 0
