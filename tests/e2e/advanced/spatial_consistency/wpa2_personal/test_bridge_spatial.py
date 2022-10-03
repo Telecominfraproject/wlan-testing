@@ -56,9 +56,9 @@ class Test_SpatialConsistency_Bridge(object):
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 100'],['attenuations2: 100'],['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 100'],['attenuations2: 100'],['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
-            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
+            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%",
                                         instance_name="SPATIAL_NSS1_RVR1",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -137,7 +137,7 @@ class Test_SpatialConsistency_Bridge(object):
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
                                         instance_name="SPATIAL_NSS2_RVR1",
@@ -202,7 +202,7 @@ class Test_SpatialConsistency_Bridge(object):
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'],['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 380'], ['attenuations2: 380'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 380'], ['attenuations2: 380'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
                                         instance_name="SPATIAL_NSS1_RVR1_Degree60",
@@ -268,7 +268,7 @@ class Test_SpatialConsistency_Bridge(object):
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 380'], ['attenuations2: 380'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 380'], ['attenuations2: 380'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
                                         instance_name="SPATIAL_NSS2_RVR1_Degree60",
@@ -334,7 +334,7 @@ class Test_SpatialConsistency_Bridge(object):
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])],
                ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 480'], ['attenuations2: 480'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 480'], ['attenuations2: 480'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
                                         instance_name="SPATIAL_NSS1_RVR1_Degree120_twog_10db",
@@ -400,7 +400,7 @@ class Test_SpatialConsistency_Bridge(object):
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
                ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 480'], ['attenuations2: 480'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 480'], ['attenuations2: 480'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode,
                                         instance_name="SPATIAL_NSS2_RVR1_Degree120_twog_10db",
@@ -467,7 +467,7 @@ class Test_SpatialConsistency_Bridge(object):
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])],
                ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
                                         instance_name="SPATIAL_NSS1_RVR1",
@@ -533,7 +533,7 @@ class Test_SpatialConsistency_Bridge(object):
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
                ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 100'], ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
                                         instance_name="SPATIAL_NSS2_RVR1_Degree0_fiveg",
@@ -599,7 +599,7 @@ class Test_SpatialConsistency_Bridge(object):
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])],
                ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 250'], ['attenuations2: 250'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 250'], ['attenuations2: 250'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
                                         instance_name="SPATIAL_NSS1_RVR1_Degree60_fiveg",
@@ -665,7 +665,7 @@ class Test_SpatialConsistency_Bridge(object):
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
                ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 250'], ['attenuations2: 250'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 250'], ['attenuations2: 250'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
                                         instance_name="SPATIAL_NSS2_RVR1_Degree60_fiveg_10db",
@@ -730,7 +730,7 @@ class Test_SpatialConsistency_Bridge(object):
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 350'], ['attenuations2: 350'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 350'], ['attenuations2: 350'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
                                         instance_name="SPATIAL_NSS1_RVR1_Degree120_fiveg_10db",
@@ -795,7 +795,7 @@ class Test_SpatialConsistency_Bridge(object):
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'],['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 350'], ['attenuations2: 350'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..360']]
+               ['attenuations: 350'], ['attenuations2: 350'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,
                                         instance_name="SPATIAL_NSS2_RVR1_Degree120_fiveg_10db",
