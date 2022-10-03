@@ -306,8 +306,8 @@ class Controller(ConfigureController):
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
 
-    def get_commands(self):
-        uri = self.build_uri("commands")
+    def get_commands(self, serial_number):
+        uri = self.build_uri("commands?serialNumber=" + serial_number)
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +

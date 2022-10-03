@@ -206,8 +206,9 @@ class TestUcentralGatewayService(object):
 
     @pytest.mark.gw_commands
     @allure.title("Get OW Gateway Commands")
-    def test_gw_commands(self, setup_controller):
-        system_info = setup_controller.get_commands()
+    def test_gw_commands(self, setup_controller, get_configuration):
+        device_name = get_configuration['access_point'][0]['serial']
+        system_info = setup_controller.get_commands(device_name)
         # print(system_info.json())
         # allure.attach(name="Gateway list of commands", body=str(system_info.json()),
         ##attachment_type=#allure.#attachment_type.JSON)
