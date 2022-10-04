@@ -55,11 +55,11 @@ class Test_SpatialConsistency_Bridge(object):
         ser_no = lf_test.attenuator_serial()
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
-               ['attenuations: 100'],['attenuations2: 100'],['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
+               ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[2])], ['attenuator2: ' + str(ser_no[3])],
+               ['attenuations: 100 380 480'],['attenuations2: 100 380 480'],['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%",
-                                        instance_name="SPATIAL_NSS1_RVR1",
+                                        instance_name="SPATIAL_NSS1_RVR1", duration="5000",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
@@ -70,8 +70,8 @@ class Test_SpatialConsistency_Bridge(object):
             lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             print("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
-            pass_value = {"strong": 45}
-            atn, deg = [10], [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330]  #
+            pass_value = {"strong": 45, "medium": 35, "weak": 17}
+            atn, deg = [10, 38, 48], [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330]  #
             if kpi in entries:
                 kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
