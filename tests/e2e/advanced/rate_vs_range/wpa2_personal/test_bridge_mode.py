@@ -74,7 +74,7 @@ class TestRatevsRangeBridge(object):
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
                ['attenuations: 0 100 210..+30..630'], ['chamber: 0'], ['tt_deg: 0']]
         if station:
-            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='30000',
+            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='60000',
                                        instance_name="MODEBRIDGE_RVR_11B_TWOG_modified",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -404,7 +404,7 @@ class TestRatevsRangeBridge(object):
 
         if station:
             time.sleep(3)
-            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,download_rate="100%", duration='30000',
+            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,download_rate="100%", duration='60000',
                                         instance_name="MODEBRIDGE_RVR_11AC_FIVEG_modified",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
