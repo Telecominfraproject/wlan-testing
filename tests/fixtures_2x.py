@@ -39,6 +39,7 @@ from controller.controller_2x.controller import ProvUtils
 from configuration import CONFIGURATION
 from configuration import RADIUS_SERVER_DATA
 from configuration import RADIUS_ACCOUNTING_DATA
+from lanforge.scp_util import SCP_File
 
 
 class Fixtures_2x:
@@ -710,11 +711,22 @@ class Fixtures_2x:
 
             #print(instantiate_profile_obj.base_profile_config)
         except Exception as e:
-            push_config_exception_variable = True
             ap_logs = ap_ssh.get_logread()
-            allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
-            allure.attach(body=str(e), name="Exception data after config push: ")
+            allure.attach(body=ap_logs, name="1st time Failure while pushing- AP Logs: ")
+            allure.attach(body=str(e), name="1st time Exception data after config push: ")
             print(e)
+            time.sleep(30)
+            print("Second time applying config")
+            try:
+                instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
+            except Exception as e:
+                push_config_exception_variable = True
+                ap_logs = ap_ssh.get_logread()
+                allure.attach(body=ap_logs, name="2nd time Failure while pushing- AP Logs: ")
+                allure.attach(body=str(e), name="2nd time Exception data after config push: ")
+                print(e)
+
+
 
 
 
@@ -854,9 +866,25 @@ class Fixtures_2x:
             print("\nTeardown")
 
         request.addfinalizer(teardown_session)
-        if push_config_exception_variable:
-            pytest.fail("Command Timed Out")
 
+        def collect_logs_lf():
+            ip = get_configuration["traffic_generator"]["details"]["ip"]
+            port = get_configuration["traffic_generator"]["details"]["ssh_port"]
+            log_0 = "/home/lanforge/lanforge_log_0.txt"
+            log_1 = "/home/lanforge/lanforge_log_1.txt"
+            obj = SCP_File(ip=ip, port=port, username="root", password="lanforge", remote_path=log_0,
+                           local_path=".")
+            obj.pull_file()
+            allure.attach.file(source="lanforge_log_0.txt",
+                               name="lanforge_log_0")
+            obj = SCP_File(ip=ip, port=port, username="root", password="lanforge", remote_path=log_1,
+                           local_path=".")
+            obj.pull_file()
+            allure.attach.file(source="lanforge_log_1.txt",
+                               name="lanforge_log_1")
+        if push_config_exception_variable:
+            request.addfinalizer(collect_logs_lf)
+            pytest.fail("Command Timed Out")
 
         return test_cases
 
