@@ -46,7 +46,7 @@ def create_lanforge_chamberview_dut(lf_tools, run_lf):
 @pytest.fixture(scope="class")
 def setup_profiles(request, setup_controller, testbed, get_equipment_ref, fixtures_ver, reset_scenario_lf,
                    instantiate_profile, get_markers, create_lanforge_chamberview_dut, lf_tools, run_lf,
-                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info, cc_1, get_lf_logs):
+                   get_security_flags, get_configuration, radius_info, get_apnos, radius_accounting_info, cc_1):
     param = dict(request.param)
 
     # VLAN Setup
