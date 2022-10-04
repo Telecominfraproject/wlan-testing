@@ -42,7 +42,7 @@ class TestDFSChannel52Bw80(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_52_bw_80
-    def test_dfs_channel_52_bw_80(self, get_ap_logs, lf_test, lf_tools, station_names_fiveg, dfs_start):
+    def test_dfs_channel_52_bw_80(self, get_ap_logs, lf_test, lf_tools, station_names_fiveg, dfs_start, get_lf_logs):
         lf_tools.reset_scenario()
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -130,7 +130,7 @@ class TestDFSChannel100Bw80(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_100_bw_80
-    def test_dfs_channel_100_bw_80(self, get_ap_logs, lf_test, lf_tools, station_names_fiveg, dfs_start):
+    def test_dfs_channel_100_bw_80(self, get_ap_logs, lf_test, lf_tools, station_names_fiveg, dfs_start, get_lf_logs):
         lf_tools.reset_scenario()
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -810,7 +810,7 @@ class TestDFSChannel132Bw80(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_132_bw_80
-    def test_dfs_channel_132_bw_80(self, get_ap_logs, lf_test, lf_tools, station_names_fiveg, dfs_start):
+    def test_dfs_channel_132_bw_80(self, get_ap_logs, lf_test, lf_tools, station_names_fiveg, dfs_start, get_lf_logs):
         lf_tools.reset_scenario()
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
