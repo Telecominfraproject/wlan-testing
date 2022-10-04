@@ -68,11 +68,11 @@ class TestRatevsRangeBridge(object):
         atn2 = ser_no[1].split(".")[2]
         print(f"antenuation-2 : {atn2}")
         for i in range(4):
-            lf_test.attenuator_modify(int(atn2[2]), i, 955)
+            lf_test.attenuator_modify(int(atn2), i, 955)
             time.sleep(0.5)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:;TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + "NONE"],
-               ['attenuations: 0 100 210..+100..630'], ['chamber: DUT-Chamber'], ['tt_deg: 0']]
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
+               ['attenuations: 0 100 210..+30..630'], ['chamber: 0'], ['tt_deg: 0']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='60000',
                                        instance_name="MODEBRIDGE_RVR_11B_TWOG_modified",
@@ -369,9 +369,8 @@ class TestRatevsRangeBridge(object):
     @pytest.mark.performance_advanced
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.client11ac
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2499", name="WIFI-2499")
-    def test_client_wpa2_personal_5g_11ac(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
+    def test_client_wpa2_personal_5g(self, lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                           get_configuration, lf_tools):
         """
 
@@ -397,11 +396,11 @@ class TestRatevsRangeBridge(object):
         atn2 = ser_no[1].split(".")[2]
         print(f"antenuation-2 : {atn2}")
         for i in range(4):
-            lf_test.attenuator_modify(int(atn2[2]), i, 955)
+            lf_test.attenuator_modify(int(atn2), i, 955)
             time.sleep(0.5)
         val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: NONE'],
-               ['attenuations: 0 100 210..+30..540'],['chamber: DUT-Chamber'], ['tt_deg: 0']]
+               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
+               ['attenuations: 0 100 210..+30..540'],['chamber: 0'], ['tt_deg: 0']]
 
         if station:
             time.sleep(3)
