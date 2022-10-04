@@ -71,10 +71,10 @@ class TestRatevsRangeBridge(object):
             lf_test.attenuator_modify(int(atn2), i, 955)
             time.sleep(0.5)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:;TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
                ['attenuations: 0 100 210..+30..630'], ['chamber: 0'], ['tt_deg: 0']]
         if station:
-            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='60000',
+            rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='30000',
                                        instance_name="MODEBRIDGE_RVR_11B_TWOG_modified",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -399,12 +399,12 @@ class TestRatevsRangeBridge(object):
             lf_test.attenuator_modify(int(atn2), i, 955)
             time.sleep(0.5)
         val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: AUTO'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
                ['attenuations: 0 100 210..+30..540'],['chamber: 0'], ['tt_deg: 0']]
 
         if station:
             time.sleep(3)
-            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,download_rate="100%",
+            rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,download_rate="100%", duration='30000',
                                         instance_name="MODEBRIDGE_RVR_11AC_FIVEG_modified",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
@@ -415,8 +415,8 @@ class TestRatevsRangeBridge(object):
             print("Test Completed... Cleaning up Stations")
             lf_test.Client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             kpi = "kpi.csv"
-            pass_value = {"strong": 100, "medium": 95, "weak": 14}
-            atn = [0, 10, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63]
+            pass_value = {"strong": 560, "medium": 220, "weak": 5}
+            atn = [0, 10, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54]
             if kpi in entries:
                 kpi_val = lf_tools.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
@@ -438,7 +438,7 @@ class TestRatevsRangeBridge(object):
                                 pass_fail.append("FAIL")
                             # count += 1
                             direction = "DUT-RX"
-                        start += 7
+                        start += 6
                     if "FAIL" in pass_fail:
                         print("Test failed due to lesser value")
                         assert False, "Test failed due to lesser value"
