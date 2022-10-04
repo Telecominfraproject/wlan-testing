@@ -882,8 +882,9 @@ class Fixtures_2x:
             obj.pull_file()
             allure.attach.file(source="lanforge_log_1.txt",
                                name="lanforge_log_1")
+
+        request.addfinalizer(collect_logs_lf)
         if push_config_exception_variable:
-            request.addfinalizer(collect_logs_lf)
             pytest.fail("Command Timed Out")
 
         return test_cases
