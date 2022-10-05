@@ -136,6 +136,7 @@ jobs:
             sudo -i;
             cd wlan-cloud-ucentral-deploy/docker-compose;
             docker-compose down;
+            docker image prune -a;
             git reset --hard;
             git checkout ${{ github.event.inputs.deployment_upgrade_version }};
             export DEFAULT_UCENTRALSEC_URL="https://${{ needs.deploy-controller.outputs.sec_url }}:16001";
