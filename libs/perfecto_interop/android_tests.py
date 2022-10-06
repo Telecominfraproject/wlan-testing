@@ -42,8 +42,42 @@ class AndroidTests(android_libs):
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
             ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
-                                                      setup_perfecto_mobile, connData=self.connData)
-            if ssid_with_internet is not None:
+                                                          setup_perfecto_mobile, connData=self.connData)
+            if ssid_with_internet is True:
+                ip_address = self.get_ip_address(ssid, setup, self.connData)
+                self.closeApp(self.connData["appPackage-android"], setup)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                print(ip_address, ssid_with_internet)
+                if ip_address is not None:
+                    return "PASS", "Device got the IP address"
+                    self.teardown()
+                else:
+                    self.teardown()
+                    return "FAIL", "Device didn't get the IP address"
+            else:
+                self.teardown()
+                return "FAIL", "SSID didn't get the Internet"
+        except Exception as e:
+            print(e)
+            self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
+
+    def enterprise_client_connect(self, ssid, identity, ttls_passwd):
+        global ip_address
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
+                                                                           self.perfecto_data[self.device],
+                                                                           perfecto_data=self.perfecto_data,
+                                                                           testcase=self.testcase_name))
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        try:
+            try:
+                ssid_with_internet, setup = self.wifi_connect_eap(ssid=ssid, user=identity, ttls_passwd=ttls_passwd,
+                                                                  setup_perfectoMobile=setup_perfecto_mobile,
+                                                                  connData=self.connData)
+            except:
+                return "Fail", "Failed to connect to ssid"
+            if ssid_with_internet is True:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -71,7 +105,36 @@ class AndroidTests(android_libs):
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
             ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
-                                                      setup_perfecto_mobile, connData=self.connData)
+                                                          setup_perfecto_mobile, connData=self.connData)
+            if ssid_with_internet is True:
+                self.closeApp(self.connData["appPackage-android"], setup)
+                down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                if down_speed is not None and up_speed is not None:
+                    return "PASS", "Device connected to SSID and ran Internet speed test"
+                else:
+                    self.teardown()
+                    return "Fail", "Device didn't get connected to SSID"
+            else:
+                self.teardown()
+                return "FAIL", "SSID didn't get the Internet"
+        except Exception as e:
+            print(e)
+            self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
+
+    def enterprise_client_connectivity_test(self, ssid, security=None, extra_securities=None, mode=None, band=None,
+                                            eap=None, ttls_passwd=None, identity=None, num_sta=None, dut_data=None):
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
+                                                                           self.perfecto_data[self.device],
+                                                                           perfecto_data=self.perfecto_data,
+                                                                           testcase=self.testcase_name))
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        try:
+            ssid_with_internet, setup = self.wifi_connect_eap(ssid=ssid, user=identity, passkey=ttls_passwd,
+                                                              setup_perfectoMobile=setup_perfecto_mobile,
+                                                              connData=self.connData)
             if ssid_with_internet is True:
                 self.closeApp(self.connData["appPackage-android"], setup)
                 down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
@@ -156,7 +219,7 @@ if __name__ == '__main__':
             "appPackage-android": "com.android.settings",
             "bundleId-iOS-Settings": "com.apple.Preferences",
             "bundleId-iOS-Safari": "com.apple.mobilesafari",
-            "jobName": "Interop-Galaxy-S10",
+            "jobName": "Interop-Galaxy-S10.*",
             "jobNumber": 38
         }
     }
@@ -194,4 +257,5 @@ if __name__ == '__main__':
     # print(obj.client_connectivity_test("ssid_wpa2_2g_RL_55K5113", security=None,
     #                                    dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
 
-    print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
+    # print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
+    print(obj.enterprise_client_connect(ssid="ssid_wpa_eap_2g", identity="nolaradius", ttls_passwd="nolastart"))
