@@ -313,7 +313,7 @@ class ChamberView:
         time.sleep(2)
         self.CreateChamberview.show_text_blob(None, None, True)  # Show changes on GUI
         self.CreateChamberview.sync_cv()
-        time.sleep(5)
+        time.sleep(15)
         return self.CreateChamberview, self.scenario_name
 
     def add_vlan(self, vlan_ids=[]):
