@@ -5,6 +5,9 @@
 
 """
 import logging
+import random
+import string
+import time
 
 import allure
 import pytest
@@ -24,6 +27,13 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
+for sec_modes in setup_params_general['ssid_modes'].keys():
+    for i in range(len(setup_params_general['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+        setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = \
+            setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
@@ -226,7 +236,13 @@ setup_params_general_two_vlan = {
     "rf": {},
     "radius": False
 }
-
+for sec_modes in setup_params_general_two_vlan['ssid_modes'].keys():
+    for i in range(len(setup_params_general_two_vlan['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+        setup_params_general_two_vlan['ssid_modes'][sec_modes][i]['ssid_name'] = \
+            setup_params_general_two_vlan['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
 
 @allure.feature("VLAN MODE CLIENT CONNECT")
 @allure.parent_suite("Client Connect Tests")
