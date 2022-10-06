@@ -328,4 +328,3 @@ class TestVlanModeConnectSuiteTwo(object):
                                                                     ttls_passwd=ttls_passwd)
 
         assert passes == "PASS", result
-

@@ -327,4 +327,3 @@ class TestBridgeModeConnectSuiteTwo(object):
                                                                     ttls_passwd=ttls_passwd)
 
         assert passes == "PASS", result
-
