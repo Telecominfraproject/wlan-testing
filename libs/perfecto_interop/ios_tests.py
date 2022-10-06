@@ -35,7 +35,36 @@ class ios_tests(ios_libs):
         try:
             ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
-            if ssid_with_internet is not None:
+            if ssid_with_internet is True:
+                ip_address = self.get_ip_address(ssid, setup, self.connData)
+                self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                print(ip_address, ssid_with_internet)
+                if ip_address is not None:
+                    return "PASS", "Device got the IP address"
+                else:
+                    return "FAIL", "Device didn't get the IP address"
+                    self.teardown()
+            else:
+                return "FAIL", "SSID didn't get the Internet"
+                self.teardown()
+        except Exception as e:
+            print(e)
+            self.teardown()
+
+    def enterprise_client_connect(self, ssid, identity, ttls_passwd):
+        global ip_address
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
+                                                                       self.perfecto_data[self.device],
+                                                                       perfecto_data=self.perfecto_data,
+                                                                       testcase=self.testcase_name))
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        try:
+            ssid_with_internet, setup = self.wifi_connect_eap(ssid=ssid, user=identity, ttls_passwd=ttls_passwd,
+                                                              setup_perfectoMobile=setup_perfecto_mobile,
+                                                              connData=self.connData)
+            if ssid_with_internet is True:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -62,7 +91,35 @@ class ios_tests(ios_libs):
         try:
             ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
-            if ssid_with_internet is not None:
+            if ssid_with_internet is True:
+                self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
+                current_result = self.speed_test(setup_perfecto_mobile)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                if current_result is True:
+                    return "PASS", "Device connected to SSID and ran Internet speed test"
+                else:
+                    return "Fail", "Device didn't get connected to SSID"
+                    self.teardown()
+            else:
+                return "FAIL", "SSID didn't get the Internet"
+                self.teardown()
+        except Exception as e:
+            print(e)
+            self.teardown()
+
+    def enterprise_client_connectivity_test(self, ssid, security=None, extra_securities=None, mode=None, band=None,
+                                            eap=None, ttls_passwd=None, identity=None, num_sta=None, dut_data=None):
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
+                                                                       self.perfecto_data[self.device],
+                                                                       perfecto_data=self.perfecto_data,
+                                                                       testcase=self.testcase_name))
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        try:
+            ssid_with_internet, setup = self.wifi_connect_eap(ssid=ssid, user=identity, ttls_passwd=ttls_passwd,
+                                                              setup_perfectoMobile=setup_perfecto_mobile,
+                                                              connData=self.connData)
+            if ssid_with_internet is True:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 current_result = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -88,7 +145,7 @@ class ios_tests(ios_libs):
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
         try:
-            if ssid_with_internet is not None:
+            if ssid_with_internet is True:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -161,5 +218,6 @@ if __name__ == '__main__':
     obj = ios_tests(perfecto_data=perfecto_data, dut_data=access_point,device="iPhone-11",
                     testcase="Test_perfecto_check")
     # print(obj.client_connectivity_test(ssid="ssid_wpa2_2g_RL_E3V2240", passkey="something"))
-    print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
+    # print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
+    print(obj.enterprise_client_connect(ssid="ssid_wpa2_eap_5g", identity="nolaradius", ttls_passwd="nolastart"))
 
