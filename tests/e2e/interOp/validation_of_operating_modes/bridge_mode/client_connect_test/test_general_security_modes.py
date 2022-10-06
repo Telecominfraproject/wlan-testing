@@ -9,7 +9,7 @@ import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connect_tests, pytest.mark.bridge, pytest.mark.general]
+pytestmark = [pytest.mark.client_connect_tests, pytest.mark.bridge, pytest.mark.general, pytest.mark.ow_sanity_interop]
 
 setup_params_general = {
     "mode": "BRIDGE",

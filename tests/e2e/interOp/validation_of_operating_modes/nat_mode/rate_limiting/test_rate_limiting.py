@@ -139,6 +139,7 @@ class TestRateLimitingNat(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.ow_sanity_interop
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("NAT Mode Rate Limiting Test with wpa2_personal encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7012", name="JIRA LINK")
@@ -163,6 +164,7 @@ class TestRateLimitingNat(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.ow_sanity_interop
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("NAT Mode Rate Limiting Test with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7013", name="JIRA LINK")
