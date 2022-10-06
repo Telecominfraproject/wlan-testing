@@ -702,7 +702,6 @@ class Fixtures_2x:
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         time_1 = time.time()
-        push_config_exception_variable = False
         # Apply config
         try:
             ap_logs = ap_ssh.get_logread()
@@ -712,23 +711,9 @@ class Fixtures_2x:
             #print(instantiate_profile_obj.base_profile_config)
         except Exception as e:
             ap_logs = ap_ssh.get_logread()
-            allure.attach(body=ap_logs, name="1st time Failure while pushing- AP Logs: ")
-            allure.attach(body=str(e), name="1st time Exception data after config push: ")
+            allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
+            allure.attach(body=str(e), name="Exception data after config push: ")
             print(e)
-            time.sleep(30)
-            print("Second time applying config")
-            try:
-                instantiate_profile_obj.push_config(serial_number=get_equipment_ref[0])
-            except Exception as e:
-                push_config_exception_variable = True
-                ap_logs = ap_ssh.get_logread()
-                allure.attach(body=ap_logs, name="2nd time Failure while pushing- AP Logs: ")
-                allure.attach(body=str(e), name="2nd time Exception data after config push: ")
-                print(e)
-
-
-
-
 
         config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
         config["uuid"] = 0
@@ -884,8 +869,6 @@ class Fixtures_2x:
                                name="lanforge_log_1")
 
         request.addfinalizer(collect_logs_lf)
-        if push_config_exception_variable:
-            pytest.fail("Command Timed Out")
 
         return test_cases
 
