@@ -1,17 +1,20 @@
 """
 
     Client Connect : BRIDGE Mode
-    pytest -m "client_connect_tests and nat and general"
+    pytest -m "client_connect_tests and nat and enterprise"
 
 """
 import logging
+import random
+import string
+import time
 
 import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connect_tests, pytest.mark.bridge, pytest.mark.enterprise]
 
-setup_params_general = {
+setup_params_enterprise = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa_enterprise": [
@@ -27,6 +30,13 @@ setup_params_general = {
     "rf": {},
     "radius": True
 }
+for sec_modes in setup_params_enterprise['ssid_modes'].keys():
+    for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+        setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = \
+            setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
 
 
 @allure.feature("NAT MODE CLIENT CONNECT")
@@ -35,7 +45,7 @@ setup_params_general = {
 @allure.sub_suite(sub_suite_name="Enterprise security mode Client Connect")
 @pytest.mark.parametrize(
     'setup_configuration',
-    [setup_params_general],
+    [setup_params_enterprise],
     indirect=True,
     scope="class"
 )
@@ -43,7 +53,7 @@ setup_params_general = {
 class TestBridgeModeConnectSuiteA(object):
     """
         NAT Client Connect (open. wpa. wpa2_personal) (twog, fiveg)
-        pytest -m "client_connect_tests and bridge and general"
+        pytest -m "client_connect_tests and bridge and enterprise"
     """
 
     @pytest.mark.wpa_enterprise
@@ -55,7 +65,7 @@ class TestBridgeModeConnectSuiteA(object):
                                            num_stations, setup_configuration, get_test_library, radius_info):
         """
             NAT Mode Client Connect Test with open encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and general and open and twog"
+            pytest -m "client_connect_tests and bridge and enterprise and open and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
@@ -77,7 +87,7 @@ class TestBridgeModeConnectSuiteA(object):
                                                 get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with open encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and open and fiveg"
+            pytest -m "client_connect_tests and bridge and enterprise and open and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
@@ -100,7 +110,7 @@ class TestBridgeModeConnectSuiteA(object):
                                                num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with wpa encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and bridge and general and wpa and twog"
+            pytest -m "client_connectivity_tests and bridge and enterprise and wpa and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
@@ -123,7 +133,7 @@ class TestBridgeModeConnectSuiteA(object):
                                                get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with wpa encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa and fiveg"
+            pytest -m "client_connect_tests and bridge and enterprise and wpa and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
@@ -146,7 +156,7 @@ class TestBridgeModeConnectSuiteA(object):
                                                          get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa2_personal and twog"
+            pytest -m "client_connect_tests and bridge and enterprise and wpa2_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
@@ -169,7 +179,7 @@ class TestBridgeModeConnectSuiteA(object):
                                                     num_stations, setup_configuration, get_test_library, radius_info):
         """
             BRIDGE Mode Client Connect Test with wpa2_personal encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and general and wpa2_personal and fiveg"
+            pytest -m "client_connect_tests and bridge and enterprise and wpa2_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
@@ -184,7 +194,7 @@ class TestBridgeModeConnectSuiteA(object):
         assert passes == "PASS", result
 
 
-setup_params_general_two_nat = {
+setup_params_enterprise_two_nat = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa_wpa2_enterprise_mixed": [
@@ -197,7 +207,13 @@ setup_params_general_two_nat = {
     "rf": {},
     "radius": True
 }
-
+for sec_modes in setup_params_enterprise_two_nat['ssid_modes'].keys():
+    for i in range(len(setup_params_enterprise_two_nat['ssid_modes'][sec_modes])):
+        N = 3
+        rand_string = (''.join(random.choices(string.ascii_uppercase +
+                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
+        setup_params_enterprise_two_nat['ssid_modes'][sec_modes][i]['ssid_name'] = \
+            setup_params_enterprise_two_nat['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
 
 @allure.feature("NAT MODE CLIENT CONNECT")
 @allure.parent_suite("Client Connect Tests")
@@ -205,7 +221,7 @@ setup_params_general_two_nat = {
 @allure.sub_suite(sub_suite_name="Enterprise security mode Client Connect")
 @pytest.mark.parametrize(
     'setup_configuration',
-    [setup_params_general_two_nat],
+    [setup_params_enterprise_two_nat],
     indirect=True,
     scope="class"
 )
@@ -225,7 +241,7 @@ class TestNatModeConnectSuiteTwo(object):
                                                          radius_info):
         """
             NAT Mode Client Connect Test with wpa3_personal encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and nat and general and wpa3_personal and twog"
+            pytest -m "client_connect_tests and nat and enterprise and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "wpa_wpa2_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
@@ -250,7 +266,7 @@ class TestNatModeConnectSuiteTwo(object):
                                                          radius_info):
         """
             NAT Mode Client Connect Test with wpa3_personal encryption 5 GHz Band
-            pytest -m "client_connect_tests and nat and general and wpa3_personal and fiveg"
+            pytest -m "client_connect_tests and nat and enterprise and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
@@ -275,7 +291,7 @@ class TestNatModeConnectSuiteTwo(object):
                                                      num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with wpa3_personal_mixed encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and nat and general and wpa3_personal_mixed and twog"
+            pytest -m "client_connect_tests and nat and enterprise and wpa3_personal_mixed and twog"
         """
         profile_data = {"ssid_name": "wpa3_m_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
@@ -300,7 +316,7 @@ class TestNatModeConnectSuiteTwo(object):
                                                      num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with wpa3_personal_mixed encryption 5 GHz Band
-            pytest -m "client_connect_tests and nat and general and wpa3_personal_mixed and fiveg"
+            pytest -m "client_connect_tests and nat and enterprise and wpa3_personal_mixed and fiveg"
         """
         profile_data = {"ssid_name": "wpa3_m_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
