@@ -561,13 +561,23 @@ class tip_2x:
         wifi_status = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
         allure.attach(name="wifi_status_before_apply: ", body=str(wifi_status))
         if not ret_val["connected"] or ret_val["connected"] is None:
+            self.dut_library_object.check_connectivity(idx=idx)
+            self.dut_library_object.restart_ucentral_service(idx=idx, attach_allure=False)
+            time.sleep(30)
+            ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False, retry=10)
+            if not ret_val["connected"] or ret_val["connected"] is None:
+                self.dut_library_object.check_connectivity(idx=idx)
+                pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
+            else:
+                allure.step("Connected to Gateway after Restarting the ucentral Process!!!")
+
             # TODO: check the connectivity (if it is not connected, then check the lanforge wan port and bring it
             #  up if lanforge eth is in down state. Also check the link state of eth port with ip address
             #  reload the scenario in case it is messed up)
             #  if wan is available, then run (/etc/init.d/ucentral restart) to retry the connection and check the
             #  status again in next 30 seconds if still disconnected, then fail and attach the logs,
             #  Jitendra
-            pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
+            # pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
 
     def post_apply_check(self, idx=0):
         """
