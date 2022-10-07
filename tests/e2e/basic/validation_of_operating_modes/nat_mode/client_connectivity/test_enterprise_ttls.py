@@ -138,7 +138,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa2"
-        mode = "NAT"
+        mode = "NAT-WAN"
         band = "fiveg"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
