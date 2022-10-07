@@ -702,6 +702,7 @@ class Fixtures_2x:
         allure.attach(name="ucode /usr/share/ucentral/sysinfo.uc ", body=str(output))
 
         time_1 = time.time()
+        push_config_exception_variable = False
         # Apply config
         try:
             ap_logs = ap_ssh.get_logread()
@@ -710,6 +711,7 @@ class Fixtures_2x:
 
             #print(instantiate_profile_obj.base_profile_config)
         except Exception as e:
+            push_config_exception_variable = True
             ap_logs = ap_ssh.get_logread()
             allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
             allure.attach(body=str(e), name="Exception data after config push: ")
@@ -868,7 +870,8 @@ class Fixtures_2x:
             allure.attach.file(source="lanforge_log_1.txt",
                                name="lanforge_log_1")
 
-        request.addfinalizer(collect_logs_lf)
+        if push_config_exception_variable:
+            request.addfinalizer(collect_logs_lf)
 
         return test_cases
 
