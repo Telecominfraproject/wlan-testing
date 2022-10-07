@@ -205,13 +205,14 @@ class TestUcentralGatewayService(object):
         assert system_info.status_code == 200
 
     @pytest.mark.gw_commands
+    @pytest.mark.anil
     @allure.title("Get OW Gateway Commands")
-    def test_gw_commands(self, get_target_object):
-        system_info = get_target_object.controller_library_object.get_commands()
-        # print(system_info.json())
+    def test_gw_commands(self, get_target_object, get_testbed_details):
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp = get_target_object.controller_library_object.get_commands(device_name)
+        # print(resp.json())
         # allure.attach(name="Gateway list of commands", body=str(system_info.json()),
-        ##attachment_type=#allure.#attachment_type.JSON)
-        assert system_info.status_code == 200
+        assert resp.status_code == 200
 
     @pytest.mark.gw_device_logs
     @allure.title("Get Device Logs")
