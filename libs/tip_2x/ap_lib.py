@@ -406,9 +406,9 @@ class APLIBS:
             status_count = int(ret.count("True"))
             logging.info("Status count: " + str(status_count))
             if status_count == 1:
-                cmd = "cd && cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
-            else:
                 cmd = "cd && cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+            else:
+                cmd = "cd && cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
         elif type_.lower() == "wifi6" or type_.lower() == "wifi6e":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
         output = self.run_generic_command(cmd=cmd, idx=idx,
