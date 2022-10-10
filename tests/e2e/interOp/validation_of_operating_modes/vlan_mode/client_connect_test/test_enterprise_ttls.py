@@ -12,7 +12,7 @@ import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connect_tests, pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.ow_sanity_interop]
+pytestmark = [pytest.mark.client_connect_tests, pytest.mark.vlan, pytest.mark.enterprise]
 
 setup_params_enterprise = {
     "mode": "VLAN",
