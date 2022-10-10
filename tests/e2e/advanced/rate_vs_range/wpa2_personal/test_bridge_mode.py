@@ -12,7 +12,7 @@ import pytest
 import allure
 import os.path
 
-pytestmark = [pytest.mark.advance, pytest.mark.ratevsrange, pytest.mark.bridge, pytest.mark.report]
+pytestmark = [pytest.mark.advance, pytest.mark.ratevsrange, pytest.mark.bridge]
 
 
 setup_params_general = {
@@ -35,7 +35,6 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
-@pytest.mark.Mhz20
 class TestRatevsRangeBridge(object):
 
     @pytest.mark.wpa2_personal
@@ -75,7 +74,7 @@ class TestRatevsRangeBridge(object):
                ['attenuations: 0 100 210..+30..630'], ['chamber: 0'], ['tt_deg: 0']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='60000',
-                                       instance_name="MODEBRIDGE_RVR_11B_TWOG_modified",
+                                       instance_name="MODEBRIDGE_RVR_TWOG_modified",
                                        vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
@@ -109,6 +108,7 @@ class TestRatevsRangeBridge(object):
                             # count += 1
                             direction = "DUT-RX"
                         start += 7
+                    print(pass_fail,"\nThroughput value-->",thrpt_val)
                     if "FAIL" in pass_fail:
                         print("Test failed due to lesser value")
                         assert False, "Test failed due to lesser value"
@@ -405,7 +405,7 @@ class TestRatevsRangeBridge(object):
         if station:
             time.sleep(3)
             rvr_o = lf_test.ratevsrange(station_name=station_names_fiveg, mode=mode,download_rate="100%", duration='60000',
-                                        instance_name="MODEBRIDGE_RVR_11AC_FIVEG_modified",
+                                        instance_name="MODEBRIDGE_RVR_FIVEG_modified",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
@@ -439,6 +439,7 @@ class TestRatevsRangeBridge(object):
                             # count += 1
                             direction = "DUT-RX"
                         start += 6
+                    print(pass_fail,"\nThroughput value-->",thrpt_val)
                     if "FAIL" in pass_fail:
                         print("Test failed due to lesser value")
                         assert False, "Test failed due to lesser value"
