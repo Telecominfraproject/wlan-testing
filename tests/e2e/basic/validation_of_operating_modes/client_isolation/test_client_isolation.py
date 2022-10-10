@@ -64,104 +64,174 @@ class TestClientIsolationEnabled(object):
     @pytest.mark.fiveg
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10610", name="WIFI-10610")
-    def test_client_isolation_disabled_ssid_5g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_enabled_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and wpa2_personal and fiveg"
-        """
+
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
         ssid_name1 = profile_data["ssid_name"]
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_fiveg
-        scan_ssid = True
-        band = "fiveg"
+        station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list :", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list], scan_ssid=scan_ssid)
-        print(sta_result2)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
-        print(layer3_restult)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+        print("layer3 results:", layer3_restult)
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("Test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between two stations when isolation enabled in both 5g ssids.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
+
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.eth_to_2g_station_true
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10620", name="WIFI-10620")
-    def test_client_isolation_enabled_with_2g(self, lf_test, update_report, test_cases,
-                                              station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ethernet_to_2g_station_true and twog"
-        """
+    def test_client_isolation_enabled_with_2g(self, lf_test, lf_tools, update_report, test_cases,
+                                              station_names_twog, get_configuration):
+
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_fiveg
-        band = "fiveg"
+        station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.twog_radios[0]
 
-        sta_result = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                            band=band, vlan_id=vlan, station_name=[station_list],
-                                            scan_ssid=True)
-        print(sta_result)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
+        station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[station_list])
+        print(station_result)
+
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=station_list, side_b="")
         print(layer3_restult)
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between eth2 and station when isolation enabled in one 2g ssid.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
+
 
 
     # clients_connected to different ssid, enabling isolation in both(2.4GH)
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.tarun
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10602",name="WIFI-10602")
-    def test_client_isolation_enabled_ssids_2g(self,lf_test, update_report, test_cases,
+    def test_client_isolation_enabled_ssids_2g(self,lf_test, lf_tools, update_report, test_cases,
                                                  station_names_twog,get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and wpa2_personal and twog"
-        """
+
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name1 = profile_data["ssid_name"]
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_twog
-        scan_ssid = True
-        band = "twog"
+        station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.twog_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                            band=band, vlan_id=vlan, station_name=[station_list], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                        band=band, vlan_id=vlan, station_name=[station_list], scan_ssid=scan_ssid)
-        print(sta_result2)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                           side_b_min_rate=0, side_b_max_rate=0,
-                                           traffic_type="lf_udp", sta_list=sta_list)
-        print(layer3_restult)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("layer3 results:", layer3_restult)
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("Test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between two stations when isolation enabled in both 2g ssids.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
+
 
     # Running traffic between eth2 to station with client-isolation enabled in (5GH) ssid
     @pytest.mark.wpa2_personal
@@ -169,34 +239,58 @@ class TestClientIsolationEnabled(object):
     @pytest.mark.eth_to_5g_station_true
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10621", name="WIFI-10621")
-    def test_client_isolation_enabled_with_5g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_enabled_with_5g(self, lf_test, lf_tools, update_report, test_cases,
                                               station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ethernet_to_5g_station_true and fiveg"
-        """
+
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_fiveg
+        station_list = station_names_fiveg[0]
         band = "fiveg"
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.fiveg_radios[0]
 
-        sta_result = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                            band=band, vlan_id=vlan, station_name=[station_list],
-                                            scan_ssid=True)
-        print(sta_result)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
+        station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[station_list])
+        print(station_result)
+
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=station_list, side_b="")
         print(layer3_restult)
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"][
+                    "rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between eth2 and station when isolation enabled in one 5g ssid.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
 
 
-setup_params_general = {
+
+
+setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
@@ -237,7 +331,7 @@ setup_params_general = {
 
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general],
+    [setup_params_general1],
     indirect=True,
     scope="class"
 )
@@ -249,107 +343,179 @@ class TestClientIsolationDisabled(object):
     """
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.anil
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10603", name="WIFI-10603")
-    def test_client_isolation_enabled_ssids_2g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_disabled_ssids_2g(self, lf_test, lf_tools, update_report, test_cases,
                                                station_names_twog, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_twog
-        scan_ssid = True
-        band = "twog"
+        station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.twog_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[1]])
+        print("+++++++++++++++++++++++++++")
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+        print("+++++++++++++++++++++++++++++++")
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list], scan_ssid=scan_ssid)
-        print(sta_result2)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
-        print(layer3_restult)
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("++++++++++++++++++++++++++++++++++")
+        print("layer3 results:", layer3_restult)
+        print("+++++++++ layer3 ended++++++++++++++")
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between two stations when isolation disabled in both 2g ssids.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.eth_to_2g_station_false
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10624", name="WIFI-10624")
-    def test_client_iso_in_same_ssids_2g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_disabled_with_2g(self, lf_test, lf_tools, update_report, test_cases,
                                          station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and eth_to_2g_station_false and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_fiveg
-        band = "fiveg"
+        station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.twog_radios[0]
 
-        sta_result = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                            band=band, vlan_id=vlan, station_name=[station_list],
-                                            scan_ssid=True)
-        print(sta_result)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
+        station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=[station_list])
+        print(station_result)
+
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=station_list, side_b="")
         print(layer3_restult)
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
 
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
 
+        if not station_result:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between eth2 and station when isolation disabled in one 2g ssid.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
 
     # clients_connected to different ssid, disabling isolation in both(5GH)
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10611",name="WIFI-10611")
-    def test_client_isolation_disabled_ssid_5g(self,lf_test, update_report, test_cases,
+    def test_client_isolation_disabled_ssid_5g(self,lf_test, lf_tools, update_report, test_cases,
                                                  station_names_fiveg,get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
+
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][2]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_fiveg
-        scan_ssid = True
-        band = "fiveg"
+        station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                            band=band, vlan_id=vlan, station_name=[station_list], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                            band=band, vlan_id=vlan, station_name=[station_list], scan_ssid=scan_ssid)
-        print(sta_result2)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
-        print(layer3_restult)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
 
-        assert True
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("layer3 results:", layer3_restult)
+
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between two stations when isolation disabled in both 5g ssids.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
 
     # Running traffic between eth2 to station with client-isolation disabled in (5GH) ssid
     @pytest.mark.wpa2_personal
@@ -357,34 +523,54 @@ class TestClientIsolationDisabled(object):
     @pytest.mark.eth_to_5g_station_false
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10623", name="WIFI-10623")
-    def test_client_iso_in_same_ssids_5g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_disabled_with_5g(self, lf_test, lf_tools, update_report, test_cases,
                                          station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ethernet_to_5g_station_false and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
+
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_fiveg
-        band = "fiveg"
+        station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.fiveg_radios[0]
 
-        sta_result = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                            band=band, vlan_id=vlan, station_name=[station_list],
-                                            scan_ssid=True)
-        print(sta_result)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
+        station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[station_list])
+        print(station_result)
+
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=station_list, side_b="")
         print(layer3_restult)
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between eth2 and stations when isolation disabled in one 5g ssid.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
 
 
-setup_params_general = {
+setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
@@ -397,13 +583,6 @@ setup_params_general = {
             },
             {
                 "ssid_name": "ci_disabled_wpa2_ssid",
-                "appliedRadios": ["5G"],
-                "security": "psk2",
-                "security_key": "OpenWifi",
-                "isolate-clients": False
-            },
-            {
-                "ssid_name": "ci_disabled_wpa2_ssid",
                 "appliedRadios": ["2G"],
                 "security": "psk2",
                 "security_key": "OpenWifi",
@@ -415,7 +594,14 @@ setup_params_general = {
                 "security": "psk2",
                 "security_key": "OpenWifi",
                 "isolate-clients": True
-            }
+            },
+            {
+                "ssid_name": "ci_disabled_wpa2_ssid",
+                "appliedRadios": ["5G"],
+                "security": "psk2",
+                "security_key": "OpenWifi",
+                "isolate-clients": False
+            },
         ]
     },
     "rf": {},
@@ -423,7 +609,7 @@ setup_params_general = {
 }
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general],
+    [setup_params_general2],
     indirect=True,
     scope="class"
 )
@@ -435,147 +621,234 @@ class TestClientIsolationSameSSID(object):
     """
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.same_ssid_enabling_isolation_2g
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10601", name="WIFI-10601")
-    def test_cleint_isolation_disabled_ssid_2g(self, lf_test, update_report,
+    def test_cleint_isolation_enabled_same_ssid_2g(self, lf_test, lf_tools, update_report,
                                                station_names_twog, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+
+        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_twog
-        scan_ssid = True
-        band = "twog"
+        station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list],
-                                             scan_ssid=scan_ssid)
-        print("First Station resulet:", sta_result1)
+        radio_name = lf_test.twog_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list],
-                                             scan_ssid=scan_ssid)
-        print("Second Station result:", sta_result2)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
-        print(layer3_restult)
+        print("-----------------------start creating station-------------------------")
+        station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=sta)
+        print("+++++++++++++++++++++++++++")
+        print(type(station_result))
+        print("station results :", station_result)
+        print("+++++++++++++++++++++++++++++++")
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("+++++++++++++++++++++++")
+        print("layer3 results:", layer3_restult)
+        print("+++++++++ layer3 ended++++++++++++++")
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
 
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10612", name="WIFI-10612")
-    def test_cleint_isolation_disabled_ssid_5g(self, lf_test, update_report, test_cases,
-                                              station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        station_list = station_names_fiveg
-        scan_ssid = True
-        band = "fiveg"
-        security = "wpa2"
-        mode = "BRIDGE"
-        vlan = 1
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list],
-                                             scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list],
-                                             scan_ssid=scan_ssid)
-        print(sta_result2)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
-        print(layer3_restult)
-
-        assert True
-
+        if not station_result:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test paseed,Packet drop has 100%")
+                    assert True
+                else:
+                    print("Test fail, traffic ran between two stations when isolation enabled in both 2g same-ssid.")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
 
     # clients_connected to same ssid, disabled isolation(2.4GH)
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.same_ssid_disabling_isolation_2g
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10604",name="WIFI-10604")
-    def test_cleint_isolation_enabled_ssid_2g(self,lf_test, update_report,
-                                             station_names_twog,get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
+    def test_cleint_isolation_disabling_same_ssid_2g(self,lf_test, lf_tools, update_report,
+                                             station_names_twog, get_configuration):
+
+        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_twog
-        scan_ssid = True
-        band = "twog"
+        station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name,passkey=security_key, security=security, mode=mode,
-                                        band=band,vlan_id=vlan,station_name=[station_list], scan_ssid=scan_ssid)
-        print("First Station resulet:",sta_result1)
+        radio_name = lf_test.twog_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name,passkey=security_key, security=security, mode=mode,
-                                            band=band,vlan_id=vlan,station_name=[station_list], scan_ssid=scan_ssid)
-        print("Second Station result:",sta_result2)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
-        print(layer3_restult)
+        station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=sta)
+        print("station results :", station_result)
 
-        assert True
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("layer3 results:", layer3_restult)
+
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between two stations when isolation disabled in both 2g same-ssid.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
 
     # clients_connected to same ssid, enabled isolation(5GHZ)
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.same_ssid_enabling_isolation_5g
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10606", name="WIFI-10606")
-    def test_cleint_isolation_enabled_ssid_5g(self, lf_test, update_report, test_cases,
+    def test_cleint_isolation_enabled_same_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                               station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and wpa2_personal and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
+
+        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_fiveg
-        scan_ssid = True
-        band = "fiveg"
+        station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list],
-                                             scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name, passkey=security_key, security=security, mode=mode,
-                                             band=band, vlan_id=vlan, station_name=[station_list],
-                                             scan_ssid=scan_ssid)
-        print(sta_result2)
-        sta_list = station_list
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_list)
-        print(layer3_restult)
+        station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=sta)
+        print("station results :", station_result)
 
-        assert True
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("layer3 results:", layer3_restult)
+
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test paseed,Packet drop has 100%")
+                    assert True
+                else:
+                    print("Test fail, traffic ran between two stations when isolation enabled in both 5g same-ssid.")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.fiveg
+    @pytest.mark.same_ssid_disabling_isolation_5g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10612", name="WIFI-10612")
+    def test_cleint_isolation_disabled_same_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
+                                              station_names_fiveg, get_configuration):
+
+        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][3]
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        station_list = station_names_fiveg[0]
+        security = "wpa2"
+        mode = "BRIDGE"
+        vlan = 1
+        radio_name = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
+        station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=sta)
+        print("station results :", station_result)
+
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("layer3 results:", layer3_restult)
+
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between two stations when isolation disabled in both 5g same-ssid.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
 
 
-setup_params_general = {
+setup_params_general3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
@@ -594,14 +867,14 @@ setup_params_general = {
                 "isolate-clients": False
             },
             {
-                "ssid_name": "ci_enabled_wpa2_ssid_5g",
+                "ssid_name": "ci_enabled_wpa2_ssid1_5g",
                 "appliedRadios": ["5G"],
                 "security": "psk2",
                 "security_key": "OpenWifi",
                 "isolate-clients": True
             },
             {
-                "ssid_name": "ci_disabled_wpa2_ssid_5g",
+                "ssid_name": "ci_disabled_wpa2_ssid2_5g",
                 "appliedRadios": ["5G"],
                 "security": "psk2",
                 "security_key": "OpenWifi",
@@ -614,7 +887,7 @@ setup_params_general = {
 }
 @pytest.mark.parametrize(
     'setup_profiles',
-    [setup_params_general],
+    [setup_params_general3],
     indirect=True,
     scope="class"
 )
@@ -625,83 +898,131 @@ class TestClientIsolationDifferentSSID(object):
         pytest -m "client_isolation and ci_disabled and bridge"
     """
 
+    # clients_connected to different ssid,enabling isolation in ssid (2GH)& isolation disabled in ssid (2GHZ)
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
     @pytest.mark.twog
     @pytest.mark.ci_enable_and_disable_2g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10605", name="WIFI-10605")
-    def test_client_isoaltion_enabled_ssid_2g_disabled_ssid_2g(self, lf_test, update_report, test_cases,
-                                                               station_names_twog, station_names_fiveg,
-                                                               get_ap_channel):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ci_enable_and_disable_2g and twog and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+    def test_client_isoaltion_enabled_ssid_2g_disabled_ssid_2g(self, lf_test, lf_tools, update_report, test_cases,
+                                                               station_names_twog, get_configuration):
+
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
+        station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.twog_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                             band=band1, vlan_id=vlan, station_name=[station_list1],
-                                             scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                             band=band2, vlan_id=vlan, station_name=[station_list2],
-                                             scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list1,
-                                               side_b_list=station_list2)
-        print(layer3_restult)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[1]])
+        print("+++++++++++++++++++++++++++")
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+        print("+++++++++++++++++++++++++++++++")
 
-        assert True
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("++++++++++++++++++++++++++++++++++")
+        print("layer3 results:", layer3_restult)
+        print("+++++++++ layer3 ended++++++++++++++")
 
-    # run traffic from 2g to 5g
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between two stations when isolation enabled in one 2g ssid disabled in another.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
+
+
+    # clients_connected to different ssid,enabling isolation in ssid (5GH)& isolation disabled in ssid (5GHZ)
     @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.bridge
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10614",name="WIFI-10614")
-    def test_client_isolation_enabled_ssids_2gdisabled_ssid_5g(self, lf_test, update_report,test_cases,
-                                                                station_names_twog,station_names_fiveg,get_ap_channel):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+    @pytest.mark.fiveg
+    @pytest.mark.ci_enable_and_disable_5g
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10613", name="WIFI-10613")
+    def test_client_isoaltion_enabled_ssid_5g_disabled_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
+                                                                station_names_fiveg, get_configuration):
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
+        station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(2):
+            sta.append(station_list + str(i))
+        print("station-list : ----->", sta)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[1]])
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                       band=band1, vlan_id=vlan, station_name=[station_list1], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                       band=band2, vlan_id=vlan, station_name=[station_list2], scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list1,side_b_list=station_list2)
-        print(layer3_restult)
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("layer3 results:", layer3_restult)
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+                else:
+                    print("Test pass, traffic ran between two stations when isolation enabled in one 5g and disabled in another.")
+                    assert True
+            else:
+                print("Layer3 not ran properly.")
 
     # run traffic from 2g to 5g
     @pytest.mark.wpa2_personal
@@ -709,39 +1030,67 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.ci_enabled_2g_and_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10616", name="WIFI-10616")
-    def test_client_isolation_enabled_ssid2g_and_ssid5g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_enabled_ssid2g_and_ssid5g(self, lf_test, lf_tools, update_report, test_cases,
                                                           station_names_twog, station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ci_enabled_2g_and_5g and twog and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
+        station_list1 = station_names_twog[0]
+        station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name1 = lf_test.twog_radios[0]
+        radio_name2 = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(1):
+            sta.append(station_list1 + str(i))
+            sta.append(station_list2 + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                             band=band1, vlan_id=vlan, station_name=[station_list1],
-                                             scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                             band=band2, vlan_id=vlan, station_name=[station_list2],
-                                             scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        print("+++++++++++++++++++++++++++")
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+        print("+++++++++++++++++++++++++++++++")
+
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list1,side_b_list=station_list2)
-        print(layer3_restult)
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+        print("++++++++++++++++++++++++++++++++++")
+        print("layer3 results:", layer3_restult)
+        print("+++++++++ layer3 ended++++++++++++++")
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] == 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] != 0:
+                    print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and 5g ssid.")
+                    assert True
+                else:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
 
     # run traffic from 2g to 5g
     @pytest.mark.wpa2_personal
@@ -749,151 +1098,62 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.ci_disable_2g_and_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10618",name="WIFI-10618")
-    def test_client_isolation_disabled_ssid2g_and_ssid5g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_disabled_ssid2g_and_ssid5g(self, lf_test, lf_tools, update_report, test_cases,
                                                  station_names_twog,station_names_fiveg,get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ci_disable_2g_and_5g and twog and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
+        station_list1 = station_names_twog[0]
+        station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name1 = lf_test.twog_radios[0]
+        radio_name2 = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(1):
+            sta.append(station_list1 + str(i))
+            sta.append(station_list2 + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                        band=band1, vlan_id=vlan, station_name=[station_list1], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                        band=band2, vlan_id=vlan, station_name=[station_list2], scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list1,side_b_list=station_list2)
-        print(layer3_restult)
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+        print("layer3 results:", layer3_restult)
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
 
-    # run traffic from 5g to 2g
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.bridge
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10625", name="WIFI-10625")
-    def test_client_isolation_disabled_ssid_2genabled_ssid_5g(self, lf_test, update_report,test_cases,
-                                                      station_names_twog,station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and bridge and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-        ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
-        ssid_name2 = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
-        security = "wpa2"
-        mode = "BRIDGE"
-        vlan = 1
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                      band=band1, vlan_id=vlan, station_name=[station_list1], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                      band=band2, vlan_id=vlan, station_name=[station_list2], scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list2,side_b_list=station_list1)
-        print(layer3_restult)
-
-        assert True
-
-
-    # clients_connected to different ssid,enabled isolation in (2GHz)ssid & isolation disabled in (5GH)ssid
-    # run traffic from 5g to 2g
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.bridge
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10615",name="WIFI-10615")
-    def test_client_isolation_enabled_ssids_2g_disabled_ssid_5g(self, lf_test, update_report,test_cases,
-                                                                station_names_twog,station_names_fiveg,get_ap_channel):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
-        ssid_name2 = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
-        security = "wpa2"
-        mode = "BRIDGE"
-        vlan = 1
-
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                       band=band1, vlan_id=vlan, station_name=[station_list1], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                       band=band2, vlan_id=vlan, station_name=[station_list2], scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list2,side_b_list=station_list1)
-        print(layer3_restult)
-
-        assert True
-
-    # clients_connected to different ssid,disabled isolation in ssid (2GHz)& isolation enabled in ssid(5GH)
-    # run traffic from 2g to 5g
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.bridge
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10626", name="WIFI-10626")
-    def test_client_isolation_disabled_ssid_2g_enabled_ssid_5g(self, lf_test, update_report,test_cases,
-                                                      station_names_twog,station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and bridge and wpa2_personal and twog"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-        ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
-        ssid_name2 = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
-        security = "wpa2"
-        mode = "BRIDGE"
-        vlan = 1
-
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                      band=band1, vlan_id=vlan, station_name=[station_list1], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                      band=band2, vlan_id=vlan, station_name=[station_list2], scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list1,side_b_list=station_list2)
-        print(layer3_restult)
-
-        assert True
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] == 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] != 0:
+                    print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and 5g ssid.")
+                    assert True
+                else:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
 
     # clients_connected to different ssid, enabling isolation in both (2GHz) & (5GHz) ssid
     # run traffic from 5g to 2g
@@ -902,39 +1162,67 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.ci_enabled_2g_and_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10617", name="WIFI-10617")
-    def test_client_isolation_enabled_ssid_2g_and_ssid_5g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_enabled_ssid_2gandssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                           station_names_twog, station_names_fiveg, get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ci_enabled_2g_and_5g and twog and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
+        station_list1 = station_names_twog[0]
+        station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name1 = lf_test.twog_radios[0]
+        radio_name2 = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(1):
+            sta.append(station_list1 + str(i))
+            sta.append(station_list2 + str(i))
+        print("station-list : ----->", sta)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        print("+++++++++++++++++++++++++++")
+        print("station results 1  :", station_result1)
+        time.sleep(3)
+        print("station results 2  :", station_result2)
+        print("+++++++++++++++++++++++++++++++")
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                             band=band1, vlan_id=vlan, station_name=[station_list1],
-                                             scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                             band=band2, vlan_id=vlan, station_name=[station_list2],
-                                             scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list2,side_b_list=station_list1)
-        print(layer3_restult)
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+        print("++++++++++++++++++++++++++++++++++")
+        print("layer3 results:", layer3_restult)
+        print("+++++++++ layer3 ended++++++++++++++")
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] != 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] == 0:
+                    print("Test pass, traffic ran between 5g to 2g stations when isolation enabled in 2g and 5g ssid.")
+                    assert True
+                else:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
 
     # clients_connected to different ssid, disabled isolation in both (2GHz) & (5GHz) ssid
     # run traffic from 5g to 2g
@@ -943,76 +1231,319 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.ci_disable_2g_and_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10619",name="WIFI-10619")
-    def test_client_isolation_disabled_ssid_2g_and_ssid_5g(self, lf_test, update_report, test_cases,
+    def test_client_isolation_disabled_ssid_2g_and_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                  station_names_twog,station_names_fiveg,get_configuration):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ci_disable_2g_and_5g and twog and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
+        station_list1 = station_names_twog[0]
+        station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name1 = lf_test.twog_radios[0]
+        radio_name2 = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(1):
+            sta.append(station_list1 + str(i))
+            sta.append(station_list2 + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                        band=band1, vlan_id=vlan, station_name=[station_list1], scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                        band=band2, vlan_id=vlan, station_name=[station_list2], scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
-                                               side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list2,side_b_list=station_list1)
-        print(layer3_restult)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
 
-        assert True
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+        print("layer3 results:", layer3_restult)
 
-    # clients_connected to different ssid,enabling isolation in ssid (5GH)& isolation disabled in ssid (5GHZ)
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] != 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] == 0:
+                    print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and 5g ssid.")
+                    assert True
+                else:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
+
+    # run traffic from 2g to 5g
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
     @pytest.mark.twog
-    @pytest.mark.ci_enable_and_disable_5g
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10613", name="WIFI-10613")
-    def test_client_isoaltion_enabled_ssid_5g_disabled_ssid_5g(self, lf_test, update_report, test_cases,
-                                                               station_names_twog, station_names_fiveg,
-                                                               get_ap_channel):
-        """Client-Isolation Bridge Mode
-           pytest -m "client_isolation and ci_enable_and_disable_5g and twog and fiveg"
-        """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
+    @pytest.mark.fiveg
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10614", name="WIFI-10614")
+    def test_client_isolation_enabled_ssids_2gdisabled_ssid_5g(self, lf_test, lf_tools,update_report, test_cases,
+                                                               station_names_twog, station_names_fiveg, get_ap_channel):
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid_name1 = profile_data["ssid_name"]
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list1 = station_names_twog
-        station_list2 = station_names_fiveg
-        scan_ssid = True
-        band1 = "twog"
-        band2 = "fiveg"
+        station_list1 = station_names_twog[0]
+        station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
         vlan = 1
+        radio_name1 = lf_test.twog_radios[0]
+        radio_name2 = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(1):
+            sta.append(station_list1 + str(i))
+            sta.append(station_list2 + str(i))
+        print("station-list : ----->", sta)
 
-        sta_result1 = lf_test.Client_Connect(ssid=ssid_name1, passkey=security_key, security=security, mode=mode,
-                                             band=band1, vlan_id=vlan, station_name=[station_list1],
-                                             scan_ssid=scan_ssid)
-        print(sta_result1)
-        sta_result2 = lf_test.Client_Connect(ssid=ssid_name2, passkey=security_key, security=security, mode=mode,
-                                             band=band2, vlan_id=vlan, station_name=[station_list2],
-                                             scan_ssid=scan_ssid)
-        print(sta_result2)
-        layer3_restult = lf_test.create_layer3(side_a_min_rate="10M", side_a_max_rate="10M",
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        print("+++++++++++++++++++++++++++")
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+        print("+++++++++++++++++++++++++++++++")
+
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list1,
-                                               side_b_list=station_list2)
-        print(layer3_restult)
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+        print("++++++++++++++++++++++++++++++++++")
+        print("layer3 results:", layer3_restult)
+        print("+++++++++ layer3 ended++++++++++++++")
 
-        assert True
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] == 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] != 0:
+                    print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and disabled 5g ssid.")
+                    assert True
+                else:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
+
+    # run traffic from 5g to 2g
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10625", name="WIFI-10625")
+    def test_client_isolation_disabled_ssid_2genabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
+                                                      station_names_twog,station_names_fiveg, get_configuration):
+
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
+        ssid_name1 = profile_data["ssid_name"]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
+        ssid_name2 = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        station_list1 = station_names_twog[0]
+        station_list2 = station_names_fiveg[0]
+        security = "wpa2"
+        mode = "BRIDGE"
+        vlan = 1
+        radio_name1 = lf_test.twog_radios[0]
+        radio_name2 = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(1):
+            sta.append(station_list1 + str(i))
+            sta.append(station_list2 + str(i))
+        print("station-list : ----->", sta)
+
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name1,
+                                                             station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name2,
+                                                             station_name=[sta[1]])
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+        print("layer3 results:", layer3_restult)
+
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] != 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] == 0:
+                    print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled 5g ssid.")
+                    assert True
+                else:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
+
+
+    # clients_connected to different ssid,enabled isolation in (2GHz)ssid & isolation disabled in (5GH)ssid
+    # run traffic from 5g to 2g
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10615",name="WIFI-10615")
+    def test_client_isolation_enabled_ssids_2g_disabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
+                                                                station_names_twog,station_names_fiveg,get_ap_channel):
+
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
+        ssid_name1 = profile_data["ssid_name"]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
+        ssid_name2 = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        station_list1 = station_names_twog[0]
+        station_list2 = station_names_fiveg[0]
+        security = "wpa2"
+        mode = "BRIDGE"
+        vlan = 1
+        radio_name1 = lf_test.twog_radios[0]
+        radio_name2 = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(1):
+            sta.append(station_list1 + str(i))
+            sta.append(station_list2 + str(i))
+        print("station-list : ----->", sta)
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        print("+++++++++++++++++++++++++++")
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+        print("+++++++++++++++++++++++++++++++")
+
+        print("-------------------- Layer3 starts-----------------------------")
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+        print("++++++++++++++++++++++++++++++++++")
+        print("layer3 results:", layer3_restult)
+        print("+++++++++ layer3 ended++++++++++++++")
+
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] != 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] == 0:
+                    print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled 5g ssid.")
+                    assert True
+                else:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
+
+    # clients_connected to different ssid,disabled isolation in ssid (2GHz)& isolation enabled in ssid(5GH)
+    # run traffic from 2g to 5g
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10626", name="WIFI-10626")
+    def test_client_isolation_disabled_ssid_2g_enabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
+                                                      station_names_twog,station_names_fiveg, get_configuration):
+
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
+        ssid_name1 = profile_data["ssid_name"]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
+        ssid_name2 = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        station_list1 = station_names_twog[0]
+        station_list2 = station_names_fiveg[0]
+        security = "wpa2"
+        mode = "BRIDGE"
+        vlan = 1
+        radio_name1 = lf_test.twog_radios[0]
+        radio_name2 = lf_test.fiveg_radios[0]
+        sta = []
+        for i in range(1):
+            sta.append(station_list1 + str(i))
+            sta.append(station_list2 + str(i))
+        print("station-list : ----->", sta)
+
+        station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        print("station results 1  :", station_result1)
+        print("station results 2  :", station_result2)
+
+        layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                               side_b_min_rate=0, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+        print("layer3 results:", layer3_restult)
+
+        cx_list = lf_test.get_cx_list()
+        print(cx_list)
+
+        rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
+        print("++++++++++++++++++++++++++++++++++++++")
+        print("Rx data : ", rx_data)
+        print("++++++++++++++++++++++++++++++++++++++")
+
+        if not station_result1 and station_result2:
+            print("test failed due to station has no ip")
+            assert False
+        else:
+            print("Station creation passed. Successful.")
+            if layer3_restult is None:
+                print("Layer3 traffic ran.")
+                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] == 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] != 0:
+                    print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and enabled 5g ssid.")
+                    assert True
+                else:
+                    print("Test failed,Packet drop should not be 100%")
+                    assert False
+            else:
+                print("Layer3 not ran properly.")
