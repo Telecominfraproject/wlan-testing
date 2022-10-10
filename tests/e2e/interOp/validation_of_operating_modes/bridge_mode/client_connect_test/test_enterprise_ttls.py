@@ -41,7 +41,7 @@ for sec_modes in setup_params_enterprise['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT")
 @allure.parent_suite("Client Connect Tests")
 @allure.suite(suite_name="BRIDGE Mode")
-@allure.sub_suite(sub_suite_name="General security mode Client Connect")
+@allure.sub_suite(sub_suite_name="Enterprise security mode Client Connect")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise],
@@ -216,7 +216,7 @@ for sec_modes in setup_params_enterprise_two_br['ssid_modes'].keys():
 @allure.feature("BRIDGE MODE CLIENT CONNECT")
 @allure.parent_suite("Client Connect Tests")
 @allure.suite(suite_name="BRIDGE Mode")
-@allure.sub_suite(sub_suite_name="General security mode Client Connect")
+@allure.sub_suite(sub_suite_name="Enterprise security mode Client Connect")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise_two_br],
