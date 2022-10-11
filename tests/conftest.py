@@ -240,7 +240,7 @@ def get_testbed_details(selected_testbed, request):
     try:
         TESTBED = CONFIGURATION[selected_testbed]
     except Exception as e:
-        logging.error("Error in Fetching Testbed: " + e)
+        logging.error("Error in Fetching Testbed: " + str(e))
         pytest.exit("Exception in getting Testbed Details. Testbed Details are not available : " + selected_testbed)
     if request.config.getini("controller_url") != "0":
         TESTBED["controller"]["url"] = request.config.getini("controller_url")
