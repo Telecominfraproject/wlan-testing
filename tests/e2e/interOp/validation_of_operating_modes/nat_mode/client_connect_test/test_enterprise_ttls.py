@@ -66,7 +66,7 @@ class TestNatModeConnectSuiteA(object):
             NAT Mode Client Connect Test with open encryption 2.4 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and open and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]}
+        profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
@@ -88,7 +88,7 @@ class TestNatModeConnectSuiteA(object):
             NAT Mode Client Connect Test with open encryption 5 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and open and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}
+        profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
@@ -111,7 +111,7 @@ class TestNatModeConnectSuiteA(object):
             NAT Mode Client Connect Test with wpa encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and enterprise and wpa and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]}
+        profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -134,7 +134,7 @@ class TestNatModeConnectSuiteA(object):
             NAT Mode Client Connect Test with wpa encryption 5 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and wpa and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}
+        profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -157,7 +157,7 @@ class TestNatModeConnectSuiteA(object):
             NAT Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and wpa2_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]}
+        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -180,7 +180,7 @@ class TestNatModeConnectSuiteA(object):
             BRIDGE Mode Client Connect Test with wpa2_personal encryption 5 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and wpa2_personal and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}
+        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -242,7 +242,7 @@ class TestNatModeConnectSuiteTwo(object):
             NAT Mode Client Connect Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "wpa_wpa2_eap_2g", "appliedRadios": ["2G"]}
+        profile_data = setup_params_enterprise_two_nat["ssid_modes"]["wpa_wpa2_enterprise_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -267,7 +267,7 @@ class TestNatModeConnectSuiteTwo(object):
             NAT Mode Client Connect Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and wpa3_personal and fiveg"
         """
-        profile_data = {"ssid_name": "wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}
+        profile_data = setup_params_enterprise_two_nat["ssid_modes"]["wpa_wpa2_enterprise_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -292,7 +292,7 @@ class TestNatModeConnectSuiteTwo(object):
             NAT Mode Client Connect Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and wpa3_personal_mixed and twog"
         """
-        profile_data = {"ssid_name": "wpa3_m_eap_2g", "appliedRadios": ["2G"]}
+        profile_data = setup_params_enterprise_two_nat["ssid_modes"]["wpa3_enterprise_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -317,7 +317,7 @@ class TestNatModeConnectSuiteTwo(object):
             NAT Mode Client Connect Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connect_tests and nat and enterprise and wpa3_personal_mixed and fiveg"
         """
-        profile_data = {"ssid_name": "wpa3_m_eap_5g", "appliedRadios": ["5G"]}
+        profile_data = setup_params_enterprise_two_nat["ssid_modes"]["wpa3_enterprise_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
