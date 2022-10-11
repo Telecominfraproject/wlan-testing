@@ -12,7 +12,7 @@ import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.client_connect_tests, pytest.mark.bridge, pytest.mark.enterprise]
+pytestmark = [pytest.mark.client_connect_tests, pytest.mark.nat, pytest.mark.enterprise]
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -50,22 +50,21 @@ for sec_modes in setup_params_enterprise['ssid_modes'].keys():
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeConnectSuiteA(object):
+class TestNatModeConnectSuiteA(object):
     """
         NAT Client Connect (open. wpa. wpa2_personal) (twog, fiveg)
-        pytest -m "client_connect_tests and bridge and enterprise"
+        pytest -m "client_connect_tests and nat and enterprise"
     """
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    @pytest.mark.hari
     @allure.title("NAT Mode Client Connect Test for wpa enterprise 2.4 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4565", name="JIRA LINK")
     def test_nat_wpa_eap_2g_client_connect(self, get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library, radius_info):
         """
             NAT Mode Client Connect Test with open encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and enterprise and open and twog"
+            pytest -m "client_connect_tests and nat and enterprise and open and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
@@ -87,7 +86,7 @@ class TestBridgeModeConnectSuiteA(object):
                                                 get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with open encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and enterprise and open and fiveg"
+            pytest -m "client_connect_tests and nat and enterprise and open and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
@@ -110,7 +109,7 @@ class TestBridgeModeConnectSuiteA(object):
                                                num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with wpa encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and bridge and enterprise and wpa and twog"
+            pytest -m "client_connectivity_tests and nat and enterprise and wpa and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
@@ -129,11 +128,11 @@ class TestBridgeModeConnectSuiteA(object):
     @pytest.mark.fiveg
     @allure.title("NAT Mode Client Connect Test Test for wpa2 enterprise 5 GHzd")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4568", name="JIRA LINK")
-    def test_bridge_wpa2_eap_5g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
+    def test_nat_wpa2_eap_5g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with wpa encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and enterprise and wpa and fiveg"
+            pytest -m "client_connect_tests and nat and enterprise and wpa and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
@@ -152,11 +151,11 @@ class TestBridgeModeConnectSuiteA(object):
     @pytest.mark.twog
     @allure.title("NAT Mode Client Connect Test for wpa3 enterprise 2.4 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4569", name="JIRA LINK")
-    def test_bridge_wpa3_eap_2g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
+    def test_nat_wpa3_eap_2g_client_connect(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
             NAT Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "client_connect_tests and bridge and enterprise and wpa2_personal and twog"
+            pytest -m "client_connect_tests and nat and enterprise and wpa2_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
@@ -175,11 +174,11 @@ class TestBridgeModeConnectSuiteA(object):
     @pytest.mark.fiveg
     @allure.title("NAT Mode Client Connect Test for wpa3 enterprise 5 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4570", name="JIRA LINK")
-    def test_bridge_wpa3_eap_5g_client_connect(self, get_test_device_logs, get_dut_logs_per_test_case,
+    def test_nat_wpa3_eap_5g_client_connect(self, get_test_device_logs, get_dut_logs_per_test_case,
                                                     num_stations, setup_configuration, get_test_library, radius_info):
         """
             BRIDGE Mode Client Connect Test with wpa2_personal encryption 5 GHz Band
-            pytest -m "client_connect_tests and bridge and enterprise and wpa2_personal and fiveg"
+            pytest -m "client_connect_tests and nat and enterprise and wpa2_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
