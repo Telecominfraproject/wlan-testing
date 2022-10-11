@@ -237,16 +237,21 @@ def get_target_object(request, run_lf, get_testbed_details, add_allure_environme
 @pytest.fixture(scope="session")
 def get_testbed_details(selected_testbed, request):
     """yields the selected testbed information from lab info file (configuration.py)"""
+    try:
+        TESTBED = CONFIGURATION[selected_testbed]
+    except Exception as e:
+        logging.error("Error in Fetching Testbed: " + e)
+        pytest.exit("Exception in getting Testbed Details. Testbed Details are not available : " + selected_testbed)
     if request.config.getini("controller_url") != "0":
-        CONFIGURATION[selected_testbed]["controller"]["url"] = request.config.getini("controller_url")
+        TESTBED["controller"]["url"] = request.config.getini("controller_url")
     if request.config.getini("firmware") != "0":
         version = request.config.getini("firmware")
         version_list = version.split(",")
-        for i in range(len(CONFIGURATION[selected_testbed]["device_under_tests"])):
-            CONFIGURATION[selected_testbed]["device_under_tests"][i]["version"] = version_list[0]
-    allure.attach(name="Testbed Details", body=str(json.dumps(CONFIGURATION[selected_testbed], indent=2)),
+        for i in range(len(TESTBED["device_under_tests"])):
+            TESTBED["device_under_tests"][i]["version"] = version_list[0]
+    allure.attach(name="Testbed Details", body=str(json.dumps(TESTBED, indent=2)),
                   attachment_type=allure.attachment_type.JSON)
-    yield CONFIGURATION[selected_testbed]
+    yield TESTBED
 
 
 @pytest.fixture(scope="session")
