@@ -45,7 +45,7 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                    get_test_device_logs,
                                    get_target_object,
-                                   num_stations, setup_configuration, radius_info):
+                                   num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
                     pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
                 """
@@ -80,7 +80,7 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                    get_test_device_logs,
                                    get_target_object,
-                                   num_stations, setup_configuration, radius_info):
+                                   num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
                     pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
                 """
@@ -115,7 +115,7 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
                     pytest -m "ow_client_connectivity_lf and vlan and enterprise and tls and twog"
                 """
@@ -148,7 +148,7 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
                     pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
                 """
@@ -181,7 +181,7 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
                     pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
                 """
@@ -214,7 +214,7 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 5g
                     pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
                 """
@@ -279,7 +279,7 @@ class TestVLANModeEnterpriseTLSSuiteTwo(object):
     def test_wpa_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
             pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and wpa_wpa2_enterprise_mixed and twog"
         """
@@ -309,7 +309,7 @@ class TestVLANModeEnterpriseTLSSuiteTwo(object):
     def test_wpa_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
             pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and wpa_wpa2_enterprise_mixed and fiveg"
         """
@@ -339,7 +339,7 @@ class TestVLANModeEnterpriseTLSSuiteTwo(object):
     def test_wpa3_enterprise_mixed_2g(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs,
                                       get_target_object,
-                                      num_stations, setup_configuration, radius_info):
+                                      num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
             pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and wpa3_enterprise_mixed and twog"
         """
@@ -367,7 +367,7 @@ class TestVLANModeEnterpriseTLSSuiteTwo(object):
     def test_wpa3_enterprise_mixed_5g(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs,
                                       get_target_object,
-                                      num_stations, setup_configuration, radius_info):
+                                      num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
             pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and wpa3_enterprise_mixed and fiveg"
         """

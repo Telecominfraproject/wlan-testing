@@ -47,7 +47,7 @@ class TestDFSChannel52Bw80(object):
     @pytest.mark.dfs_channel_52_bw_80
     @allure.title("Test for Channel 52 and bandwidth 80")
     def test_dfs_channel_52_bw_80(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
-                                  num_stations, setup_configuration, get_target_object):
+                                  num_stations, setup_configuration, check_connectivity, get_target_object):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -100,7 +100,7 @@ class TestDFSChannel100Bw80(object):
     @pytest.mark.dfs_channel_100_bw_80
     @allure.title("Test for Channel 100 and bandwidth 80")
     def test_dfs_channel_100_bw_80(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
-                                   num_stations, setup_configuration, get_target_object):
+                                   num_stations, setup_configuration, check_connectivity, get_target_object):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -153,7 +153,7 @@ class TestDFSChannel132Bw80(object):
     @pytest.mark.dfs_channel_132_bw_80
     @allure.title("Test for Channel 132 and bandwidth 80")
     def test_dfs_channel_132_bw_80(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
-                                   num_stations, setup_configuration, get_target_object):
+                                   num_stations, setup_configuration, check_connectivity, get_target_object):
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]

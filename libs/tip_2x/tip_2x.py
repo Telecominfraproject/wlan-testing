@@ -559,7 +559,7 @@ class tip_2x:
         self.dut_library_object.verify_certificates(idx=idx)
         ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False, retry=10)
         wifi_status = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
-        allure.attach(name="wifi_status_before_apply: ", body=str(wifi_status))
+        allure.attach(name="wifi_status_before_apply: ", body=str(json.dumps(wifi_status, indent=2)))
         if not ret_val["connected"] or ret_val["connected"] is None:
             self.dut_library_object.check_connectivity(idx=idx)
             self.dut_library_object.restart_ucentral_service(idx=idx, attach_allure=False)
@@ -596,7 +596,7 @@ class tip_2x:
                 self.dut_library_object.check_connectivity(idx=idx, attach_allure=False)
         self.dut_library_object.check_connectivity(idx=idx)
         r_data = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
-        allure.attach(name="wifi_status_after_apply: ", body=str(r_data))
+        allure.attach(name="wifi_status_after_apply: ", body=str(json.dumps(r_data, indent=2)))
         logging.info("Checking Wifi Status after Config Apply...")
         for radio in r_data:
             if not r_data[radio]["up"]:
@@ -604,7 +604,6 @@ class tip_2x:
                 pytest.fail(radio + " is in down State after config apply")
             else:
                 logging.info(radio + " is up and running")
-
 
     def setup_environment_properties(self, add_allure_environment_property=None):
         if add_allure_environment_property is None:
