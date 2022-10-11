@@ -462,6 +462,11 @@ class Fixtures_2x:
                                 lf_dut_data.append(j)
                             j["appliedRadios"] = list(set(j["appliedRadios"]))
                             j['security'] = 'psk2'
+                            if j["isolate-clients"]:
+                                lf_dut_data.append(j)
+                            else:
+                                lf_dut_data.append(j)
+                            j["isolate-clients"] = j["isolate-clients"]
                             creates_profile = instantiate_profile_obj.add_ssid(ssid_data=j)
                             test_cases["wpa_2g"] = True
                         except Exception as e:
@@ -708,7 +713,7 @@ class Fixtures_2x:
 
         print(instantiate_profile_obj.base_profile_config)
 
-        config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
+        config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true").replace("False", "false"))
         config["uuid"] = 0
 
         # Attach the config that is sent from API

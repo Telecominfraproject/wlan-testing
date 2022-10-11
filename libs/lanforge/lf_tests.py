@@ -1332,11 +1332,14 @@ class RunTest:
         return json_response
 
     def create_layer3(self, side_a_min_rate, side_a_max_rate, side_b_min_rate, side_b_max_rate,
-                      traffic_type, sta_list,):
+                      traffic_type, sta_list, side_b=""):
         # checked
+        if side_b=="":
+            side_b=self.upstream
         print(sta_list)
         print(type(sta_list))
-        print(self.upstream)
+        print(side_b)
+        print(type(side_b))
         local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         cx_profile = local_realm.new_l3_cx_profile()
         cx_profile.host = self.lanforge_ip
@@ -1349,7 +1352,7 @@ class RunTest:
 
         # create
         cx_profile.create(endp_type=traffic_type, side_a=sta_list,
-                               side_b=self.upstream,
+                               side_b=side_b,
                                sleep_time=0)
         cx_profile.start_cx()
 
