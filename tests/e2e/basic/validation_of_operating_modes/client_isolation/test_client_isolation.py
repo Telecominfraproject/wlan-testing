@@ -62,6 +62,7 @@ class TestClientIsolationEnabled(object):
     """
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.mahi
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10610", name="WIFI-10610")
     def test_client_isolation_enabled_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
@@ -75,32 +76,29 @@ class TestClientIsolationEnabled(object):
         station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.fiveg_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list :", sta)
-
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
+
+        # lf_test.l3_cleanup(cx_name=cx_list)
 
         if not station_result1 and station_result2:
             print("Test failed due to station has no ip")
@@ -109,7 +107,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -117,7 +115,6 @@ class TestClientIsolationEnabled(object):
                     assert True
             else:
                 print("Layer3 not ran properly.")
-
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -133,7 +130,6 @@ class TestClientIsolationEnabled(object):
         station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.twog_radios[0]
 
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
@@ -143,16 +139,14 @@ class TestClientIsolationEnabled(object):
 
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list, side_b="")
-        print(layer3_restult)
+                                               traffic_type="lf_udp", sta_list=[station_list], side_b="")
+        print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -161,7 +155,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta0000-0"]["rx drop % a"] and rx_data["Unsetsta0000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -189,12 +183,11 @@ class TestClientIsolationEnabled(object):
         station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.twog_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
-        print("station-list : ----->", sta)
+        print("station-list :", sta)
 
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
@@ -202,19 +195,16 @@ class TestClientIsolationEnabled(object):
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("Test failed due to station has no ip")
@@ -223,7 +213,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -246,10 +236,8 @@ class TestClientIsolationEnabled(object):
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         station_list = station_names_fiveg[0]
-        band = "fiveg"
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.fiveg_radios[0]
 
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
@@ -259,16 +247,14 @@ class TestClientIsolationEnabled(object):
 
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list, side_b="")
-        print(layer3_restult)
+                                               traffic_type="lf_udp", sta_list=[station_list], side_b="")
+        print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -277,7 +263,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"][
+                if rx_data["Unsetsta1000-0"]["rx drop % a"] and rx_data["Unsetsta1000-0"][
                     "rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
@@ -286,8 +272,6 @@ class TestClientIsolationEnabled(object):
                     assert True
             else:
                 print("Layer3 not ran properly.")
-
-
 
 
 setup_params_general1 = {
@@ -357,38 +341,29 @@ class TestClientIsolationDisabled(object):
         station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.twog_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
-        print("station-list : ----->", sta)
+        print("station-list :", sta)
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[sta[1]])
-        print("+++++++++++++++++++++++++++")
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-        print("+++++++++++++++++++++++++++++++")
-
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
-        print("++++++++++++++++++++++++++++++++++")
         print("layer3 results:", layer3_restult)
-        print("+++++++++ layer3 ended++++++++++++++")
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -397,7 +372,7 @@ class TestClientIsolationDisabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -420,7 +395,6 @@ class TestClientIsolationDisabled(object):
         station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.twog_radios[0]
 
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
@@ -430,16 +404,14 @@ class TestClientIsolationDisabled(object):
 
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list, side_b="")
-        print(layer3_restult)
+                                               traffic_type="lf_udp", sta_list=[station_list], side_b="")
+        print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -448,7 +420,7 @@ class TestClientIsolationDisabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta0000-0"]["rx drop % a"] and rx_data["Unsetsta0000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -473,33 +445,27 @@ class TestClientIsolationDisabled(object):
         station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.fiveg_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
-        print("station-list : ----->", sta)
-
+        print("station-list :", sta)
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -508,7 +474,7 @@ class TestClientIsolationDisabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -532,7 +498,6 @@ class TestClientIsolationDisabled(object):
         station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.fiveg_radios[0]
 
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
@@ -542,16 +507,15 @@ class TestClientIsolationDisabled(object):
 
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=station_list, side_b="")
-        print(layer3_restult)
+                                               traffic_type="lf_udp", sta_list=[station_list], side_b="")
+        print("layer3 results:", layer3_restult)
+
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -560,7 +524,7 @@ class TestClientIsolationDisabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta1000-0"]["rx drop % a"] and rx_data["Unsetsta1000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -633,36 +597,25 @@ class TestClientIsolationSameSSID(object):
         station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.twog_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
-        print("station-list : ----->", sta)
-
-        print("-----------------------start creating station-------------------------")
+        print("station-list :", sta)
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=sta)
-        print("+++++++++++++++++++++++++++")
-        print(type(station_result))
         print("station results :", station_result)
-        print("+++++++++++++++++++++++++++++++")
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
-        print("+++++++++++++++++++++++")
         print("layer3 results:", layer3_restult)
-        print("+++++++++ layer3 ended++++++++++++++")
+        print("Waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -671,7 +624,7 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
                     print("Test paseed,Packet drop has 100%")
                     assert True
                 else:
@@ -686,7 +639,7 @@ class TestClientIsolationSameSSID(object):
     @pytest.mark.same_ssid_disabling_isolation_2g
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10604",name="WIFI-10604")
-    def test_cleint_isolation_disabling_same_ssid_2g(self,lf_test, lf_tools, update_report,
+    def test_cleint_isolation_disabled_same_ssid_2g(self,lf_test, lf_tools, update_report,
                                              station_names_twog, get_configuration):
 
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
@@ -695,30 +648,26 @@ class TestClientIsolationSameSSID(object):
         station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.twog_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
-        print("station-list : ----->", sta)
+        print("station-list :", sta)
 
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=sta)
         print("station results :", station_result)
-
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -727,7 +676,7 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -751,31 +700,26 @@ class TestClientIsolationSameSSID(object):
         station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.fiveg_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
-        print("station-list : ----->", sta)
+        print("station-list :", sta)
 
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=sta)
         print("station results :", station_result)
-
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -784,7 +728,7 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
                     print("Test paseed,Packet drop has 100%")
                     assert True
                 else:
@@ -807,29 +751,25 @@ class TestClientIsolationSameSSID(object):
         station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.fiveg_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
-        print("station-list : ----->", sta)
+        print("station-list :", sta)
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=sta)
         print("station results :", station_result)
-
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -838,7 +778,7 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -914,39 +854,29 @@ class TestClientIsolationDifferentSSID(object):
         station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.twog_radios[0]
         sta = []
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list : ----->", sta)
-
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[sta[1]])
-        print("+++++++++++++++++++++++++++")
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-        print("+++++++++++++++++++++++++++++++")
-
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
-        print("++++++++++++++++++++++++++++++++++")
         print("layer3 results:", layer3_restult)
-        print("+++++++++ layer3 ended++++++++++++++")
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -955,7 +885,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -972,6 +902,7 @@ class TestClientIsolationDifferentSSID(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10613", name="WIFI-10613")
     def test_client_isoaltion_enabled_ssid_5g_disabled_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                                 station_names_fiveg, get_configuration):
+
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name1 = profile_data["ssid_name"]
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
@@ -980,7 +911,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name = lf_test.fiveg_radios[0]
         sta = []
         for i in range(2):
@@ -994,19 +924,16 @@ class TestClientIsolationDifferentSSID(object):
                                                              station_name=[sta[1]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1015,7 +942,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["rx drop % a"] and rx_data["Test_Layer3-sta00000-0"]["rx drop % b"] == 100:
+                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -1042,7 +969,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
@@ -1050,31 +976,22 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
-
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
-        print("+++++++++++++++++++++++++++")
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-        print("+++++++++++++++++++++++++++++++")
-
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
-        print("++++++++++++++++++++++++++++++++++")
         print("layer3 results:", layer3_restult)
-        print("+++++++++ layer3 ended++++++++++++++")
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1083,7 +1000,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] == 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] != 0:
+                if rx_data["Unsetsta00000-0"]["bps rx a"] == 0 and rx_data["Unsetsta00000-0"]["bps rx b"] != 0:
                     print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and 5g ssid.")
                     assert True
                 else:
@@ -1110,7 +1027,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
@@ -1118,26 +1034,22 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
-
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1146,7 +1058,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] == 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] != 0:
+                if rx_data["Unsetsta00000-0"]["bps rx a"] == 0 and rx_data["Unsetsta00000-0"]["bps rx b"] != 0:
                     print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and 5g ssid.")
                     assert True
                 else:
@@ -1174,7 +1086,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
@@ -1186,27 +1097,18 @@ class TestClientIsolationDifferentSSID(object):
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
-        print("+++++++++++++++++++++++++++")
         print("station results 1  :", station_result1)
-        time.sleep(3)
         print("station results 2  :", station_result2)
-        print("+++++++++++++++++++++++++++++++")
-
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
-        print("++++++++++++++++++++++++++++++++++")
         print("layer3 results:", layer3_restult)
-        print("+++++++++ layer3 ended++++++++++++++")
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1215,7 +1117,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] != 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] == 0:
+                if rx_data["Unsetsta00000-0"]["bps rx a"] != 0 and rx_data["Unsetsta00000-0"]["bps rx b"] == 0:
                     print("Test pass, traffic ran between 5g to 2g stations when isolation enabled in 2g and 5g ssid.")
                     assert True
                 else:
@@ -1231,7 +1133,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.ci_disable_2g_and_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10619",name="WIFI-10619")
-    def test_client_isolation_disabled_ssid_2g_and_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
+    def test_client_isolation_disabled_ssid_2gandssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                  station_names_twog,station_names_fiveg,get_configuration):
 
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
@@ -1243,7 +1145,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
@@ -1251,26 +1152,22 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
-
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-
         layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1279,7 +1176,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] != 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] == 0:
+                if rx_data["Unsetsta00000-0"]["bps rx a"] != 0 and rx_data["Unsetsta00000-0"]["bps rx b"] == 0:
                     print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and 5g ssid.")
                     assert True
                 else:
@@ -1304,7 +1201,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
@@ -1312,31 +1208,22 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
-
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
-        print("+++++++++++++++++++++++++++")
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-        print("+++++++++++++++++++++++++++++++")
-
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
-        print("++++++++++++++++++++++++++++++++++")
         print("layer3 results:", layer3_restult)
-        print("+++++++++ layer3 ended++++++++++++++")
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1345,7 +1232,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] == 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] != 0:
+                if rx_data["Unsetsta00000-0"]["bps rx a"] == 0 and rx_data["Unsetsta00000-0"]["bps rx b"] != 0:
                     print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and disabled 5g ssid.")
                     assert True
                 else:
@@ -1371,7 +1258,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
@@ -1379,7 +1265,6 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
-
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name1,
                                                              station_name=[sta[0]])
@@ -1392,14 +1277,12 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1408,7 +1291,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] != 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] == 0:
+                if rx_data["Unsetsta00000-0"]["bps rx a"] != 0 and rx_data["Unsetsta00000-0"]["bps rx b"] == 0:
                     print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled 5g ssid.")
                     assert True
                 else:
@@ -1436,7 +1319,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
@@ -1448,26 +1330,18 @@ class TestClientIsolationDifferentSSID(object):
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
-        print("+++++++++++++++++++++++++++")
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-        print("+++++++++++++++++++++++++++++++")
-
-        print("-------------------- Layer3 starts-----------------------------")
         layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
-        print("++++++++++++++++++++++++++++++++++")
         print("layer3 results:", layer3_restult)
-        print("+++++++++ layer3 ended++++++++++++++")
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1476,7 +1350,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] != 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] == 0:
+                if rx_data["Unsetsta00000-0"]["bps rx a"] != 0 and rx_data["Unsetsta00000-0"]["bps rx b"] == 0:
                     print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled 5g ssid.")
                     assert True
                 else:
@@ -1503,7 +1377,6 @@ class TestClientIsolationDifferentSSID(object):
         station_list2 = station_names_fiveg[0]
         security = "wpa2"
         mode = "BRIDGE"
-        vlan = 1
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
@@ -1511,26 +1384,22 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
-
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
-
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
         print("layer3 results:", layer3_restult)
+        print("waiting for 30 sec...")
+        time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
-        print(cx_list)
-
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("++++++++++++++++++++++++++++++++++++++")
         print("Rx data : ", rx_data)
-        print("++++++++++++++++++++++++++++++++++++++")
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -1539,7 +1408,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Test_Layer3-sta00000-0"]["bps rx a"] == 0 and rx_data["Test_Layer3-sta00000-0"]["bps rx b"] != 0:
+                if rx_data["Unsetsta00000-0"]["bps rx a"] == 0 and rx_data["Unsetsta00000-0"]["bps rx b"] != 0:
                     print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and enabled 5g ssid.")
                     assert True
                 else:
