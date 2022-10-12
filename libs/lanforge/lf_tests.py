@@ -1000,17 +1000,18 @@ class RunTest:
         result = self.multi_obj.compare_ip()
         print("checking for vlan ips")
         if result == "Pass":
-            print("Test pass")
+            print("VLAN check Passed")
         else:
-            print("Test Fail")
+            print("VLAN check Failed")
         print("now checking ip for non vlan port")
         self.multi_obj.monitor_non_vlan_ip()
         self.multi_obj.get_non_vlan_sta_ip()
         print("mode", mode)
+        result, result1 = "Pass", "Pass"
         if mode == "BRIDGE":
-            result1 = self.multi_obj.compare_nonvlan_ip_bridge()
+            result = self.multi_obj.compare_nonvlan_ip_bridge()
         elif mode == "NAT":
-            result1 = self.multi_obj.compare_nonvlan_ip_nat()
+            result = self.multi_obj.compare_nonvlan_ip_nat()
         # station_name =  ['sta100', 'sta200', 'sta00']
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port)
         res_data = cli_base.json_get(_req_url='port?fields=alias,port+type,ip,mac',)['interfaces']
@@ -1078,7 +1079,7 @@ class RunTest:
             print("Test failed for non vlan ip")
         print("clean up")
         self.multi_obj.postcleanup()
-        if result == result1:
+        if result1 == "Pass":
             return True
         else:
             return False
