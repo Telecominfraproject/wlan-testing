@@ -9,7 +9,6 @@ import requests
 import json
 
 pytestmark = [pytest.mark.test_resources,
-              pytest.mark.ow_sanity_interop,
               pytest.mark.sanity,
               pytest.mark.uc_sanity,
               pytest.mark.sanity_55,
