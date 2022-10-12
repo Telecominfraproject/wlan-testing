@@ -17,12 +17,12 @@ pytestmark = [pytest.mark.client_connect_tests, pytest.mark.bridge, pytest.mark.
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                 {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
-        "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]},
+        "open": [{"ssid_name": "open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                 {"ssid_name": "open_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa": [{"ssid_name": "wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "wpa_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa2_personal": [{"ssid_name": "wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "wpa2_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
@@ -120,7 +120,6 @@ class TestBridgeModeConnectSuiteA(object):
 
     @pytest.mark.wpa
     @pytest.mark.fiveg
-    @pytest.mark.hari
     @allure.story('wpa 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connect Test with wpa encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4568", name="JIRA LINK")
@@ -192,14 +191,14 @@ setup_params_general_two_br = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]
+            {"ssid_name": "wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]
     },
     "rf": {},
     "radius": False
