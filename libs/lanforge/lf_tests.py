@@ -1331,6 +1331,10 @@ class RunTest:
         json_response = cli_base.json_get(_req_url=_req_url)
         return json_response
 
+    def l3_cleanup(self):
+        local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        local_realm.remove_all_cxs(remove_all_endpoints=True)
+
     def create_layer3(self, side_a_min_rate, side_a_max_rate, side_b_min_rate, side_b_max_rate,
                       traffic_type, sta_list, side_b=""):
         # checked
