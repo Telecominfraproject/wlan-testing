@@ -62,7 +62,7 @@ class TestClientIsolationEnabled(object):
     """
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.mahi
+    @pytest.mark.ci_enabled_in_5g_ssid
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10610", name="WIFI-10610")
     def test_client_isolation_enabled_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
@@ -98,7 +98,8 @@ class TestClientIsolationEnabled(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
-        # lf_test.l3_cleanup(cx_name=cx_list)
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
 
         if not station_result1 and station_result2:
             print("Test failed due to station has no ip")
@@ -118,7 +119,7 @@ class TestClientIsolationEnabled(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.eth_to_2g_station_true
+    @pytest.mark.ci_enabled_in_2g_ssid
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10620", name="WIFI-10620")
     def test_client_isolation_enabled_with_2g(self, lf_test, lf_tools, update_report, test_cases,
@@ -148,6 +149,9 @@ class TestClientIsolationEnabled(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -169,7 +173,7 @@ class TestClientIsolationEnabled(object):
     # clients_connected to different ssid, enabling isolation in both(2.4GH)
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tarun
+    @pytest.mark.ci_ebabled_in_2g
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10602",name="WIFI-10602")
     def test_client_isolation_enabled_ssids_2g(self,lf_test, lf_tools, update_report, test_cases,
@@ -205,6 +209,9 @@ class TestClientIsolationEnabled(object):
         cx_list = lf_test.get_cx_list()
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
+
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
 
         if not station_result1 and station_result2:
             print("Test failed due to station has no ip")
@@ -255,6 +262,9 @@ class TestClientIsolationEnabled(object):
         cx_list = lf_test.get_cx_list()
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
+
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -327,7 +337,7 @@ class TestClientIsolationDisabled(object):
     """
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.anil
+    @pytest.mark.ci_disabled_in_2g_ssid
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10603", name="WIFI-10603")
     def test_client_isolation_disabled_ssids_2g(self, lf_test, lf_tools, update_report, test_cases,
@@ -365,6 +375,9 @@ class TestClientIsolationDisabled(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -387,12 +400,12 @@ class TestClientIsolationDisabled(object):
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10624", name="WIFI-10624")
     def test_client_isolation_disabled_with_2g(self, lf_test, lf_tools, update_report, test_cases,
-                                         station_names_fiveg, get_configuration):
+                                         station_names_twog, get_configuration):
 
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list = station_names_fiveg[0]
+        station_list = station_names_twog[0]
         security = "wpa2"
         mode = "BRIDGE"
         radio_name = lf_test.twog_radios[0]
@@ -413,6 +426,9 @@ class TestClientIsolationDisabled(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -432,6 +448,7 @@ class TestClientIsolationDisabled(object):
     # clients_connected to different ssid, disabling isolation in both(5GH)
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.ci_disabled_in_5g_ssid
     @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10611",name="WIFI-10611")
     def test_client_isolation_disabled_ssid_5g(self,lf_test, lf_tools, update_report, test_cases,
@@ -466,6 +483,9 @@ class TestClientIsolationDisabled(object):
         cx_list = lf_test.get_cx_list()
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
+
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
@@ -516,6 +536,9 @@ class TestClientIsolationDisabled(object):
         cx_list = lf_test.get_cx_list()
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
+
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -617,6 +640,9 @@ class TestClientIsolationSameSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -668,6 +694,9 @@ class TestClientIsolationSameSSID(object):
         cx_list = lf_test.get_cx_list()
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
+
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -721,6 +750,9 @@ class TestClientIsolationSameSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -770,6 +802,9 @@ class TestClientIsolationSameSSID(object):
         cx_list = lf_test.get_cx_list()
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
+
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
 
         if not station_result:
             print("test failed due to station has no ip")
@@ -878,6 +913,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -935,6 +973,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -955,7 +996,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.twog
-    @pytest.mark.ci_enabled_2g_and_5g
+    @pytest.mark.ci_enabled_2g_and_5g_traffic_2g_to_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10616", name="WIFI-10616")
     def test_client_isolation_enabled_ssid2g_and_ssid5g(self, lf_test, lf_tools, update_report, test_cases,
                                                           station_names_twog, station_names_fiveg, get_configuration):
@@ -993,6 +1034,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1013,10 +1057,10 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.twog
-    @pytest.mark.ci_disable_2g_and_5g
+    @pytest.mark.ci_disable_2g_and_5g_traffic_2g_to_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10618",name="WIFI-10618")
     def test_client_isolation_disabled_ssid2g_and_ssid5g(self, lf_test, lf_tools, update_report, test_cases,
-                                                 station_names_twog,station_names_fiveg,get_configuration):
+                                                 station_names_twog, station_names_fiveg, get_configuration):
 
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
         ssid_name1 = profile_data["ssid_name"]
@@ -1051,6 +1095,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1072,7 +1119,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.twog
-    @pytest.mark.ci_enabled_2g_and_5g
+    @pytest.mark.ci_enabled_2g_and_5g_traffic_5g_to_2g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10617", name="WIFI-10617")
     def test_client_isolation_enabled_ssid_2gandssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                           station_names_twog, station_names_fiveg, get_configuration):
@@ -1110,6 +1157,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1131,7 +1181,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.twog
-    @pytest.mark.ci_disable_2g_and_5g
+    @pytest.mark.ci_disable_2g_and_5g_traffic_5g_to_2g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10619",name="WIFI-10619")
     def test_client_isolation_disabled_ssid_2gandssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                  station_names_twog,station_names_fiveg,get_configuration):
@@ -1169,6 +1219,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1189,6 +1242,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
+    @pytest.mark.ci_enabled_2g_disabled_5g_traffic_2g_to_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10614", name="WIFI-10614")
     def test_client_isolation_enabled_ssids_2gdisabled_ssid_5g(self, lf_test, lf_tools,update_report, test_cases,
                                                                station_names_twog, station_names_fiveg, get_ap_channel):
@@ -1225,6 +1279,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1245,6 +1302,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
+    @pytest.mark.ci_disabled_2g_enabled_5g_traffic_5g_to_2g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10625", name="WIFI-10625")
     def test_client_isolation_disabled_ssid_2genabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
                                                       station_names_twog,station_names_fiveg, get_configuration):
@@ -1284,6 +1342,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1306,6 +1367,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
+    @pytest.mark.ci_enabled_2g_disabled_5g_traffic_5g_to_2g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10615",name="WIFI-10615")
     def test_client_isolation_enabled_ssids_2g_disabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
                                                                 station_names_twog,station_names_fiveg,get_ap_channel):
@@ -1343,6 +1405,9 @@ class TestClientIsolationDifferentSSID(object):
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
 
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
+
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1364,6 +1429,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
+    @pytest.mark.ci_disabled_2g_enabled_5g_traffic_2g_to_5g
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10626", name="WIFI-10626")
     def test_client_isolation_disabled_ssid_2g_enabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
                                                       station_names_twog,station_names_fiveg, get_configuration):
@@ -1400,6 +1466,9 @@ class TestClientIsolationDifferentSSID(object):
         cx_list = lf_test.get_cx_list()
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
         print("Rx data : ", rx_data)
+
+        l3_cleanup = lf_test.l3_cleanup()
+        print("layer3 cleaning result :", l3_cleanup)
 
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
