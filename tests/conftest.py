@@ -100,6 +100,14 @@ def pytest_addoption(parser):
         help="Use Interop IoS Test Package for tests"
     )
 
+    parser.addoption(
+        "--al.1",
+        action="store_true",
+        default=False,
+        help="Option to run Test Cases on al version 1"
+
+    )
+
 
 @pytest.fixture(scope="session")
 def get_lab_info():
@@ -218,6 +226,9 @@ def get_target_object(request, run_lf, get_testbed_details, add_allure_environme
                 if get_testbed_details["target"] == "tip_2x":
                     t_object.setup_environment_properties(add_allure_environment_property=
                                                           add_allure_environment_property)
+                elif get_testbed_details["target"] == "altice_2x":
+                    t_object.setup_environment_properties(add_allure_environment_property=
+                                                          add_allure_environment_property)
 
         except Exception as e:
             t_object = None
@@ -255,18 +266,18 @@ def get_testbed_details(selected_testbed, request):
 
 
 @pytest.fixture(scope="session")
-def get_controller_version(fixtures_ver, run_lf, cc_1):
+def get_controller_version(fixtures_ver, run_lf, cc_1,al_1):
     version = ""
-    if not run_lf and not cc_1:
+    if not run_lf and not cc_1 and not al_1:
         version = fixtures_ver.get_sdk_version()
         print(version)
     yield version
 
 
 @pytest.fixture(scope="session")
-def get_dut_versions(fixtures_ver, run_lf, cc_1):
+def get_dut_versions(fixtures_ver, run_lf, cc_1,al_1):
     version = ""
-    if not run_lf and not cc_1:
+    if not run_lf and not cc_1 and not al_1:
         version = fixtures_ver.get_sdk_version()
         print(version)
     yield version
@@ -430,3 +441,11 @@ def get_test_device_logs(request, get_testbed_details, get_target_object, skip_l
                                name="lanforge_log_1")
 
         request.addfinalizer(collect_logs_tg)
+
+
+@pytest.fixture(scope="session")
+def al_1(request):
+    print("al_1")
+    """yields the --al.1 option for skipping configuration on AP and using Cloud controller of available framework"""
+    var = request.config.getoption("--al.1")
+    yield var

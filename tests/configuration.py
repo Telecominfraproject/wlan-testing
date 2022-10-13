@@ -66,3 +66,5 @@ PASSPOINT_PROFILE_INFO = data["PASSPOINT_PROFILE_INFO"]
 open_flow = data["open_flow"]
 
 influx_params = data["influx_params"]
+
+AP_CLI = data["AP_CLI"]

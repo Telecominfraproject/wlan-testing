@@ -42,7 +42,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
