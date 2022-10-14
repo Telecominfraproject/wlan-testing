@@ -919,6 +919,53 @@ class tip_2x:
         ret = self.dut_library_object.reboot(idx=idx)
         return ret
 
+    # def get_ap_status_logs(self):
+    #     connected = 0
+    #     redirector_data = None
+    #     for ap in range(len(self.device_under_tests_info)):
+    #         connectivity_data = self.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=ap)
+    #         if "disconnected" in str(connectivity_data):
+    #             print("AP in disconnected state, sleeping for 30 sec")
+    #             # time.sleep(30)
+    #             connected = 0
+    #             # # if i == 10:
+    #             # print("rebooting AP")
+    #             # ap_ssh.reboot()
+    #             # print("sleep for 300 sec")
+    #             # time.sleep(300)
+    #         else:
+    #             connected = 1
+    #         redirector_data = self.dut_library_object.run_generic_command(cmd="cat /etc/ucentral/redirector.json", idx=ap)
+    #     return connected, redirector_data
+    #
+    # def get_ap_cloud_connectivity_status(self):
+    #     status_data = []
+    #     self.ubus_connection = []
+    #     for ap in range(len(self.device_under_tests_info)):
+    #         status = self.dut_library_object.ubus_call_ucentral_status()
+    #         print(status)
+    #         status_data.append(status)
+    #         connectivity_data = self.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=ap)
+    #         self.ubus_connection.append(['Serial Number: ' + self.device_under_tests_info[ap]['serial'],
+    #                                      connectivity_data])
+    #     return status_data
+    #
+    # def test_access_point(self, request):
+    #     """used to check the manager status of AP, should be used as a setup to verify if ap can reach cloud"""
+    #     status = self.get_ap_cloud_connectivity_status()
+    #
+    #     def teardown_session():
+    #         data = []
+    #         data.append(False)
+    #         for s in status:
+    #             data.append(s[0])
+    #         print(data)
+    #         if False not in data:
+    #             pytest.exit("AP is Not connected to ucentral gw")
+    #         allure.attach(name=str(status), body="")
+    #
+    #     request.addfinalizer(teardown_session)
+    #     yield status
 
 if __name__ == '__main__':
     basic_05 = {
