@@ -27,7 +27,7 @@ class TestResources(object):
 
     @pytest.mark.test_cloud_controller
     @pytest.mark.uc_sanity
-    @pytest.mark.interop_uc_sanity
+    # @pytest.mark.interop_uc_sanity
     @allure.testcase(name="test_controller_connectivity", url="")
     def test_controller_connectivity(self, get_target_object, get_testbed_details):
         """Test case to verify cloud Controller Connectivity"""
