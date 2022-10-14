@@ -22,7 +22,9 @@ file_handler = logging.FileHandler(log_filename, mode="w", encoding=None, delay=
 try:
     import importlib
 
+    # sys.path.append(os.path.join(os.path.abspath(__file__ + "../../../")))
     sys.path.append("../tests")
+
     imports = importlib.import_module("imports")
     target = imports.target
     lf_libs = imports.lf_libs
@@ -34,6 +36,8 @@ try:
     configuration = importlib.import_module("configuration")
     CONFIGURATION = configuration.CONFIGURATION
     PERFECTO_DETAILS = configuration.PERFECTO_DETAILS
+    # cv_test_manager = importlib.import_module("py-json.cv_test_manager")
+    # cv_test = cv_test_manager.cv_test
 except ImportError as e:
     print(e)
     sys.exit("Python Import Error: " + str(e))
@@ -425,3 +429,31 @@ def get_test_device_logs(request, get_testbed_details, get_target_object, skip_l
                                name="lanforge_log_1")
 
         request.addfinalizer(collect_logs_tg)
+
+# @pytest.fixture(scope="session")
+# def traffic_generator_connectivity(selected_testbed, get_testbed_details):
+#     """Verify if traffic generator is reachable"""
+#     if get_testbed_details['traffic_generator']['name'] == "lanforge":
+#         lanforge_ip = get_testbed_details['traffic_generator']['details']['manager_ip']
+#         lanforge_port = get_testbed_details['traffic_generator']['details']['http_port']
+#         # Condition :
+#         #   if gui connection is not available
+#         #   yield False
+#         # Condition :
+#         # If Gui Connection is available
+#         # yield the gui version
+#         try:
+#             cv = cv_test(lanforge_ip, lanforge_port)
+#             url_data = cv.get_ports("/")
+#             lanforge_GUI_version = url_data["VersionInfo"]["BuildVersion"]
+#             lanforge_gui_git_version = url_data["VersionInfo"]["GitVersion"]
+#             lanforge_gui_build_date = url_data["VersionInfo"]["BuildDate"]
+#             print(lanforge_GUI_version, lanforge_gui_build_date, lanforge_gui_git_version)
+#             if not (lanforge_GUI_version or lanforge_gui_build_date or lanforge_gui_git_version):
+#                 yield False
+#             else:
+#                 yield lanforge_GUI_version
+#         except:
+#             yield False
+#     else:
+#         yield True
