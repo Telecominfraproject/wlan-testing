@@ -81,6 +81,11 @@ class TestClientIsolationEnabled(object):
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list :", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to the different "
+                                                    "SSID by enabling the client isolation in both the SSID's.(5Ghz)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][2]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][3]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -101,6 +106,8 @@ class TestClientIsolationEnabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("Test failed due to station has no ip")
             assert False
@@ -133,6 +140,9 @@ class TestClientIsolationEnabled(object):
         mode = "BRIDGE"
         radio_name = lf_test.twog_radios[0]
 
+        allure.attach(name="testcase-details", body="Run traffic between eth2 port (AP) and station "
+                                                    "(with client isolation enabled) -2.4GHz")
+        allure.attach(name="station_ssid-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]))
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[station_list])
@@ -152,6 +162,8 @@ class TestClientIsolationEnabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta0000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta0000-0"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -193,6 +205,10 @@ class TestClientIsolationEnabled(object):
             sta.append(station_list + str(i))
         print("station-list :", sta)
 
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to the different "
+                                                    "SSID by enabling the client isolation in both the SSID's.(2.4Ghz)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][1]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -213,6 +229,8 @@ class TestClientIsolationEnabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("Test failed due to station has no ip")
             assert False
@@ -247,6 +265,9 @@ class TestClientIsolationEnabled(object):
         mode = "BRIDGE"
         radio_name = lf_test.fiveg_radios[0]
 
+        allure.attach(name="testcase-details", body="Run traffic between eth2 port (AP) and station "
+                                                    "(with client isolation enabled) -5GHz")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][2]))
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[station_list])
@@ -266,6 +287,8 @@ class TestClientIsolationEnabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta1000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta1000-0"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -273,8 +296,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta1000-0"]["rx drop % a"] and rx_data["Unsetsta1000-0"][
-                    "rx drop % b"] == 100:
+                if rx_data["Unsetsta1000-0"]["rx drop % a"] and rx_data["Unsetsta1000-0"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -356,6 +378,11 @@ class TestClientIsolationDisabled(object):
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list :", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to the different "
+                                                    "SSID disabling the client isolation(2.4Ghz)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][0]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][1]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[sta[0]])
@@ -378,6 +405,8 @@ class TestClientIsolationDisabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -410,6 +439,9 @@ class TestClientIsolationDisabled(object):
         mode = "BRIDGE"
         radio_name = lf_test.twog_radios[0]
 
+        allure.attach(name="testcase-details", body="Run traffic between eth2 port (AP) and station "
+                                                    "(with client isolation disabled) -2.4GHz")
+        allure.attach(name="station_ssid-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][0]))
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=[station_list])
@@ -429,6 +461,8 @@ class TestClientIsolationDisabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta0000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta0000-0"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -467,6 +501,11 @@ class TestClientIsolationDisabled(object):
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list :", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to the different "
+                                                    "SSID disabling the client isolation(5Ghz)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][2]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][3]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -487,6 +526,8 @@ class TestClientIsolationDisabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -520,6 +561,9 @@ class TestClientIsolationDisabled(object):
         mode = "BRIDGE"
         radio_name = lf_test.fiveg_radios[0]
 
+        allure.attach(name="testcase-details", body="Run traffic between eth2 port (AP) and station "
+                                                    "(with client isolation disabled) -5GHz")
+        allure.attach(name="station_ssid-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][2]))
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[station_list])
@@ -540,6 +584,8 @@ class TestClientIsolationDisabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta1000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta1000-0"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -625,6 +671,10 @@ class TestClientIsolationSameSSID(object):
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list :", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to the same "
+                                                    "SSID without enabling the client isolation.(2.4Ghz)")
+        allure.attach(name="station_ssid-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][0]))
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=sta)
@@ -643,6 +693,8 @@ class TestClientIsolationSameSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -680,6 +732,9 @@ class TestClientIsolationSameSSID(object):
             sta.append(station_list + str(i))
         print("station-list :", sta)
 
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to the same "
+                                                    "SSID without enabling the client isolation.(2.4Ghz)")
+        allure.attach(name="station_ssid-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][1]))
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=sta)
@@ -698,6 +753,8 @@ class TestClientIsolationSameSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -735,6 +792,9 @@ class TestClientIsolationSameSSID(object):
             sta.append(station_list + str(i))
         print("station-list :", sta)
 
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to the same "
+                                                    "SSID by enabling client isolation.(5Ghz)")
+        allure.attach(name="station_ssid-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][2]))
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=sta)
@@ -753,6 +813,8 @@ class TestClientIsolationSameSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -788,6 +850,10 @@ class TestClientIsolationSameSSID(object):
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list :", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to the same "
+                                                    "SSID disabling the client isolation.(5Ghz)")
+        allure.attach(name="station_ssid-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][3]))
         station_result = lf_test.Client_Connect_Using_Radio(ssid=ssid_name, passkey=security_key,
                                                             security=security, mode=mode, radio=radio_name,
                                                             station_name=sta)
@@ -806,6 +872,8 @@ class TestClientIsolationSameSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -894,6 +962,12 @@ class TestClientIsolationDifferentSSID(object):
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is enabled in one and disabled "
+                                                    "in other.(2.4Ghz)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[sta[0]])
@@ -916,6 +990,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -954,6 +1030,12 @@ class TestClientIsolationDifferentSSID(object):
         for i in range(2):
             sta.append(station_list + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is enabled in one and disabled "
+                                                    "in other.(5Ghz)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name,
                                                              station_name=[sta[0]])
@@ -976,6 +1058,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1017,6 +1101,12 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body=" Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is enabled in 2G SSID and 5G SSID"
+                                                    "(run traffic from 2G client to 5G client)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -1037,6 +1127,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1078,6 +1170,12 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body=" Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is disabled in 2G SSID and 5G SSID "
+                                                    "(run traffic from 2G client to 5G client)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -1098,6 +1196,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1140,6 +1240,12 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body=" Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is enabled in 2G SSID and 5G SSID "
+                                                    "(run traffic from 5G client to 2G client)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -1160,6 +1266,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1202,6 +1310,12 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is disabled in 2G SSID and 5G SSID"
+                                                    "(run traffic from 5G client to 2G client)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -1222,6 +1336,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1262,6 +1378,12 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body=" Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is enabled in 2G SSID and disabled"
+                                                    " in 5G SSID (run traffic from 2G client to 5G client)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -1282,6 +1404,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1323,6 +1447,12 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body=" Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is disabled in 2G SSID and enabled"
+                                                    " in 5G SSID (run traffic from 5G client to 2G client)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name1,
                                                              station_name=[sta[0]])
@@ -1345,6 +1475,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1388,6 +1520,12 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to "
+                                                    "different SSID's where Client isolation is enabled in 2G SSID "
+                                                    "and disabled in 5G SSID (run traffic from 5G client to 2G client)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -1408,6 +1546,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1450,6 +1590,12 @@ class TestClientIsolationDifferentSSID(object):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
+
+        allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to different "
+                                                    "SSID's where Client isolation is disabled in 2G SSID and enabled"
+                                                    " in 5G SSID (run traffic from 2G client to 5G client)")
+        allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
+        allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
@@ -1470,6 +1616,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
+        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
