@@ -50,7 +50,7 @@ class TestVlanConfigFivegRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2169")
     def test_station_ip_wpa_ssid_5g(self, lf_test, lf_tools,
                                     station_names_fiveg,
-                                    test_cases, get_configuration):
+                                    test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa, fiveg
             pytest -m valid_client_ip_wpa_fiveg
@@ -107,7 +107,7 @@ class TestVlanConfigFivegRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2157")
     def test_station_ip_wpa2_ssid_5g(self, lf_test, lf_tools,
                                      station_names_fiveg,
-                                     test_cases, get_configuration):
+                                     test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa2, fiveg
             pytest -m valid_client_ip_wpa2_fiveg
@@ -156,7 +156,7 @@ class TestVlanConfigFivegRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
     def test_disable_vlan_wpa2_ssid_5g(self, lf_test, lf_tools,
                                        station_names_fiveg,
-                                       test_cases, get_configuration):
+                                       test_cases, get_configuration, get_lf_logs):
         """
             Client connectivity using vlan, wpa2, fiveg
             pytest -m disable_vlan_fiveg
@@ -214,7 +214,7 @@ class TestVlanConfigFivegRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2161")
     def test_station_ip_open_ssid_5g(self, lf_test, lf_tools,
                                      station_names_fiveg,
-                                     test_cases, get_configuration):
+                                     test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, open, fiveg
             pytest -m valid_client_ip_open_fiveg
@@ -269,7 +269,7 @@ class TestVlanConfigFivegRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2167")
     def test_station_ip_wpa_wpa2_personal_ssid_5g(self, lf_test,
                                                   lf_tools, station_names_fiveg,
-                                                  test_cases, get_configuration):
+                                                  test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa, wpa2, fiveg
             pytest -m test_station_ip_wpa_wpa2_ssid_5g
@@ -326,7 +326,7 @@ class TestVlanConfigFivegRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
     def test_enable_vlan_wpa2_ssid_5g(self, lf_test, lf_tools,
                                       station_names_fiveg,
-                                      test_cases, get_configuration):
+                                      test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa2, fiveg
             pytest -m enable_vlan_fiveg

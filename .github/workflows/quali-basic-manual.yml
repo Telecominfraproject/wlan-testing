@@ -2,7 +2,7 @@ name: manual pytest execution against basic lab
 env:
   # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
-  DOCKER_USER_NAME: wlan-testing-cicd
+  DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
   DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
@@ -20,7 +20,7 @@ on:
         default: 'main'
         description: 'revision of the Open Wifi Helm chart'
       ap_model:
-        description: 'AP model to test, one of edgecore_ecw5410,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c4,hfcl_ion4'
+        description: 'AP model to test, one of edgecore_ecw5410,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,liteon_wpx8324,hfcl_ion4'
         required: true
       firmware:
         default: 'next-latest'

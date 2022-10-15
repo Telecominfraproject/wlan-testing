@@ -47,7 +47,7 @@ class TestVlanConfigTwogRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2168")
     def test_station_ip_wpa_ssid_2g(self, lf_test, lf_tools,
                                      station_names_twog,
-                                    test_cases, get_configuration):
+                                    test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa, twog
             pytest -m valid_client_ip_twog_wpa
@@ -101,7 +101,7 @@ class TestVlanConfigTwogRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2156")
     def test_station_ip_wpa2_ssid_2g(self, lf_test, lf_tools,
                                       station_names_twog,
-                                     test_cases, get_configuration):
+                                     test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa2, twog
             pytest -m valid_client_ip_twog_wpa2
@@ -148,7 +148,7 @@ class TestVlanConfigTwogRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2158")
     def test_disable_vlan_wpa2_ssid_2g(self, lf_test, lf_tools,
                                         station_names_twog,
-                                       test_cases, get_configuration):
+                                       test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa2, twog
             pytest -m disable_vlan_twog
@@ -206,7 +206,7 @@ class TestVlanConfigTwogRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2160")
     def test_station_ip_open_ssid_2g(self, lf_test, lf_tools,
                                       station_names_twog,
-                                     test_cases, get_configuration):
+                                     test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, open, twog
             pytest -m valid_client_ip_twog_open
@@ -261,7 +261,7 @@ class TestVlanConfigTwogRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2166")
     def test_station_ip_wpa_wpa2_personal_ssid_2g(self, lf_test,
                                                   lf_tools,  station_names_twog,
-                                                  test_cases, get_configuration):
+                                                  test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa, wpa2, twog
             pytest -m test_station_ip_twog_wpa_wpa2
@@ -318,7 +318,7 @@ class TestVlanConfigTwogRadio(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
     def test_enable_vlan_wpa2_ssid_2g(self, lf_test, lf_tools,
                                                station_names_twog,
-                                              test_cases, get_configuration):
+                                              test_cases, get_configuration, get_ap_logs, get_lf_logs):
         """
             Client connectivity using vlan, wpa2, twog
             pytest -m enable_vlan_twog
