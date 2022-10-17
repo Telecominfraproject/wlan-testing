@@ -1433,6 +1433,15 @@ class android_libs:
                                 print("No Connected SSIDS")
                         else:
                             try:
+                                print("Into additional details")
+                                time.sleep(2)
+                                additional_details_element = driver.find_element_by_xpath(
+                                    "//*[@resource-id='com.android.settings:id/wifi_details']")
+                                additional_details_element.click()
+                            except:
+                                print("Couldn't get into additional details")
+                                logging.info("Couldn't get into additional details")
+                            try:
                                 self.check_if_no_internet_popup(driver)
                                 forget_ssid = driver.find_element_by_xpath(
                                     "//*[@text='Forget']")
