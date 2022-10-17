@@ -55,6 +55,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.ci_enabled
 class TestClientIsolationEnabled(object):
     """
         Test Config with Enabling Client Isolation in SSIDs
@@ -63,7 +64,7 @@ class TestClientIsolationEnabled(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.ci_enabled_in_5g_ssid
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10610", name="WIFI-10610")
     def test_client_isolation_enabled_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                station_names_fiveg, get_configuration):
@@ -106,8 +107,8 @@ class TestClientIsolationEnabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("Test failed due to station has no ip")
             assert False
@@ -115,7 +116,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -127,7 +128,7 @@ class TestClientIsolationEnabled(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.ci_enabled_in_2g_ssid
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 2 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10620", name="WIFI-10620")
     def test_client_isolation_enabled_with_2g(self, lf_test, lf_tools, update_report, test_cases,
                                               station_names_twog, get_configuration):
@@ -162,8 +163,8 @@ class TestClientIsolationEnabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta0000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta0000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -171,7 +172,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta0000-0"]["rx drop % a"] and rx_data["Unsetsta0000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -186,7 +187,7 @@ class TestClientIsolationEnabled(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.ci_ebabled_in_2g
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10602",name="WIFI-10602")
     def test_client_isolation_enabled_ssids_2g(self,lf_test, lf_tools, update_report, test_cases,
                                                  station_names_twog,get_configuration):
@@ -229,8 +230,8 @@ class TestClientIsolationEnabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("Test failed due to station has no ip")
             assert False
@@ -238,7 +239,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -252,7 +253,7 @@ class TestClientIsolationEnabled(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.eth_to_5g_station_true
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10621", name="WIFI-10621")
     def test_client_isolation_enabled_with_5g(self, lf_test, lf_tools, update_report, test_cases,
                                               station_names_fiveg, get_configuration):
@@ -287,8 +288,8 @@ class TestClientIsolationEnabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta1000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta1000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -296,7 +297,7 @@ class TestClientIsolationEnabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta1000-0"]["rx drop % a"] and rx_data["Unsetsta1000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -352,6 +353,7 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.ci_disabled
 class TestClientIsolationDisabled(object):
     """
         Test Config with Enabling Client Isolation in SSIDs
@@ -360,7 +362,7 @@ class TestClientIsolationDisabled(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.ci_disabled_in_2g_ssid
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10603", name="WIFI-10603")
     def test_client_isolation_disabled_ssids_2g(self, lf_test, lf_tools, update_report, test_cases,
                                                station_names_twog, get_configuration):
@@ -405,8 +407,8 @@ class TestClientIsolationDisabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -414,7 +416,7 @@ class TestClientIsolationDisabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -426,7 +428,7 @@ class TestClientIsolationDisabled(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.eth_to_2g_station_false
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10624", name="WIFI-10624")
     def test_client_isolation_disabled_with_2g(self, lf_test, lf_tools, update_report, test_cases,
                                          station_names_twog, get_configuration):
@@ -461,8 +463,8 @@ class TestClientIsolationDisabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta0000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta0000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -470,7 +472,7 @@ class TestClientIsolationDisabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta0000-0"]["rx drop % a"] and rx_data["Unsetsta0000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -483,7 +485,7 @@ class TestClientIsolationDisabled(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.ci_disabled_in_5g_ssid
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10611",name="WIFI-10611")
     def test_client_isolation_disabled_ssid_5g(self,lf_test, lf_tools, update_report, test_cases,
                                                  station_names_fiveg,get_configuration):
@@ -526,8 +528,8 @@ class TestClientIsolationDisabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -535,7 +537,7 @@ class TestClientIsolationDisabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -548,7 +550,7 @@ class TestClientIsolationDisabled(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.eth_to_5g_station_false
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10623", name="WIFI-10623")
     def test_client_isolation_disabled_with_5g(self, lf_test, lf_tools, update_report, test_cases,
                                          station_names_fiveg, get_configuration):
@@ -584,8 +586,8 @@ class TestClientIsolationDisabled(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta1000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta1000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -593,7 +595,7 @@ class TestClientIsolationDisabled(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta1000-0"]["rx drop % a"] and rx_data["Unsetsta1000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -647,15 +649,16 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.ci_same_ssid
 class TestClientIsolationSameSSID(object):
     """
         Test Config with Enabling Client Isolation in SSIDs
-        pytest -m "client_isolation and ci_disabled and bridge"
+        pytest -m "client_isolation and ci_same_ssid and bridge"
     """
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.same_ssid_enabling_isolation_2g
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10601", name="WIFI-10601")
     def test_cleint_isolation_enabled_same_ssid_2g(self, lf_test, lf_tools, update_report,
                                                station_names_twog, get_configuration):
@@ -693,8 +696,8 @@ class TestClientIsolationSameSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -702,7 +705,7 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test paseed,Packet drop has 100%")
                     assert True
                 else:
@@ -715,7 +718,7 @@ class TestClientIsolationSameSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.same_ssid_disabling_isolation_2g
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 2.4 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10604",name="WIFI-10604")
     def test_cleint_isolation_disabled_same_ssid_2g(self,lf_test, lf_tools, update_report,
                                              station_names_twog, get_configuration):
@@ -753,8 +756,8 @@ class TestClientIsolationSameSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -762,7 +765,7 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -775,7 +778,7 @@ class TestClientIsolationSameSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.same_ssid_enabling_isolation_5g
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10606", name="WIFI-10606")
     def test_cleint_isolation_enabled_same_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                               station_names_fiveg, get_configuration):
@@ -813,8 +816,8 @@ class TestClientIsolationSameSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -822,7 +825,7 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test paseed,Packet drop has 100%")
                     assert True
                 else:
@@ -834,7 +837,7 @@ class TestClientIsolationSameSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.same_ssid_disabling_isolation_5g
-    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encription 5 GHz Band")
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10612", name="WIFI-10612")
     def test_cleint_isolation_disabled_same_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                               station_names_fiveg, get_configuration):
@@ -872,8 +875,8 @@ class TestClientIsolationSameSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result:
             print("test failed due to station has no ip")
             assert False
@@ -881,7 +884,7 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -935,16 +938,18 @@ setup_params_general3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.ci_different_ssid
 class TestClientIsolationDifferentSSID(object):
     """
         Test Config with Enabling Client Isolation in SSIDs
-        pytest -m "client_isolation and ci_disabled and bridge"
+        pytest -m "client_isolation and ci_different_ssid and bridge"
     """
 
     # clients_connected to different ssid,enabling isolation in ssid (2GH)& isolation disabled in ssid (2GHZ)
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.ci_enable_and_disable_2g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 2 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10605", name="WIFI-10605")
     def test_client_isoaltion_enabled_ssid_2g_disabled_ssid_2g(self, lf_test, lf_tools, update_report, test_cases,
                                                                station_names_twog, get_configuration):
@@ -990,8 +995,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta00000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta00000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -999,7 +1004,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["rx drop % a"] and rx_data["Unsetsta00000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -1013,6 +1018,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.ci_enable_and_disable_5g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10613", name="WIFI-10613")
     def test_client_isoaltion_enabled_ssid_5g_disabled_ssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                                 station_names_fiveg, get_configuration):
@@ -1058,8 +1064,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="rx drop % endp-a", body=str(rx_data["Unsetsta10000-0"]["rx drop % a"]))
-        allure.attach(name="rx drop % endp-b", body=str(rx_data["Unsetsta10000-0"]["rx drop % b"]))
+        allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
+        allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1067,7 +1073,7 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta10000-0"]["rx drop % a"] and rx_data["Unsetsta10000-0"]["rx drop % b"] == 100:
+                if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     print("Test failed,Packet drop should not be 100%")
                     assert False
                 else:
@@ -1081,6 +1087,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.fiveg
     @pytest.mark.twog
     @pytest.mark.ci_enabled_2g_and_5g_traffic_2g_to_5g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption both 2 GHz and 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10616", name="WIFI-10616")
     def test_client_isolation_enabled_ssid2g_and_ssid5g(self, lf_test, lf_tools, update_report, test_cases,
                                                           station_names_twog, station_names_fiveg, get_configuration):
@@ -1097,7 +1104,7 @@ class TestClientIsolationDifferentSSID(object):
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
-        for i in range(1):
+        for i in range(2):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
@@ -1110,12 +1117,12 @@ class TestClientIsolationDifferentSSID(object):
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[2]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
         print("waiting for 30 sec...")
         time.sleep(30)
@@ -1127,8 +1134,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
-        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
+        allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1136,11 +1143,11 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["bps rx a"] == 0 and rx_data["Unsetsta00000-0"]["bps rx b"] != 0:
+                if rx_data[f"{cx_list[0]}"]["bps rx a"] == 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] != 0:
                     print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and 5g ssid.")
                     assert True
                 else:
-                    print("Test failed,Packet drop should not be 100%")
+                    print("Test failed, bps rx b received none")
                     assert False
             else:
                 print("Layer3 not ran properly.")
@@ -1150,6 +1157,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.fiveg
     @pytest.mark.twog
     @pytest.mark.ci_disable_2g_and_5g_traffic_2g_to_5g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption both 2 GHz and 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10618",name="WIFI-10618")
     def test_client_isolation_disabled_ssid2g_and_ssid5g(self, lf_test, lf_tools, update_report, test_cases,
                                                  station_names_twog, station_names_fiveg, get_configuration):
@@ -1166,7 +1174,7 @@ class TestClientIsolationDifferentSSID(object):
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
-        for i in range(1):
+        for i in range(2):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
@@ -1179,12 +1187,12 @@ class TestClientIsolationDifferentSSID(object):
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[2]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
         print("waiting for 30 sec...")
         time.sleep(30)
@@ -1196,8 +1204,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
-        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
+        allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1205,11 +1213,11 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["bps rx a"] == 0 and rx_data["Unsetsta00000-0"]["bps rx b"] != 0:
+                if rx_data[f"{cx_list[0]}"]["bps rx a"] == 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] != 0:
                     print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and 5g ssid.")
                     assert True
                 else:
-                    print("Test failed,Packet drop should not be 100%")
+                    print("Test failed, bps rx b received none")
                     assert False
             else:
                 print("Layer3 not ran properly.")
@@ -1220,6 +1228,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.fiveg
     @pytest.mark.twog
     @pytest.mark.ci_enabled_2g_and_5g_traffic_5g_to_2g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption both 2 GHz and 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10617", name="WIFI-10617")
     def test_client_isolation_enabled_ssid_2gandssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                           station_names_twog, station_names_fiveg, get_configuration):
@@ -1236,7 +1245,7 @@ class TestClientIsolationDifferentSSID(object):
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
-        for i in range(1):
+        for i in range(2):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
@@ -1249,12 +1258,12 @@ class TestClientIsolationDifferentSSID(object):
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[2]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
         print("waiting for 30 sec...")
         time.sleep(30)
@@ -1266,8 +1275,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
-        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
+        allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1275,11 +1284,11 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["bps rx a"] != 0 and rx_data["Unsetsta00000-0"]["bps rx b"] == 0:
+                if rx_data[f"{cx_list[0]}"]["bps rx a"] != 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] == 0:
                     print("Test pass, traffic ran between 5g to 2g stations when isolation enabled in 2g and 5g ssid.")
                     assert True
                 else:
-                    print("Test failed,Packet drop should not be 100%")
+                    print("Test failed, bps rx a received none")
                     assert False
             else:
                 print("Layer3 not ran properly.")
@@ -1290,6 +1299,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.fiveg
     @pytest.mark.twog
     @pytest.mark.ci_disable_2g_and_5g_traffic_5g_to_2g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption both 2 GHz and 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10619",name="WIFI-10619")
     def test_client_isolation_disabled_ssid_2gandssid_5g(self, lf_test, lf_tools, update_report, test_cases,
                                                  station_names_twog,station_names_fiveg,get_configuration):
@@ -1306,7 +1316,7 @@ class TestClientIsolationDifferentSSID(object):
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
-        for i in range(1):
+        for i in range(2):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
@@ -1319,12 +1329,12 @@ class TestClientIsolationDifferentSSID(object):
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[2]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
         print("waiting for 30 sec...")
         time.sleep(30)
@@ -1336,8 +1346,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
-        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
+        allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1345,11 +1355,11 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["bps rx a"] != 0 and rx_data["Unsetsta00000-0"]["bps rx b"] == 0:
+                if rx_data[f"{cx_list[0]}"]["bps rx a"] != 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] == 0:
                     print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and 5g ssid.")
                     assert True
                 else:
-                    print("Test failed,Packet drop should not be 100%")
+                    print("Test failed, bps rx a received none")
                     assert False
             else:
                 print("Layer3 not ran properly.")
@@ -1359,6 +1369,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.fiveg
     @pytest.mark.ci_enabled_2g_disabled_5g_traffic_2g_to_5g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption both 2 GHz and 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10614", name="WIFI-10614")
     def test_client_isolation_enabled_ssids_2gdisabled_ssid_5g(self, lf_test, lf_tools,update_report, test_cases,
                                                                station_names_twog, station_names_fiveg, get_ap_channel):
@@ -1374,7 +1385,7 @@ class TestClientIsolationDifferentSSID(object):
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
-        for i in range(1):
+        for i in range(2):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
@@ -1387,12 +1398,12 @@ class TestClientIsolationDifferentSSID(object):
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[2]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
         print("waiting for 30 sec...")
         time.sleep(30)
@@ -1404,8 +1415,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
-        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
+        allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1413,11 +1424,11 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["bps rx a"] == 0 and rx_data["Unsetsta00000-0"]["bps rx b"] != 0:
+                if rx_data[f"{cx_list[0]}"]["bps rx a"] == 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] != 0:
                     print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and disabled 5g ssid.")
                     assert True
                 else:
-                    print("Test failed,Packet drop should not be 100%")
+                    print("Test failed, bps rx b received none")
                     assert False
             else:
                 print("Layer3 not ran properly.")
@@ -1427,6 +1438,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.fiveg
     @pytest.mark.ci_disabled_2g_enabled_5g_traffic_5g_to_2g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption both 2 GHz and 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10625", name="WIFI-10625")
     def test_client_isolation_disabled_ssid_2genabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
                                                       station_names_twog,station_names_fiveg, get_configuration):
@@ -1443,7 +1455,7 @@ class TestClientIsolationDifferentSSID(object):
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
-        for i in range(1):
+        for i in range(2):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
@@ -1458,12 +1470,12 @@ class TestClientIsolationDifferentSSID(object):
                                                              station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
                                                              security=security, mode=mode, radio=radio_name2,
-                                                             station_name=[sta[1]])
+                                                             station_name=[sta[2]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[2])
         print("layer3 results:", layer3_restult)
         print("waiting for 30 sec...")
         time.sleep(30)
@@ -1475,8 +1487,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
-        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
+        allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1484,11 +1496,11 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["bps rx a"] != 0 and rx_data["Unsetsta00000-0"]["bps rx b"] == 0:
+                if rx_data[f"{cx_list[0]}"]["bps rx a"] != 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] == 0:
                     print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled 5g ssid.")
                     assert True
                 else:
-                    print("Test failed,Packet drop should not be 100%")
+                    print("Test failed, bps rx a received none")
                     assert False
             else:
                 print("Layer3 not ran properly.")
@@ -1500,6 +1512,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.fiveg
     @pytest.mark.ci_enabled_2g_disabled_5g_traffic_5g_to_2g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption both 2 GHz and 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10615",name="WIFI-10615")
     def test_client_isolation_enabled_ssids_2g_disabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
                                                                 station_names_twog,station_names_fiveg,get_ap_channel):
@@ -1516,7 +1529,7 @@ class TestClientIsolationDifferentSSID(object):
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
-        for i in range(1):
+        for i in range(2):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
@@ -1529,12 +1542,12 @@ class TestClientIsolationDifferentSSID(object):
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[2]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
         print("waiting for 30 sec...")
         time.sleep(30)
@@ -1546,8 +1559,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
-        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
+        allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1555,11 +1568,11 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["bps rx a"] != 0 and rx_data["Unsetsta00000-0"]["bps rx b"] == 0:
+                if rx_data[f"{cx_list[0]}"]["bps rx a"] != 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] == 0:
                     print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled 5g ssid.")
                     assert True
                 else:
-                    print("Test failed,Packet drop should not be 100%")
+                    print("Test failed, bps rx a received none")
                     assert False
             else:
                 print("Layer3 not ran properly.")
@@ -1570,6 +1583,7 @@ class TestClientIsolationDifferentSSID(object):
     @pytest.mark.twog
     @pytest.mark.fiveg
     @pytest.mark.ci_disabled_2g_enabled_5g_traffic_2g_to_5g
+    @allure.title("BRIDGE Mode Client Isolation with wpa2_personal encryption both 2 GHz and 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10626", name="WIFI-10626")
     def test_client_isolation_disabled_ssid_2g_enabled_ssid_5g(self, lf_test, lf_tools, update_report,test_cases,
                                                       station_names_twog,station_names_fiveg, get_configuration):
@@ -1586,7 +1600,7 @@ class TestClientIsolationDifferentSSID(object):
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
         sta = []
-        for i in range(1):
+        for i in range(2):
             sta.append(station_list1 + str(i))
             sta.append(station_list2 + str(i))
         print("station-list : ----->", sta)
@@ -1599,12 +1613,12 @@ class TestClientIsolationDifferentSSID(object):
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
                                              security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[2]])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
         print("waiting for 30 sec...")
         time.sleep(30)
@@ -1616,8 +1630,8 @@ class TestClientIsolationDifferentSSID(object):
         l3_cleanup = lf_test.l3_cleanup()
         print("layer3 cleaning result :", l3_cleanup)
 
-        allure.attach(name="bps rx endp-a", body=str(rx_data["Unsetsta00000-0"]["bps rx a"]))
-        allure.attach(name="bps rx endp-b", body=str(rx_data["Unsetsta00000-0"]["bps rx b"]))
+        allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
+        allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
         if not station_result1 and station_result2:
             print("test failed due to station has no ip")
             assert False
@@ -1625,11 +1639,11 @@ class TestClientIsolationDifferentSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                if rx_data["Unsetsta00000-0"]["bps rx a"] == 0 and rx_data["Unsetsta00000-0"]["bps rx b"] != 0:
+                if rx_data[f"{cx_list[0]}"]["bps rx a"] == 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] != 0:
                     print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and enabled 5g ssid.")
                     assert True
                 else:
-                    print("Test failed,Packet drop should not be 100%")
+                    print("Test failed, bps rx b received none")
                     assert False
             else:
                 print("Layer3 not ran properly.")
