@@ -97,7 +97,7 @@ class TestClientIsolationEnabled(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -117,9 +117,12 @@ class TestClientIsolationEnabled(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between two stations when isolation"
+                                                            " enabled in both 5g ssids.")
                     print("Test pass, traffic ran between two stations when isolation enabled in both 5g ssids.")
                     assert True
             else:
@@ -153,7 +156,7 @@ class TestClientIsolationEnabled(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=[station_list], side_b="")
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -173,9 +176,12 @@ class TestClientIsolationEnabled(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between eth2 and station when "
+                                                            "isolation enabled in one 2g ssid.")
                     print("Test pass, traffic ran between eth2 and station when isolation enabled in one 2g ssid.")
                     assert True
             else:
@@ -220,7 +226,7 @@ class TestClientIsolationEnabled(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -240,9 +246,12 @@ class TestClientIsolationEnabled(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between two stations when isolation"
+                                                            " enabled in both 2g ssids.")
                     print("Test pass, traffic ran between two stations when isolation enabled in both 2g ssids.")
                     assert True
             else:
@@ -278,7 +287,7 @@ class TestClientIsolationEnabled(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=[station_list], side_b="")
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -298,9 +307,12 @@ class TestClientIsolationEnabled(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between eth2 and station when "
+                                                            "isolation enabled in one 5g ssid.")
                     print("Test pass, traffic ran between eth2 and station when isolation enabled in one 5g ssid.")
                     assert True
             else:
@@ -397,7 +409,7 @@ class TestClientIsolationDisabled(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -417,9 +429,12 @@ class TestClientIsolationDisabled(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between two stations when isolation"
+                                                            " disabled in both 2g ssids.")
                     print("Test pass, traffic ran between two stations when isolation disabled in both 2g ssids.")
                     assert True
             else:
@@ -453,7 +468,7 @@ class TestClientIsolationDisabled(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=[station_list], side_b="")
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -473,9 +488,12 @@ class TestClientIsolationDisabled(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between eth2 and station when "
+                                                            "isolation disabled in one 2g ssid.")
                     print("Test pass, traffic ran between eth2 and station when isolation disabled in one 2g ssid.")
                     assert True
             else:
@@ -518,7 +536,7 @@ class TestClientIsolationDisabled(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -538,9 +556,12 @@ class TestClientIsolationDisabled(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between two stations when "
+                                                            "isolation disabled in both 5g ssids.")
                     print("Test pass, traffic ran between two stations when isolation disabled in both 5g ssids.")
                     assert True
             else:
@@ -576,7 +597,7 @@ class TestClientIsolationDisabled(object):
                                                traffic_type="lf_udp", sta_list=[station_list], side_b="")
         print("layer3 results:", layer3_restult)
 
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -596,9 +617,12 @@ class TestClientIsolationDisabled(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between eth2 and stations when "
+                                                            "isolation disabled in one 5g ssid.")
                     print("Test pass, traffic ran between eth2 and stations when isolation disabled in one 5g ssid.")
                     assert True
             else:
@@ -686,7 +710,7 @@ class TestClientIsolationSameSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("Waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -706,9 +730,12 @@ class TestClientIsolationSameSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test paseed,Packet drop has 100%")
+                    allure.attach(name="Test Result", body="Test paseed,Rx drop has 100%")
+                    print("Test paseed,Rx drop has 100%")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test fail, traffic shouldn't run between two stations as "
+                                                           "client isolation enabled in both ssid's.")
                     print("Test fail, traffic ran between two stations when isolation enabled in both 2g same-ssid.")
                     assert False
             else:
@@ -746,7 +773,7 @@ class TestClientIsolationSameSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -766,9 +793,12 @@ class TestClientIsolationSameSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between two stations when isolation"
+                                                            " disabled in both 2g same-ssid.")
                     print("Test pass, traffic ran between two stations when isolation disabled in both 2g same-ssid.")
                     assert True
             else:
@@ -806,7 +836,7 @@ class TestClientIsolationSameSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -826,9 +856,12 @@ class TestClientIsolationSameSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test paseed,Packet drop has 100%")
+                    allure.attach(name="Test Result", body="Test paseed,Rx drop has 100%")
+                    print("Test paseed,Rx drop has 100%")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test fail, traffic ran between two stations when "
+                                                            "isolation enabled in both 5g same-ssid.")
                     print("Test fail, traffic ran between two stations when isolation enabled in both 5g same-ssid.")
                     assert False
             else:
@@ -865,7 +898,7 @@ class TestClientIsolationSameSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -885,9 +918,12 @@ class TestClientIsolationSameSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between two stations when "
+                                                           "isolation disabled in both 5g same-ssid.")
                     print("Test pass, traffic ran between two stations when isolation disabled in both 5g same-ssid.")
                     assert True
             else:
@@ -985,7 +1021,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1005,10 +1041,14 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
-                    print("Test pass, traffic ran between two stations when isolation enabled in one 2g ssid disabled in another.")
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between two stations when "
+                                                           "isolation enabled in one 2g ssid disabled in another.")
+                    print("Test pass, traffic ran between two stations when isolation enabled in one 2g ssid disabled "
+                          "in another.")
                     assert True
             else:
                 print("Layer3 not ran properly.")
@@ -1054,7 +1094,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1074,10 +1114,14 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
-                    print("Test failed,Packet drop should not be 100%")
+                    allure.attach(name="Test Result", body="Test failed,Rx drop should not be 100%")
+                    print("Test failed,Rx drop should not be 100%")
                     assert False
                 else:
-                    print("Test pass, traffic ran between two stations when isolation enabled in one 5g and disabled in another.")
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between two stations when isolation"
+                                                           " enabled in one 5g and disabled in another.")
+                    print("Test pass, traffic ran between two stations when isolation enabled in one 5g and disabled "
+                          "in another.")
                     assert True
             else:
                 print("Layer3 not ran properly.")
@@ -1124,7 +1168,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=0, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1144,9 +1188,12 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["bps rx a"] == 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] != 0:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between 2g to 5g stations when "
+                                                           "isolation enabled in 2g and 5g ssid.")
                     print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and 5g ssid.")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test failed, bps rx b received none")
                     print("Test failed, bps rx b received none")
                     assert False
             else:
@@ -1194,7 +1241,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=0, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1214,9 +1261,12 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["bps rx a"] == 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] != 0:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between 2g to 5g stations when "
+                                                           "isolation disabled in 2g and 5g ssid.")
                     print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and 5g ssid.")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test failed, bps rx b received none")
                     print("Test failed, bps rx b received none")
                     assert False
             else:
@@ -1265,7 +1315,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1285,9 +1335,12 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["bps rx a"] != 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] == 0:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between 5g to 2g stations when "
+                                                           "isolation enabled in 2g and 5g ssid")
                     print("Test pass, traffic ran between 5g to 2g stations when isolation enabled in 2g and 5g ssid.")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test failed, bps rx a received none")
                     print("Test failed, bps rx a received none")
                     assert False
             else:
@@ -1336,7 +1389,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1356,9 +1409,12 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["bps rx a"] != 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] == 0:
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between 5g to 2g stations when "
+                                                           "isolation disabled in 2g and 5g ssid.")
                     print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and 5g ssid.")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test failed, bps rx a received none")
                     print("Test failed, bps rx a received none")
                     assert False
             else:
@@ -1405,7 +1461,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=0, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1425,9 +1481,13 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["bps rx a"] == 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] != 0:
-                    print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and disabled 5g ssid.")
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between 2g to 5g stations when "
+                                                           "isolation enabled in 2g and disabled 5g ssid")
+                    print("Test pass, traffic ran between 2g to 5g stations when isolation enabled in 2g and disabled "
+                          "5g ssid.")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test failed, bps rx b received none")
                     print("Test failed, bps rx b received none")
                     assert False
             else:
@@ -1477,7 +1537,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta, side_b=sta[2])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1497,9 +1557,13 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["bps rx a"] != 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] == 0:
-                    print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled 5g ssid.")
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between 5g to 2g stations when "
+                                                           "isolation disabled in 2g and enabled 5g ssid.")
+                    print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled "
+                          "5g ssid.")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test failed, bps rx a received none")
                     print("Test failed, bps rx a received none")
                     assert False
             else:
@@ -1549,7 +1613,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1569,9 +1633,13 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["bps rx a"] != 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] == 0:
-                    print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled 5g ssid.")
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between 5g to 2g stations when "
+                                                           "isolation disabled in 2g and enabled 5g ssid.")
+                    print("Test pass, traffic ran between 5g to 2g stations when isolation disabled in 2g and enabled "
+                          "5g ssid.")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test failed, bps rx a received none")
                     print("Test failed, bps rx a received none")
                     assert False
             else:
@@ -1620,7 +1688,7 @@ class TestClientIsolationDifferentSSID(object):
                                                side_b_min_rate=0, side_b_max_rate=0,
                                                traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
         print("layer3 results:", layer3_restult)
-        print("waiting for 30 sec...")
+        print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = lf_test.get_cx_list()
@@ -1640,9 +1708,13 @@ class TestClientIsolationDifferentSSID(object):
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
                 if rx_data[f"{cx_list[0]}"]["bps rx a"] == 0 and rx_data[f"{cx_list[0]}"]["bps rx b"] != 0:
-                    print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and enabled 5g ssid.")
+                    allure.attach(name="Test Result", body="Test pass, traffic ran between 2g to 5g stations when "
+                                                           "isolation disabled in 2g and enabled 5g ssid.")
+                    print("Test pass, traffic ran between 2g to 5g stations when isolation disabled in 2g and enabled "
+                          "5g ssid.")
                     assert True
                 else:
+                    allure.attach(name="Test Result", body="Test failed, bps rx b received none")
                     print("Test failed, bps rx b received none")
                     assert False
             else:
