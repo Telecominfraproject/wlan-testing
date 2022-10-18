@@ -103,4 +103,3 @@ class TestDynamicVlanOverSsid5GWpa2(object):
             assert True, result
         elif not val:
             assert False, result
-
