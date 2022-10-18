@@ -660,18 +660,14 @@ class android_libs:
                     # This is To get all available ssids
                     # ------------------------------------------------------
                     try:
-                        for k in range(9):
+                        for k in range(6):
                             available_ssids = self.get_all_available_ssids(driver, device_model_name)
                             print("active_ssid_list: ", available_ssids)
                             logging.info("Available Ssids:" + str(available_ssids))
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
                                 if wifi_name not in available_ssids:
-                                    if self.get_phone_information(setup_perfectoMobile,
-                                                                  search_this="osVersion") != "12":
-                                        self.scrollDown(driver)
-                                    else:
-                                        driver.swipe(470, 1400, 470, 1000, 400)
+                                    self.scrollDown(driver)
                                     time.sleep(2)
                                 else:
                                     ssid_found = True
@@ -1088,7 +1084,6 @@ class android_libs:
 
         # self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
         return ssid_with_internet, setup_perfectoMobile
-
     def get_ip_address(self, ssid, setup_perfectoMobile, connData):
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -1438,6 +1433,15 @@ class android_libs:
                                 print("No Connected SSIDS")
                         else:
                             try:
+                                print("Into additional details")
+                                time.sleep(2)
+                                additional_details_element = driver.find_element_by_xpath(
+                                    "//*[@resource-id='com.android.settings:id/wifi_details']")
+                                additional_details_element.click()
+                            except:
+                                print("Couldn't get into additional details")
+                                logging.info("Couldn't get into additional details")
+                            try:
                                 self.check_if_no_internet_popup(driver)
                                 forget_ssid = driver.find_element_by_xpath(
                                     "//*[@text='Forget']")
@@ -1762,36 +1766,31 @@ class android_libs:
                     # This is To get all available ssids
                     # ------------------------------------------------------
                     try:
-                        for k in range(9):
+                        for k in range(10):
                             available_ssids = self.get_all_available_ssids(driver, device_model_name)
                             print("active_ssid_list: ", available_ssids)
-                            logging.info("Available Ssids:" + str(available_ssids))
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
-                                if wifi_name not in available_ssids:
-                                    if self.get_phone_information(setup_perfectoMobile,
-                                                                  search_this="osVersion") != "12":
-                                        self.scrollDown(driver)
-                                    else:
-                                        driver.swipe(470, 1400, 470, 1000, 400)
+                                if ssid not in available_ssids:
+                                    self.scrollDown(setup_perfectoMobile)
                                     time.sleep(2)
                                 else:
                                     ssid_found = True
-                                    print(wifi_name + " : Found in Device")
-                                    # allure.attach(name= body=str(wifi_name+" : Found in Device"))
+                                    print(ssid + " : Found in Device")
+                                    logging.info(ssid + " : Found in Device")
+                                    # allure.attach(name= body=str(ssid+" : Found in Device"))
                                     break
                             except:
                                 print("couldn't find wifi in available ssid")
-                                logging.error("couldn't find wifi in available ssid")
+                                logging.warning("couldn't find wifi in available ssid")
                         if not ssid_found:
-                            print("could not found " + str(wifi_name) + " in device")
-                            logging.error("Couldn't find the SSID")
-                            # allure.attach(name= body=str("could not found" + wifi_name + " in device"))
+                            print("could not found " + ssid + " in device")
+                            logging.info("could not found " + ssid + " in device")
+                            # allure.attach(name= body=str("could not found" + ssid + " in device"))
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
                             return ssid_with_internet, setup_perfectoMobile
                     except:
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-
                         return ssid_with_internet, setup_perfectoMobile
                     # -------------------------------------------------------
 

@@ -71,12 +71,9 @@ class AndroidTests(android_libs):
                                                                            testcase=self.testcase_name))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
-            try:
-                ssid_with_internet, setup = self.wifi_connect_eap(ssid=ssid, user=identity, ttls_passwd=ttls_passwd,
-                                                                  setup_perfectoMobile=setup_perfecto_mobile,
-                                                                  connData=self.connData)
-            except:
-                return "Fail", "Failed to connect to ssid"
+            ssid_with_internet, setup = self.wifi_connect_eap(ssid=ssid, user=identity, ttls_passwd=ttls_passwd,
+                                                              setup_perfectoMobile=setup_perfecto_mobile,
+                                                              connData=self.connData)
             if ssid_with_internet is True:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)
@@ -221,6 +218,15 @@ if __name__ == '__main__':
             "bundleId-iOS-Safari": "com.apple.mobilesafari",
             "jobName": "Interop-Galaxy-S10.*",
             "jobNumber": 38
+        },
+        "Galaxy S20": {
+            "platformName-android": "Android",
+            "model-android": "Galaxy S20",
+            "appPackage-android": "com.android.settings",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "jobName": "Interop-Galaxy-S20",
+            "jobNumber": 38
         }
     }
     access_point = [{
@@ -254,8 +260,9 @@ if __name__ == '__main__':
     }]
     obj = AndroidTests(perfecto_data=perfecto_data, dut_data=access_point, device="Galaxy S10.*",
                        testcase="Test_perfecto_check")
-    # print(obj.client_connectivity_test("ssid_wpa2_2g_RL_55K5113", security=None,
-    #                                    dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
+    print(obj.client_connectivity_test("ssid_wpa_5g_br_NE38276", security=None,
+                                       dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
 
     # print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
-    print(obj.enterprise_client_connect(ssid="ssid_wpa_eap_2g", identity="nolaradius", ttls_passwd="nolastart"))
+    # print(obj.enterprise_client_connect(ssid="ssid_wpa_eap_5g_5O05610", identity="nolaradius", ttls_passwd="nolastart"))
+    # print(obj.client_connect(ssid="ssid_wpa_5g_br_NE38276", passkey="something"))

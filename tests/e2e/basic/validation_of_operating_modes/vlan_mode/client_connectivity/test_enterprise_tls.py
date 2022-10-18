@@ -1,7 +1,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_client_connectivity_lf,
+pytestmark = [pytest.mark.client_connectivity_tests,
               pytest.mark.vlan, pytest.mark.enterprise, pytest.mark.tls, pytest.mark.uc_sanity]
 
 setup_params_enterprise = {
@@ -36,7 +36,7 @@ setup_params_enterprise = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestVLANModeEnterpriseTLSSuiteA(object):
     """ SuiteA Enterprise Test Cases
-            pytest -m "ow_client_connectivity_lf and vlan and enterprise and tls"
+            pytest -m "client_connectivity_tests and vlan and enterprise and tls"
         """
 
     @pytest.mark.wpa_enterprise
@@ -45,9 +45,9 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                    get_test_device_logs,
                                    get_target_object,
-                                   num_stations, setup_configuration, radius_info):
+                                   num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-                    pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
+                    pytest -m "client_connectivity_tests and vlan and enterprise and tts and twog"
                 """
 
         profile_data = {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], "vlan": 100}
@@ -80,9 +80,9 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                    get_test_device_logs,
                                    get_target_object,
-                                   num_stations, setup_configuration, radius_info):
+                                   num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-                    pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
+                    pytest -m "client_connectivity_tests and vlan and enterprise and tts and twog"
                 """
 
         profile_data = {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"], "vlan": 100}
@@ -115,9 +115,9 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-                    pytest -m "ow_client_connectivity_lf and vlan and enterprise and tls and twog"
+                    pytest -m "client_connectivity_tests and vlan and enterprise and tls and twog"
                 """
 
         profile_data = {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100}
@@ -148,9 +148,9 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-                    pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
+                    pytest -m "client_connectivity_tests and vlan and enterprise and tts and twog"
                 """
 
         profile_data = {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}
@@ -181,9 +181,9 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-                    pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
+                    pytest -m "client_connectivity_tests and vlan and enterprise and tts and twog"
                 """
 
         profile_data = {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "vlan": 100}
@@ -214,9 +214,9 @@ class TestVLANModeEnterpriseTLSSuiteA(object):
     def test_tls_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 5g
-                    pytest -m "ow_client_connectivity_lf and vlan and enterprise and tts and twog"
+                    pytest -m "client_connectivity_tests and vlan and enterprise and tts and twog"
                 """
 
         profile_data = {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "vlan": 100}
@@ -270,7 +270,7 @@ setup_params_enterprise_two = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestVLANModeEnterpriseTLSSuiteTwo(object):
     """ SuiteA Enterprise Test Cases
-        pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and suiteB"
+        pytest -m "client_connectivity_tests and vlan and enterprise and ttls and suiteB"
     """
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
@@ -279,9 +279,9 @@ class TestVLANModeEnterpriseTLSSuiteTwo(object):
     def test_wpa_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-            pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and wpa_wpa2_enterprise_mixed and twog"
+            pytest -m "client_connectivity_tests and vlan and enterprise and ttls and wpa_wpa2_enterprise_mixed and twog"
         """
         profile_data = {"ssid_name": "tls_ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100}
         ssid_name = profile_data["ssid_name"]
@@ -309,9 +309,9 @@ class TestVLANModeEnterpriseTLSSuiteTwo(object):
     def test_wpa_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
-                                    num_stations, setup_configuration, radius_info):
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-            pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and wpa_wpa2_enterprise_mixed and fiveg"
+            pytest -m "client_connectivity_tests and vlan and enterprise and ttls and wpa_wpa2_enterprise_mixed and fiveg"
         """
         profile_data = {"ssid_name": "tls_ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}
         ssid_name = profile_data["ssid_name"]
@@ -339,9 +339,9 @@ class TestVLANModeEnterpriseTLSSuiteTwo(object):
     def test_wpa3_enterprise_mixed_2g(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs,
                                       get_target_object,
-                                      num_stations, setup_configuration, radius_info):
+                                      num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-            pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and wpa3_enterprise_mixed and twog"
+            pytest -m "client_connectivity_tests and vlan and enterprise and ttls and wpa3_enterprise_mixed and twog"
         """
         profile_data = {"ssid_name": "tls_ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"], "vlan": 100}
         ssid_name = profile_data["ssid_name"]
@@ -367,9 +367,9 @@ class TestVLANModeEnterpriseTLSSuiteTwo(object):
     def test_wpa3_enterprise_mixed_5g(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs,
                                       get_target_object,
-                                      num_stations, setup_configuration, radius_info):
+                                      num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
-            pytest -m "ow_client_connectivity_lf and vlan and enterprise and ttls and wpa3_enterprise_mixed and fiveg"
+            pytest -m "client_connectivity_tests and vlan and enterprise and ttls and wpa3_enterprise_mixed and fiveg"
         """
         profile_data = {"ssid_name": "tls_ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"], "vlan": 100}
         ssid_name = profile_data["ssid_name"]

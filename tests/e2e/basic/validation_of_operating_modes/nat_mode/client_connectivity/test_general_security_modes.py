@@ -50,7 +50,7 @@ class TestNatModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
     def test_nat_open_2g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                              get_dut_logs_per_test_case, get_test_device_logs,
-                                             setup_configuration):
+                                             check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with open encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and open and twog"
@@ -79,7 +79,7 @@ class TestNatModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_nat_open_5g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                              get_dut_logs_per_test_case, get_test_device_logs,
-                                             setup_configuration):
+                                             check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with open encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and open and fiveg"
@@ -110,7 +110,7 @@ class TestNatModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
     def test_nat_wpa_2g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                             get_dut_logs_per_test_case, get_test_device_logs,
-                                            setup_configuration):
+                                            check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa and twog"
@@ -139,7 +139,7 @@ class TestNatModeConnectivitySuiteA(object):
     @allure.title("NAT Mode Client Connectivity Test with wpa encryption 5 GHz Band")
     def test_nat_wpa_5g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                             get_dut_logs_per_test_case, get_test_device_logs,
-                                            setup_configuration):
+                                            check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa and fiveg"
@@ -168,7 +168,7 @@ class TestNatModeConnectivitySuiteA(object):
     @allure.title("NAT Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band")
     def test_nat_wpa2_personal_2g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                                       get_dut_logs_per_test_case, get_test_device_logs,
-                                                      setup_configuration):
+                                                      check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa2_personal and twog"
@@ -199,7 +199,7 @@ class TestNatModeConnectivitySuiteA(object):
     @allure.title("NAT Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band")
     def test_nat_wpa2_personal_5g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                                       get_dut_logs_per_test_case, get_test_device_logs,
-                                                      setup_configuration):
+                                                      check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa2_personal and fiveg"
@@ -264,7 +264,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band")
     def test_nat_wpa3_personal_2g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                                       get_dut_logs_per_test_case, get_test_device_logs,
-                                                      setup_configuration):
+                                                      check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal and twog"
@@ -293,7 +293,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
     def test_nat_wpa3_personal_5g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                                       get_dut_logs_per_test_case, get_test_device_logs,
-                                                      setup_configuration):
+                                                      check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal and fiveg"
@@ -322,7 +322,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
     def test_nat_wpa3_personal_6g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                                       get_dut_logs_per_test_case, get_test_device_logs,
-                                                      setup_configuration):
+                                                      check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal and sixg"
@@ -352,7 +352,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     def test_nat_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library, execution_number,
                                                             num_stations, get_dut_logs_per_test_case,
                                                             get_test_device_logs,
-                                                            setup_configuration):
+                                                            check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal_mixed and twog"
@@ -382,7 +382,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     def test_nat_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library, execution_number,
                                                             num_stations, get_dut_logs_per_test_case,
                                                             get_test_device_logs,
-                                                            setup_configuration):
+                                                            check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa3_personal_mixed and fiveg"
@@ -412,7 +412,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     def test_nat_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library, execution_number,
                                                                 num_stations, get_dut_logs_per_test_case,
                                                                 get_test_device_logs,
-                                                                setup_configuration):
+                                                                check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa_wpa2_personal_mixed and twog"
@@ -444,7 +444,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     def test_nat_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library, execution_number,
                                                                 num_stations, get_dut_logs_per_test_case,
                                                                 get_test_device_logs,
-                                                                setup_configuration):
+                                                                check_connectivity, setup_configuration):
         """
             NAT Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connectivity_tests and nat and general and wpa_wpa2_personal_mixed and fiveg"

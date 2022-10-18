@@ -559,15 +559,25 @@ class tip_2x:
         self.dut_library_object.verify_certificates(idx=idx)
         ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False, retry=10)
         wifi_status = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
-        allure.attach(name="wifi_status_before_apply: ", body=str(wifi_status))
+        allure.attach(name="wifi_status_before_apply: ", body=str(json.dumps(wifi_status, indent=2)))
         if not ret_val["connected"] or ret_val["connected"] is None:
+            self.dut_library_object.check_connectivity(idx=idx)
+            self.dut_library_object.restart_ucentral_service(idx=idx, attach_allure=False)
+            time.sleep(30)
+            ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False, retry=10)
+            if not ret_val["connected"] or ret_val["connected"] is None:
+                self.dut_library_object.check_connectivity(idx=idx)
+                pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
+            else:
+                allure.step("Connected to Gateway after Restarting the ucentral Process!!!")
+
             # TODO: check the connectivity (if it is not connected, then check the lanforge wan port and bring it
             #  up if lanforge eth is in down state. Also check the link state of eth port with ip address
             #  reload the scenario in case it is messed up)
             #  if wan is available, then run (/etc/init.d/ucentral restart) to retry the connection and check the
             #  status again in next 30 seconds if still disconnected, then fail and attach the logs,
             #  Jitendra
-            pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
+            # pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
 
     def post_apply_check(self, idx=0):
         """
@@ -586,7 +596,7 @@ class tip_2x:
                 self.dut_library_object.check_connectivity(idx=idx, attach_allure=False)
         self.dut_library_object.check_connectivity(idx=idx)
         r_data = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
-        allure.attach(name="wifi_status_after_apply: ", body=str(r_data))
+        allure.attach(name="wifi_status_after_apply: ", body=str(json.dumps(r_data, indent=2)))
         logging.info("Checking Wifi Status after Config Apply...")
         for radio in r_data:
             if not r_data[radio]["up"]:
@@ -594,7 +604,6 @@ class tip_2x:
                 pytest.fail(radio + " is in down State after config apply")
             else:
                 logging.info(radio + " is up and running")
-
 
     def setup_environment_properties(self, add_allure_environment_property=None):
         if add_allure_environment_property is None:
@@ -909,6 +918,53 @@ class tip_2x:
         ret = self.dut_library_object.reboot(idx=idx)
         return ret
 
+    # def get_ap_status_logs(self):
+    #     connected = 0
+    #     redirector_data = None
+    #     for ap in range(len(self.device_under_tests_info)):
+    #         connectivity_data = self.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=ap)
+    #         if "disconnected" in str(connectivity_data):
+    #             print("AP in disconnected state, sleeping for 30 sec")
+    #             # time.sleep(30)
+    #             connected = 0
+    #             # # if i == 10:
+    #             # print("rebooting AP")
+    #             # ap_ssh.reboot()
+    #             # print("sleep for 300 sec")
+    #             # time.sleep(300)
+    #         else:
+    #             connected = 1
+    #         redirector_data = self.dut_library_object.run_generic_command(cmd="cat /etc/ucentral/redirector.json", idx=ap)
+    #     return connected, redirector_data
+    #
+    # def get_ap_cloud_connectivity_status(self):
+    #     status_data = []
+    #     self.ubus_connection = []
+    #     for ap in range(len(self.device_under_tests_info)):
+    #         status = self.dut_library_object.ubus_call_ucentral_status()
+    #         print(status)
+    #         status_data.append(status)
+    #         connectivity_data = self.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=ap)
+    #         self.ubus_connection.append(['Serial Number: ' + self.device_under_tests_info[ap]['serial'],
+    #                                      connectivity_data])
+    #     return status_data
+    #
+    # def test_access_point(self, request):
+    #     """used to check the manager status of AP, should be used as a setup to verify if ap can reach cloud"""
+    #     status = self.get_ap_cloud_connectivity_status()
+    #
+    #     def teardown_session():
+    #         data = []
+    #         data.append(False)
+    #         for s in status:
+    #             data.append(s[0])
+    #         print(data)
+    #         if False not in data:
+    #             pytest.exit("AP is Not connected to ucentral gw")
+    #         allure.attach(name=str(status), body="")
+    #
+    #     request.addfinalizer(teardown_session)
+    #     yield status
 
 if __name__ == '__main__':
     basic_05 = {

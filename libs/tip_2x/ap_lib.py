@@ -112,6 +112,14 @@ class APLIBS:
 
         return output
 
+    def restart_ucentral_service(self, idx=0, print_log=True, attach_allure=True):
+        output = self.run_generic_command(cmd="/etc/init.d/ucentral restart", idx=idx,
+                                          print_log=print_log,
+                                          attach_allure=attach_allure,
+                                          expected_attachment_type=allure.attachment_type.TEXT)
+
+        return output
+
     def ubus_call_ucentral_status(self, idx=0, print_log=True, attach_allure=True, retry=5):
         ret_val = dict.fromkeys(["connected", "latest", "active"])
         for i in range(0, retry):
@@ -398,9 +406,9 @@ class APLIBS:
             status_count = int(ret.count("True"))
             logging.info("Status count: " + str(status_count))
             if status_count == 1:
-                cmd = "cd && cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
-            else:
                 cmd = "cd && cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && echo 1 > dfs_simulate_radar"
+            else:
+                cmd = "cd && cd /sys/kernel/debug/ieee80211/phy0/ath10k/ && echo 1 > dfs_simulate_radar"
         elif type_.lower() == "wifi6" or type_.lower() == "wifi6e":
             cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
         output = self.run_generic_command(cmd=cmd, idx=idx,

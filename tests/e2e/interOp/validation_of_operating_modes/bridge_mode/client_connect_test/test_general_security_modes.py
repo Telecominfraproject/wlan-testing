@@ -17,12 +17,12 @@ pytestmark = [pytest.mark.client_connect_tests, pytest.mark.bridge, pytest.mark.
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "open": [{"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                 {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
-        "wpa": [{"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]},
+        "open": [{"ssid_name": "open_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                 {"ssid_name": "open_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa": [{"ssid_name": "wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "wpa_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+        "wpa2_personal": [{"ssid_name": "wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+                          {"ssid_name": "wpa2_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]},
     "rf": {},
     "radius": False
 }
@@ -62,7 +62,7 @@ class TestBridgeModeConnectSuiteA(object):
             BRIDGE Mode Client Connect Test with open encryption 2.4 GHz Band
             pytest -m "client_connect_tests and bridge and general and open and twog"
         """
-        profile_data = {"ssid_name": "ssid_open_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = setup_params_general["ssid_modes"]["open"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
@@ -84,7 +84,7 @@ class TestBridgeModeConnectSuiteA(object):
             BRIDGE Mode Client Connect Test with open encryption 5 GHz Band
             pytest -m "client_connect_tests and bridge and general and open and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_open_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
+        profile_data = setup_params_general["ssid_modes"]["open"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = "[BLANK]"
         security = "open"
@@ -107,7 +107,7 @@ class TestBridgeModeConnectSuiteA(object):
             BRIDGE Mode Client Connect Test with wpa encryption 2.4 GHz Band
             pytest -m "client_connectivity_tests and bridge and general and wpa and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -129,7 +129,7 @@ class TestBridgeModeConnectSuiteA(object):
             BRIDGE Mode Client Connect Test with wpa encryption 5 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
+        profile_data = setup_params_general["ssid_modes"]["wpa"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -151,7 +151,7 @@ class TestBridgeModeConnectSuiteA(object):
             BRIDGE Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa2_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -175,7 +175,7 @@ class TestBridgeModeConnectSuiteA(object):
             BRIDGE Mode Client Connect Test with wpa2_personal encryption 5 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa2_personal and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa2_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
+        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -191,14 +191,14 @@ setup_params_general_two_br = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa3_personal": [
-            {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_personal_mixed": [
-            {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa_wpa2_personal_mixed": [
-            {"ssid_name": "ssid_wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]
+            {"ssid_name": "wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}]
     },
     "rf": {},
     "radius": False
@@ -238,7 +238,7 @@ class TestBridgeModeConnectSuiteTwo(object):
             BRIDGE Mode Client Connect Test with wpa3_personal encryption 2.4 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_p_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -260,7 +260,7 @@ class TestBridgeModeConnectSuiteTwo(object):
             BRIDGE Mode Client Connect Test with wpa3_personal encryption 5 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa3_personal and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_p_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -284,7 +284,7 @@ class TestBridgeModeConnectSuiteTwo(object):
             BRIDGE Mode Client Connect Test with wpa3_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa3_personal_mixed and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -307,7 +307,7 @@ class TestBridgeModeConnectSuiteTwo(object):
             BRIDGE Mode Client Connect Test with wpa3_personal_mixed encryption 5 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa3_personal_mixed and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa3"
@@ -330,7 +330,7 @@ class TestBridgeModeConnectSuiteTwo(object):
             BRIDGE Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa_wpa2_personal_mixed and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa_wpa2_p_m_2g_br", "appliedRadios": ["2G"], "security_key": "something"}
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
@@ -354,7 +354,7 @@ class TestBridgeModeConnectSuiteTwo(object):
             BRIDGE Mode Client Connect Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
             pytest -m "client_connect_tests and bridge and general and wpa_wpa2_personal_mixed and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa_wpa2_p_m_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
+        profile_data = setup_params_general_two_br["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa"
