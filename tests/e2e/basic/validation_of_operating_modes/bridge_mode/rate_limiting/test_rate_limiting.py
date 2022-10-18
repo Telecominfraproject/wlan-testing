@@ -5,8 +5,7 @@ Rate LImiting Bridge Mode Scenario
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_regression_lf,
-              pytest.mark.bridge, pytest.mark.ow_rate_limiting_tests_lf]
+pytestmark = [pytest.mark.bridge, pytest.mark.rate_limiting_tests]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -49,13 +48,13 @@ class TestRateLimitingBridge(object):
     @pytest.mark.twog
     @pytest.mark.upload
     @pytest.mark.batch_size_125
-    @pytest.mark.ow_rate_limiting_tests_lf
+    @pytest.mark.rate_limiting_tests
     @allure.title("Test for Upload batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                      get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and up and batch_size_125"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and up and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -80,13 +79,13 @@ class TestRateLimitingBridge(object):
     @pytest.mark.twog
     @pytest.mark.download
     @pytest.mark.batch_size_125
-    @pytest.mark.ow_rate_limiting_tests_lf
+    @pytest.mark.rate_limiting_tests
     @allure.title("Test for Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                      get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and dw and batch_size_125"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and dw and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -112,13 +111,13 @@ class TestRateLimitingBridge(object):
     @pytest.mark.upload_download
     @pytest.mark.ow_sanity_lf
     @pytest.mark.batch_size_125
-    @pytest.mark.ow_rate_limiting_tests_lf
+    @pytest.mark.rate_limiting_tests
     @allure.title("Test for Upload and Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                         get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and up_dw and batch_size_125"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and up_dw and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -142,14 +141,14 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.disable_up_dw
-    @pytest.mark.ow_rate_limiting_tests_lf
+    @pytest.mark.rate_limiting_tests
     @allure.title("Test for ssid disable Upload and Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_disable_up_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                                 get_test_device_logs, num_stations,
                                                                 setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and disable_up_dw"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and disable_up_dw"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -175,14 +174,14 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_dw_per_client
-    @pytest.mark.ow_rate_limiting_tests_lf
+    @pytest.mark.rate_limiting_tests
     @allure.title("Test for Upload and Download per client batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_per_client_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                                    get_test_device_logs, num_stations,
                                                                    setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and up_dw_per_client"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and up_dw_per_client"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -206,14 +205,14 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.up_per_client
-    @pytest.mark.ow_rate_limiting_tests_lf
+    @pytest.mark.rate_limiting_tests
     @allure.title("Test for Upload per client batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_per_client_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                                 get_test_device_logs, num_stations,
                                                                 setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and up_per_client"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and up_per_client"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -238,14 +237,14 @@ class TestRateLimitingBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.dw_per_client
-    @pytest.mark.ow_rate_limiting_tests_lf
+    @pytest.mark.rate_limiting_tests
     @allure.title("Test for Download per client batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_dw_per_client_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                                 get_test_device_logs, num_stations,
                                                                 setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and dw_per_client"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and dw_per_client"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -276,7 +275,7 @@ class TestRateLimitingBridge(object):
                                                      get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and up and batch_size_125"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and up and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -307,7 +306,7 @@ class TestRateLimitingBridge(object):
                                                      get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and dw and batch_size_125"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and dw and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -340,7 +339,7 @@ class TestRateLimitingBridge(object):
                                                         get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and up_dw and batch_size_125"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and up_dw and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -371,7 +370,7 @@ class TestRateLimitingBridge(object):
                                                    get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and up and batch_size_1"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and up and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -402,7 +401,7 @@ class TestRateLimitingBridge(object):
                                                    get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and dw and batch_size_1"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and dw and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -433,7 +432,7 @@ class TestRateLimitingBridge(object):
                                                       get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and twog and up_dw and batch_size_1"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and twog and up_dw and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -464,7 +463,7 @@ class TestRateLimitingBridge(object):
                                                    get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and up and batch_size_1"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and up and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -495,7 +494,7 @@ class TestRateLimitingBridge(object):
                                                    get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and dw and batch_size_1"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and dw and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -526,7 +525,7 @@ class TestRateLimitingBridge(object):
                                                       get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and up_dw and batch_size_1"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and up_dw and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -557,7 +556,7 @@ class TestRateLimitingBridge(object):
                                                                 setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and disable_up_dw"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and disable_up_dw"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -590,7 +589,7 @@ class TestRateLimitingBridge(object):
                                                                    setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and up_dw_per_client"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and up_dw_per_client"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -622,7 +621,7 @@ class TestRateLimitingBridge(object):
                                                                 setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and up_per_client"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and up_per_client"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -654,7 +653,7 @@ class TestRateLimitingBridge(object):
                                                                 setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "ow_rate_limiting_tests_lf and bridge and wpa2_personal and fiveg and dw_per_client"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and dw_per_client"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
