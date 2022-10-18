@@ -109,7 +109,7 @@ class TestClientIsolationEnabled(object):
 
         allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
         allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("Test failed due to station has no ip")
             assert False
         else:
@@ -238,7 +238,7 @@ class TestClientIsolationEnabled(object):
 
         allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
         allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("Test failed due to station has no ip")
             assert False
         else:
@@ -421,7 +421,7 @@ class TestClientIsolationDisabled(object):
 
         allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
         allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -548,7 +548,7 @@ class TestClientIsolationDisabled(object):
 
         allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
         allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1033,7 +1033,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
         allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1106,7 +1106,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="rx drop % endp-a", body=str(rx_data[f"{cx_list[0]}"]["rx drop % a"]))
         allure.attach(name="rx drop % endp-b", body=str(rx_data[f"{cx_list[0]}"]["rx drop % b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1180,7 +1180,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
         allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1253,7 +1253,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
         allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1327,7 +1327,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
         allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1401,7 +1401,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
         allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1473,7 +1473,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
         allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1549,7 +1549,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
         allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1625,7 +1625,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
         allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
@@ -1700,7 +1700,7 @@ class TestClientIsolationDifferentSSID(object):
 
         allure.attach(name="bps rx endp-a", body=str(rx_data[f"{cx_list[0]}"]["bps rx a"]))
         allure.attach(name="bps rx endp-b", body=str(rx_data[f"{cx_list[0]}"]["bps rx b"]))
-        if not station_result1 and station_result2:
+        if not (station_result1 and station_result2):
             print("test failed due to station has no ip")
             assert False
         else:
