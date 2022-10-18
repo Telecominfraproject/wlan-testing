@@ -21,14 +21,13 @@ state = True
 sdk_expected = True
 
 
-@allure.testcase(name="Test Resources", url="")
 class TestResources(object):
     """Test Case Class: Test cases to cover resource Connectivity"""
 
     @pytest.mark.test_cloud_controller
     @pytest.mark.uc_sanity
-    # @pytest.mark.interop_uc_sanity
-    @allure.testcase(name="test_controller_connectivity", url="")
+    @allure.testcase(name="Test Cloud Controller", url="")
+    @allure.title("Cloud Controller Connectivity")
     def test_controller_connectivity(self, get_target_object, get_testbed_details):
         """Test case to verify cloud Controller Connectivity"""
 
@@ -40,10 +39,10 @@ class TestResources(object):
         print("response_code: ", response_code)
         allure.attach(name="Login Response Code: ", body=str(response_code))
         print("login_response_json: ", login_response_json)
-        allure.attach(name="Login Response JSON: ", body=str(get_target_object.login_resp.json()))
+        allure.attach(name="Login Response JSON: ", body=str(get_target_object.controller_library_object.login_resp.json()))
         if response_code != 200:
             pytest.exit(
-                "exiting from pytest, login response is no 200: " + str(get_target_object.login_resp.status_code))
+                "exiting from pytest, login response is no 200: " + str(get_target_object.controller_library_object.login_resp.status_code))
 
         gw_system_info = get_target_object.controller_library_object.get_system_gw()
         request_url = gw_system_info.request.url
@@ -208,117 +207,117 @@ class TestResources(object):
         assert True
 
 
-@allure.testcase(name="Firmware Management", url="")
-@pytest.mark.uc_firmware
-class TestFMS(object):
-
-    @pytest.mark.get_firmware_list
-    def test_fms_version_list(self,  get_testbed_details, get_target_object):
-        PASS = []
-        for ap in range(len(get_target_object.device_under_tests_info)):
-            # get the latest branch
-            firmware_list = get_target_object.firmware_library_object.get_firmwares(model=ap['model'],
-                                                                 branch="",
-                                                                 commit_id='',
-                                                                 limit='10000',
-                                                                 offset='3000')
-            firmware_list.reverse()
-            release_list_data = []
-            for i in firmware_list:
-                release_list_data.append(str(i['release']))
-            allure.attach(name="firmware_list", body=str("\n".join(release_list_data)),
-                          attachment_type=allure.attachment_type.JSON)
-            try:
-                response = requests.get(ap['firmware_version'])
-                print("URL is valid and exists on the internet")
-                allure.attach(name="firmware url: ", body=str(ap['firmware_version']))
-                target_revision_commit = ap['firmware_version'].split("-")[-2]
-                target_revision_branch = ap['firmware_version'].split("-")[-3]
-                flag = True
-                for i in release_list_data:
-                    if target_revision_commit == i.split('-')[-1] and target_revision_branch == i.split('-')[-2]:
-                        print('target firmware : ' + ap['version'] + " is available in FMS : " + i)
-                        allure.attach(name='target firmware : ' + ap['firmware_version'] + " is available in FMS : " + i,
-                                      body="")
-                        PASS.append(True)
-                        flag = False
-
-                if flag:
-                    print('target firmware : ' + ap['firmware_version'] + " is not available in FMS : ")
-                    allure.attach(name='target firmware : ' + ap['firmware_version'] + " is not available in FMS : ",
-                                  body="")
-                    PASS.append(False)
-                break
-            except Exception as e:
-                pass
-
-            if ap['firmware_version'].split('-')[1] == "latest":
-
-                for firmware in firmware_list:
-                    if ap['firmware_version'].split('-')[0] == 'release':
-                        version = firmware['revision'].split("/")[1].replace(" ", "").split('-')[1]
-                        if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
-                            print("Target Firmware: \n", firmware)
-                            allure.attach(name="Target firmware : ", body=str(firmware['release']))
-                            break
-
-                    if firmware['release'].split("-")[-2] == ap['firmware_version'].split('-')[0]:
-                        print("Target Firmware: \n", firmware)
-                        allure.attach(name="Target firmware : ", body=str(firmware['release']))
-                        break
-            else:
-                flag = True
-                for firmware in firmware_list:
-                    if ap['firmware_version'].split('-')[0] == 'release':
-                        branch = firmware['revision'].split("/")[1].replace(" ", "").split('-')[1]
-                        commit = ap['firmware_version'].split('-')[1]
-                        if branch.__contains__('v2.') and commit == firmware['release'].split('-')[-1]:
-                            print("Target Firmware: \n", firmware)
-                            allure.attach(name="Target firmware : ", body=str(firmware['release']))
-                            PASS.append(True)
-                            flag = False
-                            break
-                    if ap['firmware_version'].split('-')[1] == firmware['release'].split('-')[-1] and ap['firmware_version'].split('-')[
-                        0] == \
-                            firmware['release'].split('-')[-2]:
-                        print('target firmware : ' + ap['firmware_version'] + " is available in FMS : " + firmware['release'])
-                        allure.attach(
-                            name='target firmware : ' + ap['firmware_version'] + " is available in FMS : " + firmware['release']
-                            , body="")
-                        PASS.append(True)
-                        flag = False
-
-                if flag:
-                    print('target firmware : ' + ap['firmware_version'] + " is not available in FMS : ")
-                    allure.attach(name='target firmware : ' + ap['firmware_version'] + " is not available in FMS : ",
-                                  body="")
-                    PASS.append(False)
-        assert False not in PASS
-
-    @pytest.mark.firmware_upgrade
-    def test_firmware_upgrade_request(self, get_target_object, get_dut_logs_per_test_case, test_ap_connection_status):
-        for update in get_target_object.setup_firmware():
-            allure.attach(name='serial: ' + update[0], body="")
-        if test_ap_connection_status[0] == 0:
-            assert False
-            pytest.exit("AP in Disconnected State")
-        assert True
-
-    @pytest.mark.test_firmware_ap
-    def test_firmware_upgrade_status_AP(self):
-        allure.attach(name="firmware Upgrade Status:", body="")
-        assert True
-
-    @pytest.mark.test_firmware_gw
-    def test_firmware_upgrade_status_gateway(self, get_testbed_details, get_target_object):
-        status = []
-        for ap in range(len(get_target_object.device_under_tests_info)):
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version_ap = str(ap_version).split()
-            data = get_target_object.controller_library_object.get_device_by_serial_number(serial_number=ap['serial'])
-            data = data.json()
-            allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
-            status.append(current_version_ap == data['firmware'].split())
-        assert False not in status
+# @allure.testcase(name="Firmware Management", url="")
+# @pytest.mark.uc_firmware
+# class TestFMS(object):
+#
+#     @pytest.mark.get_firmware_list
+#     def test_fms_version_list(self,  get_testbed_details, get_target_object):
+#         PASS = []
+#         for ap in range(len(get_target_object.device_under_tests_info)):
+#             # get the latest branch
+#             firmware_list = get_target_object.firmware_library_object.get_firmwares(model=ap['model'],
+#                                                                  branch="",
+#                                                                  commit_id='',
+#                                                                  limit='10000',
+#                                                                  offset='3000')
+#             firmware_list.reverse()
+#             release_list_data = []
+#             for i in firmware_list:
+#                 release_list_data.append(str(i['release']))
+#             allure.attach(name="firmware_list", body=str("\n".join(release_list_data)),
+#                           attachment_type=allure.attachment_type.JSON)
+#             try:
+#                 response = requests.get(ap['firmware_version'])
+#                 print("URL is valid and exists on the internet")
+#                 allure.attach(name="firmware url: ", body=str(ap['firmware_version']))
+#                 target_revision_commit = ap['firmware_version'].split("-")[-2]
+#                 target_revision_branch = ap['firmware_version'].split("-")[-3]
+#                 flag = True
+#                 for i in release_list_data:
+#                     if target_revision_commit == i.split('-')[-1] and target_revision_branch == i.split('-')[-2]:
+#                         print('target firmware : ' + ap['version'] + " is available in FMS : " + i)
+#                         allure.attach(name='target firmware : ' + ap['firmware_version'] + " is available in FMS : " + i,
+#                                       body="")
+#                         PASS.append(True)
+#                         flag = False
+#
+#                 if flag:
+#                     print('target firmware : ' + ap['firmware_version'] + " is not available in FMS : ")
+#                     allure.attach(name='target firmware : ' + ap['firmware_version'] + " is not available in FMS : ",
+#                                   body="")
+#                     PASS.append(False)
+#                 break
+#             except Exception as e:
+#                 pass
+#
+#             if ap['firmware_version'].split('-')[1] == "latest":
+#
+#                 for firmware in firmware_list:
+#                     if ap['firmware_version'].split('-')[0] == 'release':
+#                         version = firmware['revision'].split("/")[1].replace(" ", "").split('-')[1]
+#                         if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+#                             print("Target Firmware: \n", firmware)
+#                             allure.attach(name="Target firmware : ", body=str(firmware['release']))
+#                             break
+#
+#                     if firmware['release'].split("-")[-2] == ap['firmware_version'].split('-')[0]:
+#                         print("Target Firmware: \n", firmware)
+#                         allure.attach(name="Target firmware : ", body=str(firmware['release']))
+#                         break
+#             else:
+#                 flag = True
+#                 for firmware in firmware_list:
+#                     if ap['firmware_version'].split('-')[0] == 'release':
+#                         branch = firmware['revision'].split("/")[1].replace(" ", "").split('-')[1]
+#                         commit = ap['firmware_version'].split('-')[1]
+#                         if branch.__contains__('v2.') and commit == firmware['release'].split('-')[-1]:
+#                             print("Target Firmware: \n", firmware)
+#                             allure.attach(name="Target firmware : ", body=str(firmware['release']))
+#                             PASS.append(True)
+#                             flag = False
+#                             break
+#                     if ap['firmware_version'].split('-')[1] == firmware['release'].split('-')[-1] and ap['firmware_version'].split('-')[
+#                         0] == \
+#                             firmware['release'].split('-')[-2]:
+#                         print('target firmware : ' + ap['firmware_version'] + " is available in FMS : " + firmware['release'])
+#                         allure.attach(
+#                             name='target firmware : ' + ap['firmware_version'] + " is available in FMS : " + firmware['release']
+#                             , body="")
+#                         PASS.append(True)
+#                         flag = False
+#
+#                 if flag:
+#                     print('target firmware : ' + ap['firmware_version'] + " is not available in FMS : ")
+#                     allure.attach(name='target firmware : ' + ap['firmware_version'] + " is not available in FMS : ",
+#                                   body="")
+#                     PASS.append(False)
+#         assert False not in PASS
+#
+#     @pytest.mark.firmware_upgrade
+#     def test_firmware_upgrade_request(self, get_target_object, get_dut_logs_per_test_case, test_ap_connection_status):
+#         for update in get_target_object.setup_firmware():
+#             allure.attach(name='serial: ' + update[0], body="")
+#         if test_ap_connection_status[0] == 0:
+#             assert False
+#             pytest.exit("AP in Disconnected State")
+#         assert True
+#
+#     @pytest.mark.test_firmware_ap
+#     def test_firmware_upgrade_status_AP(self):
+#         allure.attach(name="firmware Upgrade Status:", body="")
+#         assert True
+#
+#     @pytest.mark.test_firmware_gw
+#     def test_firmware_upgrade_status_gateway(self, get_testbed_details, get_target_object):
+#         status = []
+#         for ap in range(len(get_target_object.device_under_tests_info)):
+#             ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+#             current_version_ap = str(ap_version).split()
+#             data = get_target_object.controller_library_object.get_device_by_serial_number(serial_number=ap['serial'])
+#             data = data.json()
+#             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
+#             status.append(current_version_ap == data['firmware'].split())
+#         assert False not in status
 
 
