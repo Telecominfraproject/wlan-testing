@@ -113,7 +113,7 @@ class APLIBS:
         return output
 
     def restart_ucentral_service(self, idx=0, print_log=True, attach_allure=True):
-        output = self.run_generic_command(cmd="/etc/init.d/ucentral/restart", idx=idx,
+        output = self.run_generic_command(cmd="/etc/init.d/ucentral restart", idx=idx,
                                           print_log=print_log,
                                           attach_allure=attach_allure,
                                           expected_attachment_type=allure.attachment_type.TEXT)
