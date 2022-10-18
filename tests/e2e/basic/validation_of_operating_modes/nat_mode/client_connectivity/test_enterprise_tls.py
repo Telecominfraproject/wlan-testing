@@ -441,4 +441,3 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
 
         assert passes == "PASS", result
 
-
