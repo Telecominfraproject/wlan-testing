@@ -47,43 +47,47 @@ class TestDynamicVlanOverSsid2GWpa2(object):
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
-    def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_vif_state, lf_tools,get_ap_logs,get_lf_logs,
-                                                    create_lanforge_chamberview_dut, lf_test, get_configuration,
-                                                    station_names_twog):
+    def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
+                                get_test_device_logs, num_stations, setup_configuration):
         """
                 pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan"
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
-        ssid_2G = profile_data[0]["ssid_name"]
+        ssid_name = profile_data[0]["ssid_name"]
         mode = "VLAN"
+        security = "wpa2"
+        extra_secu = []
+        band = "twog"
         vlan = [100,200]
+        ttls_passwd = "passwordB"
+        eap = "TTLS"
+        identity = "userB"
+        
         val = ""
-        upstream_port = lf_tools.upstream_port
+        upstream_port = get_test_library.upstream_port
         print(upstream_port)
-        port_resources = upstream_port.split(".")
-        print(lf_tools.dut_idx_mapping)
-        lf_tools.reset_scenario()
-        lf_tools.add_vlan(vlan_ids=vlan)
+        port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
+        print(get_test_library.dut_idx_mapping)
+        get_test_library.reset_scenario()
+        get_test_library.add_vlan(vlan_ids=vlan)
 
-        lf_test.EAP_Connect(ssid=ssid_2G, passkey="[BLANK]", security="wpa2", extra_securities=[],
-                            mode=mode, band="twog", vlan_id=vlan[0],
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
-                            pairwise="NA", group="NA", wpa_psk="DEFAULT",
-                            ttls_passwd="passwordB", ieee80211w=0,
-                            wep_key="NA", ca_cert="NA", eap="TTLS", identity="userB", d_vlan=True)
+        passes, result, station_ip = get_test_library.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu, 
+                                                                  vlan_id=vlan, mode=mode, band=band, eap=eap,d_vlan=True, 
+                                                                  ttls_passwd=ttls_passwd, ieee80211w=0, 
+                                                                  identity=identity, num_sta=1, dut_data=setup_configuration)
 
-        eth_ssid_vlan_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
+        eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                                "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
 
-        eth_radius_vlan_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
+        eth_radius_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                         "/" + port_resources[2] + "." + str(vlan[1]))["interface"]["ip"]
-        eth_ip = lf_tools.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
+        eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                    "/" + port_resources[2])["interface"]["ip"]
 
-        sta_ip_1 = lf_test.station_ip[station_names_twog[0]].split('.')
+        sta_ip_1 = station_ip.split('.')
         eth_vlan_ip_1 = eth_radius_vlan_ip.split('.')
-        print("station ip...", lf_test.station_ip[station_names_twog[0]])
+        print("station ip...", station_ip)
         print("vlan ip...", eth_radius_vlan_ip)
         print("eth_upstream_ip..", eth_ip)
         if sta_ip_1[0] == "0":
@@ -99,7 +103,7 @@ class TestDynamicVlanOverSsid2GWpa2(object):
             else:
                 val = True
 
-        allure.attach(name="station ip....", body=str(lf_test.station_ip[station_names_twog[0]]))
+        allure.attach(name="station ip....", body=str(station_ip))
         allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan[0])))
         allure.attach(name="ssid configured vlan ip....", body=str(eth_ssid_vlan_ip))
         allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
