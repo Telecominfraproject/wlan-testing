@@ -113,12 +113,13 @@ class android_libs:
             "jobNumber": 38
         }
     }
-    def __init__(self, perfecto_data=None, dut_data=None):
+    def __init__(self, perfecto_data=None, dut_data=None, testcase=None):
         logging_level = logging.INFO
         logging.basicConfig(format='%(asctime)s - %(message)s', level=logging_level)
         # super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
+        self.testcase_name = testcase
         self.connData = self.get_ToggleAirplaneMode_data()
         print("connData------", self.connData)
         pass
@@ -402,15 +403,17 @@ class android_libs:
             'https://' + perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
             capabilities)
         driver.implicitly_wait(2)
-
-        TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-        nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+        if os.environ.get('PYTEST_CURRENT_TEST') is not None:
+            TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+            nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+        else:
+            nCurrentTestMethodNameSplit = self.testcase_name
         try:
             # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
             testcase = nCurrentTestMethodNameSplit.replace('test_', '')
             print("\n\nExecuting TestCase: " + testcase)
         except Exception as e:
-            TestCaseName = nCurrentTestMethodNameSplit
+            testcase = nCurrentTestMethodNameSplit
             print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
             # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 

@@ -21,11 +21,12 @@ from xml.etree import ElementTree as ET
 
 class ios_libs:
     global driver, perfecto_execution_context, deviceModel
-    def __init__(self, perfecto_data=None, dut_data=None):
+    def __init__(self, perfecto_data=None, dut_data=None, testcase=None):
         logging_level = logging.INFO
         logging.basicConfig(format='%(asctime)s - %(message)s', level=logging_level)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
+        self.testcase_name = testcase
         pass
 
     def openApp(self, appName, setup_perfectoMobile):
@@ -183,9 +184,11 @@ class ios_libs:
             'https://' + perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
             capabilities)
         driver.implicitly_wait(2)
-
-        TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-        nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+        if os.environ.get('PYTEST_CURRENT_TEST') is not None:
+            TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+            nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+        else:
+            nCurrentTestMethodNameSplit = self.testcase_name
         try:
             # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
             testcase = nCurrentTestMethodNameSplit.replace('test_', '')
