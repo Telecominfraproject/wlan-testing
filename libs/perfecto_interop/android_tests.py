@@ -202,6 +202,34 @@ class AndroidTests(android_libs):
             self.teardown()
             return "Fail", "Failed due to exception or Unable to find the API path"
 
+    def toggle_wifi_mode_test(self, ssid, passkey):
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
+                                                                           self.perfecto_data[self.device],
+                                                                           perfecto_data=self.perfecto_data,
+                                                                           testcase=self.testcase_name))
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        try:
+            ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey,
+                                                          setup_perfectoMobile=setup_perfecto_mobile,
+                                                          connData=self.connData)
+            if ssid_with_internet is True:
+                wifi_toggling = self.toggle_wifi_mode(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile,
+                                                    connData=self.connData)
+                self.closeApp(self.connData["appPackage-android"], setup)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                if wifi_toggling is True:
+                    return "PASS", "Connected to same ssid, after toggle the wifi button."
+                else:
+                    return "FAIL", "Not connected to same ssid, after toggle the wifi button."
+            else:
+                self.teardown()
+                return "FAIL", "SSID didn't get the Internet"
+        except Exception as e:
+            print(e)
+            self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
+
 
 if __name__ == '__main__':
     perfecto_data = {

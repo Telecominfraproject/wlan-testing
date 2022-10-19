@@ -2551,6 +2551,110 @@ class android_libs:
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
                         return ssid_with_internet
 
+    def toggle_wifi_mode(self, ssid, setup_perfectoMobile, connData):
+        print("\n-----------------------")
+        print("Toggle Wifi Mode")
+        print("-----------------------")
+        report = setup_perfectoMobile[1]
+        driver = setup_perfectoMobile[0]
+
+        device_model_name = self.getDeviceModelName(setup_perfectoMobile)
+        print("Selected Device Model: " + device_model_name)
+
+        if device_model_name != "Pixel 4":
+            report.step_start("Set Wifi Network to " + ssid)
+
+            try:    # Disabling wifi-toggle button
+                time.sleep(10)
+                print("Disable Wifi Radio Button")
+                report.step_start("Disable Wifi Radio Button")
+                wifiRadioBTN_On = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/switch_widget']")
+                wifiRadioBTN_On.click()
+                time.sleep(5)
+            except NoSuchElementException:
+                print("Exception: Verify Xpath - Update/check Xpath for Wifi Radio Button")
+
+            try:    # Enabling wifi-toggle button
+                print("Enable Wifi Radio Button")
+                report.step_start("Enable Wifi Radio Button")
+                wifiRadioBTN_Off = driver.find_element_by_xpath(
+                    "//*[@resource-id='com.android.settings:id/switch_widget']")
+                wifiRadioBTN_Off.click()
+                time.sleep(2)
+            except NoSuchElementException:
+                print("Exception: Verify Xpath - Update/check Xpath for Wifi Radio Button")
+
+            try:    # Checking whether connected to same ssid, after toggling wifi-button
+                if device_model_name == "Galaxy S9":
+                    print("Get Connected Wifi Name if any after Wifi Radio is Enabled")
+                    report.step_start("Get Connected Wifi Name if any after Wifi Radio is disabled")
+                    WifiNameElement1 = WebDriverWait(driver, 35).until(
+                        EC.presence_of_element_located((MobileBy.XPATH,
+                            "//hierarchy/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.view.ViewGroup[1]/android.widget.LinearLayout[2]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.view.ViewGroup[1]/android.widget.ScrollView[1]/android.widget.LinearLayout[1]/android.view.ViewGroup[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.RelativeLayout[2]/android.widget.TextView[1]")))
+                    Wifi_SSID_Name = WifiNameElement1.text
+                    print("Current Wifi Status Name: " + Wifi_SSID_Name)
+                else:
+                    print("Get Connected Wifi Name if any after Wifi Radio is Enabled")
+                    report.step_start("Get Connected Wifi Name if any after Wifi Radio is disabled")
+                    WifiNameElement1 = WebDriverWait(driver, 35).until(
+                        EC.presence_of_element_located((MobileBy.XPATH,
+                             "//hierarchy/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.view.ViewGroup[1]/android.widget.LinearLayout[3]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.view.ViewGroup[1]/android.widget.ScrollView[1]/android.widget.LinearLayout[1]/androidx.recyclerview.widget.RecyclerView[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.RelativeLayout[2]/android.widget.TextView[1]")))
+                    Wifi_SSID_Name = WifiNameElement1.text
+                    print("Current Wifi Status Name: " + Wifi_SSID_Name)
+
+            except NoSuchElementException:
+                Wifi_SSID_Name = "Null"
+                print("Device did not connect back to Wifi: " + ssid)
+
+            if Wifi_SSID_Name.__eq__(ssid):
+                WifiFlag = True
+            else:
+                WifiFlag = False
+
+            return WifiFlag
+
+        else:#------------------For Pixcel4 ------------------------
+            try:    # Disabling wifi-toggle button
+                time.sleep(2)
+                print("--Disable Wifi Radio Button")
+                report.step_start("Disable Wifi Radio Button")
+                wifiRadioBTN_On = driver.find_element_by_xpath(
+                                                        "//*[@resource-id='com.android.settings:id/switch_widget']")
+                wifiRadioBTN_On.click()
+                time.sleep(5)
+            except NoSuchElementException:
+                print("Exception: Verify Xpath - Update/check Xpath for Wifi Radio Button")
+
+            try:    # Enabling wifi-toggle button
+                print("--Enable Wifi Radio Button")
+                report.step_start("Enable Wifi Radio Button")
+                wifiRadioBTN_Off = driver.find_element_by_xpath(
+                                                        "//*[@resource-id='com.android.settings:id/switch_widget']")
+                wifiRadioBTN_Off.click()
+                time.sleep(10)
+            except NoSuchElementException:
+                print("Exception: Verify Xpath - Update/check Xpath for Wifi Radio Button")
+
+            try:    # Checking whether connected to same ssid, after toggling wifi-button
+                print("Get Connected Wifi Name if any after Wifi Radio is Enabled")
+                report.step_start("Get Connected Wifi Name if any after Wifi Radio is disabled")
+                WifiNameElement2 = WebDriverWait(driver, 35).until(
+                    EC.presence_of_element_located((MobileBy.XPATH,
+                    "//hierarchy/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[2]/androidx.recyclerview.widget.RecyclerView[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.RelativeLayout[1]/android.widget.TextView[1]")))
+                Wifi_SSID_Name = WifiNameElement2.text
+                print("Current Wifi Status Name: " + Wifi_SSID_Name)
+            except NoSuchElementException:
+                Wifi_SSID_Name = "Null"
+                print("Device did not connect back to Wifi: " + ssid)
+
+            if Wifi_SSID_Name.__eq__(ssid):
+                WifiFlag = True
+            else:
+                WifiFlag = False
+
+            return WifiFlag
+
 
 if __name__ == '__main__':
     perfecto_data = {
