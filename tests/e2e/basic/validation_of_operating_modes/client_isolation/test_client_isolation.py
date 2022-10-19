@@ -1661,17 +1661,17 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        station_list1 = station_names_twog[0]
-        station_list2 = station_names_fiveg[0]
+        station_list1 = "sta000"
+        station_list2 = "sta100"
         security = "wpa2"
         mode = "BRIDGE"
         radio_name1 = lf_test.twog_radios[0]
         radio_name2 = lf_test.fiveg_radios[0]
-        sta = []
-        for i in range(2):
-            sta.append(station_list1 + str(i))
-            sta.append(station_list2 + str(i))
-        print("station-list : ----->", sta)
+        # sta = []
+        # for i in range(2):
+        #     sta.append(station_list1 + str(i))
+        #     sta.append(station_list2 + str(i))
+        # print("station-list : ----->", sta)
 
         allure.attach(name="testcase-details", body="Verify the connectivity of 2 clients connected to different "
                                                     "SSID's where Client isolation is disabled in 2G SSID and enabled"
@@ -1679,17 +1679,17 @@ class TestClientIsolationDifferentSSID(object):
         allure.attach(name="station1_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
         allure.attach(name="station2_ssid-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
         station_result1 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name1, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+                                         security=security, mode=mode, radio=radio_name1, station_name=[station_list1])
         station_result2 = lf_test.Client_Connect_Using_Radio(ssid=ssid_name2, passkey=security_key,
-                                             security=security, mode=mode, radio=radio_name2, station_name=[sta[2]])
+                                         security=security, mode=mode, radio=radio_name2, station_name=[station_list2])
         print("station results 1  :", station_result1)
         print("station results 2  :", station_result2)
         layer3_restult = lf_test.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[2])
+                                               traffic_type="lf_udp", sta_list=[station_list1],side_b=station_list2)
         print("layer3 results:", layer3_restult)
-        print("waiting 30 sec for getting cx_list data...")
-        time.sleep(30)
+        print("waiting 45 sec for getting cx_list data...")
+        time.sleep(45)
 
         cx_list = lf_test.get_cx_list()
         rx_data = lf_tools.json_get(_req_url=f"cx/{cx_list[0]}")
