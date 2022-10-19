@@ -1128,6 +1128,60 @@ class ios_libs:
             print("get_wifi_switch_element is ON")
         # --------------------To Turn on WIFi Switch if already OFF--------------------------------
 
+
+    def toggle_wifi_mode(self,ssid, setup_perfectoMobile, connData):
+        print("\n-----------------------")
+        print("Toggle Wifi Mode")
+        print("-----------------------")
+
+        report = setup_perfectoMobile[1]
+        driver = setup_perfectoMobile[0]
+
+        # report.step_start("Switching Driver Context")
+        # print("Switching Context to Native")
+        # driver.switch_to.context('NATIVE_APP')
+        # # driver.switch_to.context(contexts[0])
+
+        try:    # Disabling wifi-toggle button
+            time.sleep(2)
+            driver.implicitly_wait(2)
+            print("Disable Wifi Radio Btn")
+            report.step_start("Disable Wifi Radio Btn")
+            wifiRadioBTN_On = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+            wifiRadioBTN_On.click()
+            time.sleep(5)
+        except NoSuchElementException:
+            print("Wifi Radio Button Not Disabled...")
+
+        try:    # Enabling wifi-toggle button
+            time.sleep(2)
+            driver.implicitly_wait(2)
+            print("Enable Wifi Radio Btn")
+            report.step_start("Enable Wifi Radio Btn")
+            wifiRadioBTN_Off = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+            wifiRadioBTN_Off.click()
+            time.sleep(5)
+        except NoSuchElementException:
+            print("Wifi Radio Button Not Enabled...")
+
+        try:    # Checking whether connected to same ssid, after toggling wifi-button
+            print("Get Connected Wifi Name if any after Wifi Radio is Enabled")
+            report.step_start("Get Connected Wifi Name if any after Wifi Radio is disabled")
+            WifiNameElement = WebDriverWait(driver, 35).until(
+                EC.presence_of_element_located((MobileBy.XPATH, "//AppiumAUT/XCUIElementTypeApplication[1]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeTable[1]/XCUIElementTypeCell[2]/XCUIElementTypeStaticText[1]")))
+            Wifi_SSID_Name = WifiNameElement.text
+            print("Current Wifi Status Name: " + Wifi_SSID_Name)
+        except NoSuchElementException:
+            Wifi_SSID_Name = "Null"
+            print("Device did not connect back to Wifi: " + ssid)
+
+        if Wifi_SSID_Name.__eq__(ssid):
+            WifiFlag = True
+        else:
+            WifiFlag = False
+
+        return WifiFlag
+
 if __name__ == '__main__':
     perfecto_data = {
         "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks",
