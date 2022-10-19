@@ -23,7 +23,7 @@ def setup_configuration(request, get_markers, get_target_object, run_lf):
 
 
 @pytest.fixture(scope="function")
-def check_connectivity(request, get_testbed_details, get_target_object):
+def check_connectivity(request, get_testbed_details, get_target_object, run_lf):
     def collect_logs():
         for i in range(len(get_testbed_details["device_under_tests"])):
             ret_val = get_target_object.get_dut_library_object().ubus_call_ucentral_status(idx=i, attach_allure=True,
@@ -35,4 +35,6 @@ def check_connectivity(request, get_testbed_details, get_target_object):
 
             allure.attach(name='Device : ' + get_testbed_details["device_under_tests"][i]["identifier"] +
                                " is connected after Test", body="")
-    request.addfinalizer(collect_logs)
+
+    if not run_lf:
+        request.addfinalizer(collect_logs)
