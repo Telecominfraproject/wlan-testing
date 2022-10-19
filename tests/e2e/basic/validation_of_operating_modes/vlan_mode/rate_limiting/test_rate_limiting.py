@@ -119,7 +119,8 @@ class TestRateLimitingVLAN(object):
     @pytest.mark.rate_limiting_tests
     @allure.title("Test for Upload and Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                                        get_test_device_logs, num_stations, setup_configuration):
+                                                        get_test_device_logs, num_stations, setup_configuration,
+                                                        check_connectivity):
         """
             Test Rate Limiting Scenario
             pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and upload_download and batch_size_125"

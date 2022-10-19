@@ -1369,7 +1369,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.title("Single client TCP Download wifi capacity 40Mhz Bw")
     @allure.sub_suite("BRIDGE Mode")
     def test_client_wpa2_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"

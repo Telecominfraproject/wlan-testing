@@ -67,7 +67,7 @@ class TestRateLimitingWithRadiusBridge(object):
                                               get_test_device_logs,
                                               get_target_object,
                                               num_stations, setup_configuration, rate_radius_info,
-                                              rate_radius_accounting_info):
+                                              rate_radius_accounting_info, check_connectivity):
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
                         "appliedRadios": ["2G"],
                         "security_key": "something",
@@ -112,7 +112,7 @@ class TestRateLimitingWithRadiusBridge(object):
                                                       get_test_device_logs,
                                                       get_target_object,
                                                       num_stations, setup_configuration, rate_radius_info,
-                                                      rate_radius_accounting_info):
+                                                      rate_radius_accounting_info, check_connectivity):
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
                         "appliedRadios": ["2G"],
                         "security_key": "something",
