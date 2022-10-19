@@ -309,7 +309,7 @@ def interop_testcase_name(request):
     yield test_case_name
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios, request,
                      get_device_configuration, interop_testcase_name, device, run_lf):
     if is_test_library_perfecto_android:
