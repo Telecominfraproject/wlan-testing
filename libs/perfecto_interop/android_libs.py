@@ -2,6 +2,8 @@
 This file contains the functions that are required for Perfecto Android devices
 """
 import logging
+import os
+import re
 import time
 import warnings
 from time import gmtime, strftime
