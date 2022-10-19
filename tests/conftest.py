@@ -77,6 +77,12 @@ def pytest_addoption(parser):
         default=False,
         help="Skips the Lanforge Usage"
     )
+    parser.addoption(
+        "--skip-all",
+        action="store_true",
+        default=False,
+        help="Skips the Lanforge Usage"
+    )
 
     parser.addoption(
         "--skip-env",
@@ -211,7 +217,8 @@ def get_markers(request, get_security_flags):
 @pytest.fixture(scope="session")
 def get_target_object(request, run_lf, get_testbed_details, add_allure_environment_property: Callable) -> None:
     """yields the testbed option selection"""
-
+    if request.config.getoption("--skip-all"):
+        pytest.skip("Skipping all")
     t_object = None
     if not run_lf:
         try:
