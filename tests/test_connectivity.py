@@ -26,7 +26,6 @@ class TestResources(object):
     """Test Case Class: Test cases to cover resource Connectivity"""
 
     @pytest.mark.test_cloud_controller
-    @pytest.mark.uc_sanity
     @allure.testcase(name="Test Cloud Controller", url="")
     @allure.title("Cloud Controller Connectivity")
     def test_controller_connectivity(self, get_target_object, get_testbed_details):
@@ -40,10 +39,12 @@ class TestResources(object):
         print("response_code: ", response_code)
         allure.attach(name="Login Response Code: ", body=str(response_code))
         print("login_response_json: ", login_response_json)
-        allure.attach(name="Login Response JSON: ", body=str(get_target_object.controller_library_object.login_resp.json()))
+        allure.attach(name="Login Response JSON: ",
+                      body=str(get_target_object.controller_library_object.login_resp.json()))
         if response_code != 200:
             pytest.exit(
-                "exiting from pytest, login response is no 200: " + str(get_target_object.controller_library_object.login_resp.status_code))
+                "exiting from pytest, login response is no 200: " + str(
+                    get_target_object.controller_library_object.login_resp.status_code))
 
         gw_system_info = get_target_object.controller_library_object.get_system_gw()
         request_url = gw_system_info.request.url
@@ -76,7 +77,7 @@ class TestResources(object):
         prov_system_status_json = prov_system_info.json()
         print("prov_status_check response from fms: ", prov_system_status)
         allure.attach(name="prov_status_check response from Prov:", body=str(prov_system_status) +
-                                                                       str(prov_system_status_json))
+                                                                         str(prov_system_status_json))
         if prov_system_status != 200:
             pytest.exit("Prov_status_check response from Prov: " + str(prov_system_status))
 
@@ -149,47 +150,40 @@ class TestResources(object):
         assert True
 
     @pytest.mark.test_access_points_connectivity
-    @allure.testcase(name="test_access_points_connectivity", url="")
-    def test_access_points_connectivity(self, get_target_object, get_testbed_details,
-                                        test_ap_connection_status):
+    @allure.testcase(name="Test Access Point Connectivity", url="")
+    @allure.title("Cloud Access Point Connectivity")
+    def test_access_points_connectivity(self, get_target_object, get_testbed_details):
         """Test case to verify Access Points Connectivity"""
-        # print(test_ap_connection_status)
-        # pytest.exit("")
-        data = []
-        for status in get_target_object.test_access_point:
-            data.append(status[0])
-        connection, redirector = get_target_object.get_ap_status_logs
-        allure.attach(name="AP - Cloud connectivity info", body=str(get_target_object.ubus_connection))
-        print("test_ap_connection_status: ", connection, redirector)
-        expected_sdk = str(
-            get_testbed_details["controller"]['url'].replace("https://sec", "\'gw").replace(":16001", "\'"))
-        print("Expected SDK: ", expected_sdk)
-        allure.attach(name="Exoected SDK: ", body=str(expected_sdk))
-        print("SDK On AP: ", str(get_target_object.dut_library_object.dut_get_uci_show().split("=")[1]))
-        allure.attach(name="SDK Pointed by AP: ", body=str(get_target_object.dut_library_object().get_uci_show.split("=")[1]))
-        for ap in range(len(get_target_object.device_under_tests_info)):
-            out = get_target_object.controller_library_object.get_device_by_serial_number(serial_number=ap["serial"])
-            out = out.json()
-            if "ErrorCode" in out.keys():
-                print(out)
-                allure.attach(name="Error Device not found in Gateway: ", body=str(out))
-                pytest.exit("Error Device not found in Gateway:")
-            else:
-                print(out)
-                allure.attach(name="Device is available in Gateway: ", body=str(out))
-            for log in get_target_object.dut_library_object.get_logread(idx=ap):
-                allure.attach(name="AP Logs: ", body=log)
-            if expected_sdk not in get_target_object.dut_library_object.get_uci_show(idx=ap):
-                global sdk_expected
-                sdk_expected = False
-                pytest.fail("AP has invalid Redirector")
-                pytest.exit("AP has invalid Redirector")
-            if test_ap_connection_status[0] == 0:
-                global state
-                state = False
-                pytest.fail("AP in Disconnected State")
-                pytest.exit("AP in Disconnected State")
-        assert False not in data
+
+        # Logic to Get ubus call ucentral status from AP
+        connected = True
+        ubus_data = []
+        for i in range(0, len(get_target_object.device_under_tests_info)):
+            ret_val = get_target_object.get_dut_library_object().ubus_call_ucentral_status(idx=i)
+            ubus_data.append(ret_val)
+            if not ret_val["connected"]:
+                connected = False
+                get_target_object.get_dut_library_object().verify_certificates(idx=i, print_log=True,
+                                                                               attach_allure=True)
+                get_target_object.get_dut_library_object().check_connectivity(idx=i, print_log=True, attach_allure=True)
+
+        # Logic to get uci show ucentral and check the target sdk
+        uci_data = []
+        for i in range(0, len(get_target_object.device_under_tests_info)):
+            ret_val = get_target_object.get_dut_library_object().get_uci_show(idx=i, param="ucentral.config.server")
+            ret_val = str(ret_val).split("=")[1]
+            uci_data.append(ret_val)
+        gw_host = get_target_object.controller_library_object.gw_host.hostname
+        expected_host = True
+        for j in uci_data:
+            if gw_host not in j:
+                expected_host = False
+
+        print(gw_host)
+        print(uci_data)
+        print(ubus_data)
+        assert connected == True and expected_host == True
+
 
     @pytest.mark.traffic_generator_connectivity
     @pytest.mark.jitu
@@ -231,7 +225,6 @@ class TestResources(object):
         if sdk_expected == False:
             pytest.exit("AP has invalid Redirector")
         assert True
-
 
 # @allure.testcase(name="Firmware Management", url="")
 # @pytest.mark.uc_firmware
@@ -345,5 +338,3 @@ class TestResources(object):
 #             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
 #             status.append(current_version_ap == data['firmware'].split())
 #         assert False not in status
-
-
