@@ -325,7 +325,7 @@ class ios_libs:
         is_internet = False
         wifi_name = ssid
         wifi_pass = passkey
-
+        ssid_found = False
         print("Verifying Wifi/AP Connection Details....")
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -390,12 +390,12 @@ class ios_libs:
                             print("switch is still OFF")
                             logging.error("Wifi Switch is OFF")
                             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                            return is_internet
+                            return is_internet, setup_perfectoMobile, ssid_found
                     else:
                         print("Switch is Still OFF")
                         logging.error("Wifi Switch is OFF")
                         self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                        return is_internet
+                        return is_internet, setup_perfectoMobile, ssid_found
                 except:
                     print("No switch element found")
                     logging.error("No switch element found")
@@ -408,7 +408,7 @@ class ios_libs:
             print("Cannot find WIFI element")
             logging.error("Cannot find WIFI element")
             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-            return is_internet
+            return is_internet, setup_perfectoMobile, ssid_found
 
         # ---------------------This is to Forget current connected SSID-------------------------------
         # ---------------------This to Avoid any popup page from captive portal--------------------#
@@ -494,7 +494,6 @@ class ios_libs:
         time.sleep(2)
         report.step_start("Searching SSID")
         print("Selecting Wifi: " + wifi_name)
-        ssid_found = False
         available_ssids = False
 
         try:
@@ -522,21 +521,21 @@ class ios_libs:
                             logging.error("Unable to select SSID")
                             report.step_start("Selecting Unable SSID To Connect")
                             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                            return is_internet
+                            return is_internet, setup_perfectoMobile, ssid_found
 
                 except:
                     print("couldn't connect to " + wifi_name)
                     logging.error("Couldn't Find ssid")
                     # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                     self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                    return is_internet
+                    return is_internet, setup_perfectoMobile, ssid_found
                     pass
 
             if not ssid_found:
                 print("could not found " + wifi_name + " in device")
                 logging.error("Couldn't Find ssid in device")
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                return is_internet
+                return is_internet, setup_perfectoMobile, ssid_found
         except:
             pass
         # ---------------------To get all available SSID and select it-------------------------------
@@ -576,7 +575,7 @@ class ios_libs:
             # Need to add Wait for Selected Wifi Xpath
             # time.sleep(3)
         # ---------------------check if internet-------------------------------
-        return is_internet, setup_perfectoMobile
+        return is_internet, setup_perfectoMobile, ssid_found
 
     def get_ip_address(self, ssid, setup_perfectoMobile, connData):
         wifi_name = ssid
@@ -725,7 +724,7 @@ class ios_libs:
         print("-------------------------------------")
         is_internet = False
         wifi_name = ssid
-
+        ssid_found = False
         print("Verifying Wifi/AP Connection Details....")
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -790,12 +789,12 @@ class ios_libs:
                             print("switch is still OFF")
                             logging.error("Wifi Switch is OFF")
                             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                            return is_internet
+                            return is_internet, setup_perfectoMobile, ssid_found
                     else:
                         print("Switch is Still OFF")
                         logging.error("Wifi Switch is OFF")
                         self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                        return is_internet
+                        return is_internet, setup_perfectoMobile, ssid_found
                 except:
                     print("No switch element found")
                     logging.error("No switch element found")
@@ -808,7 +807,7 @@ class ios_libs:
             print("Cannot find WIFI element")
             logging.error("Cannot find WIFI element")
             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-            return is_internet
+            return is_internet, setup_perfectoMobile, ssid_found
 
         # ---------------------This is to Forget current connected SSID-------------------------------
         # ---------------------This to Avoid any popup page from captive portal--------------------#
@@ -922,21 +921,21 @@ class ios_libs:
                             logging.error("Unable to select SSID")
                             report.step_start("Selecting Unable SSID To Connect")
                             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                            return is_internet
+                            return is_internet, setup_perfectoMobile, ssid_found
 
                 except:
                     print("couldn't connect to " + wifi_name)
                     logging.error("Couldn't Find ssid")
                     # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                     self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                    return is_internet
+                    return is_internet, setup_perfectoMobile, ssid_found
                     pass
 
             if not ssid_found:
                 print("could not found " + wifi_name + " in device")
                 logging.error("Couldn't Find ssid in device")
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                return is_internet
+                return is_internet, setup_perfectoMobile, ssid_found
         except:
             pass
         # ---------------------To get all available SSID and select it-------------------------------
@@ -1006,7 +1005,7 @@ class ios_libs:
             # Need to add Wait for Selected Wifi Xpath
             # time.sleep(3)
         # ---------------------check if internet-------------------------------
-        return is_internet, setup_perfectoMobile
+        return is_internet, setup_perfectoMobile, ssid_found
 
     def wifi_disconnect(self, ssid, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
