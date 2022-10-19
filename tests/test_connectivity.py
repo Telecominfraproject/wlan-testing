@@ -11,6 +11,7 @@ import json
 
 pytestmark = [pytest.mark.test_resources,
               pytest.mark.sanity,
+              pytest.mark.ow_sanity_lf,
               pytest.mark.uc_sanity,
               pytest.mark.sanity_55,
               pytest.mark.interop_uc_sanity,
@@ -186,7 +187,6 @@ class TestResources(object):
 
 
     @pytest.mark.traffic_generator_connectivity
-    @pytest.mark.jitu
     @allure.testcase(name="test_traffic_generator_connectivity", url="")
     def test_traffic_generator_connectivity(self, get_test_library):
         """Test case to verify Traffic Generator Connectivity"""
