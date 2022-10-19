@@ -294,3 +294,4 @@ if __name__ == '__main__':
     # print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
     # print(obj.enterprise_client_connect(ssid="ssid_wpa_eap_5g_5O05610", identity="nolaradius", ttls_passwd="nolastart"))
     # print(obj.client_connect(ssid="ssid_wpa_5g_br_NE38276", passkey="something"))
+    print(obj.toggle_wifi_mode_test(ssid="ssid_wpa_2g_RL_7V05064", passkey="something"))
