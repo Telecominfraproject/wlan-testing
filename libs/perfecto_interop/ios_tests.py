@@ -178,14 +178,13 @@ class ios_tests(ios_libs):
     def toggle_wifi_mode_test(self, ssid, passkey):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
                                                                        self.perfecto_data[self.device],
-                                                                       perfecto_data=self.perfecto_data,
-                                                                       testcase=self.testcase_name))
+                                                                       perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
-            ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey,
+            ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid, passkey=passkey,
                                                           setup_perfectoMobile=setup_perfecto_mobile,
                                                           connData=self.connData)
-            if ssid_with_internet is True:
+            if ssid_with_internet is True and ssid_found is True:
                 wifi_toggleing = self.toggle_wifi_mode(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile,
                                                     connData=self.connData)
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)

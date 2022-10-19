@@ -2613,7 +2613,7 @@ class android_libs:
 
             return WifiFlag
 
-        else:#------------------For Pixcel4 ------------------------
+        else:#------------------For Pixel4 ------------------------
             try:    # Disabling wifi-toggle button
                 time.sleep(2)
                 print("--Disable Wifi Radio Button")

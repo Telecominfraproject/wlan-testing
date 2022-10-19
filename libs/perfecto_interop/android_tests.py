@@ -217,14 +217,13 @@ class AndroidTests(android_libs):
     def toggle_wifi_mode_test(self, ssid, passkey):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
                                                                            self.perfecto_data[self.device],
-                                                                           perfecto_data=self.perfecto_data,
-                                                                           testcase=self.testcase_name))
+                                                                           perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
-            ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey,
+            ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid, passkey=passkey,
                                                           setup_perfectoMobile=setup_perfecto_mobile,
                                                           connData=self.connData)
-            if ssid_with_internet is True:
+            if ssid_with_internet is True and ssid_found is True:
                 wifi_toggling = self.toggle_wifi_mode(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile,
                                                     connData=self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)
@@ -300,8 +299,8 @@ if __name__ == '__main__':
     }]
     obj = AndroidTests(perfecto_data=perfecto_data, dut_data=access_point, device="Galaxy S10.*",
                        testcase="Test_perfecto_check")
-    print(obj.client_connectivity_test("ssid_wpa_5g_br_NE38276", security=None,
-                                       dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
+    # print(obj.client_connectivity_test("ssid_wpa_5g_br_NE38276", security=None,
+    #                                    dut_data=None, passkey="something", mode=None, band=None, num_sta=None))
 
     # print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
     # print(obj.enterprise_client_connect(ssid="ssid_wpa_eap_5g_5O05610", identity="nolaradius", ttls_passwd="nolastart"))
