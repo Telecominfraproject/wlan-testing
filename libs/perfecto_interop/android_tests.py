@@ -42,6 +42,7 @@ class AndroidTests(android_libs):
         try:
             ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                           setup_perfecto_mobile, connData=self.connData)
+            print(ssid_with_internet, ssid_found, "++++++++++")
             if ssid_with_internet is True and ssid_found is True:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)

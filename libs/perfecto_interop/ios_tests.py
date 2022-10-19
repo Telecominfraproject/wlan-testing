@@ -194,6 +194,19 @@ if __name__ == '__main__':
             "appPackage-android": "com.android.settings",
             "jobName": "Interop-iphone-11",
             "jobNumber": 38
+        },
+        "iPhone-7": {
+            "model-iOS": "iPhone-7",
+            "bundleId-iOS": "com.apple.Preferences",
+            "platformName-iOS": "iOS",
+            "bundleId-iOS-Settings": "com.apple.Preferences",
+            "bundleId-iOS-Ping": "com.deftapps.ping",
+            "browserType-iOS": "Safari",
+            "bundleId-iOS-Safari": "com.apple.mobilesafari",
+            "platformName-android": "Android",
+            "appPackage-android": "com.android.settings",
+            "jobName": "Interop-iphone-7",
+            "jobNumber": 38
         }
     }
     access_point = [{
@@ -225,7 +238,7 @@ if __name__ == '__main__':
         "serial_tty": "/dev/ttyAP5",
         "firmware_version": "next-latest"
     }]
-    obj = ios_tests(perfecto_data=perfecto_data, dut_data=access_point,device="iPhone-11",
+    obj = ios_tests(perfecto_data=perfecto_data, dut_data=access_point,device="iPhone-7",
                     testcase="Test_perfecto_check")
     # print(obj.client_connectivity_test(ssid="ssid_wpa2_2g_RL_E3V2240", passkey="something"))
     # print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
