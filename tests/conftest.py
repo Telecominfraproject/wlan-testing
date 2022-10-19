@@ -295,31 +295,16 @@ def is_test_library_perfecto_ios(request):
     yield interop
 
 
-@pytest.fixture(scope="function")
-def interop_testcase_name(request):
-    test_case_full_name = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-    n_current_test_method_name_split = re.sub(r'\[.*?\]\ *', "", test_case_full_name)
-    try:
-        test_case_name = n_current_test_method_name_split.replace('test_', '')
-        print("\n\nExecuting TestCase: " + test_case_name)
-    except Exception as e:
-        test_case_name = n_current_test_method_name_split
-        print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/"
-    yield test_case_name
-
-
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios, request,
-                     get_device_configuration, interop_testcase_name, device, run_lf):
+                     get_device_configuration, device, run_lf):
     if is_test_library_perfecto_android:
         obj = android_tests.AndroidTests(perfecto_data=PERFECTO_DETAILS,
-                                         dut_data=get_testbed_details["device_under_tests"], device=device,
-                                         testcase=interop_testcase_name)
+                                         dut_data=get_testbed_details["device_under_tests"], device=device)
 
     elif is_test_library_perfecto_ios:
         obj = ios_tests.ios_tests(perfecto_data=PERFECTO_DETAILS, dut_data=get_testbed_details["device_under_tests"],
-                                  device=device, testcase=interop_testcase_name)
+                                  device=device)
     else:
         obj = lf_tests(lf_data=get_testbed_details["traffic_generator"],
                        dut_data=get_testbed_details["device_under_tests"],

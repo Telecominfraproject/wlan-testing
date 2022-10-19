@@ -1,4 +1,6 @@
 import logging
+import os
+import re
 import time
 import warnings
 from time import gmtime, strftime
@@ -152,7 +154,7 @@ class ios_libs:
             attribute_value = False
         return attribute_value
 
-    def setup_perfectoMobile_iOS(self, get_device_configuration, perfecto_data, testcase):
+    def setup_perfectoMobile_iOS(self, get_device_configuration, perfecto_data):
         global perfecto_execution_context, driver, deviceModel
         from appium import webdriver
         driver = None
@@ -182,16 +184,16 @@ class ios_libs:
             capabilities)
         driver.implicitly_wait(2)
 
-        # TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-        # nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-        # try:
-        #     # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
-        #     TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
-        #     print("\n\nExecuting TestCase: " + TestCaseName)
-        # except Exception as e:
-        #     TestCaseName = nCurrentTestMethodNameSplit
-        #     print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        #     # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+        nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+        try:
+            # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+            testcase = nCurrentTestMethodNameSplit.replace('test_', '')
+            print("\n\nExecuting TestCase: " + testcase)
+        except Exception as e:
+            TestCaseName = nCurrentTestMethodNameSplit
+            print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+            # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
         projectname = perfecto_data["projectName"]
         projectversion = perfecto_data["projectVersion"]
