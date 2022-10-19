@@ -37,8 +37,7 @@ class AndroidTests(android_libs):
         global ip_address
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
                                                                            self.perfecto_data[self.device],
-                                                                           perfecto_data=self.perfecto_data,
-                                                                           testcase=self.testcase_name))
+                                                                           perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
             ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
@@ -67,8 +66,7 @@ class AndroidTests(android_libs):
         global ip_address
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
                                                                            self.perfecto_data[self.device],
-                                                                           perfecto_data=self.perfecto_data,
-                                                                           testcase=self.testcase_name))
+                                                                           perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
             ssid_with_internet, setup = self.wifi_connect_eap(ssid=ssid, user=identity, ttls_passwd=ttls_passwd,
@@ -97,8 +95,7 @@ class AndroidTests(android_libs):
     def client_connectivity_test(self, ssid, security=None, dut_data=None, passkey=None, mode=None, band=None, num_sta=None):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
                                                                            self.perfecto_data[self.device],
-                                                                           perfecto_data=self.perfecto_data,
-                                                                           testcase=self.testcase_name))
+                                                                           perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
             ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
@@ -125,8 +122,7 @@ class AndroidTests(android_libs):
                                             eap=None, ttls_passwd=None, identity=None, num_sta=None, dut_data=None):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
                                                                            self.perfecto_data[self.device],
-                                                                           perfecto_data=self.perfecto_data,
-                                                                           testcase=self.testcase_name))
+                                                                           perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
             ssid_with_internet, setup = self.wifi_connect_eap(ssid=ssid, user=identity, passkey=ttls_passwd,
@@ -154,8 +150,7 @@ class AndroidTests(android_libs):
         global ip_address
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
                                                                            self.perfecto_data[self.device],
-                                                                           perfecto_data=self.perfecto_data,
-                                                                           testcase=self.testcase_name))
+                                                                           perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
             ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
@@ -175,8 +170,7 @@ class AndroidTests(android_libs):
     def rate_limiting_test(self, ssid, passkey,up_rate=None,down_rate=None):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
                                                                            self.perfecto_data[self.device],
-                                                                           perfecto_data=self.perfecto_data,
-                                                                           testcase=self.testcase_name))
+                                                                           perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         ssid_with_internet, setup = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
