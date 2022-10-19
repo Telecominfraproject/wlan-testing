@@ -288,7 +288,7 @@ def is_test_library_perfecto_ios(request):
     yield interop
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def interop_testcase_name(request):
     test_case_full_name = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
     n_current_test_method_name_split = re.sub(r'\[.*?\]\ *', "", test_case_full_name)
