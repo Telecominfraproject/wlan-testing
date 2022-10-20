@@ -5,16 +5,18 @@
 
 """
 
-import os
 import allure
 import pytest
-from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
-from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
+import importlib
+import logging
 
-pytestmark = [pytest.mark.ow_regression_lf,
-              pytest.mark.ow_dvlan_tests_lf,
-              pytest.mark.wpa2_enterprise,
-              pytest.mark.twog]
+lf_library = importlib.import_module("configuration")
+DYNAMIC_VLAN_RADIUS_SERVER_DATA = lf_library.DYNAMIC_VLAN_RADIUS_SERVER_DATA
+DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = lf_library.DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
+
+pytestmark = [pytest.mark.dynamic_vlan_tests,
+              pytest.mark.vlan,
+              pytest.mark.ow_sanity_lf]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -31,15 +33,18 @@ setup_params_general = {
 }
 
 
-@allure.suite("regression")
+# @allure.suite("regression")
+@allure.parent_suite("OpenWifi Dynamic Vlan Test")
+@allure.suite("WPA2 Enterprise Security")
+@allure.sub_suite("2.4 GHz Band")
 @allure.feature("VLAN MODE wpa2_enterprise Dynamic Vlan")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestDynamicVlanOverSsid2GWpa2(object):
 
     @pytest.mark.dynamic_precedence_over_ssid
@@ -47,6 +52,7 @@ class TestDynamicVlanOverSsid2GWpa2(object):
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
+    @allure.title("Test for dynamic precedence over ssid")
     def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration):
         """
@@ -63,20 +69,16 @@ class TestDynamicVlanOverSsid2GWpa2(object):
         ttls_passwd = "passwordB"
         eap = "TTLS"
         identity = "userB"
-        
         val = ""
-        upstream_port = get_test_library.upstream_port
-        print(upstream_port)
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
-        print(get_test_library.dut_idx_mapping)
-        get_test_library.reset_scenario()
-        get_test_library.add_vlan(vlan_ids=vlan)
 
-        passes, result, station_ip = get_test_library.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu, 
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                  extra_securities=extra_secu,
                                                                   vlan_id=vlan, mode=mode, band=band, eap=eap,d_vlan=True, 
                                                                   ttls_passwd=ttls_passwd, ieee80211w=0, 
                                                                   identity=identity, num_sta=1, dut_data=setup_configuration)
 
+        station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                                "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
 
@@ -87,31 +89,18 @@ class TestDynamicVlanOverSsid2GWpa2(object):
 
         sta_ip_1 = station_ip.split('.')
         eth_vlan_ip_1 = eth_radius_vlan_ip.split('.')
-        print("station ip...", station_ip)
-        print("vlan ip...", eth_radius_vlan_ip)
-        print("eth_upstream_ip..", eth_ip)
+        logging.info(f"station ip...{sta_ip_1}\neth.{vlan[0]}...{eth_ssid_vlan_ip}\neth.{vlan[1]}...{eth_radius_vlan_ip}"
+                    f"\neth_upstream_ip...{eth_ip}")
         if sta_ip_1[0] == "0":
-            print("station didnt received any ip")
-            allure.attach("station didnt recieved ip..")
-            assert False
+            assert False, result
         elif eth_vlan_ip_1[0] == "0":
-            print("radius configured vlan didnt recieved ip")
-            assert False
+            assert False, result
         for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
             if i != j:
                 val = False
             else:
                 val = True
-
-        allure.attach(name="station ip....", body=str(station_ip))
-        allure.attach(name="ssid configured vlan..", body=str(port_resources[2] + "." + str(vlan[0])))
-        allure.attach(name="ssid configured vlan ip....", body=str(eth_ssid_vlan_ip))
-        allure.attach(name="radius configured vlan..", body=str(port_resources[2] + "." + str(vlan[1])))
-        allure.attach(name="radius configured vlan ip....", body=str(eth_radius_vlan_ip))
-        allure.attach(name="upstream ip....", body=str(eth_ip))
         if val:
-            assert True
-            print("Station ip assigned as per dynamic vlan")
+            assert True, result
         elif not val:
-            print("Station ip not assigned as per dynamic vlan")
-            assert False
+            assert False, result
