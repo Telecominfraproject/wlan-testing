@@ -49,6 +49,7 @@ class TestDynamicVlan5GWpa2(object):
     @pytest.mark.absence_of_radius_vlan_identifier
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
     @allure.title("Test for ssid vlan in the absence of radius vlan identifier")
@@ -71,7 +72,7 @@ class TestDynamicVlan5GWpa2(object):
         val = ""
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
         
-        
+
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                     extra_securities=extra_secu, vlan_id=vlan,
                                                                     mode=mode, band=band, eap=eap,
@@ -451,7 +452,7 @@ class TestDynamicVlan5GWpa2(object):
         eap = "TTLS"
         val = ""
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
-        
+
         sta_ip = []
         dynamic_vlan_user = ["userA", "userB"]
         dynamic_vlan_pass = ["passwordA", "passwordB"]
@@ -484,4 +485,3 @@ class TestDynamicVlan5GWpa2(object):
                 assert True, result
             elif not val:
                 assert False, result
-
