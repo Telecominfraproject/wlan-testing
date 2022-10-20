@@ -480,4 +480,3 @@ class TestDynamicVlan5GWpa3(object):
             elif not val:
                 assert False, result
 
-

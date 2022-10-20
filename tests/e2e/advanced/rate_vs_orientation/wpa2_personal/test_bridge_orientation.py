@@ -172,4 +172,3 @@ class TestRateVsOrientationBridge(object):
                 assert False, "CSV file does not exist"
         else:
             assert False, "Test failed due to no station ip"
-
