@@ -66,12 +66,12 @@ class TestRatevsRangeBridge(object):
         print(ser_no)
         atn2 = ser_no[1].split(".")[2]
         print(f"antenuation-2 : {atn2}")
-        for i in range(4):
-            lf_test.attenuator_modify(int(atn2), i, 955)
-            time.sleep(0.5)
+        # for i in range(4):
+        #     lf_test.attenuator_modify(int(atn2), i, 955)
+        #     time.sleep(0.5)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:;TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
-               ['attenuations: 0 100 210..+30..630'], ['chamber: 0'], ['tt_deg: 0']]
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
+               ['attenuations: 0 100 210..+30..630'], ['attenuations2: 0 100 210..+30..630'], ['chamber: 0'], ['tt_deg: 0']]
         if station:
             rvr_o = lf_test.ratevsrange(station_name=station_names_twog, mode=mode, download_rate="100%", duration='60000',
                                        instance_name="MODEBRIDGE_RVR_TWOG_modified",
@@ -395,12 +395,12 @@ class TestRatevsRangeBridge(object):
         print(ser_no)
         atn2 = ser_no[1].split(".")[2]
         print(f"antenuation-2 : {atn2}")
-        for i in range(4):
-            lf_test.attenuator_modify(int(atn2), i, 955)
-            time.sleep(0.5)
+        # for i in range(4):
+        #     lf_test.attenuator_modify(int(atn2), i, 955)
+        #     time.sleep(0.5)
         val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
-               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: 0'],
-               ['attenuations: 0 100 210..+30..540'],['chamber: 0'], ['tt_deg: 0']]
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: '+ str(ser_no[1])],
+               ['attenuations: 0 100 210..+30..540'],['attenuations2: 0 100 210..+30..540'],['chamber: 0'], ['tt_deg: 0']]
 
         if station:
             time.sleep(3)
