@@ -32,12 +32,12 @@ setup_params_general_20Mhz = {
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_20Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw20MhzVLAN(object):
     """Throughput Across Bw VLAN Mode
        pytest -m "throughput_across_bw_test and VLAN"
@@ -141,12 +141,12 @@ setup_params_general_40Mhz = {
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_40Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw40MhzVLAN(object):
     """Throughput Across Bw VLAN Mode
        pytest -m "throughput_across_bw_test and VLAN"
@@ -249,12 +249,12 @@ setup_params_general_80Mhz = {
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_80Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw80MhzVLAN(object):
     """Throughput Across Bw VLAN Mode
        pytest -m "throughput_across_bw_test and VLAN"
@@ -358,12 +358,12 @@ setup_params_general_160Mhz = {
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_160Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw160MhzVLAN(object):
     """Throughput Across Bw VLAN Mode
        pytest -m "throughput_across_bw_test and VLAN"

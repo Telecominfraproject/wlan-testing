@@ -23,12 +23,12 @@ setup_params_general_5G = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_5G],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa2_personal
 @pytest.mark.fiveg
 @pytest.mark.fiveg_band
@@ -39,7 +39,7 @@ class TestWifiCapacityNATModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6947", name="WIFI-6947")
     @pytest.mark.tcp_download
-    def test_client_wpa2_NAT_tcp_dl(self, lf_tools, setup_profiles,
+    def test_client_wpa2_NAT_tcp_dl(self, lf_tools, setup_configuration,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -135,7 +135,7 @@ class TestWifiCapacityNATModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6948", name="WIFI-6948")
     @pytest.mark.tcp_upload
-    def test_client_wpa2_NAT_tcp_ul(self, lf_tools, setup_profiles,
+    def test_client_wpa2_NAT_tcp_ul(self, lf_tools, setup_configuration,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test NAT mode

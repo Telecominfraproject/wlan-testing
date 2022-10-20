@@ -32,74 +32,74 @@ setup_params_enterprise = {
 @pytest.mark.suiteA
 @allure.feature("BRIDGE MODE ENTERPRISE SETUP")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_enterprise],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestSetupBridgeEnterpriseSuiteA(object):
     """ Enterprise SSID Suite-A"""
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_setup_wpa_enterprise_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa_enterprise_2g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ WPA Enterprise SSID 2.4G """
-        assert setup_profiles['wpa_enterprise_2g']
+        assert setup_configuration['wpa_enterprise_2g']
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_setup_wpa_enterprise_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa_enterprise_5g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ WPA Enterprise SSID 5G """
-        assert setup_profiles['wpa_enterprise_5g']
+        assert setup_configuration['wpa_enterprise_5g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_setup_wpa2_enterprise_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa2_enterprise_2g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ WPA2 Enterprise SSID 2.4G """
-        assert setup_profiles['wpa2_enterprise_2g']
+        assert setup_configuration['wpa2_enterprise_2g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_setup_wpa2_enterprise_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa2_enterprise_5g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ WPA2 Enterprise SSID 5G """
-        assert setup_profiles['wpa2_enterprise_5g']
+        assert setup_configuration['wpa2_enterprise_5g']
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    def test_setup_wpa3_enterprise_2g_ssid_profile(self, setup_profiles, update_report,
+    def test_setup_wpa3_enterprise_2g_ssid_profile(self, setup_configuration, update_report,
                                                    test_cases):
         """ WPA3 Enterprise SSID 2.4G """
-        assert setup_profiles['wpa3_enterprise_2g']
+        assert setup_configuration['wpa3_enterprise_2g']
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_setup_wpa3_enterprise_5g_ssid_profile(self, setup_profiles, update_report,
+    def test_setup_wpa3_enterprise_5g_ssid_profile(self, setup_configuration, update_report,
                                                    test_cases):
         """ WPA3 Enterprise SSID 5G """
-        assert setup_profiles['wpa3_enterprise_5g']
+        assert setup_configuration['wpa3_enterprise_5g']
 
     @pytest.mark.sanity_light
-    def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
+    def test_setup_equipment_ap_profile(self, setup_configuration, update_report,
                                         test_cases):
         """ Equipment AP Profile Suite A Enterprise """
-        assert setup_profiles['equipment_ap']
+        assert setup_configuration['equipment_ap']
 
     @pytest.mark.sanity_light
-    def test_verify_vif_config(self, setup_profiles, update_report,
+    def test_verify_vif_config(self, setup_configuration, update_report,
                                test_cases):
         """ VIF Config Suite A Enterprise """
-        assert setup_profiles['vifc']
+        assert setup_configuration['vifc']
 
     @pytest.mark.sanity_light
     @allure.severity(allure.severity_level.BLOCKER)
-    def test_verify_vif_state(self, setup_profiles, update_report,
+    def test_verify_vif_state(self, setup_configuration, update_report,
                               test_cases):
         """ VIF Config Suite B Enterprise """
         time.sleep(200)
-        assert setup_profiles['vifs']
+        assert setup_configuration['vifs']
 
 
 setup_params_enterprise_two = {
@@ -120,55 +120,55 @@ setup_params_enterprise_two = {
 @pytest.mark.suiteB
 @allure.feature("BRIDGE MODE ENTERPRISE SETUP")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_enterprise_two],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestSetupBridgeEnterpriseSuiteB(object):
     """ Enterprise SSID Suite-B"""
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    def test_setup_wpa_wpa2_enterprise_mixed_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa_wpa2_enterprise_mixed_2g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ WPA WPA2 Enterprise SSID 2.4G """
-        assert setup_profiles['wpa_wpa2_enterprise_mixed_2g']
+        assert setup_configuration['wpa_wpa2_enterprise_mixed_2g']
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
-    def test_setup_wpa_wpa2_enterprise_mixed_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa_wpa2_enterprise_mixed_5g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ WPA WPA2 Enterprise SSID 5G """
-        assert setup_profiles['wpa_wpa2_enterprise_mixed_5g']
+        assert setup_configuration['wpa_wpa2_enterprise_mixed_5g']
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
-    def test_setup_wpa3_enterprise_mixed_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa3_enterprise_mixed_2g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ WPA3 Enterprise Mixed SSID 2.4G """
 
-        assert setup_profiles['wpa3_enterprise_mixed_2g']
+        assert setup_configuration['wpa3_enterprise_mixed_2g']
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
-    def test_setup_wpa3_enterprise_mixed_5g_ssid_profile(self, setup_profiles, update_report,
+    def test_setup_wpa3_enterprise_mixed_5g_ssid_profile(self, setup_configuration, update_report,
                                                          test_cases):
         """ WPA3 Enterprise Mixed SSID 5G """
 
-        assert setup_profiles['wpa3_enterprise_mixed_5g']
+        assert setup_configuration['wpa3_enterprise_mixed_5g']
 
-    def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
+    def test_setup_equipment_ap_profile(self, setup_configuration, update_report,
                                         test_cases):
         """ Equipment AP Profile Suite B Enterprise """
-        assert setup_profiles['equipment_ap']
+        assert setup_configuration['equipment_ap']
 
-    def test_verify_vif_config(self, setup_profiles, update_report,
+    def test_verify_vif_config(self, setup_configuration, update_report,
                                test_cases):
         """ VIF Config Suite B Enterprise """
-        assert setup_profiles['vifc']
+        assert setup_configuration['vifc']
 
     @allure.severity(allure.severity_level.BLOCKER)
-    def test_verify_vif_state(self, setup_profiles, update_report,
+    def test_verify_vif_state(self, setup_configuration, update_report,
                               test_cases):
         """ VIF State Suite B Enterprise """
         time.sleep(200)
-        assert setup_profiles['vifs']
+        assert setup_configuration['vifs']

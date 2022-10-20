@@ -28,12 +28,12 @@ setup_params_general_dual_band = {
 
 @allure.feature("NAT MODE WIFI CAPACITY TEST")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_dual_band],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.bridge
 @pytest.mark.twog
 @pytest.mark.fiveg
@@ -259,12 +259,12 @@ setup_params_general_2G = {
 
 @allure.feature("NAT MODE Wifi Capacity")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_2G],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa2_personal
 @pytest.mark.twog
 @pytest.mark.twog_band
@@ -460,12 +460,12 @@ setup_params_general_5G = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_5G],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa2_personal
 @pytest.mark.fiveg
 @pytest.mark.fiveg_band

@@ -339,7 +339,7 @@ class TestDynamicVlan2GWpa2(object):
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_unsupported_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5710")
-    def test_dynamic_unsupported_vlan(self, get_vif_state, get_test_library,
+    def test_dynamic_unsupported_vlan(self,  get_test_library,
                                       create_lanforge_chamberview_dut, get_test_library, get_configuration,
                                       station_names_twog):
         """

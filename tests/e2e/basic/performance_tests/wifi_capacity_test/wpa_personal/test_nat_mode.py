@@ -26,12 +26,12 @@ setup_params_general_dual_band = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_dual_band],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa_personal
 @pytest.mark.twog
 @pytest.mark.fiveg
@@ -43,7 +43,7 @@ class TestWifiCapacityNATModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3687", name="WIFI-3687")
     @pytest.mark.wpa_personal
     @pytest.mark.tcp_download
-    def test_client_wpa_nat_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa_nat_tcp_dl(self,  lf_tools, setup_configuration,
                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                    get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -72,7 +72,7 @@ class TestWifiCapacityNATModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3688", name="WIFI-3688")
     @pytest.mark.wpa_personal
     @pytest.mark.udp_download
-    def test_client_wpa_nat_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_udp_dl(self,  lf_tools,
                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                    get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -101,7 +101,7 @@ class TestWifiCapacityNATModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3689", name="WIFI-3689")
     @pytest.mark.wpa_personal
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa_nat_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_tcp_bidirectional(self,  lf_tools,
                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                               get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -130,7 +130,7 @@ class TestWifiCapacityNATModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3690", name="WIFI-3690")
     @pytest.mark.wpa_personal
     @pytest.mark.udp_bidirectional
-    def test_client_wpa_nat_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_udp_bidirectional(self,  lf_tools,
                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                               get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -171,12 +171,12 @@ setup_params_general_2G = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_2G],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa_personal
 @pytest.mark.twog
 @pytest.mark.twog_band
@@ -187,7 +187,7 @@ class TestWifiCapacityNATMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3650", name="WIFI-3650")
     @pytest.mark.wpa_personal
     @pytest.mark.tcp_download
-    def test_client_wpa_nat_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa_nat_tcp_dl(self,  lf_tools, setup_configuration,
                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                    get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -215,7 +215,7 @@ class TestWifiCapacityNATMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3656", name="WIFI-3656")
     @pytest.mark.wpa_personal
     @pytest.mark.udp_download
-    def test_client_wpa_nat_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_udp_dl(self,  lf_tools,
                                    lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                    get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -243,7 +243,7 @@ class TestWifiCapacityNATMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3666", name="WIFI-3666")
     @pytest.mark.wpa_personal
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa_nat_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_tcp_bidirectional(self,  lf_tools,
                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                               get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -271,7 +271,7 @@ class TestWifiCapacityNATMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3660", name="WIFI-3660")
     @pytest.mark.wpa_personal
     @pytest.mark.udp_bidirectional
-    def test_client_wpa_nat_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_udp_bidirectional(self,  lf_tools,
                                               lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                               get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -311,12 +311,12 @@ setup_params_general_5G = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_5G],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa_personal
 @pytest.mark.fiveg
 @pytest.mark.fiveg_band
@@ -327,7 +327,7 @@ class TestWifiCapacityNATMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3652", name="WIFI-3652")
     @pytest.mark.wpa_personal
     @pytest.mark.tcp_download
-    def test_client_wpa_nat_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa_nat_tcp_dl(self,  lf_tools, setup_configuration,
                                    lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                    get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -355,7 +355,7 @@ class TestWifiCapacityNATMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3657", name="WIFI-3657")
     @pytest.mark.wpa_personal
     @pytest.mark.udp_download
-    def test_client_wpa_nat_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_udp_dl(self,  lf_tools,
                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                     get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -383,7 +383,7 @@ class TestWifiCapacityNATMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3667", name="WIFI-3667")
     @pytest.mark.wpa_personal
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa_nat_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_tcp_bidirectional(self,  lf_tools,
                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                               get_configuration):
         """ Wifi Capacity Test NAT mode
@@ -411,7 +411,7 @@ class TestWifiCapacityNATMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3661", name="WIFI-3661")
     @pytest.mark.wpa_personal
     @pytest.mark.udp_bidirectional
-    def test_client_wpa_nat_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa_nat_udp_bidirectional(self,  lf_tools,
                                               lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                               get_configuration):
         """ Wifi Capacity Test NAT mode

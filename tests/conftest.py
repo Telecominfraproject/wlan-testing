@@ -192,7 +192,7 @@ def get_security_flags():
 
 @pytest.fixture(scope="session")
 def get_markers(request, get_security_flags):
-    """used to get the markers on the selected test case class, used in setup_profiles"""
+    """used to get the markers on the selected test case class, used in setup_configuration"""
     session = request.node
     markers = list()
     security = get_security_flags
@@ -309,6 +309,8 @@ def is_test_library_perfecto_ios(request):
 @pytest.fixture(scope="session")
 def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios, request,
                      get_device_configuration, device, run_lf):
+    if request.config.getoption("--skip-all"):
+        pytest.skip("Skipping all")
     if is_test_library_perfecto_android:
         obj = android_tests.AndroidTests(perfecto_data=PERFECTO_DETAILS,
                                          dut_data=get_testbed_details["device_under_tests"], device=device)
