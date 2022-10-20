@@ -34,7 +34,7 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "v2.7.1-RC1",
+      "chart_version": "v2.7.1-RC2",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
