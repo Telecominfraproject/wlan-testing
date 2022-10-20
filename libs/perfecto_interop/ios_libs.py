@@ -1,4 +1,6 @@
 import logging
+import os
+import re
 import time
 import warnings
 from time import gmtime, strftime
@@ -19,11 +21,12 @@ from xml.etree import ElementTree as ET
 
 class ios_libs:
     global driver, perfecto_execution_context, deviceModel
-    def __init__(self, perfecto_data=None, dut_data=None):
+    def __init__(self, perfecto_data=None, dut_data=None, testcase=None):
         logging_level = logging.INFO
         logging.basicConfig(format='%(asctime)s - %(message)s', level=logging_level)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
+        self.testcase_name = testcase
         pass
 
     def openApp(self, appName, setup_perfectoMobile):
@@ -152,7 +155,7 @@ class ios_libs:
             attribute_value = False
         return attribute_value
 
-    def setup_perfectoMobile_iOS(self, get_device_configuration, perfecto_data, testcase):
+    def setup_perfectoMobile_iOS(self, get_device_configuration, perfecto_data):
         global perfecto_execution_context, driver, deviceModel
         from appium import webdriver
         driver = None
@@ -181,17 +184,19 @@ class ios_libs:
             'https://' + perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
             capabilities)
         driver.implicitly_wait(2)
-
-        # TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-        # nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-        # try:
-        #     # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
-        #     TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
-        #     print("\n\nExecuting TestCase: " + TestCaseName)
-        # except Exception as e:
-        #     TestCaseName = nCurrentTestMethodNameSplit
-        #     print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        #     # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        if os.environ.get('PYTEST_CURRENT_TEST') is not None:
+            TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+            nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+        else:
+            nCurrentTestMethodNameSplit = self.testcase_name
+        try:
+            # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+            testcase = nCurrentTestMethodNameSplit.replace('test_', '')
+            print("\n\nExecuting TestCase: " + testcase)
+        except Exception as e:
+            TestCaseName = nCurrentTestMethodNameSplit
+            print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+            # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
         projectname = perfecto_data["projectName"]
         projectversion = perfecto_data["projectVersion"]
@@ -309,7 +314,7 @@ class ios_libs:
         is_internet = False
         wifi_name = ssid
         wifi_pass = passkey
-
+        ssid_found = False
         print("Verifying Wifi/AP Connection Details....")
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -374,12 +379,12 @@ class ios_libs:
                             print("switch is still OFF")
                             logging.error("Wifi Switch is OFF")
                             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                            return is_internet
+                            return is_internet, setup_perfectoMobile, ssid_found
                     else:
                         print("Switch is Still OFF")
                         logging.error("Wifi Switch is OFF")
                         self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                        return is_internet
+                        return is_internet, setup_perfectoMobile, ssid_found
                 except:
                     print("No switch element found")
                     logging.error("No switch element found")
@@ -392,7 +397,7 @@ class ios_libs:
             print("Cannot find WIFI element")
             logging.error("Cannot find WIFI element")
             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-            return is_internet
+            return is_internet, setup_perfectoMobile, ssid_found
 
         # ---------------------This is to Forget current connected SSID-------------------------------
         # ---------------------This to Avoid any popup page from captive portal--------------------#
@@ -478,7 +483,6 @@ class ios_libs:
         time.sleep(2)
         report.step_start("Searching SSID")
         print("Selecting Wifi: " + wifi_name)
-        ssid_found = False
         available_ssids = False
 
         try:
@@ -506,21 +510,21 @@ class ios_libs:
                             logging.error("Unable to select SSID")
                             report.step_start("Selecting Unable SSID To Connect")
                             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                            return is_internet
+                            return is_internet, setup_perfectoMobile, ssid_found
 
                 except:
                     print("couldn't connect to " + wifi_name)
                     logging.error("Couldn't Find ssid")
                     # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                     self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                    return is_internet
+                    return is_internet, setup_perfectoMobile, ssid_found
                     pass
 
             if not ssid_found:
                 print("could not found " + wifi_name + " in device")
                 logging.error("Couldn't Find ssid in device")
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                return is_internet
+                return is_internet, setup_perfectoMobile, ssid_found
         except:
             pass
         # ---------------------To get all available SSID and select it-------------------------------
@@ -560,7 +564,7 @@ class ios_libs:
             # Need to add Wait for Selected Wifi Xpath
             # time.sleep(3)
         # ---------------------check if internet-------------------------------
-        return is_internet, setup_perfectoMobile
+        return is_internet, setup_perfectoMobile, ssid_found
 
     def get_ip_address(self, ssid, setup_perfectoMobile, connData):
         wifi_name = ssid
@@ -709,7 +713,7 @@ class ios_libs:
         print("-------------------------------------")
         is_internet = False
         wifi_name = ssid
-
+        ssid_found = False
         print("Verifying Wifi/AP Connection Details....")
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -774,12 +778,12 @@ class ios_libs:
                             print("switch is still OFF")
                             logging.error("Wifi Switch is OFF")
                             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                            return is_internet
+                            return is_internet, setup_perfectoMobile, ssid_found
                     else:
                         print("Switch is Still OFF")
                         logging.error("Wifi Switch is OFF")
                         self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                        return is_internet
+                        return is_internet, setup_perfectoMobile, ssid_found
                 except:
                     print("No switch element found")
                     logging.error("No switch element found")
@@ -792,7 +796,7 @@ class ios_libs:
             print("Cannot find WIFI element")
             logging.error("Cannot find WIFI element")
             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-            return is_internet
+            return is_internet, setup_perfectoMobile, ssid_found
 
         # ---------------------This is to Forget current connected SSID-------------------------------
         # ---------------------This to Avoid any popup page from captive portal--------------------#
@@ -906,21 +910,21 @@ class ios_libs:
                             logging.error("Unable to select SSID")
                             report.step_start("Selecting Unable SSID To Connect")
                             self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                            return is_internet
+                            return is_internet, setup_perfectoMobile, ssid_found
 
                 except:
                     print("couldn't connect to " + wifi_name)
                     logging.error("Couldn't Find ssid")
                     # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                     self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                    return is_internet
+                    return is_internet, setup_perfectoMobile, ssid_found
                     pass
 
             if not ssid_found:
                 print("could not found " + wifi_name + " in device")
                 logging.error("Couldn't Find ssid in device")
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
-                return is_internet
+                return is_internet, setup_perfectoMobile, ssid_found
         except:
             pass
         # ---------------------To get all available SSID and select it-------------------------------
@@ -990,7 +994,7 @@ class ios_libs:
             # Need to add Wait for Selected Wifi Xpath
             # time.sleep(3)
         # ---------------------check if internet-------------------------------
-        return is_internet, setup_perfectoMobile
+        return is_internet, setup_perfectoMobile, ssid_found
 
     def wifi_disconnect(self, ssid, setup_perfectoMobile, connData):
         print("\n-------------------------------------")

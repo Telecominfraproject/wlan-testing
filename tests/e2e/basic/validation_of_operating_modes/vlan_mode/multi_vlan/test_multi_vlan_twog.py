@@ -75,7 +75,7 @@ class TestMultiVlan(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2168")
     @allure.title("Test VLAN with WPA Security Mode")
     def test_multi_vlan_wpa_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                     Multi VLAN Test with open encryption 2.4 GHz Band
                     pytest -m "multi_vlan_tests and open and twog"
@@ -102,7 +102,7 @@ class TestMultiVlan(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2156")
     @allure.title("Test VLAN with WPA2 Personal Security Mode")
     def test_multi_vlan_wpa2_personal_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                     Multi VLAN Test with open encryption 2.4 GHz Band
                     pytest -m "multi_vlan_tests and open and twog"
@@ -155,7 +155,7 @@ class TestMultiVlan(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
     @allure.title("Test Disabled VLAN with WPA2 Security Mode")
     def test_disable_vlan_wpa2_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                  get_test_device_logs, num_stations, setup_configuration):
+                                  get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
             Client connectivity using vlan, wpa2, fiveg
             pytest -m disable_vlan_fiveg

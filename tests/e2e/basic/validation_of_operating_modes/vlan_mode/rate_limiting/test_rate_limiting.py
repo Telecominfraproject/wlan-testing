@@ -56,7 +56,7 @@ class TestRateLimitingVLAN(object):
                                                      get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and up and batch_size_125"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and upload and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -69,7 +69,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up", mode=mode,
                                        download_rate="0Gbps", batch_size="1,2,5",
@@ -89,7 +89,7 @@ class TestRateLimitingVLAN(object):
                                                      get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and dw and batch_size_125"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and download and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -101,7 +101,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -119,10 +119,11 @@ class TestRateLimitingVLAN(object):
     @pytest.mark.rate_limiting_tests
     @allure.title("Test for Upload and Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                                        get_test_device_logs, num_stations, setup_configuration):
+                                                        get_test_device_logs, num_stations, setup_configuration,
+                                                        check_connectivity):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and up_dw and batch_size_125"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and upload_download and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -134,7 +135,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -168,7 +169,7 @@ class TestRateLimitingVLAN(object):
         profile_data["rate-limit"][0] = 0
         profile_data["rate-limit"][1] = 0
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_di", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -200,7 +201,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         raw_lines = [["dl_rate_sel: Per-Station Download Rate:"], ["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_per_cl", mode=mode,
@@ -232,7 +233,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         raw_lines = [["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_per_cl", mode=mode,
@@ -265,7 +266,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         raw_lines = [["dw_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw_per_cl", mode=mode,
@@ -278,14 +279,14 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.up
+    @pytest.mark.upload
     @pytest.mark.batch_size_125
     @allure.title("Test for Upload per client batch size 1,2,5 5 GHz")
     def test_wpa2_personal_ssid_up_batch_size_125_5g(self, get_test_library, get_dut_logs_per_test_case,
                                                      get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and up and batch_size_125"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and upload and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -298,7 +299,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_125", mode=mode,
                                        download_rate="0Gbps", batch_size="1,2,5",
@@ -310,14 +311,14 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.dw
+    @pytest.mark.download
     @pytest.mark.batch_size_125
     @allure.title("Test for Download per client batch size 1,2,5 5 GHz")
     def test_wpa2_personal_ssid_dw_batch_size_125_5g(self, get_test_library, get_dut_logs_per_test_case,
                                                      get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and dw and batch_size_125"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and download and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -330,7 +331,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw_125", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -342,7 +343,7 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.up_dw
+    @pytest.mark.upload_download
     @pytest.mark.batch_size_125
     @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
     @allure.title("Test for Upload and Download per client batch size 1,2,5 5 GHz")
@@ -350,7 +351,7 @@ class TestRateLimitingVLAN(object):
                                                         get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and up_dw and batch_size_125"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and upload_download and batch_size_125"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -363,7 +364,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_125", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -375,14 +376,14 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.up
+    @pytest.mark.upload
     @pytest.mark.batch_size_1
     @allure.title("Test for Upload batch size 1 2.4 GHz")
     def test_wpa2_personal_ssid_up_batch_size_1_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                    get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and up and batch_size_1"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and upload and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -395,7 +396,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_1", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
@@ -407,14 +408,14 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.dw
+    @pytest.mark.download
     @pytest.mark.batch_size_1
     @allure.title("Test for Download batch size 1 2.4 GHz")
     def test_wpa2_personal_ssid_dw_batch_size_1_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                    get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and dw and batch_size_1"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and download and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -427,7 +428,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_1", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
@@ -439,14 +440,14 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.up_dw
+    @pytest.mark.upload_download
     @pytest.mark.batch_size_1
     @allure.title("Test for Upload and Download batch size 1 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_1_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                       get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and up_dw and batch_size_1"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and twog and upload_download and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
@@ -459,7 +460,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_tcp_dl_up_dw_1", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
@@ -471,14 +472,14 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.up
+    @pytest.mark.upload
     @pytest.mark.batch_size_1
     @allure.title("Test for Upload batch size 1 5 GHz")
     def test_wpa2_personal_ssid_up_batch_size_1_5g(self, get_test_library, get_dut_logs_per_test_case,
                                                    get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and up and batch_size_1"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and upload and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -491,7 +492,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_1_5g", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
@@ -503,14 +504,14 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.dw
+    @pytest.mark.download
     @pytest.mark.batch_size_1
     @allure.title("Test for Download batch size 1 5 GHz")
     def test_wpa2_personal_ssid_dw_batch_size_1_5g(self, get_test_library, get_dut_logs_per_test_case,
                                                    get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and dw and batch_size_1"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and download and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -523,7 +524,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw_1_5g", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
@@ -535,14 +536,14 @@ class TestRateLimitingVLAN(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.up_dw
+    @pytest.mark.upload_download
     @pytest.mark.batch_size_1
     @allure.title("Test for Upload and Download batch size 1 5 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_1_5g(self, get_test_library, get_dut_logs_per_test_case,
                                                       get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and up_dw and batch_size_1"
+            pytest -m "rate_limiting_tests and vlan and wpa2_personal and fiveg and upload_download and batch_size_1"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
@@ -555,7 +556,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_1_5g", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
@@ -589,7 +590,7 @@ class TestRateLimitingVLAN(object):
         profile_data["rate-limit"][0] = 0
         profile_data["rate-limit"][1] = 0
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_di_5g", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -621,7 +622,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         raw_lines = [["dl_rate_sel: Per-Station Download Rate:"], ["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_per_cl_5g", mode=mode,
@@ -654,7 +655,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         raw_lines = [["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_per_cl_5g", mode=mode,
@@ -687,7 +688,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = [100]
+        vlan = 100
         raw_lines = [["dw_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw_per_cl_5g", mode=mode,

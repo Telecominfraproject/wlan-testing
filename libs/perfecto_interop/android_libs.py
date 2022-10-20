@@ -1,4 +1,6 @@
 import logging
+import os
+import re
 import time
 import warnings
 from time import gmtime, strftime
@@ -111,12 +113,13 @@ class android_libs:
             "jobNumber": 38
         }
     }
-    def __init__(self, perfecto_data=None, dut_data=None):
+    def __init__(self, perfecto_data=None, dut_data=None, testcase=None):
         logging_level = logging.INFO
         logging.basicConfig(format='%(asctime)s - %(message)s', level=logging_level)
         # super().__init__(perfecto_data=perfecto_data, dut_data=dut_data)
         self.perfecto_data = perfecto_data
         self.dut_data = dut_data
+        self.testcase_name = testcase
         self.connData = self.get_ToggleAirplaneMode_data()
         print("connData------", self.connData)
         pass
@@ -372,13 +375,12 @@ class android_libs:
             attribute_value = False
         return attribute_value
 
-    def setup_perfectoMobile_android(self, get_device_configuration, perfecto_data, testcase):
+    def setup_perfectoMobile_android(self, get_device_configuration, perfecto_data):
         from appium import webdriver
         global perfecto_execution_context, driver
         driver = None
         reporting_client = None
         print("Device CONFIG:", get_device_configuration)
-        print("Testcase Name", testcase)
         print("Perfect data:", perfecto_data)
         warnings.simplefilter("ignore", ResourceWarning)
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -401,17 +403,19 @@ class android_libs:
             'https://' + perfecto_data["perfectoURL"] + '.perfectomobile.com/nexperience/perfectomobile/wd/hub',
             capabilities)
         driver.implicitly_wait(2)
-
-        # TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
-        # nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
-        # try:
-        #     # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
-        #     TestCaseName = nCurrentTestMethodNameSplit.replace('test_', '')
-        #     print("\n\nExecuting TestCase: " + TestCaseName)
-        # except Exception as e:
-        #     TestCaseName = nCurrentTestMethodNameSplit
-        #     print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
-        #     # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
+        if os.environ.get('PYTEST_CURRENT_TEST') is not None:
+            TestCaseFullName = os.environ.get('PYTEST_CURRENT_TEST').split(':')[-1].split(' ')[0]
+            nCurrentTestMethodNameSplit = re.sub(r'\[.*?\]\ *', "", TestCaseFullName)
+        else:
+            nCurrentTestMethodNameSplit = self.testcase_name
+        try:
+            # TestCaseName = nCurrentTestMethodNameSplit.removeprefix('test_')
+            testcase = nCurrentTestMethodNameSplit.replace('test_', '')
+            print("\n\nExecuting TestCase: " + testcase)
+        except Exception as e:
+            testcase = nCurrentTestMethodNameSplit
+            print("\nUpgrade Python to 3.9 to avoid test_ string in your test case name, see below URL")
+            # print("https://www.andreagrandi.it/2020/10/11/python39-introduces-removeprefix-removesuffix/")
 
         projectname = perfecto_data["projectName"]
         projectversion = perfecto_data["projectVersion"]
@@ -499,6 +503,7 @@ class android_libs:
         # ip_address_element_text = False
         ssid_with_internet = False
         wifi_name = ssid
+        ssid_found = False
 
         report.step_start("Switching Driver Context")
         print("Switching Context to Native")
@@ -655,7 +660,6 @@ class android_libs:
                     print("Selecting Wifi: " + wifi_name)
                     logging.info("Selecting SSID")
                     # allure.attach(name= body=str("Selecting Wifi: " + wifi_name))
-                    ssid_found = False
                     available_ssids = False
                     # This is To get all available ssids
                     # ------------------------------------------------------
@@ -682,11 +686,10 @@ class android_libs:
                             logging.error("Couldn't find the SSID")
                             # allure.attach(name= body=str("could not found" + wifi_name + " in device"))
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
                     except:
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-
-                        return ssid_with_internet, setup_perfectoMobile
+                        return ssid_with_internet, setup_perfectoMobile, ssid_found,
                     # -------------------------------------------------------
 
                     # Selecting WIFI
@@ -704,7 +707,7 @@ class android_libs:
                         logging.error("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                         # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                        return ssid_with_internet, setup_perfectoMobile
+                        return ssid_with_internet, setup_perfectoMobile, ssid_found
                     # -------------------------------------------------------
                     # Set password if Needed
                     # -------------------------------------------------------
@@ -782,7 +785,7 @@ class android_libs:
                                     logging.error("Wifi Connection Error")
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                     else:
                         try:
                             report.step_start(
@@ -818,10 +821,10 @@ class android_libs:
                                 # Connected to some other wifi, makes sense to close app and fail this testcase
                                 logging.error("Connected to some other wifi")
                                 self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ssid_with_internet, setup_perfectoMobile
+                                return ssid_with_internet, setup_perfectoMobile, ssid_found
                         except:
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
 
                     # ---------------------To Turn on WIFi Switch if already OFF-------------------------------
 
@@ -899,7 +902,7 @@ class android_libs:
                                     print("Switch is Still OFF")
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                             else:
                                 print("Switch is already On")
                                 self.check_if_no_internet_popup(driver)
@@ -907,7 +910,7 @@ class android_libs:
                             print("Couldn't turn on WIFI switch")
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
 
                         # ---------------------This is to Forget current connected SSID-------------------------------
                         try:  # To deal with already connected SSID
@@ -931,7 +934,7 @@ class android_libs:
                                 print("Couldn't forget ssid")
                                 self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                return ssid_with_internet, setup_perfectoMobile
+                                return ssid_with_internet, setup_perfectoMobile, ssid_found
                         except:
                             print("No Connected SSIDS")
                         # ----------------------This is to Forget current connected SSID--------------------------------
@@ -981,11 +984,11 @@ class android_libs:
                                     # allure.attach(name= body=str("could not found" + wifi_name + " in device"))
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                         except:
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
                         # -------------------------------------------------------
 
                         # Selecting WIFI
@@ -1001,7 +1004,7 @@ class android_libs:
                             # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
                         # -------------------------------------------------------
 
                         # Set password if Needed
@@ -1068,7 +1071,7 @@ class android_libs:
                                     print("Wifi Connection Error: " + wifi_name)
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                         # -------------------------------------------------------
                     except:
                         print("No Switch element found")
@@ -1083,7 +1086,7 @@ class android_libs:
             # -----------------To Open Connections page---------------------------
 
         # self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-        return ssid_with_internet, setup_perfectoMobile
+        return ssid_with_internet, setup_perfectoMobile, ssid_found
     def get_ip_address(self, ssid, setup_perfectoMobile, connData):
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -1605,7 +1608,7 @@ class android_libs:
         # ip_address_element_text = False
         ssid_with_internet = False
         wifi_name = ssid
-
+        ssid_found = False
         report.step_start("Switching Driver Context")
         print("Switching Context to Native")
         contexts = driver.contexts
@@ -1673,7 +1676,7 @@ class android_libs:
                                 if get_switch_text == "Off":
                                     print("Switch is Still OFF")
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                             else:
                                 print("Switch is already On")
                                 logging.info("Switch is already On")
@@ -1682,7 +1685,7 @@ class android_libs:
                             print("Couldn't turn on WIFI switch")
                             logging.error("Couldn't turn on WIFI switch")
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
                     except:
                         print("No Switch element found")
                         logging.error("No Switch element found")
@@ -1713,7 +1716,7 @@ class android_libs:
                                     print("Couldn't forget ssid")
                                     logging.error("Couldn't forget ssid")
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                             except:
                                 print("Couldn't get into additional details")
                                 logging.error("Couldn't get into additional details")
@@ -1748,7 +1751,7 @@ class android_libs:
                                     print("Couldn't forget ssid")
                                     logging.error("Couldn't forget ssid")
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                             except:
                                 print("Couldn't get into additional details")
                                 logging.error("Couldn't get into additional details")
@@ -1761,7 +1764,6 @@ class android_libs:
                     print("Selecting Wifi: " + wifi_name)
                     logging.info("Selecting SSID")
                     # allure.attach(name= body=str("Selecting Wifi: " + wifi_name))
-                    ssid_found = False
                     available_ssids = False
                     # This is To get all available ssids
                     # ------------------------------------------------------
@@ -1788,10 +1790,10 @@ class android_libs:
                             logging.info("could not found " + ssid + " in device")
                             # allure.attach(name= body=str("could not found" + ssid + " in device"))
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
                     except:
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                        return ssid_with_internet, setup_perfectoMobile
+                        return ssid_with_internet, setup_perfectoMobile, ssid_found
                     # -------------------------------------------------------
 
                     # Selecting WIFI
@@ -1809,7 +1811,7 @@ class android_libs:
                         logging.error("Exception on Selecting Wifi Network.  Please check wifi Name or signal")
                         # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                        return ssid_with_internet, setup_perfectoMobile
+                        return ssid_with_internet, setup_perfectoMobile, ssid_found
                     # -------------------------------------------------------
 
                     # Set username
@@ -1933,7 +1935,7 @@ class android_libs:
                                     logging.error("Wifi Connection Error")
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                     else:
                         try:
                             report.step_start(
@@ -1969,10 +1971,10 @@ class android_libs:
                                 # Connected to some other wifi, makes sense to close app and fail this testcase
                                 logging.error("Connected to some other wifi")
                                 self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                return ssid_with_internet, setup_perfectoMobile
+                                return ssid_with_internet, setup_perfectoMobile, ssid_found
                         except:
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
 
                     # ---------------------To Turn on WIFi Switch if already OFF-------------------------------
 
@@ -2050,7 +2052,7 @@ class android_libs:
                                     print("Switch is Still OFF")
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                             else:
                                 print("Switch is already On")
                                 self.check_if_no_internet_popup(driver)
@@ -2058,7 +2060,7 @@ class android_libs:
                             print("Couldn't turn on WIFI switch")
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
 
                         # ---------------------This is to Forget current connected SSID-------------------------------
                         try:  # To deal with already connected SSID
@@ -2082,7 +2084,7 @@ class android_libs:
                                 print("Couldn't forget ssid")
                                 self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                return ssid_with_internet, setup_perfectoMobile
+                                return ssid_with_internet, setup_perfectoMobile, ssid_found
                         except:
                             print("No Connected SSIDS")
                         # ----------------------This is to Forget current connected SSID--------------------------------
@@ -2132,11 +2134,11 @@ class android_libs:
                                     # allure.attach(name= body=str("could not found" + wifi_name + " in device"))
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                         except:
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
                         # -------------------------------------------------------
 
                         # Selecting WIFI
@@ -2152,7 +2154,7 @@ class android_libs:
                             # request.config.cache.set(key="SelectingWifiFailed", value=str(e))
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                            return ssid_with_internet, setup_perfectoMobile
+                            return ssid_with_internet, setup_perfectoMobile, ssid_found
                         # -------------------------------------------------------
                         # Selecting certificate
                         # -------------------------------------------------------
@@ -2267,7 +2269,7 @@ class android_libs:
                                     print("Wifi Connection Error: " + wifi_name)
                                     self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-                                    return ssid_with_internet, setup_perfectoMobile
+                                    return ssid_with_internet, setup_perfectoMobile, ssid_found
                         # -------------------------------------------------------
                     except:
                         print("No Switch element found")
@@ -2282,7 +2284,7 @@ class android_libs:
             # -----------------To Open Connections page---------------------------
 
         # self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-        return ssid_with_internet, setup_perfectoMobile
+        return ssid_with_internet, setup_perfectoMobile, ssid_found
     def run_speed_test(self, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
         print("Verify Upload & Download Speed")
