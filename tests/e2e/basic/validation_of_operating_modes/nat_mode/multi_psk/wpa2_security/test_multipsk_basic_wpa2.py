@@ -55,7 +55,7 @@ class TestMultipskNAT(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     @allure.title("Test for Client Connect with 1 VLAN")
     def test_client_wpa2_2g_vlan1(self, get_test_library, get_dut_logs_per_test_case,
-                                  get_test_device_logs, num_stations, setup_configuration):
+                                  get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                     NAT Mode Multipsk Test with wpa encryption 2.4 GHz Band
                     pytest -m "multi_psk_tests and NAT and wpa_personal and vlan1 and twog"
@@ -93,7 +93,7 @@ class TestMultipskNAT(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     @allure.title("Test for Client Connect with 2 VLAN's")
     def test_client_wpa2_2g_vlan2(self, get_test_library, get_dut_logs_per_test_case,
-                                  get_test_device_logs, num_stations, setup_configuration):
+                                  get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
             nat Mode Multipsk Test with wpa encryption 2.4 GHz Band
             pytest -m "multi_psk_tests and nat and wpa2_personal and vlan2 and twog"

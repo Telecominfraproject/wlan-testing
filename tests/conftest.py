@@ -110,6 +110,12 @@ def pytest_addoption(parser):
         help="Use Interop IoS Test Package for tests"
     )
 
+    parser.addoption(
+        "--port",
+        default=False,
+        help="Select the port for AP Up Down tests"
+    )
+
 
 @pytest.fixture(scope="session")
 def get_lab_info():
@@ -135,6 +141,11 @@ def selected_testbed(request):
     current_testbed = request.config.getoption("--testbed")
     yield current_testbed
 
+@pytest.fixture(scope="session")
+def selected_port(request):
+    """yields the port option selection"""
+    current_port = request.config.getoption("--port")
+    yield current_port
 
 @pytest.fixture(scope="session")
 def num_stations(request):
