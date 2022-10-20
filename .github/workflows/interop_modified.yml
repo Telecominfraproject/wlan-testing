@@ -1,4 +1,4 @@
-name: interop testing
+name: interop testing v2
 
 env:
   # AWS credentials
