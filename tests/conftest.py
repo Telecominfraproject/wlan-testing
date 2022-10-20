@@ -199,7 +199,6 @@ def get_markers(request, get_security_flags):
     data = dict()
     for item in session.items:
         data[item] = []
-        print(item.iter_markers())
         for j in item.iter_markers():
             for i in security:
                 if j.name == i:
