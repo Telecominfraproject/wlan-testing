@@ -194,6 +194,9 @@ class ios_tests(ios_libs):
                     return "PASS", "Connected to same ssid, after toggle the wifi button."
                 else:
                     return "FAIL", "Not connected to same ssid, after toggle the wifi button."
+            elif ssid_found is False:
+                self.teardown()
+                return "FAIL", "SSID is not seen in Device"
             else:
                 self.teardown()
                 return "FAIL", "SSID didn't get the Internet"
