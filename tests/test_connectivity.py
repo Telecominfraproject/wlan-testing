@@ -217,14 +217,14 @@ class TestResources(object):
 
         assert True
 
-    def test_ap_conn_state(self):
-        global state
-        if state == False:
-            pytest.exit("AP is in DISCONNECTED State")
-        global sdk_expected
-        if sdk_expected == False:
-            pytest.exit("AP has invalid Redirector")
-        assert True
+    # def test_ap_conn_state(self):
+    #     global state
+    #     if state == False:
+    #         pytest.exit("AP is in DISCONNECTED State")
+    #     global sdk_expected
+    #     if sdk_expected == False:
+    #         pytest.exit("AP has invalid Redirector")
+    #     assert True
 
 # @allure.testcase(name="Firmware Management", url="")
 # @pytest.mark.uc_firmware

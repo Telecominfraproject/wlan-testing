@@ -31,12 +31,12 @@ setup_params_general = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.Mhz20
 class TestThroughputUnderCombinationsNAT20MHz(object):
 
@@ -588,12 +588,12 @@ setup_params_general = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.Mhz80
 class TestThroughputUnderCombinationsNAT80MHz(object):
 
@@ -1166,12 +1166,12 @@ setup_params_general = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.Mhz160
 class TestThroughputUnderCombinationsNAT160MHz(object):
 

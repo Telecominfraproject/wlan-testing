@@ -33,19 +33,19 @@ setup_params_general = {
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestRxSensitivityVLAN2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2446", name="WIFI-2446")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs0_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs0_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -98,7 +98,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs1
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs1_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs1_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -151,7 +151,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs2
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs2_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs2_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -204,7 +204,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs3
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs3_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs3_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -256,7 +256,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs4
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs4_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs4_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -309,7 +309,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs5
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs5_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs5_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -361,7 +361,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs6
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs6_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs6_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -414,7 +414,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs7
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs7_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs7_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -466,7 +466,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs8
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs8_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs8_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -519,7 +519,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs9
     @pytest.mark.nss1
-    def test_client_wpa2_personal_vlan_mcs9_nss1_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs9_nss1_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -573,7 +573,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs0_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs0_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -626,7 +626,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs1
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs1_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs1_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -679,7 +679,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs2
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs2_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs2_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -732,7 +732,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs3
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs3_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs3_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -785,7 +785,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs4
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs4_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs4_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -838,7 +838,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs5
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs5_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs5_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -891,7 +891,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs6
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs6_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs6_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -944,7 +944,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs7
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs7_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs7_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -997,7 +997,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs8
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs8_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs8_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1050,7 +1050,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs9
     @pytest.mark.nss2
-    def test_client_wpa2_personal_vlan_mcs9_nss2_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs9_nss2_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1104,7 +1104,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs0_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs0_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1157,7 +1157,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs1
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs1_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs1_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1210,7 +1210,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs2
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs2_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs2_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1263,7 +1263,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs3
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs3_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs3_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1316,7 +1316,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs4
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs4_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs4_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1369,7 +1369,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs5
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs5_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs5_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1422,7 +1422,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs6
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs6_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs6_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1475,7 +1475,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs7
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs7_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs7_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1528,7 +1528,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs8
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs8_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs8_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1581,7 +1581,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs9
     @pytest.mark.nss3
-    def test_client_wpa2_personal_vlan_mcs9_nss3_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs9_nss3_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1635,7 +1635,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs0
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs0_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs0_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1688,7 +1688,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs1
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs1_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs1_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1741,7 +1741,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs2
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs2_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs2_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1794,7 +1794,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs3
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs3_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs3_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1847,7 +1847,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs4
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs4_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs4_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1900,7 +1900,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs5
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs5_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs5_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -1953,7 +1953,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs6
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs6_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs6_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -2006,7 +2006,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs7
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs7_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs7_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -2059,7 +2059,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs8
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs8_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs8_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode
@@ -2112,7 +2112,7 @@ class TestRxSensitivityVLAN2G(object):
     @pytest.mark.twog
     @pytest.mark.mcs9
     @pytest.mark.nss4
-    def test_client_wpa2_personal_vlan_mcs9_nss4_2g(self, get_vif_state,
+    def test_client_wpa2_personal_vlan_mcs9_nss4_2g(self, 
                                                lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                get_configuration):
         """Receiver Sensitivity vlan Mode

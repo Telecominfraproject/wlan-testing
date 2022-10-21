@@ -110,6 +110,12 @@ def pytest_addoption(parser):
         help="Use Interop IoS Test Package for tests"
     )
 
+    parser.addoption(
+        "--port",
+        default=False,
+        help="Select the port for AP Up Down tests"
+    )
+
 
 @pytest.fixture(scope="session")
 def get_lab_info():
@@ -135,6 +141,11 @@ def selected_testbed(request):
     current_testbed = request.config.getoption("--testbed")
     yield current_testbed
 
+@pytest.fixture(scope="session")
+def selected_port(request):
+    """yields the port option selection"""
+    current_port = request.config.getoption("--port")
+    yield current_port
 
 @pytest.fixture(scope="session")
 def num_stations(request):
@@ -181,14 +192,13 @@ def get_security_flags():
 
 @pytest.fixture(scope="session")
 def get_markers(request, get_security_flags):
-    """used to get the markers on the selected test case class, used in setup_profiles"""
+    """used to get the markers on the selected test case class, used in setup_configuration"""
     session = request.node
     markers = list()
     security = get_security_flags
     data = dict()
     for item in session.items:
         data[item] = []
-        print(item.iter_markers())
         for j in item.iter_markers():
             for i in security:
                 if j.name == i:
@@ -298,6 +308,8 @@ def is_test_library_perfecto_ios(request):
 @pytest.fixture(scope="session")
 def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_test_library_perfecto_ios, request,
                      get_device_configuration, device, run_lf):
+    if request.config.getoption("--skip-all"):
+        pytest.skip("Skipping all")
     if is_test_library_perfecto_android:
         obj = android_tests.AndroidTests(perfecto_data=PERFECTO_DETAILS,
                                          dut_data=get_testbed_details["device_under_tests"], device=device)

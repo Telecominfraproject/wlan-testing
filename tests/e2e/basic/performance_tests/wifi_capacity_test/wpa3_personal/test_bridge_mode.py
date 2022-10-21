@@ -26,12 +26,12 @@ setup_params_general_dual_band = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_dual_band],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.bridge
 @pytest.mark.twog
 @pytest.mark.fiveg
@@ -45,7 +45,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3693", name="WIFI-3693")
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa3_bridge_tcp_dl(self,  lf_tools, setup_configuration,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -79,7 +79,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3694", name="WIFI-3694")
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_udp_dl(self,  lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -113,7 +113,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3691", name="WIFI-3691")
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_tcp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -146,7 +146,7 @@ class TestWifiCapacityBRIDGEModeDualBand(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3692", name="WIFI-3692")
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_udp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -190,12 +190,12 @@ setup_params_general_2G = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_2G],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa3_personal
 @pytest.mark.twog
 @pytest.mark.twog_band
@@ -207,7 +207,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3651", name="WIFI-3651")
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa3_bridge_tcp_dl(self,  lf_tools, setup_configuration,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -236,7 +236,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3658", name="WIFI-3658")
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_udp_dl(self,  lf_tools,
                                        lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -265,7 +265,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3668", name="WIFI-3668")
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_tcp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -294,7 +294,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3662", name="WIFI-3662")
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_udp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -334,12 +334,12 @@ setup_params_general_5G = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_5G],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa3_personal
 @pytest.mark.fiveg
 @pytest.mark.fiveg_band
@@ -350,7 +350,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3653", name="WIFI-3653")
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_download
-    def test_client_wpa3_bridge_tcp_dl(self, get_vif_state, lf_tools, setup_profiles,
+    def test_client_wpa3_bridge_tcp_dl(self,  lf_tools, setup_configuration,
                                        lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -379,7 +379,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3659", name="WIFI-3659")
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_download
-    def test_client_wpa3_bridge_udp_dl(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_udp_dl(self,  lf_tools,
                                        lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                        get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -408,7 +408,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3669", name="WIFI-3669")
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_bidirectional
-    def test_client_wpa3_bridge_tcp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_tcp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -437,7 +437,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3663", name="WIFI-3663")
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_bridge_udp_bidirectional(self, get_vif_state, lf_tools,
+    def test_client_wpa3_bridge_udp_bidirectional(self,  lf_tools,
                                                   lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                   get_configuration):
         """ Wifi Capacity Test BRIDGE mode

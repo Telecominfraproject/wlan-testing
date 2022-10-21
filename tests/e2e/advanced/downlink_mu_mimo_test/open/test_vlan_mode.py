@@ -26,12 +26,12 @@ setup_params_general = {
 @allure.suite("performance")
 @allure.feature("VLAN MODE open security and Downlink MU_MIMO Test")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMuMimoVlan(object):
     """
     Downlink MU-MIMO Test: VLAN Mode
