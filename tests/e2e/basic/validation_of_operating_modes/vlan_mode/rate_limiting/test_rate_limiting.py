@@ -69,7 +69,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up", mode=mode,
                                        download_rate="0Gbps", batch_size="1,2,5",
@@ -101,7 +101,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -135,7 +135,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -169,7 +169,7 @@ class TestRateLimitingVLAN(object):
         profile_data["rate-limit"][0] = 0
         profile_data["rate-limit"][1] = 0
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_di", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -201,7 +201,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         raw_lines = [["dl_rate_sel: Per-Station Download Rate:"], ["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_per_cl", mode=mode,
@@ -233,7 +233,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         raw_lines = [["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_per_cl", mode=mode,
@@ -266,7 +266,7 @@ class TestRateLimitingVLAN(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         raw_lines = [["dw_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw_per_cl", mode=mode,
@@ -299,7 +299,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_125", mode=mode,
                                        download_rate="0Gbps", batch_size="1,2,5",
@@ -331,7 +331,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw_125", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -364,7 +364,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_125", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -396,7 +396,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_1", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
@@ -428,7 +428,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_1", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
@@ -460,7 +460,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_tcp_dl_up_dw_1", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
@@ -492,7 +492,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_1_5g", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
@@ -524,7 +524,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw_1_5g", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
@@ -556,7 +556,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_1_5g", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
@@ -590,7 +590,7 @@ class TestRateLimitingVLAN(object):
         profile_data["rate-limit"][0] = 0
         profile_data["rate-limit"][1] = 0
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_dw_di_5g", mode=mode,
                                        download_rate="1Gbps", batch_size="1,2,5",
@@ -622,7 +622,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         raw_lines = [["dl_rate_sel: Per-Station Download Rate:"], ["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_per_cl_5g", mode=mode,
@@ -655,7 +655,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         raw_lines = [["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_up_per_cl_5g", mode=mode,
@@ -688,7 +688,7 @@ class TestRateLimitingVLAN(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         raw_lines = [["dw_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_VLAN_dw_per_cl_5g", mode=mode,
