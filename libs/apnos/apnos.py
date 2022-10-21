@@ -638,7 +638,16 @@ class APNOS:
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                           f"cmd --value \"{cmd}\" "
         elif self.type.lower() == "wifi6" or self.type.lower() == "wifi6e":
-            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
+            client = self.ssh_cli_connect()
+            cmd1 = '[ -f /sys/kernel/debug/ath11k/qcn*/mac0/dfs_simulate_radar ] && echo "True" || echo "False"'
+            stdin, stdout, stderr = client.exec_command(cmd1)
+            output = str(stdout.read())
+            print("Output", output)
+            if output.__contains__("False"):
+                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
+            else:
+                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd qcn* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
+            client.close()
             print("cmd: ", cmd)
             if self.mode:
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
@@ -667,7 +676,16 @@ class APNOS:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
         elif self.type.lower() == "wifi6" or self.type.lower() == "wifi6e":
-            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
+            client = self.ssh_cli_connect()
+            cmd1 = '[ -f /sys/kernel/debug/ath11k/qcn*/mac0/dfs_simulate_radar ] && echo "True" || echo "False"'
+            stdin, stdout, stderr = client.exec_command(cmd1)
+            output = str(stdout.read())
+            print("Output", output)
+            if output.__contains__("False"):
+                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
+            else:
+                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd qcn* && cd mac0 && logread | grep DFS'
+            client.close()
             print("cmd: ", cmd)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
