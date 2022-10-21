@@ -57,7 +57,7 @@ class APNOS:
             cmd = '[ -f ~/cicd-git/ ] && echo "True" || echo "False"'
             stdin, stdout, stderr = client.exec_command(cmd)
             output = str(stdout.read())
-            
+
             if output.__contains__("False"):
                 cmd = 'mkdir ~/cicd-git/'
                 stdin, stdout, stderr = client.exec_command(cmd)
@@ -638,9 +638,24 @@ class APNOS:
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                           f"cmd --value \"{cmd}\" "
         elif self.type.lower() == "wifi6" or self.type.lower() == "wifi6e":
-            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
-            print("cmd: ", cmd)
+            client = self.ssh_cli_connect()
+            cmd1 = '[ -f /sys/kernel/debug/ath11k/qcn6122_2/mac0/dfs_simulate_radar ] && echo "True" || echo "False"'
             if self.mode:
+                cmd1 = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                       f"cmd --value \"{cmd1}\" "
+                stdin, stdout, stderr = client.exec_command(cmd1)
+                output = stdout.read()
+                print("Output", output)
+                status = output.decode('utf-8')
+                status_count = int(status.count("True"))
+                print("status", status)
+                print("count", status_count)
+                if status_count == 1:
+                    cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
+                else:
+                    cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd qcn6122_2 && cd mac0 && ls && echo 1 > dfs_simulate_radar'
+                client.close()
+                print("cmd: ", cmd)
                 command = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                           f"cmd --value \"{cmd}\" "
         client = self.ssh_cli_connect()
@@ -661,13 +676,28 @@ class APNOS:
             else:
                 cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
             client.close()
-            #cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
-            #print("cmd: ", cmd)
+            # cmd = "cd /sys/kernel/debug/ieee80211/phy1/ath10k/ && logread | grep DFS"
+            # print("cmd: ", cmd)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
                       f"cmd --value \"{cmd}\" "
         elif self.type.lower() == "wifi6" or self.type.lower() == "wifi6e":
-            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
+            client = self.ssh_cli_connect()
+            cmd1 = '[ -f /sys/kernel/debug/ath11k/qcn6122_2/mac0/dfs_simulate_radar ] && echo "True" || echo "False"'
+            cmd1 = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
+                   f"cmd --value \"{cmd1}\" "
+            stdin, stdout, stderr = client.exec_command(cmd1)
+            output = stdout.read()
+            print("Output", output)
+            status = output.decode('utf-8')
+            status_count = int(status.count("True"))
+            print("status", status)
+            print("count", status_count)
+            if status_count == 1:
+                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
+            else:
+                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd qcn6122_2 && cd mac0 && logread | grep DFS'
+            client.close()
             print("cmd: ", cmd)
             if self.mode:
                 cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {self.owrt_args} -t {self.tty} --action " \
@@ -690,16 +720,16 @@ class APNOS:
 
 if __name__ == '__main__':
     obj = {
-                "model": "cig_wf188n",
-                "mode": "wifi6",
-                "serial": "0000c1018812",
-                "jumphost": True,
-                "ip": "10.28.3.103",
-                "username": "lanforge",
-                "password": "pumpkin77",
-                "port": 22,
-                "jumphost_tty": "/dev/ttyAP1",
-                "version": "next-latest"
-            }
+        "model": "cig_wf188n",
+        "mode": "wifi6",
+        "serial": "0000c1018812",
+        "jumphost": True,
+        "ip": "10.28.3.103",
+        "username": "lanforge",
+        "password": "pumpkin77",
+        "port": 22,
+        "jumphost_tty": "/dev/ttyAP1",
+        "version": "next-latest"
+    }
     var = APNOS(credentials=obj, sdk="2.x")
     print(var.get_memory_profile())
