@@ -36,12 +36,12 @@ setup_params_general = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMaxEightSsid2G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
            pytest -m "max_ssid and bridge"
@@ -112,12 +112,12 @@ setup_params_general1 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general1],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMaxEightSsid5G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
            pytest -m "max_ssid and bridge"
@@ -189,12 +189,12 @@ setup_params_general2 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general2],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMoreThanEightSsid2G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
            pytest -m "max_ssid and bridge"
@@ -275,12 +275,12 @@ setup_params_general3 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general3],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMoreThanEightSsid5G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
            pytest -m "max_ssid and bridge"
@@ -366,12 +366,12 @@ setup_params_general4 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general4],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMaxSixteenSsid(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
        pytest -m "max_ssid and bridge"
@@ -458,12 +458,12 @@ setup_params_general5 = {
 
 
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general5],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestMoreThanSixteenSsid(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
        pytest -m "max_ssid and bridge"

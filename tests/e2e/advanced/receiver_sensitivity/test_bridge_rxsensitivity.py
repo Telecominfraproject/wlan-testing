@@ -24,12 +24,12 @@ setup_params_general = {
 
 @allure.feature("BRIDGE MODE RECEIVER SENSITIVITY TEST")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestRxSensitivityBridge(object):
 
 

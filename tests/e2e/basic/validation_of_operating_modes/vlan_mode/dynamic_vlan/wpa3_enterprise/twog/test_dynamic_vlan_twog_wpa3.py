@@ -35,12 +35,12 @@ setup_params_general = {
 @allure.suite("regression")
 @allure.feature("VLAN MODE wpa3_enterprise Dynamic Vlan")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestDynamicVlan2GWpa3(object):
 
     @pytest.mark.absence_of_radius_vlan_identifier
@@ -48,7 +48,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6095")
-    def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_2g_wpa3(self,  lf_tools, get_lf_logs, get_ap_logs,
                                                                 create_lanforge_chamberview_dut, lf_test,
                                                                 get_configuration,
                                                                 station_names_twog):
@@ -116,7 +116,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_invalid_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6097")
-    def test_dynamic_invalid_vlan_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_dynamic_invalid_vlan_2g_wpa3(self,  lf_tools, get_lf_logs, get_ap_logs,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration,
                                   station_names_twog):
         """
@@ -181,7 +181,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_radius_vlan_info_retained_after_periodic_reauthentication",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6098")
-    def test_radius_vlan_info_retained_after_periodic_reauthentication_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
+    def test_radius_vlan_info_retained_after_periodic_reauthentication_2g_wpa3(self,  lf_tools, get_lf_logs,
                                                                        get_ap_logs,
                                                                        create_lanforge_chamberview_dut, lf_test,
                                                                        get_configuration,
@@ -265,7 +265,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_ssid_vlan_used_in_absence_of_radius_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6100")
-    def test_ssid_vlan_used_in_absence_of_radius_vlan_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_ssid_vlan_used_in_absence_of_radius_vlan_2g_wpa3(self,  lf_tools, get_lf_logs, get_ap_logs,
                                                       create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                       station_names_twog):
         """
@@ -332,7 +332,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_dynamic_unsupported_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6102")
-    def test_dynamic_unsupported_vlan(self, get_vif_state, lf_tools,
+    def test_dynamic_unsupported_vlan(self,  lf_tools,
                                       create_lanforge_chamberview_dut, lf_test, get_configuration,
                                       station_names_twog):
         """
@@ -386,7 +386,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_outof_bound_vlanid",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6103")
-    def test_out_of_bound_vlanid_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs, get_ap_logs,
+    def test_out_of_bound_vlanid_2g_wpa3(self,  lf_tools, get_lf_logs, get_ap_logs,
                                 create_lanforge_chamberview_dut, lf_test, get_configuration,
                                 station_names_twog):
         """
@@ -432,7 +432,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_client_association_ap_with_dynamic_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6104")
-    def test_client_association_ap_with_dynamic_vlan_2g_wpa3(self, get_vif_state, lf_tools, get_ap_logs, get_lf_logs,
+    def test_client_association_ap_with_dynamic_vlan_2g_wpa3(self,  lf_tools, get_ap_logs, get_lf_logs,
                                                      create_lanforge_chamberview_dut, lf_test, get_configuration,
                                                      station_names_twog):
         """
@@ -502,7 +502,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_subsequent_user_for_same_user_account",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6105")
-    def test_subsequent_user_for_same_user_account_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
+    def test_subsequent_user_for_same_user_account_2g_wpa3(self,  lf_tools, get_lf_logs,
                                                         get_ap_logs,
                                                         create_lanforge_chamberview_dut, lf_test,
                                                         get_configuration,
@@ -577,7 +577,7 @@ class TestDynamicVlan2GWpa3(object):
     @pytest.mark.twog
     @allure.testcase(name="test_subsequent_user_for_different_user_account_vlan",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6106")
-    def test_subsequent_user_for_different_user_account_2g_wpa3(self, get_vif_state, lf_tools, get_lf_logs,
+    def test_subsequent_user_for_different_user_account_2g_wpa3(self,  lf_tools, get_lf_logs,
                                                         get_ap_logs,
                                                         create_lanforge_chamberview_dut, lf_test,
                                                         get_configuration,

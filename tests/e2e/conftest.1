@@ -636,7 +636,7 @@ def get_security_flags():
 
 @pytest.fixture(scope="session")
 def get_markers(request, get_security_flags):
-    """used to get the markers on the selected test case class, used in setup_profiles"""
+    """used to get the markers on the selected test case class, used in setup_configuration"""
     session = request.node
     markers = list()
     security = get_security_flags

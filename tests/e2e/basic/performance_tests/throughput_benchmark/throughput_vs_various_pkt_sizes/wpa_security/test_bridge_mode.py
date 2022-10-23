@@ -24,12 +24,12 @@ setup_params_general = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputVsPktWpaBridge2G(object):
     """Throughput vs Various Pkt Size Test BRIDGE MODE
        pytest -m "throughput_vs_pkt and Bridge"
@@ -340,12 +340,12 @@ setup_params_5g = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_5g],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputVsPktWpaBridge5G(object):
     """Throughput vs Various Pkt Size Test BRIDGE MODE
        pytest -m "throughput_vs_pkt and Bridge"

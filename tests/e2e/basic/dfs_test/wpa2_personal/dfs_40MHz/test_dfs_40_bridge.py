@@ -36,7 +36,8 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.parent_suite("OpenWifi DFS Test")
+@allure.feature("DFS Test")
+@allure.parent_suite("DFS Test")
 @allure.suite("BRIDGE Mode(40 MHz)")
 @allure.sub_suite("Channel-52")
 class TestDFSChannel52Bw40(object):
@@ -88,7 +89,8 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.parent_suite("OpenWifi DFS Test")
+@allure.feature("DFS Test")
+@allure.parent_suite("DFS Test")
 @allure.suite("BRIDGE Mode(40 MHz)")
 @allure.sub_suite("Channel-100")
 class TestDFSChannel100Bw40(object):
@@ -141,7 +143,8 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.parent_suite("OpenWifi DFS Test")
+@allure.feature("DFS Test")
+@allure.parent_suite("DFS Test")
 @allure.suite("BRIDGE Mode(40 MHz)")
 @allure.sub_suite("Channel-60")
 class TestDFSChannel60Bw40(object):
@@ -193,7 +196,8 @@ setup_params_general7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.parent_suite("OpenWifi DFS Test")
+@allure.feature("DFS Test")
+@allure.parent_suite("DFS Test")
 @allure.suite("BRIDGE Mode(40 MHz)")
 @allure.sub_suite("Channel-108")
 class TestDFSChannel108Bw40(object):
@@ -246,7 +250,8 @@ setup_params_general11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.parent_suite("OpenWifi DFS Test")
+@allure.feature("DFS Test")
+@allure.parent_suite("DFS Test")
 @allure.suite("BRIDGE Mode(40 MHz)")
 @allure.sub_suite("Channel-132")
 class TestDFSChannel132Bw40(object):

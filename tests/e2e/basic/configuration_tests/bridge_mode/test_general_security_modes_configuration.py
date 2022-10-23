@@ -32,12 +32,12 @@ setup_params_general = {
 @pytest.mark.suiteA
 @allure.feature("BRIDGE MODE SETUP")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestSetupBridgeSuiteA(object):
     """ General Security Modes: SuiteA
         pytest -m "setup and bridge and general and suiteA"
@@ -45,77 +45,77 @@ class TestSetupBridgeSuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.twog
-    def test_setup_open_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_open_2g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ SSID Profile Creation open 2.4G
             pytest -m "setup and bridge and general and suiteA and open and twog"
         """
-        assert setup_profiles['open_2g']
+        assert setup_configuration['open_2g']
 
     @pytest.mark.open
     @pytest.mark.fiveg
-    def test_setup_open_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_open_5g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ SSID Profile Creation open 5G
             pytest -m "setup and bridge and general and suiteA and open and fiveg"
          """
-        assert setup_profiles['open_5g']
+        assert setup_configuration['open_5g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.twog
-    def test_setup_wpa_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa_2g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ SSID Profile Creation wpa 2.4G
             pytest -m "setup and bridge and general and suiteA and wpa and twog"
         """
-        assert setup_profiles['wpa_2g']
+        assert setup_configuration['wpa_2g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa
     @pytest.mark.fiveg
-    def test_setup_wpa_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa_5g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ SSID Profile Creation wpa 5G
             pytest -m "setup and bridge and general and suiteA and wpa and fiveg"
         """
-        assert setup_profiles['wpa_5g']
+        assert setup_configuration['wpa_5g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    def test_setup_wpa2_personal_2g_ssid_profile(self, setup_profiles, update_report,
+    def test_setup_wpa2_personal_2g_ssid_profile(self, setup_configuration, update_report,
                                                  test_cases):
         """ SSID Profile Creation wpa2_personal 2.4G
             pytest -m "setup and bridge and general and suiteA and wpa2_personal and twog"
         """
-        assert setup_profiles['wpa2_personal_2g']
+        assert setup_configuration['wpa2_personal_2g']
 
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    def test_setup_wpa2_personal_5g_ssid_profile(self, setup_profiles, update_report,
+    def test_setup_wpa2_personal_5g_ssid_profile(self, setup_configuration, update_report,
                                                  test_cases):
         """ SSID Profile Creation wpa2_personal 5G
             pytest -m "setup and bridge and general and suiteA and wpa2_personal and fiveg"
          """
-        assert setup_profiles['wpa2_personal_5g']
+        assert setup_configuration['wpa2_personal_5g']
 
     @pytest.mark.sanity_light
-    def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
+    def test_setup_equipment_ap_profile(self, setup_configuration, update_report,
                                         test_cases):
         """ Equipment AP Profile SuiteA General """
-        assert setup_profiles['equipment_ap']
+        assert setup_configuration['equipment_ap']
 
     @pytest.mark.sanity_light
-    def test_verify_vif_config(self, setup_profiles, update_report,
+    def test_verify_vif_config(self, setup_configuration, update_report,
                                test_cases):
         """ vifc SuiteA General """
-        assert setup_profiles['vifc']
+        assert setup_configuration['vifc']
 
     @pytest.mark.sanity_light
     @allure.severity(allure.severity_level.BLOCKER)
-    def test_verify_vif_state(self, setup_profiles, update_report,
+    def test_verify_vif_state(self, setup_configuration, update_report,
                               test_cases):
         """ vifs SuiteA General """
         time.sleep(200)
-        assert setup_profiles['vifs']
+        assert setup_configuration['vifs']
 
 
 setup_params_general_two = {
@@ -142,82 +142,82 @@ setup_params_general_two = {
 @pytest.mark.suiteB
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_two],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestBridgeModeConnectivitySuiteB(object):
     """ General Security Modes: SuiteB """
 
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
-    def test_setup_wpa3_personal_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa3_personal_2g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ SSID Profile Creation wpa3_personal 2.4G
             pytest -m "setup and bridge and general and suiteB and wpa3_personal and twog"
          """
-        assert setup_profiles['wpa3_personal_2g']
+        assert setup_configuration['wpa3_personal_2g']
 
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
-    def test_setup_wpa3_personal_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa3_personal_5g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ SSID Profile Creation wpa3_personal 5G
             pytest -m "setup and bridge and general and suiteB and wpa3_personal and fiveg"
         """
 
-        assert setup_profiles['wpa3_personal_5g']
+        assert setup_configuration['wpa3_personal_5g']
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
-    def test_setup_wpa3_personal_mixed_2g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa3_personal_mixed_2g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ SSID Profile Creation wpa3_personal_mixed 2.4G
             pytest -m "setup and bridge and general and suiteB and wpa3_personal_mixed and twog"
          """
-        assert setup_profiles['wpa3_personal_mixed_2g']
+        assert setup_configuration['wpa3_personal_mixed_2g']
 
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
-    def test_setup_wpa3_personal_mixed_5g_ssid_profile(self, setup_profiles, update_report, test_cases):
+    def test_setup_wpa3_personal_mixed_5g_ssid_profile(self, setup_configuration, update_report, test_cases):
         """ SSID Profile Creation wpa3_personal_mixed 5G
             pytest -m "setup and bridge and general and suiteB and wpa3_personal_mixed and fiveg"
 
          """
-        assert setup_profiles['wpa3_personal_mixed_5g']
+        assert setup_configuration['wpa3_personal_mixed_5g']
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
-    def test_setup_wpa_wpa2_personal_mixed_2g_ssid_profile(self, setup_profiles, update_report,
+    def test_setup_wpa_wpa2_personal_mixed_2g_ssid_profile(self, setup_configuration, update_report,
                                                            test_cases):
         """ SSID Profile Creation wpa_wpa2_personal_mixed 2.4G
             pytest -m "setup and bridge and general and suiteB and wpa_wpa2_personal_mixed and twog"
 
         """
-        assert setup_profiles['wpa_wpa2_personal_mixed_2g']
+        assert setup_configuration['wpa_wpa2_personal_mixed_2g']
 
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
-    def test_setup_wpa_wpa2_personal_mixed_5g_ssid_profile(self, setup_profiles, update_report,
+    def test_setup_wpa_wpa2_personal_mixed_5g_ssid_profile(self, setup_configuration, update_report,
                                                            test_cases):
         """ SSID Profile Creation wpa_wpa2_personal_mixed 5G
             pytest -m "setup and bridge and general and suiteB and wpa_wpa2_personal_mixed and fiveg"
 
          """
-        assert setup_profiles['wpa_wpa2_personal_mixed_5g']
+        assert setup_configuration['wpa_wpa2_personal_mixed_5g']
 
-    def test_setup_equipment_ap_profile(self, setup_profiles, update_report,
+    def test_setup_equipment_ap_profile(self, setup_configuration, update_report,
                                         test_cases):
         """ Equipment AP Suite B """
-        assert setup_profiles['equipment_ap']
+        assert setup_configuration['equipment_ap']
 
-    def test_verify_vif_config(self, setup_profiles, update_report,
+    def test_verify_vif_config(self, setup_configuration, update_report,
                                test_cases):
         """ vif config Suite B """
-        assert setup_profiles['vifc']
+        assert setup_configuration['vifc']
 
     @allure.severity(allure.severity_level.BLOCKER)
-    def test_verify_vif_state(self, setup_profiles, update_report,
+    def test_verify_vif_state(self, setup_configuration, update_report,
                               test_cases):
         """ vif state Suite B """
         time.sleep(200)
-        assert setup_profiles['vifs']
+        assert setup_configuration['vifs']

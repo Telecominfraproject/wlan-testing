@@ -23,12 +23,12 @@ setup_params_general = {
     "radius": False
 }
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class Test_SpatialConsistency_Bridge(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5052", name="WIFI-5052")
@@ -36,7 +36,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss1
     @pytest.mark.degree0
-    def test_nss1_wpa2_personal_2g_10db_0degree(self, setup_profiles, lf_tools, lf_test, station_names_twog, create_lanforge_chamberview_dut, get_configuration ):
+    def test_nss1_wpa2_personal_2g_10db_0degree(self, setup_configuration, lf_tools, lf_test, station_names_twog, create_lanforge_chamberview_dut, get_configuration ):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -102,7 +102,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss2
     @pytest.mark.degree0
-    def test_nss2_wpa2_personal_2g_10db_0degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss2_wpa2_personal_2g_10db_0degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                 create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -169,7 +169,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss1
     @pytest.mark.degree60
-    def test_nss1_wpa2_personal_2g_10db_60degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss1_wpa2_personal_2g_10db_60degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                 create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -236,7 +236,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss2
     @pytest.mark.degree60
-    def test_nss2_wpa2_personal_2g_10db_60degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss2_wpa2_personal_2g_10db_60degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                  create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -303,7 +303,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss1
     @pytest.mark.degree120
-    def test_nss1_wpa2_personal_2g_10db_120degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss1_wpa2_personal_2g_10db_120degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -371,7 +371,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss2
     @pytest.mark.degree120
-    def test_nss2_wpa2_personal_2g_10db_120degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss2_wpa2_personal_2g_10db_120degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -439,7 +439,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss1
     @pytest.mark.degree240
-    def test_nss1_wpa2_personal_2g_10db_240degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss1_wpa2_personal_2g_10db_240degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -507,7 +507,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss2
     @pytest.mark.degree240
-    def test_nss2_wpa2_personal_2g_10db_240degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss2_wpa2_personal_2g_10db_240degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -575,7 +575,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss1
     @pytest.mark.degree300
-    def test_nss1_wpa2_personal_2g_10db_300degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss1_wpa2_personal_2g_10db_300degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -643,7 +643,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.nss2
     @pytest.mark.degree300
-    def test_nss2_wpa2_personal_2g_10db_300degree(self, setup_profiles, lf_tools, lf_test, station_names_twog,
+    def test_nss2_wpa2_personal_2g_10db_300degree(self, setup_configuration, lf_tools, lf_test, station_names_twog,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
@@ -711,7 +711,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss1
     @pytest.mark.degree0
-    def test_nss1_wpa2_personal_5g_10db_0degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss1_wpa2_personal_5g_10db_0degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                 create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -779,7 +779,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss2
     @pytest.mark.degree0
-    def test_nss2_wpa2_personal_5g_10db_0degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss2_wpa2_personal_5g_10db_0degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                 create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -847,7 +847,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss1
     @pytest.mark.degree60
-    def test_nss1_wpa2_personal_5g_10db_60degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss1_wpa2_personal_5g_10db_60degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                  create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -915,7 +915,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss2
     @pytest.mark.degree60
-    def test_nss2_wpa2_personal_5g_10db_60degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss2_wpa2_personal_5g_10db_60degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                  create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -983,7 +983,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss1
     @pytest.mark.degree120
-    def test_nss1_wpa2_personal_5g_10db_120degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss1_wpa2_personal_5g_10db_120degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                  create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1050,7 +1050,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss2
     @pytest.mark.degree120
-    def test_nss2_wpa2_personal_5g_10db_120degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss2_wpa2_personal_5g_10db_120degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1117,7 +1117,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss1
     @pytest.mark.degree240
-    def test_nss1_wpa2_personal_5g_10db_240degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss1_wpa2_personal_5g_10db_240degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1185,7 +1185,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss2
     @pytest.mark.degree240
-    def test_nss2_wpa2_personal_5g_10db_240degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss2_wpa2_personal_5g_10db_240degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1253,7 +1253,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss1
     @pytest.mark.degree300
-    def test_nss1_wpa2_personal_5g_10db_300degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss1_wpa2_personal_5g_10db_300degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
@@ -1320,7 +1320,7 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @pytest.mark.nss2
     @pytest.mark.degree300
-    def test_nss2_wpa2_personal_5g_10db_300degree(self, setup_profiles, lf_tools, lf_test, station_names_fiveg,
+    def test_nss2_wpa2_personal_5g_10db_300degree(self, setup_configuration, lf_tools, lf_test, station_names_fiveg,
                                                   create_lanforge_chamberview_dut, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
