@@ -1761,7 +1761,7 @@ class UProfileUtility:
 
         self.base_profile_config["radios"].append(base_radio_config_2g)
         self.base_profile_config["radios"].append(base_radio_config_5g)
-        # self.base_profile_config["radios"].append(base_radio_config_6g)
+        self.base_profile_config["radios"].append(base_radio_config_6g)
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
