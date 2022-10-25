@@ -2572,6 +2572,7 @@ class android_libs:
                 report.step_start("Disable Wifi Radio Button")
                 wifiRadioBTN_On = driver.find_element_by_xpath(
                     "//*[@resource-id='com.android.settings:id/switch_widget']")
+                driver.implicitly_wait(2)
                 wifiRadioBTN_On.click()
                 time.sleep(5)
             except NoSuchElementException:
@@ -2582,6 +2583,7 @@ class android_libs:
                 report.step_start("Enable Wifi Radio Button")
                 wifiRadioBTN_Off = driver.find_element_by_xpath(
                     "//*[@resource-id='com.android.settings:id/switch_widget']")
+                driver.implicitly_wait(2)
                 wifiRadioBTN_Off.click()
                 time.sleep(2)
             except NoSuchElementException:
@@ -2623,6 +2625,7 @@ class android_libs:
                 report.step_start("Disable Wifi Radio Button")
                 wifiRadioBTN_On = driver.find_element_by_xpath(
                                                         "//*[@resource-id='com.android.settings:id/switch_widget']")
+                driver.implicitly_wait(2)
                 wifiRadioBTN_On.click()
                 time.sleep(5)
             except NoSuchElementException:
@@ -2633,6 +2636,7 @@ class android_libs:
                 report.step_start("Enable Wifi Radio Button")
                 wifiRadioBTN_Off = driver.find_element_by_xpath(
                                                         "//*[@resource-id='com.android.settings:id/switch_widget']")
+                driver.implicitly_wait(2)
                 wifiRadioBTN_Off.click()
                 time.sleep(10)
             except NoSuchElementException:

@@ -45,7 +45,8 @@ class TestToggleWifiModeVlanModeSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa2 encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa2 encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6511", name="WIFI-6511")
     def test_ToggleWifiMode_WPA2_Personal_2g_Vlan(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -58,7 +59,8 @@ class TestToggleWifiModeVlanModeSuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa2 encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa2 encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6510", name="WIFI-6510")
     def test_ToggleWifiMode_WPA2_Personal_5g_Vlan(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -71,7 +73,8 @@ class TestToggleWifiModeVlanModeSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6513", name="WIFI-6513")
     def test_ToggleWifiMode_WPA_2g_Vlan(self, get_dut_logs_per_test_case, get_test_device_logs,
                                                     num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -84,7 +87,8 @@ class TestToggleWifiModeVlanModeSuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6512", name="WIFI-6512")
     def test_ToggleWifiMode_WPA_5g_Vlan(self, get_dut_logs_per_test_case, get_test_device_logs,
                                                     num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
@@ -97,7 +101,8 @@ class TestToggleWifiModeVlanModeSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with open encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with open encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6515", name="WIFI-6515")
     def test_ToggleWifiMode_open_2g_Vlan(self, get_dut_logs_per_test_case, get_test_device_logs,
                                                     num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["open"][0]
@@ -110,7 +115,8 @@ class TestToggleWifiModeVlanModeSuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with open encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with open encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6514", name="WIFI-6514")
     def test_ToggleWifiMode_open_5g_Vlan(self, get_dut_logs_per_test_case, get_test_device_logs,
                                                     num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -162,10 +168,11 @@ class TestToggleWifiModeVlanModeSuiteTwo(object):
     """
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa3_personal encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa3_personal encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6517", name="WIFI-6517")
     def test_ToggleWifiMode_WPA3_Personal_2g_Vlan(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -175,10 +182,11 @@ class TestToggleWifiModeVlanModeSuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa3_personal encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa3_personal encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6516", name="WIFI-6516")
     def test_ToggleWifiMode_WPA3_Personal_5g_Vlan(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][1]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -188,10 +196,11 @@ class TestToggleWifiModeVlanModeSuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa3_personal_mixed encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa3_personal_mixed encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6519", name="WIFI-6519")
     def test_ToggleWifiMode_WPA3_Personal_Mixed_2g_Vlan(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa3_personal_mixed"][0]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -201,10 +210,11 @@ class TestToggleWifiModeVlanModeSuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa3_personal_mixed encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa3_personal_mixed encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6518", name="WIFI-6518")
     def test_ToggleWifiMode_WPA3_Personal_Mixed_5g_Vlan(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa3_personal_mixed"][1]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -214,10 +224,11 @@ class TestToggleWifiModeVlanModeSuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6521", name="WIFI-6521")
     def test_ToggleWifiMode_wpa_wpa2_personal_mixed_2g_Vlan(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -227,10 +238,11 @@ class TestToggleWifiModeVlanModeSuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
-    @allure.title("VLAN Mode Toggle Wifi Mode Test with wpa_wpa2_personal_mixed encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Wifi Button Test with wpa_wpa2_personal_mixed encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6520", name="WIFI-6520")
     def test_ToggleWifiMode_wpa_wpa2_personal_mixed_5g_Vlan(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 

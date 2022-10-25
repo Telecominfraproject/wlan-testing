@@ -45,7 +45,8 @@ class TestToggleWifiModeNatModeSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa2_personal
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa2 encryption 2.4 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa2 encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6492", name="WIFI-6492")
     def test_ToggleWifiMode_WPA2_Personal_2g_Nat(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -58,7 +59,8 @@ class TestToggleWifiModeNatModeSuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa2_personal
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa2 encryption 5 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa2 encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6491", name="WIFI-6491")
     def test_ToggleWifiMode_WPA2_Personal_5g_Nat(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -71,7 +73,8 @@ class TestToggleWifiModeNatModeSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa encryption 2.4 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6494", name="WIFI-6494")
     def test_ToggleWifiMode_WPA_2g_Nat(self, get_dut_logs_per_test_case, get_test_device_logs,
                                                     num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
@@ -84,7 +87,8 @@ class TestToggleWifiModeNatModeSuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa encryption 5 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6493", name="WIFI-6493")
     def test_ToggleWifiMode_WPA_5g_Nat(self, get_dut_logs_per_test_case, get_test_device_logs,
                                                     num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["wpa"][1]
@@ -97,7 +101,8 @@ class TestToggleWifiModeNatModeSuiteOne(object):
 
     @pytest.mark.twog
     @pytest.mark.open
-    @allure.title("NAT Mode Toggle Wifi Mode Test with open encryption 2.4 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with open encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6496", name="WIFI-6496")
     def test_ToggleWifiMode_open_2g_Nat(self, get_dut_logs_per_test_case, get_test_device_logs,
                                                     num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["open"][0]
@@ -110,7 +115,8 @@ class TestToggleWifiModeNatModeSuiteOne(object):
 
     @pytest.mark.fiveg
     @pytest.mark.open
-    @allure.title("NAT Mode Toggle Wifi Mode Test with open encryption 5 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with open encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6495", name="WIFI-6495")
     def test_ToggleWifiMode_open_5g_Nat(self, get_dut_logs_per_test_case, get_test_device_logs,
                                                     num_stations, setup_configuration, get_test_library):
         profile_data = setup_params_general["ssid_modes"]["open"][1]
@@ -161,10 +167,11 @@ class TestToggleWifiModeNatModeSuiteTwo(object):
     """
     @pytest.mark.twog
     @pytest.mark.wpa3_personal
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa3_personal encryption 2.4 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa3_personal encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6498", name="WIFI-6498")
     def test_ToggleWifiMode_WPA3_Personal_2g_Nat(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][0]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -174,10 +181,11 @@ class TestToggleWifiModeNatModeSuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa3_personal encryption 5 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa3_personal encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6497", name="WIFI-6497")
     def test_ToggleWifiMode_WPA3_Personal_5g_Nat(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa3_personal"][1]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -187,10 +195,11 @@ class TestToggleWifiModeNatModeSuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa3_personal_mixed
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa3_personal_mixed encryption 2.4 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa3_personal_mixed encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6500", name="WIFI-6500")
     def test_ToggleWifiMode_WPA3_Personal_Mixed_2g_Nat(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa3_personal_mixed"][0]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -200,10 +209,11 @@ class TestToggleWifiModeNatModeSuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa3_personal_mixed
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa3_personal_mixed encryption 5 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa3_personal_mixed encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6499", name="WIFI-6499")
     def test_ToggleWifiMode_WPA3_Personal_Mixed_5g_Nat(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa3_personal_mixed"][1]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa3_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -213,10 +223,11 @@ class TestToggleWifiModeNatModeSuiteTwo(object):
 
     @pytest.mark.twog
     @pytest.mark.wpa_wpa2_personal_mixed
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6502", name="WIFI-6502")
     def test_ToggleWifiMode_wpa_wpa2_personal_mixed_2g_Nat(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 
@@ -226,10 +237,11 @@ class TestToggleWifiModeNatModeSuiteTwo(object):
 
     @pytest.mark.fiveg
     @pytest.mark.wpa_wpa2_personal_mixed
-    @allure.title("NAT Mode Toggle Wifi Mode Test with wpa_wpa2_personal_mixed encryption 5 GHz Band")
+    @allure.title("NAT Mode Toggle Wifi Button Test with wpa_wpa2_personal_mixed encryption 5 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6501", name="WIFI-6501")
     def test_ToggleWifiMode_wpa_wpa2_personal_mixed_5g_Nat(self,get_dut_logs_per_test_case, get_test_device_logs,
                                            num_stations, setup_configuration, get_test_library):
-        profile_data = setup_params_general["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
+        profile_data = setup_params_general_two["ssid_modes"]["wpa_wpa2_personal_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
 

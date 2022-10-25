@@ -1152,7 +1152,9 @@ class ios_libs:
             print("Disable Wifi Radio Btn")
             report.step_start("Disable Wifi Radio Btn")
             wifiRadioBTN_On = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
+            driver.implicitly_wait(1)
             wifiRadioBTN_On.click()
+            driver.implicitly_wait(1)
             time.sleep(5)
         except NoSuchElementException:
             print("Wifi Radio Button Not Disabled...")
@@ -1163,7 +1165,9 @@ class ios_libs:
             print("Enable Wifi Radio Btn")
             report.step_start("Enable Wifi Radio Btn")
             wifiRadioBTN_Off = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
+            driver.implicitly_wait(1)
             wifiRadioBTN_Off.click()
+            driver.implicitly_wait(1)
             time.sleep(5)
         except NoSuchElementException:
             print("Wifi Radio Button Not Enabled...")
@@ -1171,6 +1175,7 @@ class ios_libs:
         try:    # Checking whether connected to same ssid, after toggling wifi-button
             print("Get Connected Wifi Name if any after Wifi Radio is Enabled")
             report.step_start("Get Connected Wifi Name if any after Wifi Radio is disabled")
+            driver.implicitly_wait(2)
             WifiNameElement = WebDriverWait(driver, 35).until(
                 EC.presence_of_element_located((MobileBy.XPATH, "//AppiumAUT/XCUIElementTypeApplication[1]/XCUIElementTypeWindow[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeOther[1]/XCUIElementTypeTable[1]/XCUIElementTypeCell[2]/XCUIElementTypeStaticText[1]")))
             Wifi_SSID_Name = WifiNameElement.text

@@ -191,9 +191,9 @@ class ios_tests(ios_libs):
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
                 self.teardown()
                 if wifi_toggleing is True:
-                    return "PASS", "Connected to same ssid, after toggle the wifi button."
+                    return "PASS", "Connected to same ssid, after toggling the wifi button."
                 else:
-                    return "FAIL", "Not connected to same ssid, after toggle the wifi button."
+                    return "FAIL", "Not connected to same ssid, after toggling the wifi button."
             elif ssid_found is False:
                 self.teardown()
                 return "FAIL", "SSID is not seen in Device"
