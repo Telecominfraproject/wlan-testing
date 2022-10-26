@@ -245,6 +245,38 @@ class AndroidTests(android_libs):
             self.teardown()
             return "Fail", "Failed due to exception or Unable to find the API path"
 
+    def enterprise_toggle_wifi_mode_test(self, ssid, identity, ttls_passwd):
+        self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
+                                                                           self.perfecto_data[self.device],
+                                                                           perfecto_data=self.perfecto_data))
+        setup_perfecto_mobile = self.setup_perfectoMobile[0]
+        try:
+            ssid_with_internet, setup, ssid_found = self.wifi_connect_eap(ssid=ssid, user=identity,
+                                                                          ttls_passwd=ttls_passwd,
+                                                                          setup_perfectoMobile=setup_perfecto_mobile,
+                                                                          connData=self.connData)
+            if ssid_with_internet is True and ssid_found is True:
+                wifi_toggling = self.toggle_wifi_mode(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile,
+                                                    connData=self.connData)
+                self.closeApp(self.connData["appPackage-android"], setup)
+                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.teardown()
+                if wifi_toggling is True:
+                    return "PASS", "Connected to same ssid, after toggling the wifi button."
+                else:
+                    return "FAIL", "Not connected to same ssid, after toggling the wifi button."
+            elif ssid_found is False:
+                self.teardown()
+                return "FAIL", "SSID is not seen in Device"
+            else:
+                self.teardown()
+                return "FAIL", "SSID didn't get the Internet"
+        except Exception as e:
+            print(e)
+            self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
+
+
 
 if __name__ == '__main__':
     perfecto_data = {
@@ -309,4 +341,5 @@ if __name__ == '__main__':
     # print(obj.rate_limiting_test(ssid="ssid_wpa2_2g_RL_1VE7537",passkey="something",up_rate="60",down_rate="10"))
     # print(obj.enterprise_client_connect(ssid="ssid_wpa_eap_5g_5O05610", identity="nolaradius", ttls_passwd="nolastart"))
     # print(obj.client_connect(ssid="ssid_wpa_5g_br_NE38276", passkey="something"))
-    print(obj.toggle_wifi_mode_test(ssid="ssid_wpa_2g_RL_7V05064", passkey="something"))
+    print(obj.enterprise_toggle_wifi_mode_test(ssid="ssid_wpa_2g_RL_7V05064", identity="nolaradius",
+                                               ttls_passwd="nolastart"))
