@@ -82,7 +82,7 @@ class TestMultiVlan(object):
         profile_data={"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 125}
         ssid_name=profile_data["ssid_name"]
         security_key=profile_data["security_key"]
-        security="open"
+        security="wpa"
         mode="VLAN"
         band="fiveg"
         vlan=[profile_data["vlan"]]
@@ -109,7 +109,7 @@ class TestMultiVlan(object):
         profile_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
         ssid_name=profile_data["ssid_name"]
         security_key=profile_data["security_key"]
-        security="open"
+        security="wpa2"
         mode="VLAN"
         band="fiveg"
         vlan=[profile_data["vlan"]]
@@ -135,13 +135,14 @@ class TestMultiVlan(object):
         profile_data={"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 150}
         ssid_name=profile_data["ssid_name"]
         security_key=profile_data["security_key"]
-        security="open"
+        security = "wpa"
+        extra_sec = ["wpa2"]
         mode="VLAN"
         band="fiveg"
         vlan=[profile_data["vlan"]]
 
         passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                 dut_data=setup_configuration,
+                                                                 dut_data=setup_configuration,extra_securities=extra_sec,
                                                                  passkey=security_key, mode=mode, band=band,
                                                                  num_sta=1, vlan_id=vlan)
         assert passes == "PASS", result
@@ -174,5 +175,5 @@ class TestMultiVlan(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=None)
-        assert passes == "PASS", result
+                                                                   num_sta=1, vlan_id=vlan)
+        assert passes != "PASS", result

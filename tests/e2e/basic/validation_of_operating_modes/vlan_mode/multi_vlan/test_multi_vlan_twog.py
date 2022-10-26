@@ -59,7 +59,7 @@ class TestMultiVlan(object):
         security="open"
         mode="VLAN"
         band="twog"
-        vlan=[[profile_data["vlan"]]]
+        vlan=[profile_data["vlan"]]
 
         passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                  dut_data=setup_configuration,
@@ -83,7 +83,7 @@ class TestMultiVlan(object):
         profile_data={"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 125}
         ssid_name=profile_data["ssid_name"]
         security_key=profile_data["security_key"]
-        security="open"
+        security="wpa"
         mode="VLAN"
         band="twog"
         vlan=[profile_data["vlan"]]
@@ -110,7 +110,7 @@ class TestMultiVlan(object):
         profile_data={"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 200}
         ssid_name=profile_data["ssid_name"]
         security_key=profile_data["security_key"]
-        security="open"
+        security="wpa2"
         mode="VLAN"
         band="twog"
         vlan=[profile_data["vlan"]]
@@ -136,20 +136,21 @@ class TestMultiVlan(object):
         profile_data={"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 150}
         ssid_name=profile_data["ssid_name"]
         security_key="[BLANK]"
-        security="open"
+        security="wpa"
+        extra_sec = ["wpa2"]
         mode="VLAN"
         band="twog"
         vlan=[profile_data["vlan"]]
 
         passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                 dut_data=setup_configuration,
+                                                                 dut_data=setup_configuration,extra_securities=extra_sec,
                                                                  passkey=security_key, mode=mode, band=band,
                                                                  num_sta=1, vlan_id=vlan)
         assert passes == "PASS", result
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.disable_vlan_fiveg  # wifi-2174
+    @pytest.mark.disable_vlan_twog  # wifi-2174
     @pytest.mark.ow_sanity_lf
     @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
@@ -175,5 +176,5 @@ class TestMultiVlan(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1, vlan_id=None)
-        assert passes == "PASS", result
+                                                                   num_sta=1, vlan_id=vlan)
+        assert passes == "FAIL", result
