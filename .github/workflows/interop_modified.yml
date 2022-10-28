@@ -608,7 +608,7 @@ jobs:
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:
-          registry_user: wlan-testing-cicd
+          registry_user: ${{ secrets.DOCKER_USER_NAME }}
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
 
