@@ -300,6 +300,7 @@ class ios_libs:
         setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
         time.sleep(3)
 
+    # Runs Speed test on OOKla Speed test App on Android devices, OOKLA app should be present on the Device
     def speed_test(self, setup_perfectoMobile):
         driver = setup_perfectoMobile[0]
         driver.switch_to.context('NATIVE_APP')
@@ -318,6 +319,7 @@ class ios_libs:
         print(f"Upload speed: {upload_speed}")
         return download_speed, upload_speed
 
+    # Function used to connect to a particular SSID
     def wifi_connect(self, ssid, passkey, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
         print("Select Wifi/Get IP Address IOS Connection")
@@ -577,6 +579,7 @@ class ios_libs:
         # ---------------------check if internet-------------------------------
         return is_internet, setup_perfectoMobile, ssid_found
 
+    # Gets the IP Address of the connected SSID from Phone
     def get_ip_address(self, ssid, setup_perfectoMobile, connData):
         wifi_name = ssid
         driver = setup_perfectoMobile[0]
@@ -717,7 +720,7 @@ class ios_libs:
             print("Access Point Verification NOT Completed, checking Connection....")
             current_result = False
         return current_result
-    #----------Wifi connect Enterprise---------------
+    #----------Wifi connect for Enterprise Security---------------
     def wifi_connect_eap(self, ssid, user, ttls_passwd, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
         print("Select Wifi/Get IP Address IOS Connection")
