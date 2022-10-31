@@ -1,3 +1,6 @@
+"""
+This file contains the functions that are required for Perfecto Android devices
+"""
 import logging
 import os
 import re
@@ -124,6 +127,7 @@ class android_libs:
         print("connData------", self.connData)
         pass
 
+    # Checks if there is any Popup on device and tries to kill the Popup and returns false if the Popup is not killed
     def check_if_no_internet_popup(self, driver):
         time.sleep(1)
         driver.implicitly_wait(1)
@@ -158,6 +162,7 @@ class android_libs:
         except:
             pass
 
+    # Checks the Available SSIDS on device and return them in the form of List
     def get_all_available_ssids(self, driver, deviceModelName):
         active_ssid_list = []
         print("Selected Device Model: " + deviceModelName)
@@ -194,6 +199,7 @@ class android_libs:
                 logging.error("No SSIDS available")
         return active_ssid_list
 
+    # Opens an APP on the device based on the argument given
     def openApp(self, appName, setup_perfectoMobile):
         print("Refreshing App: " + appName)
         setup_perfectoMobile[1].step_start("Opening App: " + appName)
@@ -203,6 +209,7 @@ class android_libs:
         setup_perfectoMobile[0].execute_script('mobile:application:close', params)
         setup_perfectoMobile[0].execute_script('mobile:application:open', params)
 
+    # Closes an APP on the device based on the argument given
     def closeApp(self, appName, setup_perfectoMobile):
         print("Closing App.." + appName)
         setup_perfectoMobile[1].step_start("Closing App: " + appName)
@@ -210,6 +217,7 @@ class android_libs:
         setup_perfectoMobile[0].execute_script('mobile:application:close', params)
         print("Closed App")
 
+    # Tries to swipe the screen on the device based on the Params given
     def scrollDown(self, setup_perfectoMobile):
         print("Scroll Down")
         setup_perfectoMobile[1].step_start("Scroll Down")
@@ -221,6 +229,7 @@ class android_libs:
         setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
         time.sleep(3)
 
+    # Tries to swipe the screen on the device based on the Params given specially created for Pixel Phone
     def scroll_down_pixel(self, setup_perfectoMobile):
         print("Scroll Down")
         setup_perfectoMobile[1].step_start("Scroll Down")
@@ -232,6 +241,7 @@ class android_libs:
         setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
         time.sleep(1)
 
+    # Tries to swipe the screen on the device based on the Params given
     def scroll_up(self, setup_perfectoMobile):
         print("Scroll up")
         setup_perfectoMobile[1].step_start("Scroll up")
@@ -243,6 +253,7 @@ class android_libs:
         setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
         time.sleep(1)
 
+    # Returns the Device id
     def getDeviceID(self, setup_perfectoMobile):
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -253,6 +264,7 @@ class android_libs:
         print("DeviceID: " + deviceID)
         return deviceID
 
+    # Returns the Device Model
     def getDeviceModelName(self, setup_perfectoMobile):
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -263,6 +275,7 @@ class android_libs:
         print("ModelName: " + deviceModel)
         return deviceModel
 
+    # Returns the device info mostly used for OS version in this case
     def get_phone_information(self, setup_perfectoMobile, search_this):
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
@@ -273,7 +286,7 @@ class android_libs:
         print("device information for " + search_this + " is: ", device_information)
         return device_information
 
-
+    # Returns the Data needed for the Device
     def get_ToggleAirplaneMode_data(self, get_device_configuration):
 
         passPoint_data = {
@@ -306,6 +319,7 @@ class android_libs:
         testCaseErrorMsg.append(str(testErrorMsg))
         testCaseReportURL.append(reportURL)
 
+    # Gets the Device response from Perfecto
     def response_device(self, model):
         securityToken = self.perfecto_data["securityToken"]
         perfectoURL = self.perfecto_data["perfectoURL"]
@@ -335,8 +349,6 @@ class android_libs:
             allocated_to = self.get_attribute_device(responseXml, 'allocatedTo')
             print("The device is currently allocated to:" + allocated_to)
             return False
-
-    # Checks whether the device is available or not.If the device is not available rechecks depending upon the
 
     # Checks whether the device is available or not.If the device is not available rechecks depending upon the
     # 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
@@ -375,6 +387,7 @@ class android_libs:
             attribute_value = False
         return attribute_value
 
+    # Used to get the Android Device driver obj for further utility,Base function for Android Tests
     def setup_perfectoMobile_android(self, get_device_configuration, perfecto_data):
         from appium import webdriver
         global perfecto_execution_context, driver
@@ -446,6 +459,7 @@ class android_libs:
         else:
             yield driver, reporting_client
 
+    # Teardown function used to release all the data that presently hold from Perfecto
     def teardown(self):
         global driver, perfecto_execution_context
         reporting_client = PerfectoReportiumClient(perfecto_execution_context)
@@ -475,6 +489,7 @@ class android_libs:
                 print(" -- Exception Not Able To Quit --")
                 print(e)
 
+    # Runs Speed test on OOKla Speed test App on Android devices, OOKLA app should be present on the Device
     def speed_test(self, setup_perfectoMobile):
         driver = setup_perfectoMobile[0]
         driver.switch_to.context('NATIVE_APP')
@@ -491,7 +506,7 @@ class android_libs:
         print(f"Upload speed: {uploadSpeed}")
         return downloadSpeed, uploadSpeed
 
-    # ------------------Functions related to perfecto Android libs such as Wifi connect, Get IP address, Forget Wifi----
+    # Function used to connect to a particular SSID
     def wifi_connect(self, ssid, passkey, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
         print("Select Wifi/AccessPoint Connection")
@@ -1596,7 +1611,7 @@ class android_libs:
 
         self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
 
-    #---------------- WIFI connect Enterprise ------------------
+    #---------------- WIFI connect for Enterprise security------------------
     def wifi_connect_eap(self, ssid, user, ttls_passwd, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
         print("Select Wifi/AccessPoint Connection")
