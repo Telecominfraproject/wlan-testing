@@ -35,7 +35,8 @@ setup_params_general={
     indirect=True,
     scope="class"
 )
-@allure.parent_suite("OpenWifi MULTI VLAN Test")
+@allure.feature("MULTI VLAN Test")
+@allure.parent_suite("MULTI VLAN Test")
 @allure.suite("VLAN Mode")
 @allure.sub_suite("5Ghz")
 @pytest.mark.usefixtures("setup_configuration")

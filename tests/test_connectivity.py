@@ -22,7 +22,9 @@ pytestmark = [pytest.mark.test_resources,
 state = True
 sdk_expected = True
 
-
+@allure.feature("Test Connectivity")
+@allure.parent_suite("Test Connectivity")
+@allure.suite("Test Resources")
 class TestResources(object):
     """Test Case Class: Test cases to cover resource Connectivity"""
 
@@ -188,6 +190,7 @@ class TestResources(object):
 
     @pytest.mark.traffic_generator_connectivity
     @allure.testcase(name="test_traffic_generator_connectivity", url="")
+    @allure.title("Traffic Generator  Connectivity")
     def test_traffic_generator_connectivity(self, get_test_library):
         """Test case to verify Traffic Generator Connectivity"""
         port_data = get_test_library.json_get(_req_url="/port?fields=alias,port+type,ip")['interfaces']

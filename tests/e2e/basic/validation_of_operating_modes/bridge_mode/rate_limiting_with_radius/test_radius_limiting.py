@@ -44,8 +44,8 @@ setup_params_general = {
     "radius": True
 }
 
-
-@allure.parent_suite("OpenWifi Dynamic QoS Test")
+@allure.feature("Dynamic QoS Test")
+@allure.parent_suite("Dynamic QoS Test")
 @allure.suite("BRIDGE Mode")
 @allure.sub_suite("WPA2 Enterprise Security")
 @pytest.mark.parametrize(

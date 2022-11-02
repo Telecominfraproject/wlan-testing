@@ -32,7 +32,8 @@ setup_params_general = {
 }
 
 
-@allure.parent_suite("OpenWifi Rate Limiting Test")
+@allure.feature("Rate Limiting Test")
+@allure.parent_suite("Rate Limiting Tests")
 @allure.suite("NAT Mode")
 @allure.sub_suite("WPA2 Personal Security")
 @pytest.mark.parametrize(

@@ -28,7 +28,8 @@ setup_params_enterprise = {
 }
 
 
-@allure.parent_suite("OpenWifi Client Connectivity")
+@allure.parent_suite("Client Connectivity Tests")
+@allure.feature("Client Connectivity")
 @allure.suite(suite_name="BRIDGE Mode")
 @allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-A")
 @pytest.mark.parametrize(
@@ -219,7 +220,8 @@ setup_params_enterprise_two = {
 }
 
 
-@allure.parent_suite("OpenWifi Client Connectivity")
+@allure.parent_suite("Client Connectivity Tests")
+@allure.feature("Client Connectivity")
 @allure.suite(suite_name="BRIDGE Mode")
 @allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-B")
 @pytest.mark.parametrize(
