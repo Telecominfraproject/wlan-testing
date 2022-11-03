@@ -717,7 +717,7 @@ class Fixtures_2x:
             allure.attach(body=str(e), name="Exception data after config push: ")
             print(e)
 
-        config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true"))
+        config = json.loads(str(instantiate_profile_obj.base_profile_config).replace(" ", "").replace("'", '"').replace("True", "true").replace("False", "false"))
         config["uuid"] = 0
 
         # Attach the config that is sent from API
