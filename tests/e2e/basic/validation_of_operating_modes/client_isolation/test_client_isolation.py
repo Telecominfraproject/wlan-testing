@@ -708,7 +708,7 @@ class TestClientIsolationSameSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.same_ssid_enabling_isolation_2g
-    @allure.title("Verify the connectivity of 2 clients connected to the same SSID without enabling the client "
+    @allure.title("Verify the connectivity of 2 clients connected to the same SSID enabling the client "
                   "isolation.(2.4Ghz)")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10601", name="WIFI-10601")
     def test_cleint_isolation_enabled_same_ssid_2g(self, lf_test, get_configuration):
