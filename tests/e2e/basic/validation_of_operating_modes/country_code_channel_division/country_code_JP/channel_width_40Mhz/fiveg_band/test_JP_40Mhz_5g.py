@@ -36,13 +36,16 @@ setup_params_general1 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general1],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-36)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel36(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -53,6 +56,7 @@ class TestCountryJP40Mhz5GChannel36(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel36
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn36_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel36"
@@ -101,13 +105,16 @@ setup_params_general2 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general2],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-44)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel44(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -118,6 +125,7 @@ class TestCountryJP40Mhz5GChannel44(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel44
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn44_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel44"
@@ -166,13 +174,16 @@ setup_params_general3 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general3],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-52)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel52(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -183,6 +194,7 @@ class TestCountryJP40Mhz5GChannel52(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel52
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn52_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel52"
@@ -229,13 +241,16 @@ setup_params_general4 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general4],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-60)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel60(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -246,6 +261,7 @@ class TestCountryJP40Mhz5GChannel60(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel60
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn60_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel60"
@@ -293,13 +309,16 @@ setup_params_general5 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general5],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-100)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel100(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -310,6 +329,7 @@ class TestCountryJP40Mhz5GChannel100(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel100
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn100_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel100"
@@ -357,13 +377,16 @@ setup_params_general6 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general6],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-108)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel108(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -374,6 +397,7 @@ class TestCountryJP40Mhz5GChannel108(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel108
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn108_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel108"
@@ -421,13 +445,16 @@ setup_params_general7 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general7],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-116)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel116(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -438,6 +465,7 @@ class TestCountryJP40Mhz5GChannel116(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel116
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn116_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel116"
@@ -485,13 +513,16 @@ setup_params_general8 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general8],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-124)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel124(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -502,6 +533,7 @@ class TestCountryJP40Mhz5GChannel124(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel124
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn124_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel124"
@@ -549,13 +581,16 @@ setup_params_general9 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general9],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-132)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel132(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -566,6 +601,7 @@ class TestCountryJP40Mhz5GChannel132(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel132
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn132_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel132"
@@ -613,13 +649,16 @@ setup_params_general10 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general10],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-140)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel140(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -630,6 +669,7 @@ class TestCountryJP40Mhz5GChannel140(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel140
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn140_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel140"
@@ -677,13 +717,16 @@ setup_params_general11 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general11],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-149)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel149(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -695,6 +738,7 @@ class TestCountryJP40Mhz5GChannel149(object):
     @pytest.mark.fiveg
     @pytest.mark.channel149
     @pytest.mark.checkchannel
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn149_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel149"
@@ -742,13 +786,16 @@ setup_params_general12 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general12],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("JP country code (Channel-157)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP40Mhz5GChannel157(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -760,6 +807,7 @@ class TestCountryJP40Mhz5GChannel157(object):
     @pytest.mark.fiveg
     @pytest.mark.channel157
     @pytest.mark.checkchannel
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn157_40Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and fiveg and channel157"
