@@ -94,7 +94,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1667480707830,
+  "iteration": 1667481532739,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -598,7 +598,7 @@
       },
       "targets": [
         {
-          "alias": "{{message}}",
+          "alias": "",
           "bucketAggs": [
             {
               "field": "@timestamp",
@@ -698,17 +698,18 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
+          "selected": true,
+          "text": "default",
+          "value": "default"
         },
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus source",
         "multi": false,
-        "name": "prom",
+        "name": "DS_PROMETHEUS",
         "options": [],
         "query": "prometheus",
+        "queryValue": "",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -724,13 +725,35 @@
         "includeAll": false,
         "label": "ES source",
         "multi": false,
-        "name": "es",
+        "name": "DS_ELASTICSEARCH",
         "options": [],
         "query": "elasticsearch",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "type": "datasource"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(up{job=\"kube-state-metrics\"}, cluster)",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "cluster",
+        "options": [],
+        "query": {
+          "query": "label_values(up{job=\"kube-state-metrics\"}, cluster)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
       },
       {
         "current": {},
@@ -747,28 +770,6 @@
         "options": [],
         "query": {
           "query": "label_values(kube_namespace_status_phase{job=\"kube-state-metrics\", cluster=\"$cluster\"}, namespace)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(up{job=\"kube-state-metrics\"}, cluster)",
-        "hide": 2,
-        "includeAll": false,
-        "multi": false,
-        "name": "cluster",
-        "options": [],
-        "query": {
-          "query": "label_values(up{job=\"kube-state-metrics\"}, cluster)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -833,6 +834,6 @@
   "timezone": "",
   "title": "QA debugging",
   "uid": "1Ge5lwNVz",
-  "version": 1,
+  "version": 5,
   "weekStart": ""
 }
