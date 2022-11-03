@@ -75,7 +75,7 @@ class TestUcentralSecService(object):
         if system['version'] == '':
             assert False
 
-    @allure.title("Get Secutity Service Uptime")
+    @allure.title("Get Security Service Uptime")
     def test_secservice_get_uptime(self, get_target_object):
         """
             Test the system endpoint to verify the uptime of the service

@@ -130,11 +130,11 @@ class TestUcentralGatewayService(object):
         # allure.attach(name="Devices", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
         assert resp.status_code == 200
 
-    @pytest.mark.gw_cred_dev
+    @pytest.mark.gw_crud_dev
     @allure.title("CRUD Device")
     def test_gwservice_create_edit_delete_device(self, get_target_object, selected_testbed):
         """
-            Test the create & edit and delete device endpoint
+            Test the creation & updation and delete device endpoint
             WIFI-3453
         """
         device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
@@ -205,7 +205,6 @@ class TestUcentralGatewayService(object):
         assert system_info.status_code == 200
 
     @pytest.mark.gw_commands
-    @pytest.mark.anil
     @allure.title("Get OW Gateway Commands")
     def test_gw_commands(self, get_target_object, get_testbed_details):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
