@@ -78,8 +78,8 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa_2g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                    Multi VLAN Test with open encryption 2.4 GHz Band
-                    pytest -m "multi_vlan_tests and open and twog"
+                    Multi VLAN Test with wpa encryption 2.4 GHz Band
+                    pytest -m "multi_vlan_tests and wpa and twog"
         """
         profile_data={"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 125}
         ssid_name=profile_data["ssid_name"]
@@ -105,8 +105,8 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa2_personal_2g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                    Multi VLAN Test with open encryption 2.4 GHz Band
-                    pytest -m "multi_vlan_tests and open and twog"
+                    Multi VLAN Test with wpa2_personal encryption 2.4 GHz Band
+                    pytest -m "multi_vlan_tests and wpa2_personal and twog"
         """
         profile_data={"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 200}
         ssid_name=profile_data["ssid_name"]
@@ -131,8 +131,8 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa_wpa2_personal_2g(self, get_test_library, get_dut_logs_per_test_case,
                                             get_test_device_logs, num_stations, setup_configuration):
         """
-                    Multi VLAN Test with open encryption 2.4 GHz Band
-                    pytest -m "multi_vlan_tests and open and twog"
+                    Multi VLAN Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
+                    pytest -m "multi_vlan_tests and wpa_wpa2_personal_mixed and twog"
         """
         profile_data={"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 150}
         ssid_name=profile_data["ssid_name"]
@@ -159,13 +159,9 @@ class TestMultiVlan(object):
     def test_disable_vlan_wpa2_2g(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Client connectivity using vlan, wpa2, fiveg
-            pytest -m disable_vlan_fiveg
+                            Multi VLAN Disabled Test with wpa2_personal encryption 2.4 GHz Band
+                            pytest -m "disable_vlan_twog and wpa2_personal and twog"
         """
-        """
-                            Multi VLAN Test with open encryption 2.4 GHz Band
-                            pytest -m "multi_vlan_tests and open and fiveg"
-                """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
