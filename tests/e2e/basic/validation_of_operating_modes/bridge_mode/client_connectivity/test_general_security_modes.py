@@ -25,7 +25,7 @@ setup_params_general = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("Client Connectivity")
 @allure.parent_suite("Client Connectivity Tests")
 @allure.suite(suite_name="BRIDGE Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connectivity")
@@ -214,7 +214,7 @@ setup_params_general_two_br = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("Client Connectivity")
 @allure.parent_suite("Client Connectivity Tests")
 @allure.suite(suite_name="BRIDGE Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connectivity")

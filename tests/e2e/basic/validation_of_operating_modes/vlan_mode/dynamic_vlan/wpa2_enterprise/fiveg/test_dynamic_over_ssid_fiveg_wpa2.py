@@ -1,7 +1,7 @@
 """
 
    Dynamic_Vlan: VLAN Mode
-    pytest -m "dynamic_vlan and wpa2_enterprise and vlan"
+    pytest -m "dynamic_vlan_tests and wpa2_enterprise and vlan"
 
 """
 
@@ -34,10 +34,10 @@ setup_params_general = {
 
 
 # @allure.suite("regression")
-@allure.parent_suite("OpenWifi Dynamic Vlan Test")
+@allure.parent_suite("Dynamic Vlan Test")
 @allure.suite("WPA2 Enterprise Security")
 @allure.sub_suite("5 GHz Band")
-@allure.feature("VLAN MODE wpa2_enterprise Dynamic Vlan")
+@allure.feature("Dynamic Vlan Test")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -56,7 +56,7 @@ class TestDynamicVlanOverSsid5GWpa2(object):
     def test_dynamic_precedence_over_ssid_vlan_5g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration):
         """
-                pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan"
+                pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan and fiveg"
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -69,13 +69,12 @@ class TestDynamicVlanOverSsid5GWpa2(object):
         ttls_passwd = "passwordB"
         eap = "TTLS"
         identity = "userB"
-
         val = ""
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu, vlan_id=vlan,
-                                                                              mode=mode, band=band, eap=eap,d_vlan=True,
+                                                                              mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
                                                                               identity=identity, num_sta=1,
                                                                               dut_data=setup_configuration)

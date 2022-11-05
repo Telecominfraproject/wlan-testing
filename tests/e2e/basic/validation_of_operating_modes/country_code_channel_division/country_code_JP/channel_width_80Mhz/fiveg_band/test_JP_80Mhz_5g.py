@@ -34,13 +34,16 @@ setup_params_general1 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general1],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(80 MHz)")
+@allure.sub_suite("JP country code (Channel-36)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP80Mhz5GChannel36(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -51,6 +54,7 @@ class TestCountryJP80Mhz5GChannel36(object):
     @pytest.mark.eightyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel36
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn36_80Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and eightyMhz and wpa2 and fiveg and channel36"
@@ -98,13 +102,16 @@ setup_params_general2 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general2],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(80 MHz)")
+@allure.sub_suite("JP country code (Channel-52)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP80Mhz5GChannel52(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -115,6 +122,7 @@ class TestCountryJP80Mhz5GChannel52(object):
     @pytest.mark.eightyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel52
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn52_80Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and eightyMhz and wpa2 and fiveg and channel52"
@@ -161,13 +169,16 @@ setup_params_general3 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general3],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(80 MHz)")
+@allure.sub_suite("JP country code (Channel-100)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP80Mhz5GChannel100(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -178,6 +189,7 @@ class TestCountryJP80Mhz5GChannel100(object):
     @pytest.mark.eightyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel100
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn100_80Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and eightyMhz and wpa2 and fiveg and channel100"
@@ -224,13 +236,16 @@ setup_params_general4 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general4],
     indirect=True,
     scope="class"
 )
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(80 MHz)")
+@allure.sub_suite("JP country code (Channel-116)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestCountryJP80Mhz5GChannel116(object):
     """Country code along with Channel and Channel-width Test Bridge mode
@@ -241,6 +256,7 @@ class TestCountryJP80Mhz5GChannel116(object):
     @pytest.mark.eightyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel116
+    @allure.title("Test for wpa2 encryption 5 GHz Band")
     def test_client_bridge_wpa2_chn116_80Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and eightyMhz and wpa2 and fiveg and channel116"

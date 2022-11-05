@@ -1,7 +1,7 @@
 """
 
    Dynamic_Vlan: VLAN Mode
-    pytest -m "dynamic_vlan and wpa2_enterprise and vlan"
+    pytest -m "dynamic_vlan_tests and wpa2_enterprise and vlan"
 
 """
 
@@ -34,10 +34,10 @@ setup_params_general = {
 
 
 # @allure.suite("regression")
-@allure.parent_suite("OpenWifi Dynamic Vlan Test")
+@allure.parent_suite("Dynamic Vlan Test")
 @allure.suite("WPA2 Enterprise Security")
 @allure.sub_suite("2.4 GHz Band")
-@allure.feature("VLAN MODE wpa2_enterprise Dynamic Vlan")
+@allure.feature("Dynamic Vlan Test")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -56,7 +56,7 @@ class TestDynamicVlanOverSsid2GWpa2(object):
     def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration):
         """
-                pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan"
+                pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan and twog"
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -74,14 +74,13 @@ class TestDynamicVlanOverSsid2GWpa2(object):
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                   extra_securities=extra_secu,
-                                                                  vlan_id=vlan, mode=mode, band=band, eap=eap,d_vlan=True, 
+                                                                  vlan_id=vlan, mode=mode, band=band, eap=eap, 
                                                                   ttls_passwd=ttls_passwd, ieee80211w=0, 
                                                                   identity=identity, num_sta=1, dut_data=setup_configuration)
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                                "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
-
         eth_radius_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                         "/" + port_resources[2] + "." + str(vlan[1]))["interface"]["ip"]
         eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
@@ -90,7 +89,7 @@ class TestDynamicVlanOverSsid2GWpa2(object):
         sta_ip_1 = station_ip.split('.')
         eth_vlan_ip_1 = eth_radius_vlan_ip.split('.')
         logging.info(f"station ip...{sta_ip_1}\neth.{vlan[0]}...{eth_ssid_vlan_ip}\neth.{vlan[1]}...{eth_radius_vlan_ip}"
-                    f"\neth_upstream_ip...{eth_ip}")
+                     f"\neth_upstream_ip...{eth_ip}")
         if sta_ip_1[0] == "0":
             assert False, result
         elif eth_vlan_ip_1[0] == "0":

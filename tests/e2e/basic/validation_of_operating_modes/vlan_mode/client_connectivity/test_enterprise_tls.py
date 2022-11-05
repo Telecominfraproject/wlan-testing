@@ -23,7 +23,8 @@ setup_params_enterprise = {
 }
 
 
-@allure.parent_suite("OpenWifi Client Connectivity")
+@allure.feature("Client Connectivity")
+@allure.parent_suite("Client Connectivity Tests")
 @allure.suite(suite_name="VLAN Mode")
 @allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-A")
 @pytest.mark.parametrize(
@@ -257,7 +258,8 @@ setup_params_enterprise_two = {
 }
 
 
-@allure.parent_suite("OpenWifi Client Connectivity")
+@allure.feature("Client Connectivity")
+@allure.parent_suite("Client Connectivity Tests")
 @allure.suite(suite_name="VLAN Mode")
 @allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-B")
 @pytest.mark.suiteB

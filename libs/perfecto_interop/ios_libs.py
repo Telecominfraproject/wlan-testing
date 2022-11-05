@@ -1,3 +1,6 @@
+"""
+This file contains the functions that are required for Perfecto iOS devices
+"""
 import logging
 import os
 import re
@@ -29,6 +32,7 @@ class ios_libs:
         self.testcase_name = testcase
         pass
 
+    # Opens an APP on the device based on the argument given
     def openApp(self, appName, setup_perfectoMobile):
         setup_perfectoMobile[1].step_start("Opening App: " + appName)
         params = {'identifier': appName}
@@ -37,6 +41,7 @@ class ios_libs:
         setup_perfectoMobile[0].execute_script('mobile:application:close', params)
         setup_perfectoMobile[0].execute_script('mobile:application:open', params)
 
+    # Tries to swipe the screen on the device based on the Params given
     def scrollDown(self, setup_perfectoMobile):
         print("Scroll Down")
         setup_perfectoMobile[1].step_start("Scroll Down")
@@ -48,12 +53,14 @@ class ios_libs:
         setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
         time.sleep(3)
 
+    # Closes an APP on the device based on the argument given
     def closeApp(self, appName, setup_perfectoMobile):
         # print("Closing App.." + appName)
         setup_perfectoMobile[1].step_start("Closing App: " + appName)
         params = {'identifier': appName}
         setup_perfectoMobile[0].execute_script('mobile:application:close', params)
 
+    # Returns the Data needed for the Device
     def get_ToggleAirplaneMode_data(self, get_device_configuration):
 
         passPoint_data = {
@@ -86,6 +93,7 @@ class ios_libs:
         testCaseErrorMsg.append(str(testErrorMsg))
         testCaseReportURL.append(reportURL)
 
+    # Gets the Device response from Perfecto
     def response_device(self, model):
         securityToken = self.perfecto_data["securityToken"]
         perfectoURL = self.perfecto_data["perfectoURL"]
@@ -115,8 +123,6 @@ class ios_libs:
             allocated_to = self.get_attribute_device(response_xml, 'allocatedTo')
             print("The device is currently allocated to:" + allocated_to)
             return False
-
-    # Checks whether the device is available or not.If the device is not available rechecks depending upon the
 
     # Checks whether the device is available or not.If the device is not available rechecks depending upon the
     # 'timerValue' and 'timerThreshold' values.With the current parameters it will check after:10,20,40,80 mins.
@@ -155,6 +161,7 @@ class ios_libs:
             attribute_value = False
         return attribute_value
 
+    # Used to get the iOS Device driver obj for further utility,Base function for iOS Tests
     def setup_perfectoMobile_iOS(self, get_device_configuration, perfecto_data):
         global perfecto_execution_context, driver, deviceModel
         from appium import webdriver
@@ -224,6 +231,7 @@ class ios_libs:
         else:
             yield driver, reporting_client
 
+    # Teardown function used to release all the data that presently hold from Perfecto
     def teardown(self):
         global driver, perfecto_execution_context, deviceModel
         reporting_client = PerfectoReportiumClient(perfecto_execution_context)
@@ -249,6 +257,7 @@ class ios_libs:
                 print(" -- Exception Not Able To Quit --")
                 print(e)
 
+    # Checks the Available SSIDS on device and return them in the form of List
     def get_all_available_ssids(self, driver):
         print("\n----------------------------")
         print("Get All Available SSID")
@@ -268,6 +277,7 @@ class ios_libs:
 
         return active_ssid_list
 
+    # checks if SSID is visible or not on the Phone screen
     def ssid_Visible(self, driver, WifiName):
         wifiSelectionElement = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((MobileBy.XPATH, "//*[@label='" + WifiName + "']")))
@@ -278,6 +288,7 @@ class ios_libs:
         else:
             return True
 
+    # Tries to swipe the screen on the device based on the Params given
     def scrollDown(self, setup_perfectoMobile):
         print("Scroll Down")
         setup_perfectoMobile[1].step_start("Scroll Down")
@@ -289,6 +300,7 @@ class ios_libs:
         setup_perfectoMobile[0].execute_script('mobile:touch:swipe', params2)
         time.sleep(3)
 
+    # Runs Speed test on OOKla Speed test App on Android devices, OOKLA app should be present on the Device
     def speed_test(self, setup_perfectoMobile):
         driver = setup_perfectoMobile[0]
         driver.switch_to.context('NATIVE_APP')
@@ -307,6 +319,7 @@ class ios_libs:
         print(f"Upload speed: {upload_speed}")
         return download_speed, upload_speed
 
+    # Function used to connect to a particular SSID
     def wifi_connect(self, ssid, passkey, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
         print("Select Wifi/Get IP Address IOS Connection")
@@ -566,6 +579,7 @@ class ios_libs:
         # ---------------------check if internet-------------------------------
         return is_internet, setup_perfectoMobile, ssid_found
 
+    # Gets the IP Address of the connected SSID from Phone
     def get_ip_address(self, ssid, setup_perfectoMobile, connData):
         wifi_name = ssid
         driver = setup_perfectoMobile[0]
@@ -706,7 +720,7 @@ class ios_libs:
             print("Access Point Verification NOT Completed, checking Connection....")
             current_result = False
         return current_result
-    #----------Wifi connect Enterprise---------------
+    #----------Wifi connect for Enterprise Security---------------
     def wifi_connect_eap(self, ssid, user, ttls_passwd, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
         print("Select Wifi/Get IP Address IOS Connection")

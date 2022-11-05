@@ -1,3 +1,13 @@
+"""
+This file contains functions that represents the Tests we can run on AP using Perfecto real clients
+some tests are Client connectivity (For General and Enterprise Security) , Rate Limiting, Captive Portal, MultiPSK
+Most of the Functions used are inherited from Android Libs which consists of Perfecto related Library Functions
+Base functions used for all the tests are Wifi_connect and Wifi_disconnect
+Wifi_connect is used to connect to a particular ssid that is passed as an argument on the real client
+Wifi_disconnect is used to disconnect and forget that particular ssid that is passed as an argument on the real client
+get_ip_address is used to get the ip address from the client of the connected ssid
+speed_test is used to run the speed test on OOKLA speed test app
+"""
 from android_libs import android_libs
 
 
