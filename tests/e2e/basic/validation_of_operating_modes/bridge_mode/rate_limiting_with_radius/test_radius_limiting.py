@@ -45,7 +45,7 @@ setup_params_general = {
 }
 
 
-@allure.parent_suite("OpenWifi Dynamic QoS Test")
+@allure.parent_suite("OpenWifi Rate Limiting with RADIUS")
 @allure.suite("BRIDGE Mode")
 @allure.sub_suite("WPA2 Enterprise Security")
 @pytest.mark.parametrize(
@@ -61,13 +61,17 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.twog
     @pytest.mark.ow_sanity_lf
     @pytest.mark.twog_upload_per_ssid
-    @allure.title("Test for Upload per SSID 2.4 GHz")
+    @allure.title("Rate Limit with RADIUS in Bridge Mode: Test Upload traffic Per-SSID on Per-Station in 2GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
     def test_radius_server_2g_upload_per_ssid(self, get_test_library, get_dut_logs_per_test_case,
                                               get_test_device_logs,
                                               get_target_object,
                                               num_stations, setup_configuration, rate_radius_info,
                                               rate_radius_accounting_info, check_connectivity):
+        """
+                       To verify that rate-limiting with radius works on a clients operating on 2G radio which are running TCP upstream traffic with WAP2 Enterprise Encryption
+                       Unique Marker: pytest -m "wpa2_enterprise and ow_sanity_lf and twog_upload_per_ssid and bridge and twog"
+                              """
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
                         "appliedRadios": ["2G"],
                         "security_key": "something",
@@ -106,13 +110,17 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.twog
     @pytest.mark.twog_download_perssid_persta
     @pytest.mark.ow_sanity_lf
-    @allure.title("Test for Download per SSID per Station 2.4GHz")
+    @allure.title("Rate Limit with RADIUS in Bridge Mode: Test Download traffic Per-SSID on Per-Station in 2.4GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5850", name="WIFI-5850")
     def test_radius_server_2g_download_perssid_persta(self, get_test_library, get_dut_logs_per_test_case,
                                                       get_test_device_logs,
                                                       get_target_object,
                                                       num_stations, setup_configuration, rate_radius_info,
                                                       rate_radius_accounting_info, check_connectivity):
+        """
+                              To verify that rate-limiting with radius works on a clients operating on 2G radio which are running TCP downstream traffic with WAP2 Enterprise Encryption
+                              Unique Marker: pytest -m "wpa2_enterprise and ow_sanity_lf and twog_download_perssid_persta and bridge and twog"
+                                     """
         profile_data = {"ssid_name": "ssid_wpa2_2g_br",
                         "appliedRadios": ["2G"],
                         "security_key": "something",

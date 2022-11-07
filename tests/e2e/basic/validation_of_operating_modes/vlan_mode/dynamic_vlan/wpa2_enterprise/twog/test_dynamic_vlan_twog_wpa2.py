@@ -51,13 +51,13 @@ class TestDynamicVlan2GWpa2(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.ow_sanity_lf
-    @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
-    @allure.title("Test for ssid vlan in the absence of radius vlan identifier")
+    @allure.title("Verify that SSID VLAN is used in the absence of radius VLAN tunnel type identifiers")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5704", name="WIFI-5704")
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration):
         """
-                pytest -m " absence_of_radius_vlan_identifier and wpa2_enterprise and vlan"
+        To verify that SSID VLAN is used in the absence of radius VLAN tunnel type identifiers
+               Unique Marker:  pytest -m " absence_of_radius_vlan_identifier and wpa2_enterprise and vlan"
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]

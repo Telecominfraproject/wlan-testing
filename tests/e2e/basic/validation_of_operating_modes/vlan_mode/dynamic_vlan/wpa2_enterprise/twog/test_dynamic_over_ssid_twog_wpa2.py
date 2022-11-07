@@ -50,13 +50,13 @@ class TestDynamicVlanOverSsid2GWpa2(object):
     @pytest.mark.dynamic_precedence_over_ssid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    @allure.testcase(name="test_dynamic_precedence_over_ssid_vlan",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
-    @allure.title("Test for dynamic precedence over ssid")
+    @allure.title("Verify that Dynamic VLAN takes precedence over configured SSID VLAN")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5705", name="WIFI-5705")
     def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration):
         """
-                pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan"
+                To Verify that Dynamic VLAN takes precedence over configured SSID VLAN
+              Unique Marker:  pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan"
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]

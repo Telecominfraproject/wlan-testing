@@ -46,14 +46,14 @@ class TestVLANModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.twog
     @allure.story('OPEN 2.4 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with open encryption 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2809", name="JIRA LINK")
+    @allure.title("VLAN Mode Client Connectivity Test with Open Encryption 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10608", name="WIFI-10608")
     def test_vlan_open_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                               get_test_device_logs,
                                               check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with open encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and open and twog"
+            To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with open authentication
+           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and open and twog"
         """
         profile_data = {"ssid_name": "ssid_open_2g_vlan", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
@@ -73,14 +73,14 @@ class TestVLANModeConnectivitySuiteA(object):
     @pytest.mark.open
     @pytest.mark.fiveg
     @allure.story('OPEN 5 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with open encryption 5 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
+    @allure.title("VLAN Mode Client Connectivity Test with Open Encryption 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10622", name="WIFI-10622")
     def test_vlan_open_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                               get_test_device_logs,
                                               check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with open encryption 5 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and open and fiveg"
+            To verify that a client created on 5G radio connects to AP in VLAN mode (VLAM-100) with open authentication
+           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and open and fiveg"
         """
         profile_data = {"ssid_name": "ssid_open_5g_vlan", "appliedRadios": ["5G"], "security_key": "something",
                         "vlan": 100}
@@ -102,14 +102,14 @@ class TestVLANModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @allure.story('wpa 2.4 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa encryption 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2801", name="JIRA LINK")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA Encryption 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2125", name="WIFI-2125")
     def test_vlan_wpa_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                              get_test_device_logs,
                                              check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa and twog"
+            To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA personal authentication
+            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g_vlan", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
@@ -129,13 +129,14 @@ class TestVLANModeConnectivitySuiteA(object):
     @pytest.mark.wpa
     @pytest.mark.fiveg
     @allure.story('wpa 5 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa encryption 5 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA Encryption 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2134", name="WIFI-2134")
     def test_vlan_wpa_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                              get_test_device_logs,
                                              check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa encryption 5 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa and fiveg"
+            To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA authentication
+          Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_vlan", "appliedRadios": ["5G"], "security_key": "something",
                         "vlan": 100}
@@ -155,13 +156,14 @@ class TestVLANModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA2-Personal Encryption 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2124", name="WIFI-2124")
     def test_vlan_wpa2_personal_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa2_personal and twog"
+            To verify that a client created on 2G radio connects to AP in VLAN mode with WPA2-Personal authentication
+           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa2_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g_vlan", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
@@ -183,13 +185,14 @@ class TestVLANModeConnectivitySuiteA(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA2-Personal Encryption 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2140", name="WIFI-2140")
     def test_vlan_wpa2_personal_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa2_personal encryption 5 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa2_personal and fiveg"
+            To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA2-Personal authentication
+           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa2_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g_vlan", "appliedRadios": ["5G"], "security_key": "something",
                         "vlan": 100}
@@ -249,13 +252,14 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @allure.story('wpa3_personal 2.4 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA3-Personal Encryption 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10627", name="WIFI-10627")
     def test_vlan_wpa3_personal_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa3_personal encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and twog"
+            To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal authentication
+           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_2g_vlan", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
@@ -275,13 +279,14 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
     @allure.story('wpa3_personal 5 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA3-Personal Encryption 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10629", name="WIFI-10629")
     def test_vlan_wpa3_personal_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and fiveg"
+            To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal authentication
+           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_5g_vlan", "appliedRadios": ["5G"], "security_key": "something",
                         "vlan": 100}
@@ -301,13 +306,14 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.sixg
     @allure.story('wpa3_personal 6 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA3-Personal Encryption 6GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10764", name="WIFI-10764")
     def test_vlan_wpa3_personal_6g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
                                                        check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and sixg"
+            To verify that a client created on 6G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal authentication
+           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and sixg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_6g_vlan", "appliedRadios": ["6G"], "security_key": "something",
                         "vlan": 100}
@@ -327,14 +333,15 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa3_personal_mixed 2.4 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA3-Personal-Mixed Encryption 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10630", name="WIFI-10630")
     def test_vlan_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library,
                                                              num_stations, get_dut_logs_per_test_case,
                                                              get_test_device_logs,
                                                              check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa3_personal_mixed and twog"
+            To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal-Mixed authentication
+            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal_mixed and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
@@ -354,14 +361,15 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa3_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa3_personal_mixed 5 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA3-Personal-Mixed Encryption 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10631", name="WIFI-10631")
     def test_vlan_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library,
                                                              num_stations, get_dut_logs_per_test_case,
                                                              get_test_device_logs,
                                                              check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa3_personal_mixed encryption 5 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa3_personal_mixed and fiveg"
+            To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal-Mixed authentication
+           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal_mixed and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa3_p_m_5g_vlan", "appliedRadios": ["5G"], "security_key": "something",
                         "vlan": 100}
@@ -381,14 +389,15 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.twog
     @allure.story('wpa wpa2 personal mixed 2.4 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA-WPA2-Personal-Mixed Encryption 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10632", name="WIFI-10632")
     def test_vlan_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library,
                                                                  num_stations, get_dut_logs_per_test_case,
                                                                  get_test_device_logs,
                                                                  check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa_wpa2_personal_mixed and twog"
+            To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA-WPA2-Personal-Mixed authentication
+            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa_wpa2_personal_mixed and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa_wpa2_p_m_2g_vlan", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
@@ -410,14 +419,15 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @pytest.mark.wpa_wpa2_personal_mixed
     @pytest.mark.fiveg
     @allure.story('wpa wpa2 personal mixed 5 GHZ Band')
-    @allure.title("VLAN Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band")
+    @allure.title("VLAN Mode Client Connectivity Test with WPA-WPA2-Personal-Mixed Encryption 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10633", name="WIFI-10633")
     def test_vlan_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library,
                                                                  num_stations, get_dut_logs_per_test_case,
                                                                  get_test_device_logs,
                                                                  check_connectivity, setup_configuration):
         """
-            VLAN Mode Client Connectivity Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
-            pytest -m "client_connectivity_tests and vlan and general and wpa_wpa2_personal_mixed and fiveg"
+            To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA-WPA2-Personal-Mixed  authentication
+            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa_wpa2_personal_mixed and fiveg"
         """
         profile_data = {"ssid_name": "ssid_wpa_wpa2_p_m_5g_vlan", "appliedRadios": ["5G"], "security_key": "something",
                         "vlan": 100}
