@@ -631,6 +631,7 @@ class tip_2x:
     def setup_firmware(self):
         # Query AP Firmware
         upgrade_status = []
+
         for ap in range(len(self.device_under_tests_info)):
 
             # If specified as URL
@@ -732,7 +733,7 @@ class tip_2x:
                             else:
                                 upgrade_status.append(
                                     [self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
-                                logging.info("firmware upgraded failed: ", target_revision)
+                                logging.info("firmware upgraded failed: " + target_revision)
                             break
                     if firmware['image'].split("-")[-2] == \
                             self.device_under_tests_info[ap]['firmware_version'].split('-')[0]:
@@ -872,7 +873,7 @@ class tip_2x:
                     # print and report the firmware versions before upgrade
                     allure.attach(name="Before Firmware Upgrade Request: ",
                                   body="current revision: " + current_version + "\ntarget revision: " + target_revision)
-                    logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                    logging.info("current revision: " + current_version + "\ntarget revision: " + target_revision)
 
                     # if AP is already in target Version then skip upgrade unless force upgrade is specified
                     if current_version == target_revision:
@@ -895,13 +896,13 @@ class tip_2x:
                     # print and report the Firmware versions after upgrade
                     allure.attach(name="After Firmware Upgrade Request: ",
                                   body="current revision: " + current_version + "\ntarget revision: " + target_revision)
-                    logging.info("current revision: ", current_version, "\ntarget revision: ", target_revision)
+                    logging.info("current revision: " + current_version + "\ntarget revision: " + target_revision)
                     if current_version == target_revision:
                         upgrade_status.append([target_revision, current_version])
-                        logging.info("firmware upgraded successfully: ", target_revision)
+                        logging.info("firmware upgraded successfully: " + target_revision)
                     else:
                         upgrade_status.append([target_revision, current_version])
-                        logging.info("firmware upgraded failed: ", target_revision)
+                        logging.info("firmware upgraded failed: " + target_revision)
                     break
         return upgrade_status
 
