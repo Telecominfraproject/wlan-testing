@@ -46,9 +46,13 @@ class TestDFSChannel52Bw80(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_52_bw_80
-    @allure.title("Test for Channel 52 and bandwidth 80")
+    @allure.title("Verify DFS Test of Channel 52 and Bandwidth 80MHz in 5GHz Band")
     def test_dfs_channel_52_bw_80(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                   num_stations, setup_configuration, check_connectivity, get_target_object):
+        """
+        To verify that a 5G client operating on channel 52 shifts to a non-DFS channel if radar is detected
+        Unique Marker: pytest -m "bandwidth_80MHz and ow_sanity_lf and dfs_channel_52_bw_80"
+        """
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -99,9 +103,13 @@ class TestDFSChannel100Bw80(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_100_bw_80
-    @allure.title("Test for Channel 100 and bandwidth 80")
+    @allure.title("Verify DFS Test of Channel 100 and Bandwidth 80MHz in 5GHz Band")
     def test_dfs_channel_100_bw_80(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                    num_stations, setup_configuration, check_connectivity, get_target_object):
+        """
+        To verify that a 5G client operating on channel 100 shifts to a non-DFS channel if radar is detected
+        Unique Marker: pytest -m "bandwidth_80MHz and ow_sanity_lf and dfs_channel_100_bw_80"
+        """
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -152,9 +160,14 @@ class TestDFSChannel132Bw80(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.dfs_channel_132_bw_80
-    @allure.title("Test for Channel 132 and bandwidth 80")
+    @allure.title("Verify DFS Test of Channel 132 and Bandwidth 80MHz in 5GHz Band")
     def test_dfs_channel_132_bw_80(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                    num_stations, setup_configuration, check_connectivity, get_target_object):
+        """
+        To verify that a 5G client operating on channel 132 shifts to a non-DFS channel if radar is detected
+        Unique Marker: pytest -m "bandwidth_80MHz and ow_sanity_lf and dfs_channel_132_bw_80"
+
+        """
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
