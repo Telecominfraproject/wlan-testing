@@ -29,7 +29,7 @@ setup_params_general = {
              "appliedRadios": ["5G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 65,
+                 "ingress-rate": 60,
                  "egress-rate": 10
              }
              }
