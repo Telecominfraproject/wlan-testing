@@ -506,8 +506,10 @@ class tip_2x:
             if o[i].__contains__("ESSID"):
                 if o[i + 9].__contains__("2.4"):
                     band = "2G"
-                else:
+                if o[i + 9].__contains__("5."):
                     band = "5G"
+                else:
+                    band = "6G"
                 iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
         for p in iwinfo_bssid_data:
             for q in ssid_info_sdk:
