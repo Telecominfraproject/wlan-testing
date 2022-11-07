@@ -63,6 +63,8 @@ from lf_tr398_test import TR398Test
 from lf_pcap import LfPcap
 from sta_scan_test import StaScan
 from lf_sniff_radio import SniffRadio
+from lf_power_save_test_case_for_multicast import MulticastPowersaveTraffic
+from lf_power_save_with_unicast import UnicastPowersaveTraffic
 
 cv_test_reports = importlib.import_module("py-json.cv_test_reports")
 lf_report = cv_test_reports.lanforge_reports
@@ -2100,6 +2102,79 @@ class RunTest:
             count += 1
         self.staConnect.stop()
         self.staConnect.cleanup()
+
+    def verify_multicast_downstream_with_powersave(self, instantiate_profile, get_configuration, ssid="", security="",
+                                                   password="", station_list="", band="twog",
+                                                   test_dur=""):
+        sta_radio = ""
+        if band == "twog":
+            sta_radio = self.twog_radios[0]
+        elif band == "fiveg":
+            sta_radio = self.fiveg_radios[0]
+        elif band == "sixg":
+            sta_radio = self.ax_radios[-2]
+        ip_powersave_test = MulticastPowersaveTraffic(self.lanforge_ip, self.lanforge_port, ssid=ssid,
+                                                      security=security,
+                                                      password=password, station_list=station_list,
+                                                      min_rate_multi_cast=9000,
+                                                      max_rate_multi_cast=128000,
+                                                      pdu_size=1400,
+                                                      band=band,
+                                                      station_radio=sta_radio,
+                                                      upstream=self.upstream_port,
+                                                      monitor_radio=self.ax_radios[-1],
+                                                      test_duration=test_dur,
+                                                      output_file_for_cap="home/lanforge/html-reports",
+                                                      report_path=self.local_report_path)
+        ip_powersave_test.multicast_testing(cleanup=False)
+        station_mac = ip_powersave_test.sta_mac
+        for ap_name in range(len(get_configuration['access_point'])):
+            instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                          timeout="10",
+                                                          ap_data=get_configuration['access_point'],
+                                                          type=ap_name)
+            station_detail_info = instantiate_profile_obj.show_wireless_client_mac_detail(sta_mac=station_mac)
+            allure.attach(name=f"Station info from controller AP {ap_name}", body=str(station_detail_info))
+        ip_powersave_test.multicast_testing_stop_and_cleanup()
+        captured_file_name, local_dir, filter = ip_powersave_test.get_captured_file_and_location()
+        end_result = ip_powersave_test.verify_dtim_multicast_pcap(local_dir + '/' + captured_file_name,
+                                                                  apply_filter=filter)
+        return end_result
+
+    def verify_unicast_downstream_with_powersave(self, instantiate_profile, get_configuration, ssid="", security="",
+                                                 password="", station_list="", band="twog", test_dur=""):
+        sta_radio = ""
+        if band == "twog" or band == "fiveg" or band == "sixg":
+            sta_radio = self.ax_radios[-1]
+            monitor_radio = self.ax_radios[-2]
+        ip_powersave_test = UnicastPowersaveTraffic(self.lanforge_ip, self.lanforge_port, ssid=ssid,
+                                                    security=security,
+                                                    password=password, station_list=station_list,
+                                                    side_a_unicast_min_rate=9000,
+                                                    side_b_unicast_min_rate=9000,
+                                                    side_a_unicast_max_rate=128000,
+                                                    side_b_unicast_max_rate=128000,
+                                                    pdu_size=1400,
+                                                    station_radio=sta_radio,
+                                                    upstream=self.upstream_port,
+                                                    monitor_radio=monitor_radio,
+                                                    test_duration=test_dur,
+                                                    output_file_for_cap="home/lanforge/html-reports",
+                                                    report_path=self.local_report_path)
+        ip_powersave_test.unicast_download_testing(cleanup=False)
+        station_mac = ip_powersave_test.sta_mac
+        for ap_name in range(len(get_configuration['access_point'])):
+            instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
+                                                          timeout="10",
+                                                          ap_data=get_configuration['access_point'],
+                                                          type=ap_name)
+            station_detail_info = instantiate_profile_obj.show_wireless_client_mac_detail(sta_mac=station_mac)
+            allure.attach(name=f"Station info from controller AP {ap_name}", body=str(station_detail_info))
+        ip_powersave_test.unicast_testing_stop_and_cleanup()
+        captured_file_name, local_dir, filter = ip_powersave_test.get_captured_file_and_location()
+        result_data = ip_powersave_test.verify_unicast_pcap(local_dir + '/' + captured_file_name,
+                                                            apply_filter=filter)
+        return result_data
 
 
 
