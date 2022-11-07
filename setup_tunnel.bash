@@ -815,7 +815,7 @@ Create_lab_info_json()
                 "testbed": "basic",
                 "scenario": "dhcp-bridge",
                 "details": {
-                    "manager_ip": "10.28.3.117",
+                    "manager_ip": "localhost",
                     "http_port": ' $advance3_8080',
                     "ssh_port": ' $advance3_22',
                     "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
