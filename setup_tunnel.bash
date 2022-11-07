@@ -863,7 +863,7 @@ Create_lab_info_json()
                     "uplink_nat_ports": {
                         "1.1.eth3": {
                             "addressing": "static",
-                            "ip": "10.28.2.15",
+                            "ip": "10.28.2.14",
                             "gateway_ip": "10.28.2.1/24",
                             "ip_mask": "255.255.255.0",
                             "dns_servers": "BLANK"
@@ -933,6 +933,174 @@ Create_lab_info_json()
                         "1.1.eth3": {
                             "addressing": "static",
                             "ip": "10.28.2.18",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
+                }
+            }
+        },
+        "basic-08" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
+            },
+            "device_under_tests": [{
+                "model": "liteon-wpx8324",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": null,
+                "ssid": {},
+                "mode": "wifi6",
+                "identifier": "e8c74f202600",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port": '$basic8_lab_ctlr',
+                "serial_tty": "/dev/ttyAP5",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port": '$basic8_8080',
+                    "ssh_port": '$basic8_22',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
+                        }
+                    },
+                    "lan_ports": {
+
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.19",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
+                }
+            }
+        },
+        "basic-08a" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
+            },
+            "device_under_tests": [{
+                "model": "udaya_a5-id2",
+                "supported_bands": ["2G", "5G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth2",
+                "lan_port": null,
+                "ssid": {},
+                "mode": "wifi6",
+                "identifier": "50987100327b",
+                "method": "serial",
+                "host_ip": "10.28.3.103",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port": '$basic8_lab_ctlr',
+                "serial_tty": "/dev/ttyAP6",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port": '$basic8_8080',
+                    "ssh_port": '$basic8_22',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
+                        }
+                    },
+                    "lan_ports": {
+
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.19",
+                            "gateway_ip": "10.28.2.1/24",
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
+                }
+            }
+        },
+        "advance-01" : {
+            "target": "tip_2x",
+            "controller" : {
+                "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                "username": "tip@ucentral.com",
+                "password": "OpenWifi%123"
+            },
+            "device_under_tests": [{
+                "model": "cig_194c4",
+                "supported_bands": ["2G", "5G", "6G"],
+                "supported_modes": ["BRIDGE", "NAT", "VLAN"],
+                "wan_port": "1.1.eth1",
+                "lan_port": null,
+                "ssid": {},
+                "mode": "wifi6",
+                "identifier": "f40b9fe78e03",
+                "method": "serial",
+                "host_ip": "localhost",
+                "host_username": "lanforge",
+                "host_password": "pumpkin77",
+                "host_ssh_port": '$advance1_lab_ctlr',
+                "serial_tty": "/dev/ttyAP2",
+                "firmware_version": "next-latest"
+            }],
+            "traffic_generator": {
+                "name": "lanforge",
+                "testbed": "basic",
+                "scenario": "dhcp-bridge",
+                "details": {
+                    "manager_ip": "localhost",
+                    "http_port":  '$advance1_8080',
+                    "ssh_port":  '$advance1_22',
+                    "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
+                    "wan_ports": {
+                        "1.1.eth1": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                            "lease-first": 10,
+                            "lease-count": 10000,
+                            "lease-time": "6h"
+                            }
+                        }
+                    },
+                    "lan_ports": {
+
+                    },
+                    "uplink_nat_ports": {
+                        "1.1.eth3": {
+                            "addressing": "static",
+                            "ip": "10.28.2.15",
                             "gateway_ip": "10.28.2.1/24",
                             "ip_mask": "255.255.255.0",
                             "dns_servers": "BLANK"
