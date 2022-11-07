@@ -191,6 +191,16 @@ def pytest_addoption(parser):
         default="iPhone-11",
         help="Device Model which is needed to test"
     )
+    parser.addoption(
+        "--test_duration",
+        default="3m",
+        help="example 2m,1h.. to run test"
+    )
+    parser.addoption(
+        "--dtim",
+        default="5",
+        help="value for dtim"
+    )
 
     # Perfecto Parameters
     parser.addini("perfectoURL", "Cloud URL")
@@ -291,6 +301,12 @@ def duration(request):
     var = request.config.getoption("--duration")
     allure.attach(name="duration in minutes", body=str(var))
     yield var
+
+@pytest.fixture(scope='session')
+def test_duration(request):
+    "yeilds test duration for the test case to run"
+    dur = request.config.getoption("--test_duration")
+    yield dur
 
 
 @pytest.fixture(scope="session")
