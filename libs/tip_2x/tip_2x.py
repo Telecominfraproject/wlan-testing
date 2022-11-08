@@ -1086,7 +1086,7 @@ if __name__ == '__main__':
             "host_username": "lanforge",
             "host_password": "lanforge",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyAP1",
+            "serial_tty": "/dev/ttyUSB0",
             "firmware_version": "next-latest"
         }],
         "traffic_generator": {
