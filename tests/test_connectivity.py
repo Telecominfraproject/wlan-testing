@@ -22,6 +22,7 @@ pytestmark = [pytest.mark.test_resources,
 state = True
 sdk_expected = True
 
+
 @allure.feature("Test Connectivity")
 @allure.parent_suite("Test Connectivity")
 @allure.suite("Test Resources")
@@ -182,10 +183,24 @@ class TestResources(object):
             if gw_host not in j:
                 expected_host = False
 
-        print(gw_host)
-        print(uci_data)
-        print(ubus_data)
-        assert connected == True and expected_host == True
+
+        # If Connected but not with expected host
+        if connected:
+            if expected_host:
+                logging.info(("Connected With Expected HOST" + "\n Current GW HOST: " + str(uci_data[0]) +
+                              "\n EXPECTED GW HOST: " + str(gw_host)))
+                assert True, "Connected With Expected HOST"
+            else:
+                logging.error("Connected With Unexpected HOST" + "\n Current GW HOST: " + str(uci_data[0]) +
+                              "\n EXPECTED GW HOST: " + str(gw_host))
+                pytest.exit("Connected With Unexpected HOST" + "\n Current GW HOST: " + str(uci_data[0]) +
+                            "\n EXPECTED GW HOST: " + str(gw_host))
+        else:
+            logging.error(
+                "Disconnected from HOST" + "\n Current GW HOST: " + str(uci_data[0]) + "\n EXPECTED GW HOST: " + str(
+                    gw_host))
+            pytest.exit("Disconnected from HOST" + "\n Current GW HOST: " + str(uci_data[0]) +
+                        "\n EXPECTED GW HOST: " + str(gw_host))
 
     @pytest.mark.traffic_generator_connectivity
     @allure.testcase(name="test_traffic_generator_connectivity", url="")
@@ -351,7 +366,8 @@ class TestFirmwareUpgrade(object):
         for ap in range(len(get_target_object.device_under_tests_info)):
             ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
             current_version_ap = str(ap_version).split()
-            data = get_target_object.controller_library_object.get_device_by_serial_number(serial_number=get_target_object.device_under_tests_info[ap]['identifier'])
+            data = get_target_object.controller_library_object.get_device_by_serial_number(
+                serial_number=get_target_object.device_under_tests_info[ap]['identifier'])
             data = data.json()
             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
             status.append(current_version_ap == data['firmware'].split())
