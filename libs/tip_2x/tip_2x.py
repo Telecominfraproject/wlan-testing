@@ -502,11 +502,12 @@ class tip_2x:
         channel_info = self.get_dut_channel_data(idx=idx)
         o = ap_wifi_data.split()
         iwinfo_bssid_data = {}
+        print(o)
         for i in range(len(o)):
             if o[i].__contains__("ESSID"):
                 if o[i + 9].__contains__("2.4"):
                     band = "2G"
-                if o[i + 9].__contains__("5."):
+                elif o[i + 9].__contains__("5."):
                     band = "5G"
                 else:
                     band = "6G"
@@ -970,7 +971,7 @@ class tip_2x:
     #     yield status
 
 if __name__ == '__main__':
-    basic_05 = {
+    basic_shivam= {
         "target": "tip_2x",
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
@@ -978,33 +979,55 @@ if __name__ == '__main__':
             "password": "OpenWifi%123"
         },
         "device_under_tests": [{
-            "model": "cig_wf188n",
+            "model": "edgecore_eap101",
             "supported_bands": ["2G", "5G"],
             "supported_modes": ["BRIDGE", "NAT", "VLAN"],
-            "wan_port": "1.1.eth2",
+            "wan_port": "1.1.eth3",
+            "lan_port": None,
             "ssid": {
                 "mode": "BRIDGE",
-                "2g-ssid": "OpenWifi",
-                "5g-ssid": "OpenWifi",
-                "6g-ssid": "OpenWifi",
-                "2g-password": "OpenWifi",
-                "5g-password": "OpenWifi",
-                "6g-password": "OpenWifi",
-                "2g-encryption": "WPA2",
-                "5g-encryption": "WPA2",
-                "6g-encryption": "WPA3",
-                "2g-bssid": "68:7d:b4:5f:5c:31",
-                "5g-bssid": "68:7d:b4:5f:5c:3c",
-                "6g-bssid": "68:7d:b4:5f:5c:38"
+                "ssid_data": {
+                    "0": {
+                        "ssid": "ssid_wpa2_2g",
+                        "encryption": "wpa2",
+                        "password": "something",
+                        "band": "fiveg",
+                        "bssid": "90:3C:B3:6C:43:05"
+                    },
+                    "1": {
+                        "ssid": "ssid_wpa2_2g",
+                        "encryption": "wpa2",
+                        "password": "something",
+                        "band": "twog",
+                        "bssid": "90:3C:B3:6C:43:04"
+                    }
+                },
+                "radio_data": {
+                    "2G": {
+                        "channel": 1,
+                        "bandwidth": 20,
+                        "frequency": 2412
+                    },
+                    "5G": {
+                        "channel": 52,
+                        "bandwidth": 80,
+                        "frequency": 5290
+                    },
+                    "6G": {
+                        "channel": None,
+                        "bandwidth": None,
+                        "frequency": None
+                    }
+                }
             },
             "mode": "wifi6",
-            "identifier": "0000c1018812",
+            "identifier": "903cb36c4301",
             "method": "serial",
-            "host_ip": "10.28.3.103",
+            "host_ip": "192.168.52.89",
             "host_username": "lanforge",
-            "host_password": "pumpkin77",
+            "host_password": "lanforge",
             "host_ssh_port": 22,
-            "serial_tty": "/dev/ttyAP1",
+            "serial_tty": "/dev/ttyUSB0",
             "firmware_version": "next-latest"
         }],
         "traffic_generator": {
@@ -1012,12 +1035,12 @@ if __name__ == '__main__':
             "testbed": "basic",
             "scenario": "dhcp-bridge",
             "details": {
-                "manager_ip": "10.28.3.28",
+                "manager_ip": "192.168.52.89",
                 "http_port": 8080,
                 "ssh_port": 22,
                 "setup": {"method": "build", "DB": "Test_Scenario_Automation"},
                 "wan_ports": {
-                    "1.1.eth2": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
+                    "1.1.eth3": {"addressing": "dhcp-server", "subnet": "172.16.0.1/16", "dhcp": {
                         "lease-first": 10,
                         "lease-count": 10000,
                         "lease-time": "6h"
@@ -1025,41 +1048,43 @@ if __name__ == '__main__':
                                  }
                 },
                 "lan_ports": {
-                    "1.1.eth1": {"addressing": "dynamic"}
+
                 },
                 "uplink_nat_ports": {
-                    "1.1.eth1": {"addressing": "static",
-                                 "subnet": "10.28.2.16/24",
-                                 "gateway_ip": "10.28.2.1",
-                                 "ip_mask": "255.255.255.0"
-                                 }
+                    "1.1.eth2": {
+                        "addressing": "static",
+                        "ip": "192.168.52.150",
+                        "gateway_ip": "192.168.52.1/24",
+                        "ip_mask": "255.255.255.0",
+                        "dns_servers": "BLANK"
+                    }
                 }
             }
         }
     }
-    var = tip_2x(controller_data=basic_05["controller"],
-                 device_under_tests_info=basic_05["device_under_tests"],
-                 target=basic_05["target"])
+    var = tip_2x(controller_data=basic_shivam["controller"],
+                 device_under_tests_info=basic_shivam["device_under_tests"],
+                 target=basic_shivam["target"])
 
     # var.setup_objects()
     setup_params_enterprise = {
         "mode": "BRIDGE",
         "ssid_modes": {
-            "wpa_enterprise": [
+            "wpa": [
                 {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
                 {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
-            "wpa2_enterprise": [
+            "wpa2_personal": [
                 {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
                 {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
-            "wpa3_enterprise": [
+            "wpa3_personal": [
                 {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
                 {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
 
         "rf": {},
-        "radius": True
+        "radius": False
     }
-    target = [['6G', 'wpa3_personal']]
-    # d = var.setup_configuration_data(configuration=setup_params_general_two, requested_combination=target)
+    target = [['2G', 'wpa3_personal']]
+    d = var.setup_configuration_data(configuration=setup_params_enterprise, requested_combination=target)
     d = var.setup_basic_configuration(configuration=setup_params_enterprise, requested_combination=target)
     print(d)
     # var.setup_firmware()
