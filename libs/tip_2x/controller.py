@@ -1731,20 +1731,20 @@ class UProfileUtility:
     def set_radio_config(self, radio_config={}):
         base_radio_config_2g = {
             "band": "2G",
-            "country": "CA",
+            "country": "US",
             "channel-mode": "HE",
             "channel": "auto"
         }
         base_radio_config_5g = {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "HE",
             "channel": "auto"
         }
         base_radio_config_6g = {
             "band": "6G",
-            "country": "CA",
+            "country": "US",
             "channel-mode": "HE",
             "channel": "auto"
         }

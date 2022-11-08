@@ -128,6 +128,7 @@ def run_lf(request):
     run_lf = request.config.getoption("--run-lf")
     yield run_lf
 
+
 @pytest.fixture(scope="session")
 def skip_lf(request):
     """yields the testbed option selection"""
@@ -141,11 +142,13 @@ def selected_testbed(request):
     current_testbed = request.config.getoption("--testbed")
     yield current_testbed
 
+
 @pytest.fixture(scope="session")
 def selected_port(request):
     """yields the port option selection"""
     current_port = request.config.getoption("--port")
     yield current_port
+
 
 @pytest.fixture(scope="session")
 def num_stations(request):
@@ -361,10 +364,12 @@ def radius_info():
     """yields the radius server information from lab info file"""
     yield configuration.RADIUS_SERVER_DATA
 
+
 @pytest.fixture(scope="session")
 def rate_radius_info():
     """yields the radius server information from lab info file"""
     yield configuration.RATE_LIMITING_RADIUS_SERVER_DATA
+
 
 @pytest.fixture(scope="session")
 def rate_radius_accounting_info():
@@ -439,30 +444,20 @@ def get_test_device_logs(request, get_testbed_details, get_target_object, skip_l
 
         request.addfinalizer(collect_logs_tg)
 
-# @pytest.fixture(scope="session")
-# def traffic_generator_connectivity(selected_testbed, get_testbed_details):
-#     """Verify if traffic generator is reachable"""
-#     if get_testbed_details['traffic_generator']['name'] == "lanforge":
-#         lanforge_ip = get_testbed_details['traffic_generator']['details']['manager_ip']
-#         lanforge_port = get_testbed_details['traffic_generator']['details']['http_port']
-#         # Condition :
-#         #   if gui connection is not available
-#         #   yield False
-#         # Condition :
-#         # If Gui Connection is available
-#         # yield the gui version
-#         try:
-#             cv = cv_test(lanforge_ip, lanforge_port)
-#             url_data = cv.get_ports("/")
-#             lanforge_GUI_version = url_data["VersionInfo"]["BuildVersion"]
-#             lanforge_gui_git_version = url_data["VersionInfo"]["GitVersion"]
-#             lanforge_gui_build_date = url_data["VersionInfo"]["BuildDate"]
-#             print(lanforge_GUI_version, lanforge_gui_build_date, lanforge_gui_git_version)
-#             if not (lanforge_GUI_version or lanforge_gui_build_date or lanforge_gui_git_version):
-#                 yield False
-#             else:
-#                 yield lanforge_GUI_version
-#         except:
-#             yield False
-#     else:
-#         yield True
+
+@pytest.fixture(scope="function")
+def check_connectivity(request, get_testbed_details, get_target_object, run_lf):
+    def collect_logs():
+        for i in range(len(get_testbed_details["device_under_tests"])):
+            ret_val = get_target_object.get_dut_library_object().ubus_call_ucentral_status(idx=i, attach_allure=True,
+                                                                                           retry=10)
+            if not ret_val["connected"] or ret_val["connected"] is None:
+                ap_logs = get_target_object.get_dut_library_object().get_dut_logs()
+                allure.attach(name='Logs - ' + get_testbed_details["device_under_tests"][i]["identifier"],
+                              body=str(ap_logs))
+
+            allure.attach(name='Device : ' + get_testbed_details["device_under_tests"][i]["identifier"] +
+                               " is connected after Test", body="")
+
+    if not run_lf:
+        request.addfinalizer(collect_logs)
