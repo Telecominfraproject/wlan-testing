@@ -1155,11 +1155,6 @@ class ios_libs:
         report = setup_perfectoMobile[1]
         driver = setup_perfectoMobile[0]
 
-        # report.step_start("Switching Driver Context")
-        # print("Switching Context to Native")
-        # driver.switch_to.context('NATIVE_APP')
-        # # driver.switch_to.context(contexts[0])
-
         try:    # Disabling wifi-toggle button
             time.sleep(2)
             driver.implicitly_wait(2)
@@ -1168,8 +1163,8 @@ class ios_libs:
             wifiRadioBTN_On = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='1']")
             driver.implicitly_wait(1)
             wifiRadioBTN_On.click()
-            driver.implicitly_wait(1)
-            time.sleep(5)
+            driver.implicitly_wait(15)
+            # time.sleep(15)
         except NoSuchElementException:
             print("Wifi Radio Button Not Disabled...")
 
@@ -1181,8 +1176,8 @@ class ios_libs:
             wifiRadioBTN_Off = driver.find_element_by_xpath("//*[@label='Wi-Fi' and @value='0']")
             driver.implicitly_wait(1)
             wifiRadioBTN_Off.click()
-            driver.implicitly_wait(1)
-            time.sleep(5)
+            driver.implicitly_wait(30)
+            #time.sleep(30)
         except NoSuchElementException:
             print("Wifi Radio Button Not Enabled...")
 
