@@ -134,6 +134,7 @@ jobs:
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
+
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -144,6 +145,14 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "--device='Galaxy S9' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s9
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-galaxy-s9 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-galaxy-s9 $podname || true
 
       - name: delete namespace
         if: always()
@@ -202,8 +211,14 @@ jobs:
           additional_args: "--device='iPhone-11' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-11
 
-
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-iphone-11 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-iphone-11 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -262,6 +277,13 @@ jobs:
           allure_results_artifact_name: allure-results-galaxy-s10
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-galaxy-s10 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-galaxy-s10 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -316,8 +338,14 @@ jobs:
           additional_args: "--device='iPhone-7' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-7
 
-
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-iphone-7 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-iphone-7 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -374,8 +402,14 @@ jobs:
           additional_args: "--device='Galaxy S20' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s20
 
-
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-galaxy-s20 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-galaxy-s20 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -431,6 +465,13 @@ jobs:
           allure_results_artifact_name: allure-results-iphone-xr
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-iphone-xr --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-iphone-xr $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -487,6 +528,13 @@ jobs:
           allure_results_artifact_name: allure-results-pixel-4
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-pixel-4 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-pixel-4 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
@@ -542,6 +590,13 @@ jobs:
           allure_results_artifact_name: allure-results-iphone-12
 
       # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n interop-${{ github.run_id }}-iphone-12 --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n interop-${{ github.run_id }}-iphone-12 $podname || true
+
       - name: delete namespace
         if: always()
         continue-on-error: true
