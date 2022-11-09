@@ -15,8 +15,7 @@ pytestmark = [pytest.mark.country_code, pytest.mark.bridge, pytest.mark.wpa2, py
 setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
@@ -54,12 +53,12 @@ class TestCountryJP80Mhz5GChannel36(object):
     @pytest.mark.eightyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel36
-    @allure.title("Test for wpa2 encryption 5 GHz Band")
-    def test_client_bridge_wpa2_chn36_80Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @allure.title("Test for bandwidth 80 and channel 36")
+    def test_client_bridge_wpa2_chn36_80Mhz_JP_5g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and eightyMhz and wpa2 and fiveg and channel36"
         """
-        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -69,10 +68,10 @@ class TestCountryJP80Mhz5GChannel36(object):
         channel = setup_params_general1['rf']['5G']['channel']
         channel_width = setup_params_general1['rf']['5G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=392,
-                                                       country='Japan(JP)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -82,8 +81,7 @@ class TestCountryJP80Mhz5GChannel36(object):
 setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
@@ -122,12 +120,12 @@ class TestCountryJP80Mhz5GChannel52(object):
     @pytest.mark.eightyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel52
-    @allure.title("Test for wpa2 encryption 5 GHz Band")
-    def test_client_bridge_wpa2_chn52_80Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @allure.title("Test for bandwidth 80 and channel 52")
+    def test_client_bridge_wpa2_chn52_80Mhz_JP_5g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and eightyMhz and wpa2 and fiveg and channel52"
         """
-        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -137,10 +135,10 @@ class TestCountryJP80Mhz5GChannel52(object):
         channel = setup_params_general2['rf']['5G']['channel']
         channel_width = setup_params_general2['rf']['5G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=392,
-                                                       country='Japan(JP)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -150,8 +148,7 @@ class TestCountryJP80Mhz5GChannel52(object):
 setup_params_general3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
@@ -189,12 +186,12 @@ class TestCountryJP80Mhz5GChannel100(object):
     @pytest.mark.eightyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel100
-    @allure.title("Test for wpa2 encryption 5 GHz Band")
-    def test_client_bridge_wpa2_chn100_80Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @allure.title("Test for bandwidth 80 and channel 100")
+    def test_client_bridge_wpa2_chn100_80Mhz_JP_5g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and eightyMhz and wpa2 and fiveg and channel100"
         """
-        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -204,10 +201,10 @@ class TestCountryJP80Mhz5GChannel100(object):
         channel = setup_params_general3['rf']['5G']['channel']
         channel_width = setup_params_general3['rf']['5G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=392,
-                                                       country='Japan(JP)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -217,8 +214,7 @@ class TestCountryJP80Mhz5GChannel100(object):
 setup_params_general4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [{"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-                          {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+        "wpa2_personal": [{"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
                           ]},
     "rf": {"5G":
         {'band': '5G',
@@ -256,12 +252,12 @@ class TestCountryJP80Mhz5GChannel116(object):
     @pytest.mark.eightyMhz
     @pytest.mark.fiveg
     @pytest.mark.channel116
-    @allure.title("Test for wpa2 encryption 5 GHz Band")
-    def test_client_bridge_wpa2_chn116_80Mhz_JP_5g(self, lf_test, station_names_fiveg, get_configuration):
+    @allure.title("Test for bandwidth 80 and channel 116")
+    def test_client_bridge_wpa2_chn116_80Mhz_JP_5g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and eightyMhz and wpa2 and fiveg and channel116"
         """
-        profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][1]
+        profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][0]
         ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -271,10 +267,10 @@ class TestCountryJP80Mhz5GChannel116(object):
         channel = setup_params_general4['rf']['5G']['channel']
         channel_width = setup_params_general4['rf']['5G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_fiveg, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=392,
-                                                       country='Japan(JP)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=392,
+                                                       country='Japan(JP)', dut_data=setup_configuration)
         if result:
             assert True
         else:
