@@ -11,7 +11,7 @@ import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.rate_limiting_tests, pytest.mark.nat, pytest.mark.general]
+pytestmark = [pytest.mark.nat, pytest.mark.general]
 
 setup_params_general = {
     "mode": "NAT",
