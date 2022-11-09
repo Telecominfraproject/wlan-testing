@@ -28,22 +28,29 @@ class TestProvAPIInventory(object):
                                               random.randint(0, 255))
     device_name = device_mac.replace(":", "")
 
-    @pytest.mark.prov_api
+    @pytest.mark.prov_api_all_inventory
     @allure.title("Get All Inventory List")
+    @allure.testcase(name="WIFI-7859",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-7859")
+
     def test_provservice_inventorylist(self, get_target_object, get_testbed_details):
         """
-            Test the device present in Provisioning UI
+            Test to get the information of all device present in Inventory of Provisioning UI
+            Unique marker:pytest -m "prov_api_all_inventory"
         """
         resp = get_target_object.prov_library_object.get_inventory()
         # print(resp.json())
         # allure.attach(name="Inventory", body=str(resp.json()), attachment_type=#allure.attachment_type.JSON)
         assert resp.status_code == 200
 
-    @pytest.mark.owprov_api_inventory
+    @pytest.mark.owprov_api_create_inventory
     @allure.title("Create Inventory device")
+    @allure.testcase(name="WIFI-9237",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9237")
     def test_prov_service_create_inventory_device(self, get_target_object, selected_testbed):
         """
-            Test the create device in provision Inventory
+            Test the create device in Inventory of provision Inventory
+            Unique marker: pytest -m "owprov_api_create_inventory"
         """
         payload = {"serialNumber": device_name,
                    "name": "Testing_to_add_device_through_automation",
@@ -67,16 +74,29 @@ class TestProvAPIInventory(object):
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.owprov_api_inventory
+    @pytest.mark.owprov_api_read_inventory
     @allure.title("Read Inventory device")
+    @allure.testcase(name="WIFI-9236",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9236")
     def test_prov_service_read_inventory_device(self, get_target_object, selected_testbed):
+        """
+        Test to Read a device from Inventory of Provision service
+        Unique marker: pytest -m "owprov_api_read_inventory"
+        """
         resp = get_target_object.prov_library_object.get_inventory_by_device(device_name)
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.owprov_api_inventory
+    @pytest.mark.owprov_api_edit_inventory
     @allure.title("Edit Inventory device")
+    @allure.testcase(name="WIFI-9238",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9238")
+
     def test_prov_service_edit_inventory_device(self, get_target_object, selected_testbed):
+        """
+        Test to Edit a device in inventory of Provision Service
+        Unique marker: pytest -m "owprov_api_edit_inventory"
+        """
         # This is for Edititng the information fo device in Inventory
         editing_payload = {
             "description": "For testing API through automation after editing",
@@ -95,9 +115,15 @@ class TestProvAPIInventory(object):
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.owprov_api_inventory
+    @pytest.mark.owprov_api_delete_inventory
     @allure.title("Delete Inventory device")
+    @allure.testcase(name="WIFI-9239",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9239")
     def test_prov_service_delete_inventory_device(self, get_target_object, selected_testbed):
+        """
+        Test to Delete a device in Inventory of Provision service
+        Unique marker:owprov_api_delete_inventory
+        """
         resp = get_target_object.prov_library_object.delete_device_from_inventory(device_name)
         if resp.status_code != 200:
             assert False
@@ -129,17 +155,28 @@ class TestProvAPISystemCommands(object):
 @allure.suite("OpenWifi Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Entity API tests")
 class TestProvAPIEntity(object):
-    @pytest.mark.prov_api_entity_test
+    @pytest.mark.prov_api_readAll_entity_test
     @allure.title("Read All Entities")
+    @allure.testcase(name="WIFI-7704",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-7704")
+
     def test_read_all_entities(self, get_target_object):
+        """
+        Test to Read all entities in Provision service
+        Unique marker:pytest -m "provi_api_readAll_entity_test"
+        """
         resp = get_target_object.prov_library_object.get_entity()
         assert resp.status_code == 200
 
-    @pytest.mark.prov_api_entity_test
+    @pytest.mark.prov_api_create_entity_test
     @allure.title("Create Entity")
+    @allure.testcase(name="WIFI-7836",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-7836")
+
     def test_prov_service_create_entity(self, get_target_object, selected_testbed):
         """
-            Test the create Entity in provision Service
+            Test to create an Entity in provision Service
+            Unique marker: pytest -m "prov_api_create_entity_test"
         """
         global entity_id
         payload = {"name": "Testing_prov",
@@ -155,17 +192,30 @@ class TestProvAPIEntity(object):
         logging.info(entity)
         entity_id = entity['id']
 
-    @pytest.mark.prov_api_entity_test
+    @pytest.mark.prov_api_read_entity_test
     @allure.title("Read Entity")
+    @allure.testcase(name="WIFI-7772",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-7772")
     def test_prov_service_read_entity(self, get_target_object, selected_testbed):
+        """
+        Test to Read an entity in provision service
+        Unique marker: pytest -m "prov_api_read_entity_test"
+        """
         global entity_id
         resp = get_target_object.prov_library_object.get_entity_by_id(entity_id)
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_entity_test
+    @pytest.mark.prov_api_edit_entity_test
     @allure.title("Edit Entity")
+    @allure.testcase(name="WIFI-7857",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-7857")
+
     def test_prov_service_edit_entity(self, get_target_object, selected_testbed):
+        """
+        Test to Edit an entity in Provision Service
+        Unique marker: pytest -m "prov_api_edit_entity_test"
+        """
         # This to edit Entity
         global entity_id
         editing_payload = {
@@ -184,9 +234,16 @@ class TestProvAPIEntity(object):
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_entity_test
+    @pytest.mark.prov_api_delete_entity_test
     @allure.title("Delete Entity")
+    @allure.testcase(name="WIFI-7858",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-7858")
+
     def test_prov_service_delete_entity(self, get_target_object, selected_testbed):
+        """
+        Test to Delete an entity in Provision service
+        Unique marker:pytest -m "prov_api_delete_entity_test"
+        """
         global entity_id
         resp = get_target_object.prov_library_object.delete_entity(entity_id)
         if resp.status_code != 200:
@@ -204,15 +261,26 @@ class TestProvAPIContact(object):
     # Contact related Test cases
     @pytest.mark.prov_api_contact_test
     @allure.title("Get All Contacts")
+    @allure.testcase(name="WIFI-9240",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9240")
+
     def test_get_contacts(self, get_target_object):
+        """
+        Test to get all contacts in Provision services
+        Unique marker:pytest -m "prov_api_contact_test"
+        """
         resp = get_target_object.prov_library_object.get_contact()
         assert resp.status_code == 200
 
     @pytest.mark.prov_api_contact_test
     @allure.title("Create Contact")
+    @allure.testcase(name="WIFI-9242",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9242")
+
     def test_prov_service_create_contact(self, get_target_object, selected_testbed):
         """
-            Test the create Contact in provision Service
+            Test to create Contact in provision Service
+            Unique marker: pytest -m "prov_api_contact_test"
         """
         global contact_id
         payload = {
@@ -241,17 +309,31 @@ class TestProvAPIContact(object):
         logging.info(contact)
         contact_id = contact['id']
 
-    @pytest.mark.prov_api_contact_test
+    @pytest.mark.prov_read_contact_test
     @allure.title("Read Contact")
+    @allure.testcase(name="WIFI-9241",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9241")
+
     def test_prov_service_read_contact(self, get_target_object, selected_testbed):
+        """
+        Test to Read a contact in Provision Services
+        Unique marker:pytest -m "prov_read_contact_test"
+        """
         global contact_id
         resp = get_target_object.prov_library_object.get_contact_by_id(contact_id)
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_contact_test
+    @pytest.mark.prov_api_edit_contact_test
     @allure.title("Edit Contact")
+    @allure.testcase(name="WIFI-9243",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9243")
+
     def test_prov_service_edit_contact(self, get_target_object, selected_testbed):
+        """
+        Test to edit a contact in Provision service
+        Unique marker: pytest -m "prov_api_edit_contact_test"
+        """
         # This to edit Contact
         global contact_id
         editing_payload = {
@@ -278,9 +360,16 @@ class TestProvAPIContact(object):
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_contact_test
+    @pytest.mark.prov_api_delete_contact_test
     @allure.title("Delete Contact")
+    @allure.testcase(name="WIFI-9244",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9244")
+
     def test_prov_service_delete_contact(self, get_target_object, selected_testbed):
+        """
+        Test to Delete a contact in provision service
+        Unique marker: pytest -m "prov_api_delete_contact_test"
+        """
         global contact_id
         resp = get_target_object.prov_library_object.delete_contact(contact_id)
         if resp.status_code != 200:
@@ -298,15 +387,25 @@ class TestProvAPILocation(object):
     # Location related Test cases
     @pytest.mark.prov_api_location
     @allure.title("Get All Locations")
+    @allure.testcase(name="WIFI-9245",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9245")
     def test_get_locations(self, get_target_object):
+        """
+        Test to get the information of all locations using Provision services
+        Unique marker:pytest -m "prov_api_location"
+        """
         resp = get_target_object.prov_library_object.get_location()
         assert resp.status_code == 200
 
-    @pytest.mark.prov_api_location_test
+    @pytest.mark.prov_api_create_location_test
     @allure.title("Create Location")
+    @allure.testcase(name="WIFI-9247",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9247")
+
     def test_prov_service_create_location(self, get_target_object, selected_testbed):
         """
-            Test the create location in provision Service
+            Test to create location in provision Service
+            Unique marker:pytest -m "prov_api_create_location_test"
         """
         global location_id
         payload = {
@@ -333,17 +432,30 @@ class TestProvAPILocation(object):
         logging.info(location)
         location_id = location['id']
 
-    @pytest.mark.prov_api_location_test
+    @pytest.mark.prov_api_read_location_test
     @allure.title("Read Location")
+    @allure.testcase(name="WIFI-9246",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9246")
     def test_prov_service_read_location(self, get_target_object, selected_testbed):
+        """
+        Test to Read location in Provision Services
+        Unique marker:pytest -m "prov_api_read_loaction_test"
+        """
         global location_id
         resp = get_target_object.prov_library_object.get_location_by_id(location_id)
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_location_test
+    @pytest.mark.prov_api_edit_location_test
     @allure.title("Edit Location")
+    @allure.testcase(name="WIFI-9248",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9248")
+
     def test_prov_service_edit_location(self, get_target_object, selected_testbed):
+        """
+        Test to Edit the locations in Provision services
+        Unique markers: pytest -m "prov_api_edit_location_test"
+        """
         # This to edit Location
         global location_id
         editing_payload = {
@@ -373,9 +485,17 @@ class TestProvAPILocation(object):
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_location_test
+    @pytest.mark.prov_api_delete_location_test
     @allure.title("Delete Location")
+    @allure.testcase(name="WIFI-9249",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9249")
+
     def test_prov_service_delete_location(self, get_target_object, selected_testbed):
+        """
+        Test to Delete location in provision service
+        Unique marker: pytest -m "prov_api_delete_location_test"
+
+        """
         global location_id
         resp = get_target_object.prov_library_object.delete_location(location_id)
         if resp.status_code != 200:
@@ -391,17 +511,28 @@ class TestProvAPILocation(object):
 @allure.sub_suite("Provisioning Service Venue API tests")
 class TestProvAPIVenue(object):
     # Venue related Test cases
-    @pytest.mark.prov_api_venue
+    @pytest.mark.prov_api_all_venue
     @allure.title("Get All Venues")
+    @allure.testcase(name="WIFI-9250",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9250")
+
     def test_get_venue(self, get_target_object):
+        """
+        Test to get all venues in provision services
+        Unique marker:pytest -m "prov_api_all_venue"
+        """
         resp = get_target_object.prov_library_object.get_venue()
         assert resp.status_code == 200
 
-    @pytest.mark.prov_api_venue_test
+    @pytest.mark.prov_api_create_venue_test
     @allure.title("Create Venue")
+    @allure.testcase(name="WIFI-9252",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9252")
+
     def test_prov_service_create_venue(self, get_target_object, selected_testbed):
         """
             Test the create venue in provision Service
+            Unique marker: pytest -m "prov_api_create_venue_test"
         """
         global venue_id, entity_id
         payload = {"name": "Testing_prov",
@@ -437,17 +568,31 @@ class TestProvAPIVenue(object):
         logging.info(venue)
         venue_id = venue['id']
 
-    @pytest.mark.prov_api_venue_test
+    @pytest.mark.prov_api_read_venue_test
     @allure.title("Read Venue")
+    @allure.testcase(name="WIFI-9251",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9251")
+
     def test_prov_service_read_venue(self, get_target_object, selected_testbed):
+        """
+        Test to Read venues in Provision services
+        Unique marker:pytest -m "prov_api_read_venue_test"
+        """
         global venue_id
         resp = get_target_object.prov_library_object.get_venue_by_id(venue_id)
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_venue_test
+    @pytest.mark.prov_api_edit_venue_test
     @allure.title("Edit Venue")
+    @allure.testcase(name="WIFI-9253",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9253")
+
     def test_prov_service_edit_venue(self, get_target_object, selected_testbed):
+        """
+        Test to Edit venues in Provision Services
+        Unique marker:pytest -m "prov_api_edit_venue_test"
+        """
         # This to edit venue
         global venue_id
         editing_payload = {
@@ -467,9 +612,16 @@ class TestProvAPIVenue(object):
         if resp.status_code != 200:
             assert False
 
-    @pytest.mark.prov_api_venue_test
+    @pytest.mark.prov_api_delete_venue_test
     @allure.title("Delete Venue")
+    @allure.testcase(name="WIFI-9254",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-9254")
+
     def test_prov_service_delete_venue(self, get_target_object, selected_testbed):
+        """
+        Test to Delete venue in Provision Service
+        Unique Marker:pytest -m "prov_api_delete_venue_test"
+        """
         global venue_id, entity_id
         resp = get_target_object.prov_library_object.delete_venue(venue_id)
         if resp.status_code != 200:

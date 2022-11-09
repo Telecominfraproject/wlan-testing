@@ -50,8 +50,8 @@ class TestMultiVlan(object):
     def test_multi_vlan_open_2g(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration):
         """
-                    Multi VLAN Test with open encryption 2.4 GHz Band
-                    pytest -m "multi_vlan_tests and open and twog"
+                    To verify that a client operating with open security will connect or not using multi vlans.
+                    pytest -m "open and multi_vlan and twog"
         """
         profile_data={"ssid_name": "ssid_open_2g", "appliedRadios": ["2G"], "vlan": 100}
         ssid_name=profile_data["ssid_name"]
@@ -130,8 +130,8 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa_wpa2_personal_2g(self, get_test_library, get_dut_logs_per_test_case,
                                             get_test_device_logs, num_stations, setup_configuration):
         """
-                    Multi VLAN Test with open encryption 2.4 GHz Band
-                    pytest -m "multi_vlan_tests and open and twog"
+                    To verify that a client operating with wpa mixed(personal) security will connect or not using multi vlans.
+                    pytest -m "multi_vlan_tests and wpa_wpa2_personal_mixed and twog"
         """
         profile_data={"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 150}
         ssid_name=profile_data["ssid_name"]
@@ -149,16 +149,16 @@ class TestMultiVlan(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.disable_vlan_fiveg  # wifi-2174
+    @pytest.mark.disable_vlan_twog  # wifi-2172
     @pytest.mark.ow_sanity_lf
-    @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
+    @allure.testcase(name="WIFI-2172",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-2172")
     @allure.title("Test Disabled VLAN with WPA2 Security Mode")
     def test_disable_vlan_wpa2_2g(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Client connectivity using vlan, wpa2, fiveg
-            pytest -m disable_vlan_fiveg
+            To verify that a client operating with wpa2(personal) security will connect or not by disabling VLAN.
+            Unique marker:pytest -m "disable_vlan_twog and twog and wpa2_personal and ow_sanity_lf"
         """
         """
                             Multi VLAN Test with open encryption 2.4 GHz Band
