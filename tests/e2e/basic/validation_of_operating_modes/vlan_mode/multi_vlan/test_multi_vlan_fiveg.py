@@ -6,11 +6,11 @@
 import allure
 import pytest
 
-pytestmark=[pytest.mark.ow_regression_lf,
-            pytest.mark.multi_vlan_tests,
-            pytest.mark.fiveg]
+pytestmark = [pytest.mark.ow_regression_lf,
+              pytest.mark.multi_vlan_tests,
+              pytest.mark.fiveg]
 
-setup_params_general={
+setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}],
@@ -53,18 +53,18 @@ class TestMultiVlan(object):
                     Multi VLAN Test with open encryption 5 GHz Band
                     pytest -m "multi_vlan_tests and open and fiveg"
         """
-        profile_data={"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}
-        ssid_name=profile_data["ssid_name"]
-        security_key="[BLANK]"
-        security="open"
-        mode="VLAN"
-        band="fiveg"
-        vlan=[100]
+        profile_data = {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}
+        ssid_name = profile_data["ssid_name"]
+        security_key = "[BLANK]"
+        security = "open"
+        mode = "VLAN"
+        band = "fiveg"
+        vlan = [100]
 
-        passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                 dut_data=setup_configuration,
-                                                                 passkey=security_key, mode=mode, band=band,
-                                                                 num_sta=1, vlan_id=vlan)
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
+                                                                   passkey=security_key, mode=mode, band=band,
+                                                                   num_sta=1, vlan_id=vlan)
         assert passes == "PASS", result
 
     @pytest.mark.wpa
@@ -77,21 +77,21 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa_5g(self, get_test_library, get_dut_logs_per_test_case,
                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                    Multi VLAN Test with wpa encryption 5 GHz Band
-                    pytest -m "multi_vlan_tests and wpa and fiveg"
+            To verify that a client operating with WPA security will connect or not using Multi VLAN's
+            pytest -m "multi_vlan and wpa and fiveg and ow_sanity_lf"
         """
-        profile_data={"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 125}
-        ssid_name=profile_data["ssid_name"]
-        security_key=profile_data["security_key"]
-        security="wpa"
-        mode="VLAN"
-        band="fiveg"
-        vlan=[125]
+        profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 125}
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa"
+        mode = "VLAN"
+        band = "fiveg"
+        vlan = [125]
 
-        passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                 dut_data=setup_configuration,
-                                                                 passkey=security_key, mode=mode, band=band,
-                                                                 num_sta=1, vlan_id=vlan)
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
+                                                                   passkey=security_key, mode=mode, band=band,
+                                                                   num_sta=1, vlan_id=vlan)
         assert passes == "PASS", result
 
     @pytest.mark.wpa2_personal
@@ -104,21 +104,21 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa2_personal_5g(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                    Multi VLAN Test with wpa2_personal encryption 5 GHz Band
-                    pytest -m "multi_vlan_tests and wpa2_personal and fiveg"
+            To verify that a client operating with WPA2(personal) security will connect or not using Multi VLANS
+            pytest -m "multi_vlan and wpa2_personal and fiveg and ow_sanity_lf"
         """
-        profile_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
-        ssid_name=profile_data["ssid_name"]
-        security_key=profile_data["security_key"]
-        security="wpa2"
-        mode="VLAN"
-        band="fiveg"
-        vlan=[200]
+        profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
+        security = "wpa2"
+        mode = "VLAN"
+        band = "fiveg"
+        vlan = [200]
 
-        passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                 dut_data=setup_configuration,
-                                                                 passkey=security_key, mode=mode, band=band,
-                                                                 num_sta=1, vlan_id=vlan)
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
+                                                                   passkey=security_key, mode=mode, band=band,
+                                                                   num_sta=1, vlan_id=vlan)
         assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_personal_mixed
@@ -133,34 +133,35 @@ class TestMultiVlan(object):
                     Multi VLAN Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
                     pytest -m "multi_vlan_tests and wpa_wpa2_personal_mixed and fiveg"
         """
-        profile_data={"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"], "security_key": "something",
-             "vlan": 150}
-        ssid_name=profile_data["ssid_name"]
-        security_key=profile_data["security_key"]
+        profile_data = {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"], "security_key": "something",
+                        "vlan": 150}
+        ssid_name = profile_data["ssid_name"]
+        security_key = profile_data["security_key"]
         security = "wpa"
         extra_sec = ["wpa2"]
-        mode="VLAN"
-        band="fiveg"
-        vlan=[150]
+        mode = "VLAN"
+        band = "fiveg"
+        vlan = [150]
 
-        passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
-                                                                 dut_data=setup_configuration,extra_securities=extra_sec,
-                                                                 passkey=security_key, mode=mode, band=band,
-                                                                 num_sta=1, vlan_id=vlan)
+        passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
+                                                                   dut_data=setup_configuration,
+                                                                   extra_securities=extra_sec,
+                                                                   passkey=security_key, mode=mode, band=band,
+                                                                   num_sta=1, vlan_id=vlan)
         assert passes == "PASS", result
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.disable_vlan_fiveg  # wifi-2174
     @pytest.mark.ow_sanity_lf
-    @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
+    @allure.testcase(name="WIFI-2174",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
     @allure.title("Test Disabled VLAN with WPA2 Security Mode")
     def test_disable_vlan_wpa2_5g(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Multi VLAN Disabled Test with wpa2_personal encryption 5 GHz Band
-            pytest -m disable_vlan_fiveg
+            To verify that a client operating with WPA2 security will connect or not by disabling the VLAN
+            pytest -m "disable_vlan_fiveg and wpa2_personal and fiveg and ow_sanity_lf"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
         ssid_name = profile_data["ssid_name"]

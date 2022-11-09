@@ -121,6 +121,17 @@ class TestRateLimitingNAT(object):
     @pytest.mark.ow_sanity_lf
     @pytest.mark.batch_size_125
     @pytest.mark.rate_limiting_tests
+    @allure.testcase(name="WIFI-5849",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5849")
+    @allure.title("Test for Upload and Download batch size 1,2,5 2.4 GHz")
+    def test_wpa2_personal_ssid_up_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
+                                                        get_test_device_logs, num_stations, setup_configuration, check_connectivity):
+        """
+            To verfiy a client operating with WPA2 Personal security can limit the UP & DW traffic or not.
+            Unique marker:pytest -m "rate_limiting_tests and wpa2_personal and nat and ow_sanity_lf and twog and upload_download and batch_size_125"
+
+        """
+
     @allure.title("Test for Upload and Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                         get_test_device_logs, num_stations, setup_configuration,
