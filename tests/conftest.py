@@ -326,6 +326,10 @@ def get_test_library(get_testbed_details, is_test_library_perfecto_android, is_t
                        log_level=logging.DEBUG,
                        run_lf=run_lf,
                        influx_params=None)
+        pwd = os.getcwd()
+        isExist = os.path.exists(str(pwd) + "/../reports")
+        if not isExist:
+            os.mkdir(str(pwd) + "/../reports")
 
     def teardown_test():
         if is_test_library_perfecto_android:
