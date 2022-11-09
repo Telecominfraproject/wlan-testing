@@ -16,7 +16,7 @@ def setup_configuration(request, get_markers, get_target_object, run_lf):
     # Method to setup the basic configuration
     data = {}
     if not run_lf:
-        data = get_target_object.setu_basic_configuration(configuration=configuration,
+        data = get_target_object.setup_basic_configuration(configuration=configuration,
                                                            requested_combination=requested_combination)
     logging.info("dut_data after config applied: " + str(data))
     yield data
