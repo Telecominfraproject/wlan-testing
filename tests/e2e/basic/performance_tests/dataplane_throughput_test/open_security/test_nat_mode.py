@@ -1,14 +1,14 @@
 """
 
     Performance Test: Dataplane Throughput Test: NAT Mode
-    pytest -m "dataplane_throughput_test open security and nat"
+    pytest -m "dataplane_tests open security and nat"
 
 """
 import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.dataplane_throughput_test,
+pytestmark = [pytest.mark.dataplane_tests,
               pytest.mark.nat, pytest.mark.open]
 
 setup_params_general = {
@@ -33,7 +33,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestDataplaneThroughputNAT(object):
     """Dataplane THroughput NAT Mode
-       pytest -m "dataplane_throughput_test and open and nat"
+       pytest -m "dataplane_tests and open and nat"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
@@ -43,7 +43,7 @@ class TestDataplaneThroughputNAT(object):
                                       get_target_object,
                                       num_stations, setup_configuration):
         """Dataplane THroughput NAT Mode.
-           pytest -m "dataplane_throughput_test and nat and open and twog"
+           pytest -m "dataplane_tests and nat and open and twog"
         """
         profile_data = {"ssid_name": "open_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -66,7 +66,7 @@ class TestDataplaneThroughputNAT(object):
                                       get_target_object,
                                       num_stations, setup_configuration):
         """Dataplane THroughput NAT Mode
-           pytest -m "dataplane_throughput_test and nat and open and fiveg"
+           pytest -m "dataplane_tests and nat and open and fiveg"
         """
         profile_data = {"ssid_name": "open_dataplane_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]

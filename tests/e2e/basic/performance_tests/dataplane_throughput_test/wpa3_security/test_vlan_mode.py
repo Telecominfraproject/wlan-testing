@@ -1,14 +1,14 @@
 """
 
     Performance Test: Dataplane Throughput Test: VLAN Mode
-    pytest -m "dataplane_throughput_test and vlan"
+    pytest -m "dataplane_tests and vlan"
 
 """
 import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.vlan, pytest.mark.dataplane_throughput_test, pytest.mark.wpa3_personal]
+pytestmark = [pytest.mark.vlan, pytest.mark.dataplane_tests, pytest.mark.wpa3_personal]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -34,7 +34,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestDataplaneThroughputVLAN(object):
     """Dataplane THroughput VLAN Mode
-       pytest -m "dataplane_throughput_test and wpa3_personal and vlan"
+       pytest -m "dataplane_tests and wpa3_personal and vlan"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
@@ -44,9 +44,9 @@ class TestDataplaneThroughputVLAN(object):
                                                 get_target_object,
                                                 num_stations, setup_configuration):
         """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_throughput_test and vlan and wpa3_personal and twog"
+           pytest -m "dataplane_tests and vlan and wpa3_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_personal_2g", "appliedRadios": ["2G"], "security_key": "something",
+        profile_data = {"ssid_name": "wpa3_personal_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
@@ -70,9 +70,9 @@ class TestDataplaneThroughputVLAN(object):
                                                 get_target_object,
                                                 num_stations, setup_configuration):
         """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_throughput_test and vlan and wpa3_personal and fiveg"
+           pytest -m "dataplane_tests and vlan and wpa3_personal and fiveg"
         """
-        profile_data = {"ssid_name": "ssid_wpa3_personal_5g", "appliedRadios": ["5G"], "security_key": "something",
+        profile_data = {"ssid_name": "wpa3_personal_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something",
                         "vlan": 100}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
