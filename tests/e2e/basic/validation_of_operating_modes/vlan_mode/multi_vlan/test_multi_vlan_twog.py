@@ -134,9 +134,10 @@ class TestMultiVlan(object):
                     Multi VLAN Test with wpa_wpa2_personal_mixed encryption 2.4 GHz Band
                     pytest -m "multi_vlan_tests and wpa_wpa2_personal_mixed and twog"
         """
-        profile_data={"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 150}
+        profile_data={"ssid_name": "ssid_wpa_wpa2_p_m_2g", "appliedRadios": ["2G"], "security_key": "something",
+             "vlan": 150}
         ssid_name=profile_data["ssid_name"]
-        security_key="[BLANK]"
+        security_key=profile_data["security_key"]
         security="wpa"
         extra_sec = ["wpa2"]
         mode="VLAN"
@@ -162,7 +163,7 @@ class TestMultiVlan(object):
                             Multi VLAN Disabled Test with wpa2_personal encryption 2.4 GHz Band
                             pytest -m "disable_vlan_twog and wpa2_personal and twog"
         """
-        profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
+        profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 200}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
