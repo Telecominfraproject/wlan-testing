@@ -169,7 +169,7 @@ class TestMultiVlan(object):
         security = "wpa2"
         mode = "VLAN"
         band = "twog"
-        vlan = [200]
+        vlan = [250]
 
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
