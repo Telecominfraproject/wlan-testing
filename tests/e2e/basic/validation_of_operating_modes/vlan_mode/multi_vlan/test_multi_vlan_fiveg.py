@@ -133,7 +133,8 @@ class TestMultiVlan(object):
                     Multi VLAN Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
                     pytest -m "multi_vlan_tests and wpa_wpa2_personal_mixed and fiveg"
         """
-        profile_data={"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 150}
+        profile_data={"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"], "security_key": "something",
+             "vlan": 150}
         ssid_name=profile_data["ssid_name"]
         security_key=profile_data["security_key"]
         security = "wpa"
@@ -167,7 +168,7 @@ class TestMultiVlan(object):
         security = "wpa2"
         mode = "VLAN"
         band = "fiveg"
-        vlan = [200]
+        vlan = [250]
 
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
