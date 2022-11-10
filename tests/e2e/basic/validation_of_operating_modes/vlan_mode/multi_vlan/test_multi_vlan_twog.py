@@ -60,7 +60,7 @@ class TestMultiVlan(object):
         security="open"
         mode="VLAN"
         band="twog"
-        vlan=[profile_data["vlan"]]
+        vlan=[100]
 
         passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                  dut_data=setup_configuration,
@@ -87,7 +87,7 @@ class TestMultiVlan(object):
         security="wpa"
         mode="VLAN"
         band="twog"
-        vlan=[profile_data["vlan"]]
+        vlan=[125]
 
         passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                  dut_data=setup_configuration,
@@ -114,7 +114,7 @@ class TestMultiVlan(object):
         security="wpa2"
         mode="VLAN"
         band="twog"
-        vlan=[profile_data["vlan"]]
+        vlan=[200]
 
         passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                  dut_data=setup_configuration,
@@ -141,7 +141,7 @@ class TestMultiVlan(object):
         extra_sec = ["wpa2"]
         mode="VLAN"
         band="twog"
-        vlan=[profile_data["vlan"]]
+        vlan=[150]
 
         passes, result=get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                  dut_data=setup_configuration,extra_securities=extra_sec,
@@ -168,7 +168,7 @@ class TestMultiVlan(object):
         security = "wpa2"
         mode = "VLAN"
         band = "twog"
-        vlan = [profile_data["vlan"]]
+        vlan = [200]
 
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
