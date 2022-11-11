@@ -738,7 +738,7 @@ class tip_2x:
                             break
                     if firmware['image'].split("-")[-2] == \
                             self.device_under_tests_info[ap]['firmware_version'].split('-')[0]:
-                        logging.info("Target Firmware: \n" + firmware)
+                        logging.info("Target Firmware: \n" + str(firmware))
                         allure.attach(name="Target firmware : ", body=str(firmware))
 
                         target_revision = firmware['revision'].split("/")[1].replace(" ", "")
