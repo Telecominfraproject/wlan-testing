@@ -7,7 +7,7 @@ helpFunction()
 {
    echo "Setup SSH Tunnel for TIP Labs"
    echo "Usage: $0 -l lab "
-   echo -e "\t-l Target Lab basic-01 | basic-02 | basic-03 | basic-04 | basic-05 | basic-06 | basic-07 | basic-08 | advance-01 | advance-02"
+   echo -e "\t-l Target Lab basic-01 | basic-02 | basic-03 | basic-04 | basic-05 | basic-06 | basic-07 | basic-08 | advance-01 | advance-02 | advance-03"
    exit 1 # Exit script after printing help
 }
 
@@ -80,7 +80,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "wallys_dr40x9",
@@ -149,7 +149,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "hfcl_ion4",
@@ -218,7 +218,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "tp-link_ec420-g1",
@@ -289,7 +289,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "indio_um-305ac",
@@ -360,7 +360,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "edgecore_ecw5211",
@@ -431,7 +431,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "hfcl_ion4xi",
@@ -502,7 +502,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "cig_wf188n",
@@ -571,7 +571,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "edgecore_eap102",
@@ -640,7 +640,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "edgecore_eap101",
@@ -709,7 +709,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "liteon-wpx8324",
@@ -765,7 +765,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "udaya_a5-id2",
@@ -821,7 +821,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "cig_194c4",
@@ -877,7 +877,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "edgecore_eap102",
@@ -946,7 +946,7 @@ Create_lab_info_json()
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "cig_wf196",
