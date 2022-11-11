@@ -6,7 +6,7 @@
             "controller" : {
                 "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
                 "username": "tip@ucentral.com",
-                "password": "OpenWifi%123"
+                "password": "OpenWifi%1234"
             },
             "device_under_tests": [{
                 "model": "edgecore_eap101",
