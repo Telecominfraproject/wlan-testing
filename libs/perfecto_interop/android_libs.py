@@ -686,7 +686,7 @@ class android_libs:
                             allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                             try:
                                 if wifi_name not in available_ssids:
-                                    self.scrollDown(driver)
+                                    self.scrollDown(setup_perfectoMobile)
                                     time.sleep(2)
                                 else:
                                     ssid_found = True
@@ -909,7 +909,7 @@ class android_libs:
                                         except NoSuchElementException:
                                             print("Exception: Verify Xpath")
                                         # Scroll Down
-                                        self.scrollDown(driver)
+                                        self.scrollDown(setup_perfectoMobile)
                                         print("Sleeping for: ", i)
                                         time.sleep(i)
                                         pass
@@ -968,7 +968,7 @@ class android_libs:
                                 allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                                 try:
                                     if wifi_name not in available_ssids:
-                                        self.scrollDown(driver)
+                                        self.scrollDown(setup_perfectoMobile)
                                         time.sleep(2)
                                     else:
                                         ssid_found = True
@@ -1329,18 +1329,30 @@ class android_libs:
                         except:
                             print("No advanced options")
                 # Scroll Down
-                self.scrollDown(driver)
+                self.scrollDown(setup_perfectoMobile)
+                # report.step_start("Scroll Down")
+                # for i in range(4):
+                #     print("Scrolling...", i)
+                #     try:
+                #         value = driver.find_element_by_xpath("//*[@text='IP address']").is_displayed()
+                #         if value is True:
+                #             break
+                #     except:
+                #         print("Scrolling started...")
+                #         driver.swipe(470, 1400, 470, 1000, 400)
+                #         driver.implicitly_wait(2)
+                #         continue
                 try:
                     time.sleep(2)
                     ip_address_element = driver.find_element_by_xpath(
                         "//*[@text='IP address']/parent::*/android.widget.TextView[@resource-id='android:id/summary']")
                     ip_address_element_text = ip_address_element.text
                     print("Device IP address is :", ip_address_element_text)
+                    return ip_address_element_text
                 except:
                     print("IP address element not found")
             except:
                 print("Couldn't get into Additional settings")
-        return ip_address_element_text
 
     def wifi_disconnect(self, ssid, setup_perfectoMobile, connData):
         print("\n-------------------------------------")
@@ -1561,31 +1573,30 @@ class android_libs:
                         except:
                             print("Couldn't turn on WIFI switch")
                             self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                            # ---------------------This is to Forget current connected SSID-------------------------------
-                            try:  # To deal with already connected SSID
+                        # ---------------------This is to Forget current connected SSID-------------------------------
+                        try:  # To deal with already connected SSID
+                            self.check_if_no_internet_popup(driver)
+                            network_category = driver.find_element_by_xpath("//*[@text='Connected']")
+                            try:  # To forget existing ssid
+                                print("Entering into additional details")
                                 self.check_if_no_internet_popup(driver)
-                                network_category = driver.find_element_by_xpath("//*[@text='Connected']")
-                                try:  # To forget existing ssid
-                                    print("To forget ssid")
-                                    self.check_if_no_internet_popup(driver)
-                                    additional_details_element = driver.find_element_by_xpath(
-                                        "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
-                                    additional_details_element.click()
-                                    try:
-                                        self.check_if_no_internet_popup(driver)
-                                        forget_ssid = driver.find_element_by_xpath(
-                                            "//*[@resource-id='com.android.settings:id/button1']")
-                                        forget_ssid.click()
-                                        print("Forget old ssid")
-                                    except:
-                                        print("Couldn't forget ssid")
-                                        self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
-                                except:
-                                    # allure.attach(name=body=str("Couldn't get into additional details"))
-                                    print("Couldn't get into additional details")
+                                additional_details_element = driver.find_element_by_xpath(
+                                    "//*[@resource-id='com.android.settings:id/settings_button_no_background']")
+                                additional_details_element.click()
                             except:
-                                # allure.attach(name=body=str("No Connected SSIDS"))
-                                print("No Connected SSIDS")
+                                print("Couldn't get into additional details")
+                            try:
+                                print("To forget ssid")
+                                self.check_if_no_internet_popup(driver)
+                                forget_ssid = driver.find_element_by_xpath(
+                                    "//*[@resource-id='com.android.settings:id/button1']")
+                                forget_ssid.click()
+                                print("Forget old ssid")
+                            except:
+                                print("Couldn't forget ssid")
+                                self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                        except:
+                            print("No Connected SSIDS")
                         # ----------------------This is to Forget current connected SSID--------------------------------
 
                         try:
@@ -2059,7 +2070,7 @@ class android_libs:
                                         except NoSuchElementException:
                                             print("Exception: Verify Xpath")
                                         # Scroll Down
-                                        self.scrollDown(driver)
+                                        self.scrollDown(setup_perfectoMobile)
                                         print("Sleeping for: ", i)
                                         time.sleep(i)
                                         pass
@@ -2118,7 +2129,7 @@ class android_libs:
                                 allure.attach(name="Available SSIDs in device: ", body=str(available_ssids))
                                 try:
                                     if wifi_name not in available_ssids:
-                                        self.scrollDown(driver)
+                                        self.scrollDown(setup_perfectoMobile)
                                         time.sleep(2)
                                     else:
                                         ssid_found = True
