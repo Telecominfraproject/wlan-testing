@@ -10,7 +10,7 @@ lf_library = importlib.import_module("configuration")
 RATE_LIMITING_RADIUS_SERVER_DATA = lf_library.RATE_LIMITING_RADIUS_SERVER_DATA
 RATE_LIMITING_RADIUS_ACCOUNTING_DATA = lf_library.RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
-pytestmark = [pytest.mark.dynamic_qos_tests,
+pytestmark = [pytest.mark.rate_limiting_with_radius_tests,
               pytest.mark.bridge]
 
 setup_params_general = {
@@ -45,8 +45,8 @@ setup_params_general = {
 }
 
 
-@allure.feature("Dynamic QoS Test")
-@allure.parent_suite("Dynamic QoS Test")
+@allure.feature("Rate Limiting With Radius Test")
+@allure.parent_suite("Rate Limiting With Radius Test")
 @allure.suite("BRIDGE Mode")
 @allure.sub_suite("WPA2 Enterprise Security")
 @pytest.mark.parametrize(
