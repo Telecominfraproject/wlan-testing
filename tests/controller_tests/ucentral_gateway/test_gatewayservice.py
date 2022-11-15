@@ -16,8 +16,8 @@ import pytest
 @pytest.mark.ow_sanity_lf
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owgw_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Gateway Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Gateway Service Tests")
 class TestUcentralGatewayService(object):
     """
     """
