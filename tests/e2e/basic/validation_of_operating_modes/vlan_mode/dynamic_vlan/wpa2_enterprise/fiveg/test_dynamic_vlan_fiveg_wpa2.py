@@ -181,7 +181,6 @@ class TestDynamicVlan5GWpa2(object):
         identity = "userB"
 
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
-        
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid = ssid_name, security = security,
                                         extra_securities = extra_secu, vlan_id = vlan,
@@ -193,42 +192,38 @@ class TestDynamicVlan5GWpa2(object):
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                    "/" + port_resources[2])["interface"]["ip"]
-        # sta_ip = station_ip
-
-        count = 0
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                              "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
         eth_rad_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                             "/" + port_resources[2] + "." + str(vlan[1]))["interface"]["ip"]
         eth_vlan_ip_1 = eth_rad_vlan_ip.split('.')
-        sta_ip_1 = station_ip.split('.')
-        if sta_ip_1[0] == "0":
-            assert False, result
-        elif eth_vlan_ip_1[0] == "0":
-            print("radius configured vlan didnt recieved ip")
-            assert False, result
-        for k in range(0, 2):
-            for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
+        sta_ip = []
+        sta_ip.append(station_ip.split('.'))
+        for u in get_test_library.json_get("/port/?fields=port+type,alias")['interfaces']:
+            if list(u.values())[0]['port type'] in ['WIFI-STA']:
+                station_name = list(u.keys())[0]
+        sta = station_name.split('.')
+        get_test_library.local_realm.admin_up(sta)
+        time.sleep(10)
+        for i in range(5):
+            staip = get_test_library.json_get("/port/" + sta[0] + "/" + sta[1] + "/" + sta[2])["interface"]["ip"]
+            if staip == "0.0.0.0":
+                time.sleep(10)
+            else:
+                break
+
+        sta_ip.append(staip.split('.'))
+
+        for k in sta_ip:
+            for i, j in zip(k[0:2], eth_vlan_ip_1[0:2]):
                 if i != j:
+                    val = False
                     break
                 else:
-                    if count == 2:
-                        break
-                    continue
-            count = count + 1
-            time.sleep(30)
-            for u in get_test_library.json_get("/port/?fields=port+type,alias")['interfaces']:
-                if list(u.values())[0]['port type'] not in ['Ethernet', 'WIFI-Radio', 'NA']:
-                    station_name = list(u.values())[0]['alias']
-            get_test_library.admin_up([station_name])
-
-            sta_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                       "/" + station_name)["interface"]["ip"]
-            sta_ip_1 = sta_ip.split('.')
-
-        if count == 2:
+                    val = True
+        if val:
             assert True, result
-        elif count == 0:
+        else:
             assert False, result
 
     @pytest.mark.absenceofvlanid
@@ -404,7 +399,6 @@ class TestDynamicVlan5GWpa2(object):
         identity = "userB"
         val = ""
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
-        
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu, vlan_id=vlan,
@@ -422,7 +416,7 @@ class TestDynamicVlan5GWpa2(object):
         eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                    "/" + port_resources[2])["interface"]["ip"]
 
-        sta_ip_1 = get_test_library.station_ip.split('.')
+        sta_ip_1 = station_ip.split('.')
         eth_radius_vlan_ip_1 = eth_radius_vlan_ip.split('.')
         if sta_ip_1[0] == "0":
             assert False, result
@@ -463,34 +457,25 @@ class TestDynamicVlan5GWpa2(object):
         identity = "userA"
         val = ""
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
-        
-
-        station_list = []
         sta_ip = []
-        for i in range(0, 2):
-            station_list.append(get_test_library.fiveg_prefix + str(i))
 
-        for m in range(0, len(station_list)):
+        for m in range(2):
             passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu, vlan_id=vlan,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
                                                                               identity=identity, num_sta=1,
-                                                                              dut_data=setup_configuration, cleanup=False)
+                                                                              dut_data=setup_configuration)
             station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
-            get_test_library.admin_up([station_list[m]])
             sta_ip.append(station_ip)
             if sta_ip[m] == "0.0.0.0":
                 assert False, result
-            time.sleep(30)
 
-        eth_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                        "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
-        eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                   "/" + port_resources[2])["interface"]["ip"]
-        eth_vlan_ip_1 = eth_vlan_ip.split('.')
-        for n in range(0, len(station_list)):
-            sta_ip_1 = sta_ip[n].split('.')
+            eth_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
+                                            "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
+            eth_vlan_ip_1 = eth_vlan_ip.split('.')
+            # for n in range(2):
+            sta_ip_1 = sta_ip[m].split('.')
             for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
                 if i != j:
                     val = False
@@ -524,35 +509,27 @@ class TestDynamicVlan5GWpa2(object):
         val = ""
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
         
-
-        station_list = []
         sta_ip = []
         dynamic_vlan_user = ["userA", "userB"]
         dynamic_vlan_pass = ["passwordA", "passwordB"]
-        for i in range(0, 2):
-            station_list.append(get_test_library.fiveg_prefix + str(i))
 
-        for user_id, user_pass, sta in zip(dynamic_vlan_user, dynamic_vlan_pass, range(0, len(station_list))):
+        for user_id, user_pass, cnt in zip(dynamic_vlan_user, dynamic_vlan_pass, range(0, len(vlan))):
             passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, passkey="[BLANK]",
-                                security=security, extra_securities=extra_secu,
-                                mode=mode, band=band, vlan_id=vlan[sta],
-                                station_name=[station_list[sta]], key_mgmt="WPA-EAP",
-                                pairwise="NA", group="NA", wpa_psk="DEFAULT",
-                                ttls_passwd=user_pass, ieee80211w=0,
-                                wep_key="NA", ca_cert="NA", eap="TTLS", identity=user_id, d_vlan=True, cleanup=False)
+                                security=security, extra_securities=extra_secu, mode=mode, band=band, vlan_id=vlan,
+                                num_sta=1, ttls_passwd=user_pass, ieee80211w=0, dut_data=setup_configuration,
+                                eap=eap, identity=user_id)
 
             station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
             sta_ip.append(station_ip)
 
             eth_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                            "/" + port_resources[2] + "." + str(vlan[sta]))["interface"]["ip"]
+                                            "/" + port_resources[2] + "." + str(vlan[cnt]))["interface"]["ip"]
 
             eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                        "/" + port_resources[2])["interface"]["ip"]
             eth_vlan_ip_1 = eth_vlan_ip.split('.')
-            print(sta_ip)
-            sta_ip_1 = sta_ip[sta].split('.')
-            if sta_ip_1 == "0.0.0.0":
+            sta_ip_1 = sta_ip[cnt].split('.')
+            if sta_ip_1[0] == '0':
                 allure.attach("station didn't received ip..")
                 assert False, result
             for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
@@ -564,6 +541,5 @@ class TestDynamicVlan5GWpa2(object):
                 assert True, result
             elif not val:
                 assert False, result
-            get_test_library.admin_up([station_list[sta]])
-            time.sleep(5)
+
 

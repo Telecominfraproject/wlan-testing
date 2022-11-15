@@ -36,7 +36,7 @@ setup_params_general = {
 @allure.parent_suite("Dynamic Vlan Test")
 @allure.suite("WPA3 Enterprise Security")
 @allure.sub_suite("5 GHz Band")
-@allure.feature("VLAN MODE wpa3_enterprise Dynamic Vlan")
+@allure.feature("Dynamic Vlan Test")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
