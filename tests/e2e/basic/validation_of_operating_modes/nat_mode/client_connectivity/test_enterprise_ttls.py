@@ -174,7 +174,8 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
                                                                               identity=identity, num_sta=1,
-                                                                              dut_data=setup_configuration)
+                                                                              dut_data=setup_configuration,
+                                                                              key_mgmt="WPA-EAP-SHA256")
 
         assert passes == "PASS", result
 
@@ -200,7 +201,8 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
                                                                               identity=identity, num_sta=1,
-                                                                              dut_data=setup_configuration)
+                                                                              dut_data=setup_configuration,
+                                                                              key_mgmt="WPA-EAP-SHA256")
 
         assert passes == "PASS", result
 

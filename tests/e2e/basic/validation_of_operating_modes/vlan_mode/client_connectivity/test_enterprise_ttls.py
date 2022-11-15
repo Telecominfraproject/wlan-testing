@@ -184,7 +184,8 @@ class TestVLANModeEnterpriseTTLSSuiteA(object):
                                                                               ttls_passwd=ttls_passwd,
                                                                               identity=identity, num_sta=1,
                                                                               vlan_id=vlan,
-                                                                              dut_data=setup_configuration)
+                                                                              dut_data=setup_configuration,
+                                                                              key_mgmt="WPA-EAP-SHA256")
 
         assert passes == "PASS", result
 
@@ -212,7 +213,8 @@ class TestVLANModeEnterpriseTTLSSuiteA(object):
                                                                               ttls_passwd=ttls_passwd,
                                                                               identity=identity, num_sta=1,
                                                                               vlan_id=vlan,
-                                                                              dut_data=setup_configuration)
+                                                                              dut_data=setup_configuration,
+                                                                              key_mgmt="WPA-EAP-SHA256")
 
         assert passes == "PASS", result
 
