@@ -1364,7 +1364,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @pytest.mark.ow_sanity_lf
-    @allure.parent_suite("Throughput Test")
+    @allure.parent_suite("Throughput Benchmark Test")
     @allure.suite("2.4 Ghz Band")
     @allure.title("Single client TCP Download wifi capacity 40Mhz Bw")
     @allure.sub_suite("BRIDGE Mode")
