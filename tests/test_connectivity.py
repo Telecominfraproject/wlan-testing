@@ -25,7 +25,7 @@ sdk_expected = True
 
 @allure.feature("Test Connectivity")
 @allure.parent_suite("Test Connectivity")
-@allure.suite("Test Resources")
+#@allure.suite("Test Resources")
 class TestResources(object):
     """Test Case Class: Test cases to cover resource Connectivity"""
 
@@ -202,37 +202,37 @@ class TestResources(object):
             pytest.exit("Disconnected from HOST" + "\n Current GW HOST: " + str(uci_data[0]) +
                         "\n EXPECTED GW HOST: " + str(gw_host))
 
-    @pytest.mark.traffic_generator_connectivity
-    @allure.testcase(name="test_traffic_generator_connectivity", url="")
-    @allure.title("Traffic Generator  Connectivity")
-    def test_traffic_generator_connectivity(self, get_test_library):
-        """Test case to verify Traffic Generator Connectivity"""
-        port_data = get_test_library.json_get(_req_url="/port?fields=alias,port+type,ip")['interfaces']
-        logging.info("Port data: " + str(port_data))
-        eth_table_data = {}
-        port = []
-        ip = []
-        for i in port_data:
-            for item in i:
-                if i[item]['port type'] == 'Ethernet':
-                    port.append(item)
-                    ip.append(i[item]['ip'])
-        # creating dict for eth table
-        eth_table_data["Port"] = port
-        eth_table_data["ip"] = ip
-        # Attaching eth table to allure
-        get_test_library.attach_table_allure(data=eth_table_data, allure_name="Ethernet Table")
-        max_num_sta_table_data = {}
-        col = ["max possible stations", "max 2g stations", "max 5g stations", "max 6g stations", "max ax stations",
-               "max ac stations"]
-        max_num_sta = [get_test_library.max_possible_stations, get_test_library.max_2g_stations,
-                       get_test_library.max_5g_stations, get_test_library.max_6g_stations,
-                       get_test_library.max_ax_stations, get_test_library.max_ac_stations]
-        max_num_sta_table_data[""] = col
-        max_num_sta_table_data["Max number of stations"] = max_num_sta
-        get_test_library.attach_table_allure(data=max_num_sta_table_data, allure_name="Max number of stations Table")
-
-        assert True
+    # @pytest.mark.traffic_generator_connectivity
+    # @allure.testcase(name="test_traffic_generator_connectivity", url="")
+    # @allure.title("Traffic Generator  Connectivity")
+    # def test_traffic_generator_connectivity(self, get_test_library):
+    #     """Test case to verify Traffic Generator Connectivity"""
+    #     port_data = get_test_library.json_get(_req_url="/port?fields=alias,port+type,ip")['interfaces']
+    #     logging.info("Port data: " + str(port_data))
+    #     eth_table_data = {}
+    #     port = []
+    #     ip = []
+    #     for i in port_data:
+    #         for item in i:
+    #             if i[item]['port type'] == 'Ethernet':
+    #                 port.append(item)
+    #                 ip.append(i[item]['ip'])
+    #     # creating dict for eth table
+    #     eth_table_data["Port"] = port
+    #     eth_table_data["ip"] = ip
+    #     # Attaching eth table to allure
+    #     get_test_library.attach_table_allure(data=eth_table_data, allure_name="Ethernet Table")
+    #     max_num_sta_table_data = {}
+    #     col = ["max possible stations", "max 2g stations", "max 5g stations", "max 6g stations", "max ax stations",
+    #            "max ac stations"]
+    #     max_num_sta = [get_test_library.max_possible_stations, get_test_library.max_2g_stations,
+    #                    get_test_library.max_5g_stations, get_test_library.max_6g_stations,
+    #                    get_test_library.max_ax_stations, get_test_library.max_ac_stations]
+    #     max_num_sta_table_data[""] = col
+    #     max_num_sta_table_data["Max number of stations"] = max_num_sta
+    #     get_test_library.attach_table_allure(data=max_num_sta_table_data, allure_name="Max number of stations Table")
+    #
+    #     assert True
 
     # def test_ap_conn_state(self):
     #     global state
@@ -246,6 +246,8 @@ class TestResources(object):
 
 @allure.testcase(name="Firmware Management", url="")
 @pytest.mark.firmware
+@allure.feature("Test Connectivity")
+@allure.parent_suite("Test Connectivity")
 class TestFirmwareUpgrade(object):
 
     @pytest.mark.get_firmware_list
