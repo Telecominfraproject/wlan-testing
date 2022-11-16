@@ -52,13 +52,14 @@ class TestMultipskBridgeWPA2(object):
 
     @pytest.mark.vlan1
     @pytest.mark.ow_sanity_lf
+    @pytest.mark.wpa2
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     @allure.title("Test for Client Connect with 1 VLAN")
     def test_client_wpa2_2g_vlan1(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                    BRIDGE Mode Multipsk Test with wpa encryption 2.4 GHz Band
-                    pytest -m "multi_psk_tests and bridge and wpa_personal and vlan1 and twog"
+                    To verify a client operating on BRIDGE Mode Multipsk Test with wpa encryption 2.4 GHz Band is connecting or not.
+                    pytest -m "ow_sanity_lf and vlan1 and wpa2 and multipsk"
         """
         profile_data = {"ssid_name": "MDU-Wi-Fi-2g",
                         "appliedRadios": ["2G"],
@@ -90,12 +91,12 @@ class TestMultipskBridgeWPA2(object):
 
     @pytest.mark.vlan2
     @pytest.mark.ow_sanity_lf
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10657", name="WIFI-10657")
     @allure.title("Test for Client Connect with 2 VLAN's")
     def test_client_wpa2_2g_vlan2(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            BRIDGE Mode Multipsk Test with wpa encryption 2.4 GHz Band
+            To verify a client operating on BRIDGE Mode Multipsk Test with wpa encryption 2.4 GHz Band is connecting or not.
             pytest -m "multi_psk_tests and bridge and wpa2_personal and vlan2 and twog"
         """
         profile_data = {"ssid_name": "MDU-Wi-Fi-2g",
