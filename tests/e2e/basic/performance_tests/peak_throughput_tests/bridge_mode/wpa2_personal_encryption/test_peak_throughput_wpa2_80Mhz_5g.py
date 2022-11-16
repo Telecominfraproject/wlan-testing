@@ -77,12 +77,14 @@ class Test80Mhz5GChannel36PeakThroughput(object):
                                        num_stations={"5G": 1})
         assert True
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10673", name="WIFI-10673")
     @pytest.mark.tcp_bidirectional
+    @pytest.mark.channel_36
+    @pytest.mark.ow_sanity_lf
     def test_client_wpa2_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+            pytest -m "ow_sanity_lf and channel_36"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]

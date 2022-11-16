@@ -40,12 +40,12 @@ class Test20Mhz2GChannel1PeakThroughput(object):
        pytest -m "country_code and Bridge"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10674", name="WIFI-10674")
     @pytest.mark.tcp_download
     def test_client_wpa2_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_personal and twog"
+        """ To verify Wfi Capacity test on a client operating on BRIDGE mode and 20MHz
+            pytest -m "channel_1 and BRIDGE and wpa2_personal and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1358,12 +1358,13 @@ setup_params_general_11 = {
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel11PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+       pytest -m "ow_sanity_lf and tcp_download and channel_11"
     """
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10674", name="WIFI-10674")
     @pytest.mark.tcp_download
     @pytest.mark.ow_sanity_lf
+    @pytest.mark.channel_11
     @allure.parent_suite("Throughput Test")
     @allure.suite("2.4 Ghz Band")
     @allure.title("Single client TCP Download wifi capacity 40Mhz Bw")

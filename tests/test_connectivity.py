@@ -29,8 +29,12 @@ class TestResources(object):
     @pytest.mark.test_cloud_controller
     @allure.testcase(name="Test Cloud Controller", url="")
     @allure.title("Cloud Controller Connectivity")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11615", name="11615")
+
     def test_controller_connectivity(self, get_target_object, get_testbed_details):
-        """Test case to verify cloud Controller Connectivity"""
+        """Test case to verify cloud Controller Connectivity
+           Unique marker: pytest -m "test_cloud_controller"
+        """
 
         login_response_json = get_target_object.controller_library_object.login_resp.json()
         response_code = get_target_object.controller_library_object.login_resp.status_code
@@ -153,8 +157,11 @@ class TestResources(object):
     @pytest.mark.test_access_points_connectivity
     @allure.testcase(name="Test Access Point Connectivity", url="")
     @allure.title("Cloud Access Point Connectivity")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11615", name="11615")
     def test_access_points_connectivity(self, get_target_object, get_testbed_details):
-        """Test case to verify Access Points Connectivity"""
+        """Test case to verify Access Points Connectivity
+        Unique marker: pytest -m "test_access_points_connectivity"
+        """
 
         # Logic to Get ubus call ucentral status from AP
         connected = True
@@ -187,9 +194,14 @@ class TestResources(object):
 
 
     @pytest.mark.traffic_generator_connectivity
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11617", name="11617")
+
     @allure.testcase(name="test_traffic_generator_connectivity", url="")
     def test_traffic_generator_connectivity(self, get_test_library):
-        """Test case to verify Traffic Generator Connectivity"""
+        """
+        Test case to verify Traffic Generator Connectivity
+        Unique marker: pytest -m "traffic_generator_connectivity"
+        """
         port_data = get_test_library.json_get(_req_url="/port?fields=alias,port+type,ip")['interfaces']
         logging.info("Port data: " + str(port_data))
         eth_table_data = {}
