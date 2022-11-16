@@ -72,7 +72,7 @@ class TestDynamicVlanOverSsid2GWpa3(object):
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
-                                                                  extra_securities=extra_secu,
+                                                                  extra_securities=extra_secu, key_mgmt="WPA-EAP-SHA256",
                                                                   vlan_id=vlan, mode=mode, band=band, eap=eap, 
                                                                   ttls_passwd=ttls_passwd, ieee80211w=0, 
                                                                   identity=identity, num_sta=1, dut_data=setup_configuration)

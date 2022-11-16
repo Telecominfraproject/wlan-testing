@@ -72,11 +72,11 @@ class TestDynamicVlanOverSsid5GWpa3(object):
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
-                                                                              extra_securities=extra_secu, vlan_id=vlan,
-                                                                              mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
-                                                                              identity=identity, num_sta=1,
-                                                                              dut_data=setup_configuration)
+                                                              extra_securities=extra_secu, vlan_id=vlan,
+                                                              mode=mode, band=band, eap=eap,
+                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                              identity=identity, num_sta=1, key_mgmt="WPA-EAP-SHA256",
+                                                              dut_data=setup_configuration)
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                                "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
