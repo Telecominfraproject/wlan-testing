@@ -73,11 +73,11 @@ class TestDynamicVlan2GWpa3(object):
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
         
 
-        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name,
-                                                                   security=security, extra_securities=extra_secu,
-                                                                   vlan_id=vlan, mode=mode, band=band, eap=eap,
-                                                                   ttls_passwd=ttls_passwd, ieee80211w=0, identity=identity,
-                                                                   num_sta=1, dut_data=setup_configuration)
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, key_mgmt="WPA-EAP-SHA256",
+                                                           security=security, extra_securities=extra_secu,
+                                                           vlan_id=vlan, mode=mode, band=band, eap=eap,
+                                                           ttls_passwd=ttls_passwd, ieee80211w=0, identity=identity,
+                                                           num_sta=1, dut_data=setup_configuration)
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
@@ -129,7 +129,7 @@ class TestDynamicVlan2GWpa3(object):
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
         get_test_library.add_vlan(vlan_ids=[vlan])
 
-        passes, result = get_test_library.enterprise_client_connectivity_test(ssid = ssid_name,
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid = ssid_name, key_mgmt="WPA-EAP-SHA256",
                                         security = security, extra_securities = extra_secu, vlan_id = vlan,
                                         mode = mode, band = band, eap = eap, ttls_passwd = ttls_passwd,
                                         ieee80211w = 0, identity = identity, num_sta = 1, dut_data = setup_configuration)
@@ -185,7 +185,7 @@ class TestDynamicVlan2GWpa3(object):
                                         extra_securities = extra_secu, vlan_id = vlan,
                                         mode = mode, band = band, eap = eap,
                                         ttls_passwd = ttls_passwd, ieee80211w = 0,
-                                        identity = identity, num_sta = 1,
+                                        identity = identity, num_sta = 1, key_mgmt="WPA-EAP-SHA256",
                                         dut_data = setup_configuration, cleanup=False)
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
@@ -252,7 +252,7 @@ class TestDynamicVlan2GWpa3(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                           extra_securities=extra_secu, vlan_id=vlan, mode=mode, band=band, eap=eap,
                                           d_vlan=True, ttls_passwd=ttls_passwd, ieee80211w=0, identity=identity,
-                                          num_sta=1, dut_data=setup_configuration)
+                                          num_sta=1, dut_data=setup_configuration, key_mgmt="WPA-EAP-SHA256")
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
@@ -358,11 +358,11 @@ class TestDynamicVlan2GWpa3(object):
         
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
-                                                                              extra_securities=extra_secu, vlan_id=vlan,
-                                                                              mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
-                                                                              identity=identity, num_sta=1,
-                                                                              dut_data=setup_configuration)
+                                                                      extra_securities=extra_secu, vlan_id=vlan,
+                                                                      mode=mode, band=band, eap=eap,
+                                                                      ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                                      identity=identity, num_sta=1, key_mgmt="WPA-EAP-SHA256",
+                                                                      dut_data=setup_configuration)
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                         "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
@@ -398,11 +398,11 @@ class TestDynamicVlan2GWpa3(object):
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
-                                                                              extra_securities=extra_secu, vlan_id=vlan,
-                                                                              mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
-                                                                              identity=identity, num_sta=1,
-                                                                              dut_data=setup_configuration)
+                                                                      extra_securities=extra_secu, vlan_id=vlan,
+                                                                      mode=mode, band=band, eap=eap,
+                                                                      ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                                      identity=identity, num_sta=1, key_mgmt="WPA-EAP-SHA256",
+                                                                      dut_data=setup_configuration)
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
@@ -458,11 +458,11 @@ class TestDynamicVlan2GWpa3(object):
 
         for m in range(2):
             passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
-                                                                              extra_securities=extra_secu, vlan_id=vlan,
-                                                                              mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
-                                                                              identity=identity, num_sta=1,
-                                                                              dut_data=setup_configuration)
+                                                                      extra_securities=extra_secu, vlan_id=vlan,
+                                                                      mode=mode, band=band, eap=eap,
+                                                                      ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                                      identity=identity, num_sta=1, key_mgmt="WPA-EAP-SHA256",
+                                                                      dut_data=setup_configuration)
             station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
             sta_ip.append(station_ip)
             if sta_ip[m] == "0.0.0.0":
@@ -511,7 +511,7 @@ class TestDynamicVlan2GWpa3(object):
 
         for user_id, user_pass, cnt in zip(dynamic_vlan_user, dynamic_vlan_pass, range(0, len(vlan))):
             passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, passkey="[BLANK]",
-                                security=security, extra_securities=extra_secu,
+                                security=security, extra_securities=extra_secu, key_mgmt="WPA-EAP-SHA256",
                                 mode=mode, band=band, vlan_id=vlan, dut_data=setup_configuration,
                                 num_sta=1, ttls_passwd=user_pass, ieee80211w=0,
                                 wep_key="NA", ca_cert="NA", eap=eap, identity=user_id)
