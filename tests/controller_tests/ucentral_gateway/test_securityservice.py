@@ -18,10 +18,13 @@ import allure
 class TestUcentralSecService(object):
 
     @allure.title("Get System Endpoints")
+    @allure.testcase(name="WIFI-3450",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-3450")
+    @pytest.mark.system_endpoints
     def test_secservice_system_endpoints(self, get_target_object):
         """
-            Test the system endpoints to verify list of services present
-            WIFI-3449
+            Test the system endpoints to verify list of services that are present
+            Unique marker:pytest -m "system endpoints"
         """
         resp = get_target_object.controller_library_object.request("sec", "systemEndpoints", "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
@@ -55,10 +58,13 @@ class TestUcentralSecService(object):
         assert (num_services == 2) and (uri_present == 2) and (authtype_present == 2)
 
     @allure.title("Get Security Version")
+    @allure.testcase(name="WIFI-3451",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-3451")
+    @pytest.mark.security_versions
     def test_secservice_get_version(self, get_target_object):
         """
             Test the system endpoint to verify the version of the service
-            WIFI-3450
+            Unique marker:pytest -m "security_version"
         """
 
         params = {'command': 'info'}

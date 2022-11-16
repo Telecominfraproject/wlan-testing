@@ -76,8 +76,8 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa_5g(self, get_test_library, get_dut_logs_per_test_case,
                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                    Multi VLAN Test with open encryption 2.4 GHz Band
-                    pytest -m "multi_vlan_tests and open and fiveg"
+                    To verify that a client operating with WPA security will connect or not using Multi VLAN's
+                    pytest -m "multi_vlan and wpa and fiveg and ow_sanity_lf"
         """
         profile_data={"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 125}
         ssid_name=profile_data["ssid_name"]
@@ -103,8 +103,8 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa2_personal_5g(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                    Multi VLAN Test with open encryption 2.4 GHz Band
-                    pytest -m "multi_vlan_tests and open and fiveg"
+                    To verify that a client operating with WPA2(personal) security will connect or not using Multi VLANS
+                    pytest -m "multi_vlan and wpa2_personal and fiveg and ow_sanity_lf"
         """
         profile_data={"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
         ssid_name=profile_data["ssid_name"]
@@ -150,19 +150,15 @@ class TestMultiVlan(object):
     @pytest.mark.fiveg
     @pytest.mark.disable_vlan_fiveg  # wifi-2174
     @pytest.mark.ow_sanity_lf
-    @allure.testcase(name="test_disable_vlan_wpa2_ssid_5g",
+    @allure.testcase(name="WIFI-2174",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-2174")
     @allure.title("Test Disabled VLAN with WPA2 Security Mode")
     def test_disable_vlan_wpa2_5g(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Client connectivity using vlan, wpa2, fiveg
-            pytest -m disable_vlan_fiveg
+                    To verify that a client operating with WPA2 security will connect or not by disabling the VLAN
+                    pytest -m "disable_vlan_fiveg and wpa2_personal and fiveg and ow_sanity_lf"
         """
-        """
-                            Multi VLAN Test with open encryption 2.4 GHz Band
-                            pytest -m "multi_vlan_tests and open and fiveg"
-                """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
