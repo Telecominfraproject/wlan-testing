@@ -36,6 +36,7 @@ class TestDataplaneThroughputVLAN(object):
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
+    @pytest.mark.open
     @pytest.mark.twog
     def test_tcp_upd_open_vlan_2g_band(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, client_type,
