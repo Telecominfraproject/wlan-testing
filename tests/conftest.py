@@ -7,6 +7,7 @@ import random
 import string
 import sys
 import re
+import logging
 
 import allure
 
@@ -875,6 +876,7 @@ def fixtures_ver(request, get_configuration, run_lf, cc_1):
         obj = Fixtures_1x(configuration=get_configuration)
     if request.config.getoption("cc.1"):
         print(" fixture version cc.1")
+        logging.info(" fixture version cc.1")
         obj = Fixtures_3x(configuration=get_configuration, run_lf=run_lf, cc_1=cc_1)
     yield obj
 
@@ -962,7 +964,8 @@ def get_controller_logs(get_configuration, ):
 def get_ap_config_slots(get_configuration):
     obj = CController(controller_data=get_configuration['controller'], ap_data=get_configuration['access_point'])
     slot = obj.show_ap_config_slots()
-    # print(slot)
+    print(slot)
+    # logging.info(str(slot))
     allure.attach(name="ap_slots", body=str(slot))
 
 
@@ -1040,3 +1043,7 @@ def enable_all_bands(get_configuration):
     obj.no_ap_5ghz_shutdown()
     obj.no_ap_2ghz_shutdown()
     obj.no_ap_6ghz_shutdown()
+
+@pytest.fixture(scope="function")
+def logger_start():
+    logging.basicConfig(filename='roam.log', filemode='w', level=logging.INFO, force=True)
