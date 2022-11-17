@@ -1,3 +1,4 @@
+import logging
 import allure
 import pytest
 import os
@@ -35,11 +36,12 @@ class Fixtures_3x:
         self.cc_1 = cc_1
         # print(self.lab_info)
         print("cc.1")
+        logging.info("cc.1")
         self.controller_obj = ""
 
 
     def setup_profiles(self, request, param, run_lf, instantiate_profile, get_configuration, get_markers, lf_tools, lf_reports):
-        table1= []
+        table1 = []
         instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'],
                                                   timeout="10", ssid_data=None,
                                                   ap_data=self.lab_info['access_point'], type=0)
@@ -50,17 +52,20 @@ class Fixtures_3x:
         if run_lf:
             return 0
         print("check params")
+        logging.info("check params")
         # gives parameter value of setup_params_general
         parameter = dict(param)
         print("parameter", parameter)
+        logging.info("parameter " + str(parameter))
 
         test_cases = {}
-        profile_data= {}
+        profile_data = {}
         var = ""
         list_key = list(parameter.keys())
 
         if parameter['mode'] not in ["BRIDGE", "NAT", "VLAN"]:
             print("Invalid Mode: ", parameter['mode'])
+            logging.info("Invalid Mode: " + str(parameter['mode']))
             return test_cases
         profile_data["ssid"] = {}
         lf_dut_data = []
@@ -72,6 +77,7 @@ class Fixtures_3x:
 
         # profile data will give ssid data like {'ssid': {'wpa2_personal': [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something'}], 'wpa3_personal': [{'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['6G'], 'security_key': 'something'}]}}
         print("profile data", profile_data)
+        logging.info("profile data " + str(profile_data))
 
 
         # create wlan
@@ -92,12 +98,15 @@ class Fixtures_3x:
                             test_cases["wpa_2g"] = True
                         except Exception as e:
                             print(e)
+                            logging.info(str(e))
                             test_cases["wpa2_personal"] = False
             if mode == "wpa3_personal":
                 for j in profile_data["ssid"][mode]:
                     if mode in get_markers.keys() and get_markers[mode]:
-                        print( profile_data["ssid"][mode])
+                        print(profile_data["ssid"][mode])
+                        logging.info(str(profile_data["ssid"][mode]))
                         print(j)
+                        logging.info(str(j))
                         try:
                             if j["appliedRadios"].__contains__("2G"):
                                 lf_dut_data.append(j)
@@ -111,20 +120,26 @@ class Fixtures_3x:
                             test_cases["wpa_2g"] = True
                         except Exception as e:
                             print(e)
+                            logging.info(str(e))
                             test_cases["wpa3_personal"] = False
 
         # lf dut data [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something', 'security': 'wpa2'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['6G'], 'security_key': 'something', 'security': 'wpa3'}]
         print("lf dut data", lf_dut_data)
+        logging.info("lf dut data " + str(lf_dut_data))
         allure.attach(name="wlan data passing", body=str(parameter))
         ap = instantiate_profile_obj.show_ap_summary()
         print("show ap sum", ap)
+        logging.info("show ap sum " + str(ap))
         ap_status = instantiate_profile_obj.show_ap_status_cc()
         print("show ap status", ap_status)
+        logging.info("show ap status " + str(ap_status))
         allure.attach(name="show ap summary", body=str(ap))
 
         print("create 3 wlans on slot1,2 and 3")
+        logging.info("create 3 wlans on slot1,2 and 3")
         for ap_name in range(len(self.lab_info['access_point'])):
             print("ap ", ap_name)
+            logging.info("ap " + str(ap_name))
             # instantiate controller object
 
 
@@ -132,13 +147,16 @@ class Fixtures_3x:
                                                           timeout="10", ssid_data=lf_dut_data,
                                                           ap_data=self.lab_info['access_point'], type=ap_name)
             print("check ap admin state")
+            logging.info("check ap admin state")
             ap_state = instantiate_profile_obj.check_ap_admin_status(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
             print("ap state", ap_state)
+            logging.info("ap state" + str(ap_state))
             if ap_state == "Disabled":
                 allure.attach(body="Ap " + str(self.lab_info['access_point'][ap_name]["ap_name"]) + " is in down state", name="AP state")
                 pytest.fail("Ap " + str(self.lab_info['access_point'][ap_name]["ap_name"]) + " is in down state")
                 # pytest.exit("Ap " + str(ap_name) + "is in down state")
             print("set channel and bandwidth")
+            logging.info("set channel and bandwidth")
             instantiate_profile_obj.set_channel(band="6g", channel=self.lab_info['access_point'][ap_name]["channel_6g"],
                                                 slot=self.lab_info['access_point'][ap_name]["6g_slot"])
             allure.attach(name="set 6g channel on " + str(ap_name + 1) + " ap ", body=str(self.lab_info['access_point'][ap_name]["channel_6g"]))
@@ -149,6 +167,7 @@ class Fixtures_3x:
                                                 slot=self.lab_info['access_point'][ap_name]["2g_slot"])
             allure.attach(name="set 2g channel on " + str(ap_name + 1) + " ap ", body=str(self.lab_info['access_point'][ap_name]["channel_2g"]))
             print(self.lab_info['access_point'][ap_name]["ap_name"])
+            logging.info(str(self.lab_info['access_point'][ap_name]["ap_name"]))
             check_admin = instantiate_profile_obj.check_admin_state_2ghz(ap_name=self.lab_info['access_point'][ap_name]["ap_name"])
             allure.attach(name="2ghz ap admin state for " + str(ap_name + 1) + " ap", body=str(check_admin))
 
@@ -180,6 +199,7 @@ class Fixtures_3x:
                                                                      key=lf_dut_data[0]['security_key'])
                         else:
                             print(lf_dut_data[0]['ssid_name'])
+                            logging.info(str(lf_dut_data[0]['ssid_name']))
                             instantiate_profile_obj.get_ssids()
                             instantiate_profile_obj.show_shutdown_2ghz_ap()
                             instantiate_profile_obj.get_ssids()
@@ -212,8 +232,10 @@ class Fixtures_3x:
                         instantiate_profile_obj.line_console()
                         id_slot = instantiate_profile_obj.get_slot_id_wlan()
                         print(id_slot)
+                        logging.info(str(id_slot))
                         ssid_name = instantiate_profile_obj.get_ssid_name_on_id()
                         print(ssid_name)
+                        logging.info(str(ssid_name))
                         if id_slot[1] == "2":
                             # if ssid present on slot 2 delete it and create new
                             instantiate_profile_obj.show_shutdown_5ghz_ap()
@@ -227,6 +249,7 @@ class Fixtures_3x:
                                                                      key=lf_dut_data[1]['security_key'])
                         else:
                             print(lf_dut_data[1]['ssid_name'])
+                            logging.info(str(lf_dut_data[1]['ssid_name']))
                             instantiate_profile_obj.get_ssids()
                             instantiate_profile_obj.show_shutdown_5ghz_ap()
                             instantiate_profile_obj.get_ssids()
@@ -257,8 +280,10 @@ class Fixtures_3x:
                         instantiate_profile_obj.line_console()
                         id_slot = instantiate_profile_obj.get_slot_id_wlan()
                         print(id_slot)
+                        logging.info(str(id_slot))
                         ssid_name = instantiate_profile_obj.get_ssid_name_on_id()
                         print(ssid_name)
+                        logging.info(str(ssid_name))
                         if id_slot[2] == "3":
                             instantiate_profile_obj.show_shutdown_6ghz_ap()
                             # instantiate_profile_obj.show_shutdown_5ghz_ap()
@@ -307,8 +332,10 @@ class Fixtures_3x:
         allure.attach(name="wlan summary after creating test wlan", body=str(sumy))
         if "roam_type" in list_key:
             print("after creating wlan's assign wlan to respective tag policy")
+            logging.info("after creating wlan's assign wlan to respective tag policy")
             for ap_name in range(len(self.lab_info['access_point'])):
                 print("ap ", ap_name)
+                logging.info("ap " + str(ap_name))
                 instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'], timeout="10",
                                                               ssid_data=lf_dut_data, ap_data=self.lab_info['access_point'],
                                                               type=ap_name)
@@ -340,6 +367,7 @@ class Fixtures_3x:
 
         for ap_name in range(len(self.lab_info['access_point'])):
             print("ap ", ap_name)
+            logging.info("ap " + str(ap_name))
             # instantiate controller object
             instantiate_profile_obj = instantiate_profile(controller_data=get_configuration['controller'], timeout="10",
                                                       ssid_data=lf_dut_data, ap_data=self.lab_info['access_point'], type=ap_name)
@@ -349,19 +377,23 @@ class Fixtures_3x:
             allure.attach(name="wlan 5g bssid info", body=str(bss5_info))
             ap_mode = self.lab_info['access_point'][ap_name]["mode"]
             print("ap_mode", ap_mode)
+            logging.info("ap_mode" + str(ap_mode))
             mode = None
             if ap_mode == "wifi6e-dual":
                 print("yes")
+                logging.info("yes")
                 mode = True
             bss6_info = instantiate_profile_obj.get_ap_bssid_6g(dual=mode)
             allure.attach(name="wlan 6g bssid info", body=str(bss6_info))
 
             bssid_2g = instantiate_profile_obj.cal_bssid_2g()
             print("bssid 2g", bssid_2g)
+            logging.info("bssid 2g" + str(bssid_2g))
             lst_2g = bssid_list_2g.append(bssid_2g)
 
             bssid_5g = instantiate_profile_obj.cal_bssid_5g()
             print("bssid 5g ", bssid_5g)
+            logging.info("bssid 5g " + str(bssid_5g))
             lst_5g = bssid_list_5g.append(bssid_5g)
             # print(bssid_5g)
             # print(bssid_list_2g)
@@ -387,10 +419,12 @@ class Fixtures_3x:
 
             except Exception as e:
                 print(e)
+                logging.info(str(e))
                 pass
             # print("nikita",ssid_data)
             ssid_data_list.append(ssid_data)
         print("final ssid data", ssid_data_list)
+        logging.info("final ssid data " + str(ssid_data_list))
         # ssid_data = [[['ssid_idx=0 ssid=ssid_wpa2_2g security=WPA2 password=something bssid=68:7d:b4:5f:5c:30'],
         #               ['ssid_idx=1 ssid=ssid_wpa2_5g security=WPA2 password=something bssid=68:7d:b4:5f:5c:3e']],
         #              [['ssid_idx=0 ssid=ssid_wpa2_2g security=WPA2 password=something bssid=14:16:9d:53:58:c0'],
