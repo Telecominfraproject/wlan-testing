@@ -18,7 +18,9 @@ class CController:
         self.ap_data = ap_data
         self.type = type
         print("type", type)
+        logging.info("type, " + str(type))
         print(self.ap_data)
+        logging.info(str(self.ap_data))
         self.ip = self.controller_data["ip"]
         self.user = self.controller_data["username"]
         self.password = self.controller_data["password"]
@@ -35,19 +37,24 @@ class CController:
             self.ap_name = self.ap_data[0]['ap_name']
         if type == 0:
             print("yes")
+            logging.info("yes")
             self.ap_name = self.ap_data[0]['ap_name']
             print(self.ap_data[0]['ap_name'])
+            logging.info(str(self.ap_data[0]['ap_name']))
         if type == 1:
             self.ap_name = self.ap_data[1]['ap_name']
             print(self.ap_data[1]['ap_name'])
+            logging.info(str(self.ap_data[1]['ap_name']))
 
         print("ap_name ", self.ap_name)
+        logging.info("ap_name, " + str(self.ap_name))
         self.band = self.controller_data["band"][0]
 
         self.scheme = self.controller_data["scheme"]
         self.timeout = timeout
         self.ssid_data= ssid_data
         print("ssid data", self.ssid_data)
+        logging.info("ssid data, " + str(self.ssid_data))
 
         series = importlib.import_module("cc_module_9800_3504")
         self.cc = series.create_controller_series_object(
@@ -70,18 +77,21 @@ class CController:
         else:
             for i in range(len(ssid_data)):
                 print(i)
+                logging.info(str(i))
                 if ssid_data[i]["appliedRadios"] == ["2G"]:
                     self.cc.wlan = ssid_data[i]['ssid_name']
                     self.cc.wlanID = "1"
                     self.cc.wlanSSID = ssid_data[i]['ssid_name']
                     self.cc.security_key = ssid_data[i]['security_key']
                     print("ss", self.cc.wlan)
+                    logging.info("ss, " + str(self.cc.wlan))
                 elif ssid_data[i]["appliedRadios"] == ["5G"]:
                     self.cc.wlan = ssid_data[i]['ssid_name']
                     self.cc.wlanID = "2"  # hard coded
                     self.cc.wlanSSID = ssid_data[i]['ssid_name']
                     self.cc.security_key = ssid_data[i]['security_key']
                     print("ss", self.cc.wlan)
+                    logging.info("ss, " + str(self.cc.wlan))
                 elif ssid_data[i]["appliedRadios"] == ["6G"]:
                     self.cc.wlan = ssid_data[i]['ssid_name']
                     self.cc.wlanID = "3"
@@ -108,6 +118,7 @@ class CController:
     def no_logging_console(self):
         log = self.cc.no_logging_console()
         print(log)
+        logging.info(str(log))
         return log
 
     def line_console(self):
@@ -118,6 +129,7 @@ class CController:
         self.cc.ap_band_slot = "2"
         fiveghz = self.cc.show_ap_dot11_5gz_shutdown()
         print(fiveghz)
+        logging.info(str(fiveghz))
         return fiveghz
 
     def show_shutdown_2ghz_ap(self):
@@ -128,67 +140,81 @@ class CController:
         self.cc.ap_band_slot = "3"
         sixg = self.cc.show_ap_dot11_6gz_shutdown()
         print(sixg)
+        logging.info(str(sixg))
         return sixg
 
 
     def disable_wlan(self, wlan):
         self.cc.wlan = wlan
         print(wlan)
+        logging.info(str(wlan))
         print("disable wlan")
+        logging.info("disable wlan")
         print("wlan", wlan)
+        logging.info("wlan, " + str(wlan))
         wlan1 = self.cc.wlan_shutdown()
         return wlan1
 
     def ap_5ghz_shutdown(self):
         print("shutdown 5ghz network")
+        logging.info("shutdown 5ghz network")
         shut = self.cc.ap_dot11_5ghz_shutdown()
         return shut
 
     def ap_2ghz_shutdown(self):
         print("shutdown 2ghz network")
+        logging.info("shutdown 2ghz network")
         shut = self.cc.ap_dot11_24ghz_shutdown()
         return shut
 
     def ap_6ghz_shutdown(self):
         print("shut down 6ghz network")
+        logging.info("shut down 6ghz network")
         shut = self.cc.ap_dot11_6ghz_shutdown()
         return shut
 
     def no_ap_5ghz_shutdown(self):
         print("no shutdown 5ghz network")
+        logging.info("no shutdown 5ghz network")
         shut = self.cc.config_no_ap_dot11_5ghz_shutdown()
         return shut
 
     def no_ap_2ghz_shutdown(self):
         print("shutdown 2ghz network")
+        logging.info("shutdown 2ghz network")
         shut = self.cc.config_no_ap_dot11_24ghz_shutdown()
         return shut
 
     def no_ap_6ghz_shutdown(self):
         print("shut down 6ghz network")
+        logging.info("shut down 6ghz network")
         shut = self.cc.config_no_ap_dot11_6ghz_shutdown
         return shut
 
     def enable_all_bands(self):
         print("enable all bands")
+        logging.info("enable all bands")
         self.no_ap_5ghz_shutdown()
         self.no_ap_2ghz_shutdown()
         self.no_ap_6ghz_shutdown()
 
     def get_ssids(self):
         print("show ssid's present")
+        logging.info("show ssid's present")
         wlan_summary = self.cc.show_wlan_summary()
         print(wlan_summary)
         return wlan_summary
 
     def delete_wlan(self, ssid):
         print("delete wlan")
+        logging.info("delete wlan")
         self.cc.wlan = ssid
         wlan = self.cc.config_no_wlan()
         return wlan
 
     def create_wlan_wpa2(self,id, wlan, wlanssid, key):
         print("create a new wpa2 wlan")
+        logging.info("create a new wpa2 wlan")
         self.cc.wlan = wlan
         self.cc.wlanID = id
         self.cc.wlanSSID = wlanssid
@@ -266,12 +292,16 @@ class CController:
     def check_ap_admin_status(self, ap_name=None):
         summ = self.show_ap_status_cc()
         print(sum)
+        logging.info(sum)
         ele_list = [y for y in (x.strip() for x in summ.splitlines()) if y]
         print("ele_list", ele_list)
+        logging.info("ele_list, " + str(ele_list))
         indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
         print("indices", indices)
+        logging.info("indices, " + str(indices))
         y = ele_list[indices[-1]]
         print(y)
+        logging.info(str(y))
         list_ = []
         list_.append(y)
         z = list_[0].split(" ")
@@ -281,6 +311,7 @@ class CController:
             state = "Disabled"
         if "Enabled" in z:
             print("ap is up")
+            logging.info("ap is up")
             state = "Enabled"
         return state
 
@@ -289,10 +320,13 @@ class CController:
     def check_admin_state_2ghz(self, ap_name):
         summ = self.show_2ghz_summary()
         print(sum)
+        logging.info(str(sum))
         ele_list = [y for y in (x.strip() for x in summ.splitlines()) if y]
         print("ele_list", ele_list)
+        logging.info("ele_list, " + str(ele_list))
         indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
         print("indices", indices)
+        logging.info("indices, " + str(indices))
         y = ele_list[indices[3]]
         list_ = []
         list_.append(y)
@@ -300,19 +334,24 @@ class CController:
         state = None
         if "Down" in z:
             print("yes")
+            logging.info("yes")
             state = "Down"
         if "Up" in z:
             print("ap is up")
+            logging.info("ap is up")
             state = "Up"
         return state
 
     def check_admin_state_5ghz(self, ap_name):
         summ = self.show_5ghz_summary()
         print(summ)
+        logging.info(str(sum))
         ele_list = [y for y in (x.strip() for x in summ.splitlines()) if y]
         print(ele_list)
+        print("ele_list", ele_list)
         indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
         print(indices)
+        logging.info("indices, " + str(indices))
         y = ele_list[indices[3]]
         list_ = []
         list_.append(y)
@@ -329,10 +368,13 @@ class CController:
     def check_admin_state_6ghz(self, ap_name):
         summ = self.show_6ghz_summary()
         print(sum)
+        logging.info(str(sum))
         ele_list = [y for y in (x.strip() for x in summ.splitlines()) if y]
         print("ele_list", ele_list)
+        logging.info("ele_list, " + str(ele_list))
         indices = [i for i, s in enumerate(ele_list) if str(ap_name) in s]
         print("indices", indices)
+        logging.info("indices, " + str(indices))
         # print(ele_list[])
         y = ele_list[indices[3]]
         list_ = []
@@ -341,9 +383,11 @@ class CController:
         state = None
         if "Down" in z:
             print("yes")
+            logging.info("yes")
             state = "Down"
         if "Up" in z:
             print("ap is up")
+            logging.info("ap is up")
             state = "Up"
         return state
 
@@ -358,6 +402,7 @@ class CController:
         indices = [i for i, s in enumerate(ele_list) if 'Number of WLANs' in s]
         number = ele_list[22][17:18].strip()
         print(number, "ssid's are present")
+        logging.info(str(number) + ", ssid's are present")
         return number
         # do some formatting here and return actual data
 
@@ -366,6 +411,7 @@ class CController:
     def calculate_data(self, place):
         wlan_number = self.get_number_of_wlan_present()
         print(wlan_number)
+        logging.info(str(wlan_number))
         for number in range(len(wlan_number)):
             pass
         wlan_sumry = self.get_ssids()
@@ -429,6 +475,7 @@ class CController:
 
     def get_ap_bssid_6g(self, dual):
         print("dual value", dual)
+        logging.info("dual value, " + str(dual))
         if dual:
             bssid_6g = self.cc.show_ap_bssid_dual_band_6ghz()
         else:
@@ -438,6 +485,7 @@ class CController:
     def cal_bssid_2g(self):
         wlan_sumry = self.get_ap_bssid_2g()
         print("wlan_sumry", wlan_sumry)
+        logging.info("wlan_sumry, " + str(wlan_sumry))
         ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
         indices = [i for i, s in enumerate(ele_list) if 'BSSID' in s]
         data = indices[1]
@@ -476,6 +524,7 @@ class CController:
                     wlan_bssid.append(id_list2[1])
                 else:
                     print("no wlan on slot 1 present")
+                    logging.info("no wlan on slot 1 present")
         y = wlan_bssid[0].replace(".", '')
         bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
         return bssid
@@ -520,6 +569,7 @@ class CController:
                     wlan_bssid.append(id_list3[1])
                 else:
                     print("no wlan on slot 2 present")
+                    logging.info("no wlan on slot 2 present")
         y = wlan_bssid[0].replace(".", '')
         bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
         return bssid
@@ -527,6 +577,7 @@ class CController:
     def cal_bssid_6g(self, dual=None):
         wlan_sumry = self.get_ap_bssid_6g(dual=dual)
         print(wlan_sumry)
+        logging.info(str(wlan_sumry))
         ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
         indices = [i for i, s in enumerate(ele_list) if 'BSSID' in s]
         data = indices[1]
@@ -554,6 +605,7 @@ class CController:
                 print(id_list)
                 if id_list[0] == "3":
                     print("yes")
+                    logging.info("yes")
                     wlan_id_list.append(id_list)
                     wlan_bssid.append(id_list[1])
                 elif id_list1[0] == "3":
@@ -567,6 +619,7 @@ class CController:
                     wlan_bssid.append(id_list3[1])
                 else:
                     print("no wlan on slot 3 present")
+                    logging.info("no wlan on slot 3 present")
         y = wlan_bssid[0].replace(".", '')
         bssid = ':'.join(a + b for a, b in zip(y[::2], y[1::2]))
         return bssid
@@ -597,11 +650,13 @@ class CController:
     def show_ap_wlan_summary(self):
         w_sum = self.cc.show_ap_wlan_summary()
         print(w_sum)
+        logging.info(str(w_sum))
         return w_sum
 
     def show_11r_log(self):
         show = self.cc.show_11r_logs()
         print(show)
+        logging.info(str(show))
         return show
 
     def enable_ft_psk(self, ssid, key):
@@ -616,6 +671,7 @@ class CController:
         self.cc.security_key = key
         en = self.cc.enable_ftotd_psk_cc()
         print(en)
+        logging.info(str(en))
         return en
 
     def enable_ft_sae(self, ssid, key):
@@ -657,6 +713,7 @@ class CController:
         self.cc.wlan = ssid
         en = self.cc.enable_ft_dot1x_wpa3_cc()
         print(en)
+        logging.info(str(en))
         return en
 
     def enable_ft_dot1x_sha256_wpa3(self, ssid, radius):
@@ -664,6 +721,7 @@ class CController:
         self.cc.value = radius
         en = self.cc.enable_ft_dot1x_sha256_wpa3_cc(radius=radius)
         print(en)
+        logging.info(str(en))
         return en
 
     def show_wireless_client_sum(self):
@@ -673,8 +731,10 @@ class CController:
     def get_mc_address(self):
         wlan_sumry = self.show_wireless_client_sum()
         print(wlan_sumry)
+        logging.info(wlan_sumry)
         ele_list = [y for y in (x.strip() for x in wlan_sumry.splitlines()) if y]
         print(ele_list)
+        logging.info(str(ele_list))
         indices = [i for i, s in enumerate(ele_list) if 'MAC Address' in s]
         data = indices[1]
         data2 = data + 1
@@ -683,10 +743,12 @@ class CController:
         # ele_list[data]
         y = ele_list[data3]
         print(y)
+        logging.info(str(y))
         list_ = []
         list_.append(y)
         z = list_[0].split(" ")
         print(z[0])
+        logging.info(str(z[0]))
         return z[0]
 
     def show_wireless_client_detail(self):
