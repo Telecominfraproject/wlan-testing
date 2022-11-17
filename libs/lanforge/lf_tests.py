@@ -9,6 +9,7 @@ import time
 import datetime
 from datetime import datetime
 import threading
+import logging
 
 import allure
 import pytest
@@ -1500,8 +1501,10 @@ class RunTest:
             c2_bssid = c2_6g_bssid
 
         print("bssid of c1 ", c1_bssid)
+        logging.info("bssid of c1 " + str(c1_bssid))
         allure.attach(name="bssid of ap1", body=c1_bssid)
         print("bssid of c2", c2_bssid)
+        logging.info("bssid of c2" + str(c2_bssid))
         allure.attach(name="bssid of ap2", body=c2_bssid)
         allure.attach(name="11r logs before roam test", body=str(log))
         fiveg_radio, sixg_radio, twog_radio, sniff_radio = None, None, None, None
@@ -1562,19 +1565,21 @@ class RunTest:
                        )
         x = os.getcwd()
         print(x)
+        logging.info(str(x))
         file = obj.generate_csv()
         kernel, message = obj.run(file_n=file)
         allure.attach(name="message", body=str(message))
         # file = ["test_client_0.csv"]
         report_dir_name = obj.generate_report(csv_list=file, kernel_lst=kernel, current_path=str(x) + "/tests")
         print(report_dir_name)
+        logging.info(str(report_dir_name))
         lf_csv_obj = lf_csv()
         for i, y in zip(file, range(len(file))):
             data = lf_csv_obj.read_csv_row(file_name=str(x) + "/" + str(report_dir_name) + "/csv_data/" + str(i))
             tab = lf_reports.table2(table=data)
             allure.attach(name="client " + str(y) + " table", body=str(tab))
         # report_dir_name = "2022-04-30-18-51-07_Hard Roam Test"
-        relevant_path =  report_dir_name + "/"
+        relevant_path = report_dir_name + "/"
         entries = os.listdir(report_dir_name + "/")
         pdf = None
         for i in entries:
@@ -1604,8 +1609,11 @@ class RunTest:
             # obj1.pull_file()
             allure.attach.file(source=relevant_path + "/wpa_supplicant_log_" + supplicant_radio + ".txt",
                                name="supplicant_log")
+            return  report_dir_name
         except Exception as e:
             print(e)
+            logging.warning(str(e))
+            return e
 
     def set_radio_country_channel(self,_radio="wiphy0",_channel=0,_country_num=840,): # 840 - US
         data = {
