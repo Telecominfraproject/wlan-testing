@@ -190,7 +190,15 @@ wpa3_enterprise_mixed: Use this marker to run wpa3_enterprise_mixed Encryption t
 # install allure command
 npm install -g allure-commandline --save-dev
 ```
+<<<<<<< HEAD
 ### [Test Plans and Markers](TEST_PLANS.md):bookmark_tabs:
+=======
+
+# Docker Setup Instructions
+
+This repository support building Docker image from bundled [Dockerfile](./docker/Dockerfile). If you want to use it for testing, please refer to the [related directory for details](./docker).
+
+>>>>>>> [WIFI-11619] Upd: Docker instructions update (#739)
 ### Executing and Contributing new test cases
 
 Follow instructions provided [here](./tests/README.md)  to understand the Testing Framework, and How to run and 
