@@ -2,6 +2,7 @@ import re
 import sys
 import os
 import importlib
+import logging
 
 import pytest
 
@@ -44,12 +45,15 @@ LOGGER.addHandler(stdout_handler)
 class ChamberView:
     def __init__(self, lanforge_data=None, access_point_data=None, run_lf=False, debug=True, testbed=None,  cc_1=False, ap_version=None):
         print("lanforge data", lanforge_data)
+        logging.info("lanforge data " + str(lanforge_data))
         print("access point data", access_point_data)
+        logging.info("access point data " + str(access_point_data))
         self.access_point_data = access_point_data
         self.access_point_data = access_point_data
         self.run_lf = run_lf
         self.cc_1 = cc_1
         print("testbed", testbed)
+        logging.info("testbed " + str(testbed))
         if "type" in lanforge_data.keys():
             if lanforge_data["type"] == "Non-mesh":
                 self.lanforge_ip = lanforge_data["ip"]
@@ -83,11 +87,13 @@ class ChamberView:
                 self.delete_old_scenario = True
                 if access_point_data:
                     print(len(access_point_data))
-
+                    logging.info(str(len(access_point_data)))
                     for ap in range(len(access_point_data)):
                         print(access_point_data[ap])
+                        logging.info(str(access_point_data[ap]))
                         self.dut_name = access_point_data[ap]["model"]
                         print(self.dut_name)
+                        logging.info(str(self.dut_name))
                         self.ap_model = access_point_data[ap]["model"]
                         self.version = access_point_data[ap]["version"].split("/")[-1]
                         self.serial = access_point_data[ap]["serial"]
@@ -95,6 +101,7 @@ class ChamberView:
                         if self.run_lf:
                             self.ssid_data = access_point_data[ap]['ssid']
                             print(self.ssid_data)
+                            logging.info(str(self.ssid_data))
 
                         self.CreateDut = DUT(lfmgr=self.lanforge_ip,
                                              port=self.lanforge_port,
@@ -123,6 +130,7 @@ class ChamberView:
                                                self.ssid_data["5g-bssid"].lower().replace(" ", "")]
                             if "6g-ssid" in self.ssid_data.keys():
                                 print("yes")
+                                logging.info("yes")
                                 self.sixg_ssid = ["ssid_idx=2 ssid=" +
                                                   self.ssid_data["6g-ssid"] +
                                                   " security=" +
