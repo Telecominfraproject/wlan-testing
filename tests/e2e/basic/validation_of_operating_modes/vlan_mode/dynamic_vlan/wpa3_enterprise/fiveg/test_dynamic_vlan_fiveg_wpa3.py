@@ -191,40 +191,36 @@ class TestDynamicVlan5GWpa3(object):
         eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                    "/" + port_resources[2])["interface"]["ip"]
 
-        count = 0
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                              "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
         eth_rad_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
                                             "/" + port_resources[2] + "." + str(vlan[1]))["interface"]["ip"]
         eth_vlan_ip_1 = eth_rad_vlan_ip.split('.')
-        sta_ip_1 = station_ip.split('.')
-        if sta_ip_1[0] == "0":
-            assert False, result
-        elif eth_vlan_ip_1[0] == "0":
-            print("radius configured vlan didnt recieved ip")
-            assert False, result
-        for k in range(0, 2):
-            for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
+        sta_ip = []
+        sta_ip.append(station_ip.split('.'))
+        for u in get_test_library.json_get("/port/?fields=port+type,alias")['interfaces']:
+            if list(u.values())[0]['port type'] in ['WIFI-STA']:
+                station_name = list(u.keys())[0]
+        sta = station_name.split('.')
+        get_test_library.local_realm.admin_up(sta)
+        time.sleep(10)
+        for i in range(5):
+            x = get_test_library.json_get("/port/" + sta[0] + "/" + sta[1] + "/" + sta[2])["interface"]["ip"]
+            if x == "0.0.0.0":
+                time.sleep(10)
+            else:
+                break
+        sta_ip.append(x.split('.'))
+        for k in sta_ip:
+            for i, j in zip(k[0:2], eth_vlan_ip_1[0:2]):
                 if i != j:
+                    val = False
                     break
                 else:
-                    if count == 2:
-                        break
-                    continue
-            count = count + 1
-            # time.sleep(30)
-            for u in get_test_library.json_get("/port/?fields=port+type,alias")['interfaces']:
-                if list(u.values())[0]['port type'] in ['WIFI-STA']:
-                    station_name = list(u.keys())[0]
-            get_test_library.local_realm.admin_up([station_name])
-
-            sta_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                       "/" + station_name)["interface"]["ip"]
-            sta_ip_1 = sta_ip.split('.')
-
-        if count == 2:
+                    val = True
+        if val:
             assert True, result
-        elif count == 0:
+        else:
             assert False, result
 
     @pytest.mark.absenceofvlanid
