@@ -43,7 +43,7 @@ class TestNATModeEnterpriseTLSSuiteA(object):
     @pytest.mark.twog
     @allure.title("Test for wpa enterprise 2.4 GHz")
     def test_tls_wpa_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                   get_test_device_logs,
+                                   get_test_device_logs, execution_number,
                                    get_target_object,
                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -54,20 +54,24 @@ class TestNATModeEnterpriseTLSSuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "twog"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -76,7 +80,7 @@ class TestNATModeEnterpriseTLSSuiteA(object):
     @pytest.mark.fiveg
     @allure.title("Test for wpa enterprise 5 GHz")
     def test_tls_wpa_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                   get_test_device_logs,
+                                   get_test_device_logs, execution_number,
                                    get_target_object,
                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -87,20 +91,24 @@ class TestNATModeEnterpriseTLSSuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "fiveg"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -109,7 +117,7 @@ class TestNATModeEnterpriseTLSSuiteA(object):
     @pytest.mark.twog
     @allure.title("Test for wpa2 enterprise 2.4 GHz")
     def test_tls_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                    get_test_device_logs,
+                                    get_test_device_logs, execution_number,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -119,19 +127,23 @@ class TestNATModeEnterpriseTLSSuiteA(object):
         profile_data = {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa2"
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "twog"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -140,7 +152,7 @@ class TestNATModeEnterpriseTLSSuiteA(object):
     @pytest.mark.fiveg
     @allure.title("Test for wpa2 enterprise 5 GHz")
     def test_tls_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                    get_test_device_logs,
+                                    get_test_device_logs, execution_number,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -150,19 +162,23 @@ class TestNATModeEnterpriseTLSSuiteA(object):
         profile_data = {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa2"
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "fiveg"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -171,7 +187,7 @@ class TestNATModeEnterpriseTLSSuiteA(object):
     @pytest.mark.twog
     @allure.title("Test for wpa3 enterprise 2.4 GHz")
     def test_tls_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                    get_test_device_logs,
+                                    get_test_device_logs, execution_number,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -181,19 +197,23 @@ class TestNATModeEnterpriseTLSSuiteA(object):
         profile_data = {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "twog"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP-SHA256"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -202,7 +222,7 @@ class TestNATModeEnterpriseTLSSuiteA(object):
     @pytest.mark.fiveg
     @allure.title("Test for wpa3 enterprise 5 GHz")
     def test_tls_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                    get_test_device_logs,
+                                    get_test_device_logs, execution_number,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 5g
@@ -212,19 +232,23 @@ class TestNATModeEnterpriseTLSSuiteA(object):
         profile_data = {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "fiveg"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP-SHA256"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -266,7 +290,7 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
     @pytest.mark.twog
     @allure.title("Test for wpa wpa2 enterprise 2.4 GHz")
     def test_wpa_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                    get_test_device_logs,
+                                    get_test_device_logs, execution_number,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -276,16 +300,20 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "twog"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -294,7 +322,7 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
     @pytest.mark.fiveg
     @allure.title("Test for wpa wpa2 enterprise 5 GHz")
     def test_wpa_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                    get_test_device_logs,
+                                    get_test_device_logs, execution_number,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -304,16 +332,20 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "fiveg"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -322,7 +354,7 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
     @pytest.mark.twog
     @allure.title("Test for wpa3 enterprise mixed 2.4 GHz")
     def test_wpa3_enterprise_mixed_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                      get_test_device_logs,
+                                      get_test_device_logs, execution_number,
                                       get_target_object,
                                       num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -331,15 +363,19 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
         profile_data = {"ssid_name": "tls_ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "twog"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -348,7 +384,7 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
     @pytest.mark.fiveg
     @allure.title("Test for wpa3 enterprise mixed 5 GHz")
     def test_wpa3_enterprise_mixed_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                      get_test_device_logs,
+                                      get_test_device_logs, execution_number,
                                       get_target_object,
                                       num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -357,15 +393,19 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
         profile_data = {"ssid_name": "tls_ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        mode = "NAT-WAN"
+        if execution_number == 0:
+            mode = "NAT-WAN"
+        if execution_number == 1:
+            mode = "NAT-LAN"
         band = "fiveg"
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
