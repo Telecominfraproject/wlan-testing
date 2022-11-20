@@ -60,14 +60,15 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -93,14 +94,15 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -125,13 +127,14 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -156,13 +159,14 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -187,13 +191,14 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP-SHA256"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -218,13 +223,14 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
         eap = "TLS"
         key_mgmt = "WPA-EAP-SHA256"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
-                                                                              key_mgmt=key_mgmt,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -281,11 +287,12 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -309,11 +316,12 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -336,10 +344,11 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -362,10 +371,11 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
-                                                                              ttls_passwd=tls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
