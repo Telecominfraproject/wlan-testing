@@ -153,6 +153,9 @@ npm install -g allure-commandline --save-dev
 
 ```
 
+# Docker Setup Instructions
+
+This repository support building Docker image from bundled [Dockerfile](./docker/Dockerfile). If you want to use it for testing, please refer to the [related directory for details](./docker).
 
 ### Executing and Contributing new test cases
 
