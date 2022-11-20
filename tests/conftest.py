@@ -60,6 +60,11 @@ def pytest_addoption(parser):
         help="Number of Stations"
     )
     parser.addoption(
+        "--max_stations",
+        default=64,
+        help=" Max Number of Stations of AP"
+    )
+    parser.addoption(
         "--device",
         # nargs="+",
         default="lanforge",
@@ -155,6 +160,18 @@ def num_stations(request):
     """yields the testbed option selection"""
     num_stations = request.config.getoption("--num_stations")
     yield int(num_stations)
+
+
+@pytest.fixture(scope="session")
+def max_stations(request):
+    """yields the max stations supported by AP"""
+    if run_lf:
+        """User will give max stations for run_lf"""
+        max_stations = request.config.getoption("--max_stations")
+    else:
+        """Fetch max stations from AP"""
+        max_stations = 64
+    yield int(max_stations)
 
 
 @pytest.fixture(scope="session")
