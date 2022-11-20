@@ -68,7 +68,7 @@ class TestVLANModeEnterpriseTTLSSuiteA(object):
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration)
 
@@ -98,7 +98,7 @@ class TestVLANModeEnterpriseTTLSSuiteA(object):
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration)
         assert passes == "PASS", result
@@ -126,7 +126,7 @@ class TestVLANModeEnterpriseTTLSSuiteA(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration)
         assert passes == "PASS", result
@@ -154,7 +154,7 @@ class TestVLANModeEnterpriseTTLSSuiteA(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration)
 
@@ -182,7 +182,7 @@ class TestVLANModeEnterpriseTTLSSuiteA(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration,
                                                                               key_mgmt="WPA-EAP-SHA256")
@@ -211,7 +211,7 @@ class TestVLANModeEnterpriseTTLSSuiteA(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration,
                                                                               key_mgmt="WPA-EAP-SHA256")
@@ -274,7 +274,7 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration)
 
@@ -304,7 +304,7 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration)
 
@@ -332,7 +332,7 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration)
 
@@ -360,7 +360,7 @@ class TestVLANModeEnterpriseTTLSSuiteTwo(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               vlan_id=vlan,
                                                                               dut_data=setup_configuration)
 

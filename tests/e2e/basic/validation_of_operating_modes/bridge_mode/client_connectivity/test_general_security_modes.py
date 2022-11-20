@@ -64,7 +64,7 @@ class TestBridgeModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1)
+                                                                   num_sta=num_stations)
 
         assert passes == "PASS", result
 
@@ -89,7 +89,7 @@ class TestBridgeModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=1)
+                                                                   num_sta=num_stations)
 
         assert passes == "PASS", result
 

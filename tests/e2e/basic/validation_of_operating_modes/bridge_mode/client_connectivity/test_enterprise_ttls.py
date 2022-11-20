@@ -67,7 +67,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -95,7 +95,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
         assert passes == "PASS", result
 
@@ -121,7 +121,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
         assert passes == "PASS", result
 
@@ -147,7 +147,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -173,7 +173,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration,
                                                                               key_mgmt="WPA-EAP-SHA256")
 
@@ -200,7 +200,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration,
                                                                               key_mgmt="WPA-EAP-SHA256")
 
@@ -261,7 +261,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -289,7 +289,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
                                                                               extra_securities=extra_secu,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -315,7 +315,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
@@ -341,7 +341,7 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd,
-                                                                              identity=identity, num_sta=1,
+                                                                              identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
