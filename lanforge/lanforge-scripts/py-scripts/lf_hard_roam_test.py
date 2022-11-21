@@ -276,6 +276,8 @@ class HardRoam(Realm):
             print("pre cleanup done")
             logging.info("pre cleanup done")
 
+        print("Creating stations.")
+        logging.info("Creating stations.")
         station_list = LFUtils.portNameSeries(prefix_=sta_prefix, start_id_=start_id,
                                               end_id_=num_sta - 1, padding_number_=10000,
                                               radio=radio)
@@ -357,8 +359,7 @@ class HardRoam(Realm):
                                            passwd=self.ttls_pass,
                                            pin=""
                                            )
-        print("Creating stations.")
-        logging.info("Creating stations.")
+
         station_profile.create(radio=radio, sta_names_=station_list)
         print("Waiting for ports to appear")
         logging.info("Waiting for ports to appear")
@@ -774,17 +775,6 @@ class HardRoam(Realm):
                     #  roam iteration loop starts here
                     while variable:
                         print("variable", variable)
-                        # print("make both attenuators set to zero attenuation at the begining")
-                        # logging.info("make both attenuators set to zero attenuation at the begining")
-                        # ser_no = self.attenuator_serial()
-                        # print(ser_no[0], ser_no[1])
-                        # logging.info(str(ser_no[0]) + " , " + str(ser_no[1]))
-                        # ser_1 = ser_no[0].split(".")[2]
-                        # ser_2 = ser_no[1].split(".")[2]
-                        # # set attenuation to zero in first attenuator and high in second attenuator
-                        # self.attenuator_modify(ser_1, "all", 0)
-                        # self.attenuator_modify(ser_2, "all", 0)
-
                         logging.info("variable " + str(variable))
                         iter, number, ser_1, ser_2 = None, None, None, None
                         if variable != -1:
@@ -816,10 +806,6 @@ class HardRoam(Realm):
                                 self.attenuator_modify(ser_1, "all", 950)
                                 self.attenuator_modify(ser_2, "all", 0)
                             else:
-                                # TODO:  Are you sure it is already in expected state on every loop?  Maybe
-                                # set it to be sure?
-                                # self.attenuator_modify(ser_1, "all", 0)
-                                # self.attenuator_modify(ser_2, "all", 950)
                                 print("odd,  c1 is already at  highest and c2 is at  lowest")
                                 logging.info("odd,  c1 is already at  highest and c2 is at  lowest")
                                 number = "odd"
