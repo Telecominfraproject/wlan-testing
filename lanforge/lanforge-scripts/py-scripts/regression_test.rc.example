@@ -1,0 +1,17 @@
+# Example settings file for regression_test.sh                      #
+#                                                                   #
+# Edit your own copy of regression_test.rc and regression           #
+# test.sh should use it. Please do not check in your                #
+# regression_test.rc file, That will break other people's settings. #
+#                                                                   #
+
+# Run tests against these AP credentials:
+SSID_USED=ChickenNet
+PASSWD_USED=ameliachicken
+SECURITY=wpa3
+
+# Point tests at this GUI:
+MGR=localhost
+MGR_PORT=8080
+
+#

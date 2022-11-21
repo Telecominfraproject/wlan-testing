@@ -1,0 +1,26 @@
+* Initial Setup
+** Create a LANforge Virtual Access Point (VAP).
+** Create a LANforge station on each radio you wish to test.
+   - Ensure that the stations can authenticate to the VAP.
+** Generate Layer-3 traffic from the VAP to each of the stations.
+   - Ensure that the traffic is routed through a variable attenuator which is visible in the LANforge Attenuators tab.
+* Run these commands from ./src/:
+** Vary Attenuation, Bandwidth, Channel, and Antenna, and collect signal data in ../json:
+   1. Modify the options at the top of scheduler.sh to fit your setup.
+   2. In the following, replace the IP address, radio name, and AP name with those of your test system.
+      Here, "75" is the number of attenuation levels, i.e. domain(attenuation) = [20 dB, 20+75 dB).
+   3. ./scheduler.sh 75 localhost 1.1.wiphy6 1.1.vap0036
+** Parse json data of one attenuation-sweep instance into output.csv:
+   1. git clone https://github.com/greearb/lanforge-scripts ~/lanforge-scripts
+   2. Run python3 ~/lanforge-scripts/py-scripts/update-dependencies.py with your python virtual environment activated.
+   3. python3 parser2.py --test_dir ../json --csv ../output.csv --bandwidth 20 --channel 36 --antenna 0
+** Process one attenuation-sweep instance into PNG format:
+   1. mkdir -p ../html/PNGs
+   2. python3 processing.py --csv ../output.csv --png_dir ../html/PNGs --bandwidth 20 --channel 36 --antenna 0 --path_loss_2 '28.74' --path_loss_5 '33.87'
+** Generate all PNGs from JSON data at once:
+   1. mkdir -p ../html/PNGs
+   2. Modify the options at the top of gen_all_pngs.sh to fit your setup.
+   3. ./gen_all_pngs.sh "../json" "../html/PNGs"
+** Generate an HTML report from all available PNGs:
+   1. Modify the options at the top of gen_html.sh to fit your setup.
+   2. ./gen_html.sh "./PNGs" "../html/Test_Report.html"

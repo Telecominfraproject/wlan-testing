@@ -1,0 +1,15 @@
+profile_link 1.1 STA-AC 8 'DUT: ea8300 Radio-1' NA wiphy0,AUTO -1
+profile_link 1.1 STA-AC 8 'DUT: ea8300 Radio-1' NA wiphy2,AUTO -1
+profile_link 1.1 STA-AC 8 'DUT: ea8300 Radio-2' NA wiphy1,AUTO -1
+profile_link 1.1 STA-AC 8 'DUT: ea8300 Radio-3' NA wiphy3,AUTO -1
+profile_link 1.1 upstream-dhcp 1 NA NA eth2,AUTO -1
+profile_link 1.1 uplink-nat 1 'DUT: upstream LAN 92.168.100.1/24' NA eth3,eth2 -1
+#profile_link 1.1 STA-AC 1 'DUT: ea8300 Radio-2' NA wiphy4,AUTO -1
+#profile_link 1.1 STA-AC 1 'DUT: ea8300 Radio-3' NA wiphy5,AUTO -1
+#profile_link 1.1 STA-AC 1 'DUT: ea8300 Radio-2' NA wiphy6,AUTO -1
+#profile_link 1.1 STA-AC 1 'DUT: ea8300 Radio-3' NA wiphy7,AUTO -1
+dut ea8300 393 148
+dut upstream 306 62
+resource 1.1 132 218
+
+

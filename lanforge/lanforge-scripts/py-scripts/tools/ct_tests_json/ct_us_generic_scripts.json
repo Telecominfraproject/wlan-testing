@@ -1,0 +1,65 @@
+{
+    "ct_generic_test_scripts":{
+        "Notes":[
+            "This json file describes tests to be run by LANforge system"
+        ]  
+    },
+    "test_suites":{
+        "suite_generic_scripts": {
+            "lf_cleanup_0": {
+                "enabled": "TRUE",
+                "load_db": "skip",
+                "command": "lf_cleanup.py",
+                "args": "",
+                "args_list": ["--mgr LF_MGR_IP --sanitize"]
+            },
+            "sta_connect2": {
+                "enabled": "TRUE",
+                "load_db": "skip",
+                "command": "sta_connect2.py",
+                "args": "",
+                "args_list": ["--mgr LF_MGR_IP --upstream_port UPSTREAM_PORT --local_lf_report_dir REPORT_PATH",
+                    " use_ssid_idx=1 --radio 1.1.wiphy1 --dut_ssid SSID_USED --dut_security SECURITY_USED --dut_passwd SSID_PW_USED",
+                    " --csv_outfile sta_connect2.csv --test_rig TEST_RIG --test_tag LF_STA --dut_hw_version DUT_HW",
+                    " --dut_model_num USE_DUT_NAME --dut_sw_version DUT_SW --dut_serial_num DUT_SN"
+                ]
+            },
+            "lf_cleanup_1": {
+                "enabled": "TRUE",
+                "load_db": "skip",
+                "command": "lf_cleanup.py",
+                "args": "",
+                "args_list": ["--mgr LF_MGR_IP --sanitize"]
+            },
+            "test_l4": {
+                "enabled": "TRUE",
+                "load_db": "skip",
+                "command": "test_l4.py",
+                "args": "",
+                "args_list": ["--mgr LF_MGR_IP --upstream_port UPSTREAM_PORT --local_lf_report_dir REPORT_PATH",
+                    " use_ssid_idx=1 --radio 1.1.wiphy1 --ssid SSID_USED --security SECURITY_USED --passwd SSID_PW_USED",
+                    " --test_duration 2m --url 'dl http://192.168.50.1 /dev/null' --requests_per_ten 600 --test_type bytes-rd",
+                    " --csv_outfile test_l4.csv --test_rig TEST_RIG --test_tag LF_L4 --dut_hw_version DUT_HW",
+                    " --dut_model_num USE_DUT_NAME --dut_sw_version DUT_SW --dut_serial_num DUT_SN"
+                ]
+            },
+            "lf_cleanup_3": {
+                "enabled": "TRUE",
+                "load_db": "skip",
+                "command": "lf_cleanup.py",
+                "args": "",
+                "args_list": ["--mgr LF_MGR_IP --sanitize"]
+            },
+            "lf_qa":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"./tools/lf_qa.py",
+                "args":"",
+                "args_list":[
+                    " --server TEST_SERVER --path REPORT_PATH --store --png --database DATABASE_SQLITE"
+                ]
+            }
+        }
+    }
+}    

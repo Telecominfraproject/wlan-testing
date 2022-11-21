@@ -1,0 +1,30 @@
+{
+    "ct_tests_lf_check":{
+        "Notes":[
+            "The json is used to orchastrate the tests to be run on testbed ct_us_001",
+            "This json file is used as an input to the ./lf_check.py file",
+            "The variables that are all capitalized below are replaced with configuration",
+            "from the json file. so LF_MGR_IP in the test below is replaced by the json lf_mgr_ip",
+            "The replacement is loosely coupled so the upper and lower case convention is used",
+            "to identify replaced strings in the lf_check.py code."  
+        ]  
+    },
+    "test_suites":{
+        "suite_lf_check":{
+            "CT-US-001_lf_check":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"./tools/lf_check.py",
+                "args":"",
+                "args_list":[
+                    " --json_rig ./tools/ct_us_001_rig.json --json_test ./tools/ct_tests.json --suite 'suite_wc_dp_short' --path '/home/lanforge/html-reports/ct-us-001'"
+                ]
+            }
+        }
+    }   
+}
+			
+	
+		
+	

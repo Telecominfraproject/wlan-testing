@@ -1,0 +1,23 @@
+{
+    "ct_9136I-B_dut":{
+        "Notes":[
+            "The dut related configuration is contained in this file",
+            "DUT_SET_NAME is an input to wifi capacity, dataplane and ap_auto tests, for --set parameter",
+            "The DUT_NAME must be part of DUT_SET_NAME"
+        ]  
+    },
+    "test_dut":{
+        "DUT_SET_NAME": "APCC9C.3EF4.E0B0",
+        "USE_DUT_NAME": "APCC9C.3EF4.E0B0",
+        "DUT_SW": "12345678",
+        "DUT_HW": "CW9166I-B",
+        "DUT_SN": "12345678",
+        "wireless_network_dict":{
+            "ssid_idx=0":{"ssid_idx":"0","SSID_USED":"24G-wpa2","SSID_PW_USED":"hello123","BSSID_TO_USE":"68:7d:b4:60:04:b0","SECURITY_USED":"wpa2","WLAN_ID_USED":"3"},
+            "ssid_idx=1":{"ssid_idx":"1","SSID_USED":"5G-wpa2","SSID_PW_USED":"hello123","BSSID_TO_USE":"10:F9:20:FD:E7:A8","SECURITY_USED":"wpa2","WLAN_ID_USED":"2"},
+            "ssid_idx=2":{"ssid_idx":"2","SSID_USED":"6G-wpa3","SSID_PW_USED":"hello123","BSSID_TO_USE":"68:7d:b4:60:04:b0","SECURITY_USED":"wpa3","WLAN_ID_USED":"1"},
+            "ssid_idx=3":{"ssid_idx":"3","SSID_USED":"open-wlan-6","SSID_PW_USED":"[BLANK]","BSSID_TO_USE":"68:7d:b4:60:04:b0","SECURITY_USED":"open","WLAN_ID_USED":"6"}
+        }
+    }
+}
+			

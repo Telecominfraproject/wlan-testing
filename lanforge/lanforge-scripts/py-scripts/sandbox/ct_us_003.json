@@ -1,0 +1,167 @@
+{
+    "test_parameters":{
+        "test_timeout": 200,
+        "load_blank_db": false,
+        "load_factory_default_db": true,
+        "load_custom_db": false,
+        "custom_db": "DFLT_ETH1_GEN",
+        "email_list_production": "konikofi@candelatech.com,greearb@candelatech.com,logan.lipke@candelatech.com,chuck.rekiere@candelatech.com,",
+        "host_ip_production": "192.168.95.6",
+        "email_list_test": "chuck.rekiere@candelatech.com",
+        "host_ip_test": "192.168.95.6",
+        "lf_mgr": "192.168.100.116",
+        "lf_mgr_ip": "192.168.100.233",
+        "email_title_txt": "Lanforge QA Testing CT-US-001",
+        "email_txt": "Lanforge QA Testing CT-US-001 "
+    },
+    "test_network":{
+        "http_test_ip": "10.40.0.10",
+        "ftp_test_ip": "10.40.0.10",
+        "test_ip": "192.168.0.104"
+    },
+    "test_generic":{
+        "radio_used": "wiphy1",
+        "ssid_used": "asus11ax-5",
+        "ssid_pw_used": "hello123",
+        "security_used": "wpa2",
+        "num_sta": 4,
+        "col_names": "name,tx_byptes,rx_bytes,dropped",
+        "upstream_port": "eth1"
+    },
+    "radio_dict":{
+        "RADIO_0_CFG":{"KEY":"RADIO_0_CFG","RADIO":"wiphy0","STATIONS":"4","SSID":"ct523c-vap","PASSWD":"ct523c-vap","SECURITY":"wpa2"},
+        "RADIO_1_CFG":{"KEY":"RADIO_1_CFG","RADIO":"wiphy1","STATIONS":"4","SSID":"ct523c-vap","PASSWD":"ct523c-vap","SECURITY":"wpa2"}        
+    },
+    "test_suites": {
+            "CT-US-003_create_chamberview_dut_ap":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=ct-us-ssid security=WPA2 password=ct-us-ssid bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=ct-us-ssid security=WPA2 password=ct-us-ssid bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]},
+            "CT-US-003_create_chamberview_ap":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ucentral-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 64 'DUT: DUT_NAME Radio-1' NA wiphy1,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 STA-AC 1 'DUT: DUT_NAME Radio-1' NA wiphy4,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA \" ",
+                    " --raw_line \"profile_link 1.3 Test_AP 1 NA NA wiphy0, eth1 -1 NA\" "
+                ]
+            },
+            "vap_suite": {
+                "CT-US-003_VAP": {
+                    "enabled": "TRUE",
+                    "command": "create_vap.py",
+                    "args": "",
+                    "args_list": [
+                        " --mgr LF_MGR_IP",
+                        " --resource 3",
+                        " --ssid ct-us-ssid",
+                        " --password ct-us-ssid",
+                        " --security wpa2",
+                        " --radio wiphy1",
+                        " --upstream_port eth1",
+                        " --mode 802.11anAC"
+                    ]
+                },
+            "CT-US-003_lf_ap_auto_test": {
+                "enabled": "TRUE",
+                "command": "lf_ap_auto_test.py",
+                "timeout":"1200",
+                "args": "",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge",
+                    " --instance_name ap-auto-instance --config_name test_con --upstream UPSTREAM_PORT",
+                    " --dut5_0 'DUT_NAME lanforge DUT_BSSID_5G (1)' --dut2_0 'DUT_NAME lanforge DUT_BSSID_5G (1)'",
+                    " --max_stations_2 4 --max_stations_5 32 --max_stations_dual 4 --radio2 1.1.wiphy1",
+                    " --radio5 1.1.wiphy2 --set 'Basic Client Connectivity' 1",
+                    " --set 'Multi Band Performance' 0 --set 'Stability' 0 --set 'Multi-Station Throughput vs Pkt Size'  0,",
+                    " --set 'Throughput vs Pkt Size' 0 --set 'Capacity' 0 --set 'Band-Steering' 0 --set 'Skip 2.4 Ghz Tests' 1",
+                    " --pull_report --local_lf_report_dir REPORT_PATH",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "CT-US-003_create_chamberview_dut_0":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=ct-us-ssid security=WPA2 password=ct-us-ssid bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=ct-us-ssid security=WPA2 password=ct-us-ssid bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]
+            },
+            "CT-US-003_create_chamberview_mt7915e_sta19":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ct-us-001-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 19 'DUT: DUT_NAME Radio-1' NA wiphy7,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA\"",
+                    " --raw_line \"profile_link 1.3 Test_AP 1 NA NA wiphy0, eth1 -1 NA\" "
+                ]
+            },
+            "CT-US-003_wifi_capacity_mt7915e":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"lf_wifi_capacity_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-wct",
+                    " --upstream 1.1.eth2 --batch_size 1,5,25 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'mt7915e'",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "CT-US-003_create_chamberview_mt7915e_sta1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ct-us-001-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 1 'DUT: DUT_NAME Radio-1' NA wiphy7,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA\""
+                ]
+            },
+            "CT-US-003_dataplane_ATH10K_mt7915e_sta1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"lf_dataplane_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-dpt",
+                    " --config_name test_con --upstream 1.1.eth2 --dut asus_5g --duration 30s --station 1.1.wlan7",
+                    " --download_speed 85% --upload_speed 0 --raw_line 'pkts: 60;88;120;256;512;1024;MTU' ",
+                    " --raw_line 'directions: DUT Transmit' --raw_line 'traffic_types: UDP' --raw_line 'bandw_options: 20'",
+                    " --raw_line 'spatial_streams: 1' --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'mt7915e' ",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            }
+        }
+    }
+}
+			
+	
+		
+	

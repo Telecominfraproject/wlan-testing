@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<properties>
+
+    <!-- The address of the Quali server on which to deploy, mandatory -->
+    <serverRootAddress>localhost</serverRootAddress>
+
+    <!-- The port of the Quali server on which to deploy, defaults to "8029" -->
+    <port>8029</port>
+
+    <!-- The server admin username, password and domain to use when deploying -->
+    <username>YOUR_USERNAME</username>
+    <password>YOUR_PASSWORD</password>
+    <domain>Global</domain>
+
+    <!-- Simple patterns to filter when sending the driver to the server separated by semicolons (e.g. "file.xml;logs/", also supports regular expressions),
+ on top of the patterns specified here the plugin will automatically filter the "deployment/" and ".idea/" folders and the "deployment.xml" file -->
+    <fileFilters>dont_upload_me.xml</fileFilters>
+
+    <!-- The drivers to update, holds one or more drivers -->
+    <drivers>
+       <!-- runFromLocalProject - Decides whether to run the driver from the current project directory for debugging purposes, defaults to "false" -->
+       <!-- waitForDebugger - When `runFromLocalProject` is enabled, decides whether to wait for a debugger to attach before running any Python driver code, defaults to "false" -->
+       <!-- sourceRootFolder - The folder to refer to as the project source root (if specified, the folder will be zipped and deployed instead of the whole project), defaults to the root project folder -->
+        <driver runFromLocalProject="true" waitForDebugger="true" sourceRootFolder="lanforge-resource">
+            <!-- A list of paths to the driver's files or folders relative to the project's root.
+ may be a path to a directory, in which case all the files and folders under the directory are added into the driver's zip file.
+ if the <sources> element is not specified, all the files under the project are added to the driver's zip file -->
+            <sources>
+                 <source>src</source>
+            </sources>
+            <!-- the driver name of the driver to update -->
+            <targetName>LanforgeResourceDriver</targetName>
+        </driver>
+    </drivers>
+
+    <!-- The scripts to update, holds one or more scripts -->
+    <!-- A list of paths to the script's files or folders relative to the project's root.
+ if the <sources> element is not specified, all the files under the project are added to the script's zip file.
+ if only one file is specified, the file will not be compressed into a zip file.
+ -->
+    <!--
+    <scripts>
+
+        <script>
+
+            <sources>
+                <source>script1.py</source>
+            </sources>
+            <targetName>scriptToUpdate</targetName>
+        </script>
+    </scripts>
+        -->
+</properties>

@@ -1,0 +1,350 @@
+{
+    "ct_wifi_capacity_test":{
+        "Notes":[
+            "This json file describes tests to be run by LANforge system for tx_power",
+            "Batches are ignored if values entered on command line",
+            "Batch channel : 1 33 65 97 129 161 193",
+            "Batch channel bandwidth : 20 40 80 160 ",
+            "Batch nss : 1 2 ",
+            "Batch tx power (optional, can run all passed in on command line) : 1 2 3 4 5 6 7 8 ",
+            "sample command from tools directory:",
+            " ./lf_check.py --json_rig ./ct_rig_json/ct_9136_WLC1_lanforge.json --json_dut ./ct_dut_json/ct_9136_dut.json --json_test ./ct_tests_json/ct_9136_tx_power_tests.json --suite suite_tx_power --path /home/lanforge/html-reports/ct-us-9136"
+        ]  
+    },
+    "test_suites":{
+        "suite_tx_power":{
+            "tx_power_24g_AX210":{
+                "NOTE":["Basic script 24g use existing station, ",
+                    "Batch needs to be removed if command line parameter entered",
+                    "USE_BATCH_CHANNEL for channel batch: 1 2 3 4 5 6 7 8 9 10 11 ",
+                    "USE_BATCH_NSS for nss batch: 1 2",
+                    "USE_BATCH_BANDWIDTH for bandwidth batch: 20",
+                    "USE_BATCH_TX_POWER for tx_power batch: 1 2 3 4 5 6 7 8"],
+                "enabled":"True",
+                "load_db":"skip",
+                "batch_channel":"11",
+                "batch_nss":"2",
+                "batch_bandwidth":"20",
+                "batch_tx_power":"4",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887",
+                    " --user admin --passwd Cisco123 --prompt WLC1",
+                    " --series 9800 --band 6g --module cc_module_9800_3504",
+                    " --timeout 3 --ap USE_DUT_NAME --ap_band_slot_24g 0",
+                    " use_ssid_idx=0 --wlan SSID_USED --wlan_id 3 --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --pathloss 59 --antenna_gain 0 --lfmgr LF_MGR_IP ",
+                    " --upstream_port UPSTREAM_ALIAS  --lfresource 1",
+                    " use_ssid_idx=0 --radio wiphy3 --create_station --station sta0002 --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --vht160 --ieee80211w optional",
+                    " --channel USE_BATCH_CHANNEL --nss USE_BATCH_NSS --bandwidth USE_BATCH_BANDWIDTH  --txpower USE_BATCH_TX_POWER",
+                    " --outfile tx_power --no_cleanup_station --no_cleanup",
+                    " --testbed_id Cisco-WLC1-AP5 --testbed_location RM204-TB1-AP5",
+                    " --local_lf_report_dir REPORT_PATH"
+                ]
+            },
+            "tx_power_batch_override_24g_AX210":{
+                "NOTE":["Basic script 24g use existing station"],
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887",
+                    " --user admin --passwd Cisco123 --prompt WLC1",
+                    " --series 9800 --band 24g --module cc_module_9800_3504",
+                    " --timeout 3 --ap USE_DUT_NAME --ap_band_slot_24g 0",
+                    " use_ssid_idx=0 --wlan SSID_USED --wlan_id 3 --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --pathloss 59 --antenna_gain 0 --lfmgr LF_MGR_IP",
+                    " --upstream_port UPSTREAM_ALIAS --lfresource 1",
+                    " use_ssid_idx=0 --radio wiphy3  --create_station --station sta0002 --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --vht160 --ieee80211w optional",
+                    " --channel '5' --nss '2' --bandwidth '20'  --txpower '6'",
+                    " --outfile tx_power_override --no_cleanup_station --no_cleanup",
+                    " --testbed_id Cisco-WLC1-AP5 --testbed_location RM204-TB1-AP5",
+                    " --local_lf_report_dir REPORT_PATH"
+                ]
+            },
+            "tx_power_5g_AX210":{
+                "NOTE":["Basic script 5g use existing station, ",
+                    "Batches are ignored if values entered on command line",
+                    "USE_BATCH_CHANNEL for channel batch",
+                    "USE_BATCH_NSS for nss batch",
+                    "USE_BATCH_BANDWIDTH for bandwidth batch",
+                    "USE_BATCH_TX_POWER for tx_power batch"],
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "batch_channel":"36 100 149",
+                "batch_nss":"1 2",
+                "batch_bandwidth":"20 40 80 160",
+                "batch_tx_power":"1 2 3 4 5 6 7 8",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887",
+                    " --user admin --passwd Cisco123 --prompt WLC1",
+                    " --series 9800 --band 6g --module cc_module_9800_3504",
+                    " --timeout 3 --ap USE_DUT_NAME --ap_band_slot_5g 1",
+                    " use_ssid_idx=1 --wlan SSID_USED --wlan_id 2 --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --create_station",
+                    " use_ssid_idx=1 --radio wiphy3 --station sta0002 --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 59 --antenna_gain 0",
+                    " --lfmgr LF_MGR_IP --upstream_port eth2 --lfresource 1",
+                    " --vht160 --ieee80211w optional --wifi_mode auto",
+                    " --channel USE_BATCH_CHANNEL --nss USE_BATCH_NSS --bandwidth USE_BATCH_BANDWIDTH  --txpower USE_BATCH_TX_POWER",
+                    " --outfile tx_power_5g_2B24 --no_cleanup_station --no_cleanup",
+                    " --testbed_id Cisco-WLC1-AP5 --testbed_location RM204-TB1-AP5",
+                    " --local_lf_report_dir REPORT_PATH"
+                ]
+            },
+            "tx_power_batch_override_5g_AX210":{
+                "NOTE":["Basic script 5g use existing station"],
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887",
+                    " --user admin --passwd Cisco123 --prompt WLC1",
+                    " --series 9800 --band 6g --module cc_module_9800_3504",
+                    " --timeout 3 --ap USE_DUT_NAME --ap_band_slot_5g 1",
+                    " use_ssid_idx=1 --wlan SSID_USED --wlan_id 2 --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --create_station",
+                    " use_ssid_idx=1 --radio wiphy3 --station sta0002 --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 59 --antenna_gain 0",
+                    " --lfmgr LF_MGR_IP --upstream_port eth2 --lfresource 1",
+                    " --vht160 --ieee80211w optional --wifi_mode auto",
+                    " --channel '100' --nss '2' --bandwidth '40'  --txpower '4'",
+                    " --outfile tx_power_5g_2B24 --no_cleanup_station --no_cleanup",
+                    " --testbed_id Cisco-WLC1-AP5 --testbed_location RM204-TB1-AP5",
+                    " --local_lf_report_dir REPORT_PATH"
+                ]
+            },
+
+            "tx_power_6g_AX210":{
+                "NOTE":["Basic script 6g use existing station, ",
+                    "Batches are ignored if values entered on command line",
+                    "USE_BATCH_CHANNEL for channel batch",
+                    "USE_BATCH_NSS for nss batch",
+                    "USE_BATCH_BANDWIDTH for bandwidth batch",
+                    "USE_BATCH_TX_POWER for tx_power batch"],
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "batch_channel":"1 33 65 97 129 161 193",
+                "batch_nss":"1 2",
+                "batch_bandwidth":"20 40 80 160",
+                "batch_tx_power":"1 2 3 4 5 6 7 8",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887",
+                    " --user admin --passwd Cisco123 --prompt WLC1",
+                    " --series 9800 --band 6g --module cc_module_9800_3504",
+                    " --timeout 3 --ap USE_DUT_NAME --ap_band_slot_6g 2",
+                    " use_ssid_idx=2 --wlan SSID_USED --wlan_id 2 --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --create_station",
+                    " use_ssid_idx=2 --radio wiphy2 --station sta0000 --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 59 --antenna_gain 0",
+                    " --lfmgr LF_MGR_IP --upstream_port eth2 --lfresource 1",
+                    " --vht160 --ieee80211w required --wifi_mode auto",
+                    " --channel USE_BATCH_CHANNEL --nss USE_BATCH_NSS --bandwidth USE_BATCH_BANDWIDTH  --txpower USE_BATCH_TX_POWER",
+                    " --outfile tx_power_5g_2B24 --no_cleanup_station --no_cleanup",
+                    " --testbed_id Cisco-WLC1-AP5 --testbed_location RM204-TB1-AP5",
+                    " --local_lf_report_dir REPORT_PATH"
+                ]
+            },
+            "tx_power_batch_override_6g_AX210":{
+                "NOTE":["Basic script 6g use existing station"],
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887",
+                    " --user admin --passwd Cisco123 --prompt WLC1",
+                    " --series 9800 --band 6g --module cc_module_9800_3504",
+                    " --timeout 3 --ap USE_DUT_NAME --ap_band_slot_6g 2",
+                    " use_ssid_idx=2 --wlan SSID_USED --wlan_id 1 --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --create_station",
+                    " use_ssid_idx=2 --radio wiphy2 --station sta0000 --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 59 --antenna_gain 0",
+                    " --lfmgr LF_MGR_IP --upstream_port eth2 --lfresource 1",
+                    " --vht160 --ieee80211w required --wifi_mode auto",
+                    " --channel '33' --nss '1' --bandwidth '160'  --txpower '4'",
+                    " --outfile tx_power_override_6g_2B24 --no_cleanup_station --no_cleanup",
+                    " --testbed_id Cisco-WLC1-AP5 --testbed_location RM204-TB1-AP5",
+                    " --local_lf_report_dir REPORT_PATH"
+                ]
+            },
+            "tx_power_create_wlan_and_station_6g":{
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887 --user admin --passwd Cisco123 --prompt WLC1 --series 9800",
+                    " --band 6g --module cc_module_9800_3504 --timeout 3 ",
+                    " --ap USE_DUT_NAME --ap_band_slot_6g 3 ",
+                    " use_ssid_idx=2 --create_wlan --wlan SSID_USED --wlan_id 1 --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --create_station",
+                    " use_ssid_idx=2 --radio wiphy2 --create_station --station ax210a --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 56 --antenna_gain 6",
+                    " --lfmgr LF_MGR_IP --upstream_port eth2 --lfresource 1",
+                    " --vht160 --ieee80211w required --wifi_mode abgnAX --channel 65 --bandwidth \"20\" ",
+                    " --nss 2 --txpower \"3\" --outfile tx_power_2B24 --no_cleanup_station --no_cleanup --testbed_id Cisco-WLC1-AP5",
+                    " --local_lf_report_dir REPORT_PATH"
+                ]
+            },
+            "tx_power_create_wlan_and_station_5g_wiphy4":{
+                "NOTES":"This test will create a wlan and create a station ",
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887 --user admin --passwd Cisco123 --prompt WLC1 --series 9800",
+                    " --band 5g --module cc_module_9800_3504 --timeout 3 ",
+                    " --ap USE_DUT_NAME --ap_slot 4 --ap_band_slot_5g 1 ",
+                    " use_ssid_idx=1 --create_wlan --wlan SSID_USED --wlan_id WLAN_ID_USED --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --create_station",
+                    " use_ssid_idx=1 --radio wiphy4 --create_station --station mt7915e --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 56 --antenna_gain 6",
+                    " --lfmgr LF_MGR_IP --upstream_port eth2 --lfresource 1",
+                    " --vht160 --ieee80211w disabled --wifi_mode abgnAX --channel 36 --bandwidth \"20\" ",
+                    " --nss 2 --txpower \"3\" --outfile tx_power_2B24 --no_cleanup_station --no_cleanup --testbed_id Cisco-WLC1-AP5",
+                    " --local_lf_report_dir REPORT_PATH"
+                ]
+            },
+            "tx_power_use_existing_wlan_and_station_5g_wiphy4":{
+                "NOTES":"This test will create a wlan and create a station ",
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "batch_channel":"100",
+                "batch_nss":"2",
+                "batch_bandwidth":"160",
+                "timeout":"180",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887 --user admin --passwd Cisco123 --prompt WLC1 --series 9800",
+                    " --band 5g --module cc_module_9800_3504 --timeout 3 ",
+                    " --ap USE_DUT_NAME --ap_slot 4 --ap_band_slot_5g 1 ",
+                    " use_ssid_idx=3 --wlan SSID_USED --wlan_id 6 --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " --create_station",
+                    " use_ssid_idx=3 --radio wiphy4 --station mt7915e --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 56 --antenna_gain 6",
+                    " --lfmgr LF_MGR_IP --upstream_port UPSTREAM_ALIAS --lfresource 1",
+                    " --vht160 --ieee80211w disabled --wifi_mode abgnAX",
+                    " --channel USE_BATCH_CHANNEL --bandwidth USE_BATCH_BANDWIDTH --nss USE_BATCH_NSS --txpower '3 5'",
+                    "  --outfile tx_power_2B24 --no_cleanup_station --no_cleanup --testbed_id Cisco-WLC1-AP5",
+                    " --local_lf_report_dir REPORT_PATH",
+                    " --test_tag 'tx_power C9136I-B AP687D.B45C.2B24'",
+                    " --dut_hw_version DUT_HW --dut_sw_version DUT_SW --dut_model_num USE_DUT_NAME --dut_serial_num DUT_SN",
+                    " --test_priority 4",
+                    "--enable_all_bands"
+
+                ]
+            },
+            "tx_power_batch":{
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "timeout":"180",
+                "iterations":"1",
+                "batch_channel":"1",
+                "batch_nss":"2",
+                "batch_bandwidth":"40",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887 --user admin --passwd Cisco123 --prompt WLC1 --series 9800",
+                    " --band 6g --module cc_module_9800_3504 --timeout 3 ",
+                    " --ap USE_DUT_NAME --ap_slot 4 --ap_band_slot_6g 3 ",
+                    " use_ssid_idx=2 --wlan SSID_USED --wlan_id WLAN_ID_USED --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " use_ssid_idx=2 --radio wiphy2 --create_station --station sta0000 --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 56 --antenna_gain 0",
+                    " --lfmgr LF_MGR_IP --upstream_port UPSTREAM_ALIAS --lfresource 1",
+                    " --vht160 --ieee80211w required --wifi_mode abgnAX",
+                    " --channel USE_BATCH_CHANNEL --nss USE_BATCH_NSS --bandwidth USE_BATCH_BANDWIDTH --txpower '3'",
+                    " --outfile tx_power_2B24 --no_cleanup --no_cleanup_station --testbed_id Cisco-WLC1-AP5",
+                    " --local_lf_report_dir REPORT_PATH",
+                    " --test_tag 'tx_power C9136I-B AP687D.B45C.2B24'",
+                    " --dut_hw_version DUT_HW --dut_sw_version DUT_SW --dut_model_num USE_DUT_NAME --dut_serial_num DUT_SN",
+                    " --test_priority 4"
+
+                ]
+            },
+            "tx_power_batch_2":{
+                "NOTE":"",
+                "enabled":"FALSE",
+                "load_db":"skip",
+                "timeout":"180",
+                "iterations":"1",
+                "batch_channel":"1 33 65",
+                "batch_nss":"1 2",
+                "batch_bandwidth":"20 40 80 160",
+                "command":"lf_tx_power.py",
+                "args":"",
+                "args_list":[
+                    " --scheme ssh --dest localhost --port 8887 --user admin --passwd Cisco123 --prompt WLC1 --series 9800",
+                    " --band 6g --module cc_module_9800_3504 --timeout 3 ",
+                    " --ap USE_DUT_NAME --ap_slot 4 --ap_band_slot_6g 3 ",
+                    " use_ssid_idx=2 --wlan SSID_USED --wlan_id WLAN_ID_USED --wlan_ssid SSID_USED",
+                    " --tag_policy RM204-TB1-AP5 --policy_profile default-policy-profile",
+                    " use_ssid_idx=2 --radio wiphy2 --station sta0000 --ssid SSID_USED --ssidpw SSID_PW_USED --security SECURITY_USED",
+                    " --pathloss 56 --antenna_gain 0",
+                    " --lfmgr LF_MGR_IP --upstream_port UPSTREAM_ALIAS --lfresource 1",
+                    " --vht160 --ieee80211w required --wifi_mode abgnAX",
+                    " --channel USE_BATCH_CHANNEL --nss USE_BATCH_NSS --bandwidth USE_BATCH_CHANNEL --txpower '1 2 3 4 5 6 7 8'",
+                    " --outfile tx_power_2B24 --no_cleanup --no_cleanup_station --testbed_id Cisco-WLC1-AP5",
+                    " --local_lf_report_dir REPORT_PATH",
+                    " --test_tag 'tx_power C9136I-B AP687D.B45C.2B24'",
+                    " --dut_hw_version DUT_HW --dut_sw_version DUT_SW --dut_model_num USE_DUT_NAME --dut_serial_num DUT_SN",
+                    " --test_priority 4"
+
+                ]
+            },
+
+            "lf_qa":{
+                "enabled":"FALSE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"./tools/lf_qa.py",
+                "args":"",
+                "NOTE":"Only set server when not viewing results on local system",
+                "args_list":[
+                    "--server http://localhost/  --path REPORT_PATH --store --png --database DATABASE_SQLITE"
+                ]
+            },
+            "lf_qa2":{
+                "enabled":"TRUE",
+                "timeout":"600",
+                "load_db":"skip",
+                "command":"./tools/lf_qa.py",
+                "args":"",
+                "args_list":[
+                    "--path REPORT_PATH --store --png --database DATABASE_SQLITE"
+                ]
+            }
+
+        }
+    }
+}

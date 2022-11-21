@@ -1,0 +1,7 @@
+nose
+coverage
+unittest2
+mock
+teamcity-messages
+jsonpickle
+nose-exclude

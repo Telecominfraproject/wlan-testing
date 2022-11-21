@@ -1,0 +1,10 @@
+WAN_IF=eth1
+WAN_IP=10.1.99.1
+WAN_CONCENTRATOR_IP=10.1.99.1
+# the XIF is xfrm interface that transforms packets into encrypted packets
+# it tends to live on a /32 subnet
+XIF_IP=10.9.99.1
+
+## only set these if you've installed from source
+# ETC=/usr/local/etc
+# SWAN_LIBX=/usr/local/libexec/ipsec

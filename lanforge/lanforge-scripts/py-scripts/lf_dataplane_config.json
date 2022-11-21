@@ -1,0 +1,20 @@
+{
+	"mgr":"192.168.0.101",
+	"port":"8080",
+	"lf_user":"lanforge",
+	"lf_password":"lanforge",
+	"instance_name":"dataplane-instance",
+	"config_name":"test_con",
+	"upstream":"1.1.eth1",
+	"dut":"asus_5g",
+	"duration":"15s",
+	"station":"1.1.eth2",
+	"download_speed":"85%",
+	"upload_speed":"0",	
+	"pull_report": true,
+	"raw_line":  ["pkts: Custom;60;MTU", "cust_pkt_sz: 88 1200", "directions: DUT Transmit", "traffic_types: UDP", "bandw_options: 20", "spatial_streams: 1"]
+}
+			
+	
+		
+	

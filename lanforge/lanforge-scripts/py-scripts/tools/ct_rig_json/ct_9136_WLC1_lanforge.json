@@ -1,0 +1,24 @@
+{
+    "ct_us_001":{
+        "Notes":[
+            "This json file describes LANforge system and test run configuration"
+        ]  
+    },
+    "test_rig_parameters":{
+        "TEST_BED": "CT-TB1-WLC1",
+        "TEST_RIG": "CT-TB1-WLC1",
+        "TEST_SERVER": "",
+        "DATABASE_SQLITE": "/home/lanforge/html-reports/ct-us-9136/ct_9136_001.db",
+        "LF_MGR_IP": "192.168.100.178",
+        "LF_MGR_PORT": "8080",
+        "LF_MGR_USER": "lanforge",
+        "LF_MGR_PASS": "lanforge",
+        "UPSTREAM_PORT": "1.1.eth2",
+        "UPSTREAM_ALIAS": "eth2",
+        "TEST_TIMEOUT": 180,
+        "EMAIL_LIST_PRODUCTION": "chuck.rekiere@candelatech.com",
+        "EMAIL_LIST_TEST": "chuck.rekiere@candelatech.com, 2082868321@vtech.com",
+        "EMAIL_TITLE_TXT": "Lanforge Tx Power Testing CT-RM204-TB1",
+        "EMAIL_TXT": "Lanforge Tx Power Testing CT-RM204-TB1 "
+    }
+}

@@ -1,0 +1,11 @@
+# Copy this file into ~/.config/autostart/
+# Then edit this file to start the next script to run
+[Desktop Entry]
+Version=1.0
+Name=wait_for_gui
+Comment=Wait for the GUI to start before starting scripts
+Exec=/home/lanforge/script/wait_for_8080.bash 600 http://localhost:8080/ /home/lanforge/unknown-script
+Terminal=true
+Type=application
+Hidden=false
+

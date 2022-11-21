@@ -1,0 +1,346 @@
+{
+    "ct_us_002":{
+        "Notes":[
+            "The json is used to orchastrate the tests to be run on testbed ct_us_002",
+            "This json file is used as an input to the ./lf_check.py file",
+            "The variables that are all capitalized below are replaced with configuration",
+            "from the json file. so LF_MGR_IP in the test below is replaced by the json lf_mgr_ip",
+            "The replacement is loosely coupled so the upper and lower case convention is used",
+            "to identify replaced strings in the lf_check.py code."  
+        ]  
+    },
+    "test_parameters":{
+        "test_bed": "CT-US-002",
+        "test_rig": "CT-US-002",
+        "lf_mgr_ip": "192.168.100.200",
+        "lf_mgr_port": "8080",
+        "dut_set_name": "DUT_NAME NETGEAR59-5G",
+        "dut_name": "NETGEAR-AX12",
+        "dut_bssid_5g": "94:a6:7e:54:d4:33",
+        "test_timeout": 1200,
+        "load_blank_db": false,
+        "load_factory_default_db": true,
+        "load_custom_db": false,
+        "custom_db": "DFLT_ETH1_GEN",
+        "email_list_production": "konikofi@candelatech.com,greearb@candelatech.com,logan.lipke@candelatech.com,dipti.dhond@candelatech.com,chuck.rekiere@candelatech.com,matthew@candelatech.com,iain.davidson@candelatech.com,jreynolds@candelatech.com",
+        "host_ip_production": "192.168.100.201",
+        "email_list_test": "chuck.rekiere@candelatech.com",
+        "host_ip_test": "192.168.100.201",
+        "email_title_txt": "Lanforge QA Testing CT-US-002",
+        "email_txt": "Lanforge QA Testing CT-US-002"
+    },
+    "test_network":{
+        "http_test_ip": "10.40.0.10",
+        "ftp_test_ip": "10.40.0.10",
+        "test_ip": "192.168.0.104"
+    },
+    "test_generic":{
+        "radio_used": "wiphy1",
+        "ssid_used": "NETGEAR59-5G",
+        "ssid_pw_used": "crispynest798",
+        "security_used": "wpa2",
+        "num_sta": 4,
+        "col_names": "name,tx_byptes,rx_bytes,dropped",
+        "upstream_port": "1.1.eth2"
+    },
+    "test_database":{
+        "database_config": "True",
+        "database_host": "192.168.100.201",
+        "database_port": "8086",
+        "database_token": "-u_Wd-L8o992701QF0c5UmqEp7w7Z7YOMaWLxOMgmHfATJGnQbbmYyNxHBR9PgD6taM_tcxqJl6U8DjU1xINFQ==",
+        "database_org": "Candela",
+        "database_bucket": "lanforge_qa_testing",
+        "database_tag": "testbed CT-US-002"
+    },
+    "test_dashboard":{
+        "dashboard_config": "True",
+        "dashboard_host": "192.168.100.201",
+        "dashboard_token": "eyJrIjoiS1NGRU8xcTVBQW9lUmlTM2dNRFpqNjFqV05MZkM0dzciLCJuIjoibWF0dGhldyIsImlkIjoxfQ=="
+    },
+    "test_blog":{
+        "blog_config": "True",
+        "blog_host": "192.168.100.153",
+        "blog_token": "60df4b0175953f400cd30650:d50e1fabf9a9b5d3d30fe97bc3bf04971d05496a89e92a169a0d72357c81f742",
+        "blog_authors": "Matthew",
+        "blog_customer": "candela",
+        "blog_user_push": "lanforge",
+        "blog_password_push": "lanforge",
+        "blog_flag": "--kpi_to_ghost"
+    },
+    "radio_dict":{
+        "RADIO_0_CFG":{"KEY":"RADIO_0_CFG","RADIO":"wiphy0","STATIONS":"4","SSID":"NETGEAR59-5G","PASSWD":"crispynest798","SECURITY":"wpa2"},
+        "RADIO_1_CFG":{"KEY":"RADIO_1_CFG","RADIO":"wiphy1","STATIONS":"4","SSID":"NETGEAR59-5G","PASSWD":"crispynest798","SECURITY":"wpa2"}        
+<<<<<<< Updated upstream
+=======
+    },
+    "test_suites":{
+        "suite_two":{
+                "test_l3_longevity":{"enabled":"TRUE","command":"test_l3_longevity.py","args":"--test_duration 15s --polling_interval 5s --upstream_port UPSTREAM_PORT --radio 'radio==wiphy1,stations==4,ssid==ct523c-vap,ssid_pw==ct523c-vap,security==wpa2' --endp_type lf_udp --rates_are_totals --side_a_min_bps=20000 --side_b_min_bps=300000000"}
+        },
+        "auto_suite":{
+            "CT-US-002_create_chamberview_dut_1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]},
+            "CT-US-002_create_chamberview_1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ucentral-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 1 'DUT: DUT_NAME Radio-1' NA wiphy1,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 STA-AC 1 'DUT: DUT_NAME Radio-1' NA wiphy4,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA \" "
+                ]
+            },
+            "CT-US-002_lf_ap_auto_test": {
+                "enabled": "TRUE",
+                "command": "lf_ap_auto_test.py",
+                "timeout":"4800",
+                "args": "",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge",
+                    " --instance_name ap-auto-instance --config_name test_con --upstream UPSTREAM_PORT",
+                    " --dut5_0 'DUT_NAME lanforge DUT_BSSID_5G (1)' --dut2_0 'DUT_NAME lanforge DUT_BSSID_5G (1)'",
+                    " --max_stations_2 32 --max_stations_5 32 --max_stations_dual 100 --radio2 1.1.wiphy1",
+                    " --radio5 1.1.wiphy2 --set 'Basic Client Connectivity' 1",
+                    " --set 'Multi Band Performance' 0 --set 'Stability' 0 --set 'Multi-Station Throughput vs Pkt Size'  0,",
+                    " --set 'Throughput vs Pkt Size' 0 --set 'Capacity' 0 --set 'Band-Steering' 0 --set 'Skip 2.4 Ghz Tests' 1",
+                    " --pull_report --local_lf_report_dir REPORT_PATH",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "GHOST":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"ghost_profile.py",
+                "args":"",
+                "args_list":[
+                    " --ghost_token BLOG_TOKEN --ghost_host BLOG_HOST --authors BLOG_AUTHORS --customer BLOG_CUSTOMER",
+                    " --user_push BLOG_USER_PUSH --password BLOG_PASSWORD_PUSH BLOG_FLAG --grafana_token DASHBOARD_TOKEN",
+                    " --grafana_host DASHBOARD_HOST --grafana_bucket DATABASE_BUCKET --parent_folder REPORT_PATH",
+                    " --influx_host DATABASE_HOST --influx_org DATABASE_ORG --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET",
+                    " --influx_tag DATABASE_TAG "
+                ]
+            }
+        },
+        "suite_wc_dp":{
+            "CT-US-002_create_chamberview_dut_1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]},
+            "CT-US-002_create_chamberview_ATH10k_sta64":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ucentral-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 64 'DUT: DUT_NAME Radio-1' NA wiphy1,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA \" ",
+                    " --raw_line \"profile_link 1.1 routed-AP 1 NA NA wiphy0 -1 NA \" "
+                ]
+            },
+            "CT-US-002_wifi_capacity_ATH10k(9984)":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"lf_wifi_capacity_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-wct",
+                    " --upstream UPSTREAM_PORT --batch_size 1,5,25 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'ATH10K(9984)'",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "CT-US-002_create_chamberview_dut_ATH10K_wan1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]},
+            "CT-US-002_create_chamberview_ATH10k_wan1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ucentral-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 1 'DUT: DUT_NAME Radio-1' NA wiphy1,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA \" ",
+                    " --raw_line \"profile_link 1.1 routed-AP 1 NA NA wiphy0.eth1 -1 NA \" "
+                ]
+            },
+            "CT-US-002_dataplane_ATH10k(9984) CT-US-002":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"lf_dataplane_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-dpt",
+                    " --config_name test_con --upstream UPSTREAM_PORT --dut DUT_NAME --duration 30s --station 1.1.wlan1",
+                    " --download_speed 85% --upload_speed 0 --raw_line 'pkts: 60;88;120;256;512;1024;MTU' ",
+                    " --raw_line 'directions: DUT Transmit' --raw_line 'traffic_types: UDP' --raw_line 'bandw_options: 20' ",
+                    " --raw_line 'spatial_streams: 4' --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'ATH10K(9984)' ",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "CT-US-002_create_chamberview_dut_2":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]},
+            "CT-US-002_create_chamberview_AX200_sta1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ucentral-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 1 'DUT: DUT_NAME Radio-1' NA wiphy4,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA \" "                    
+                ]
+            },
+            "CT-US-002_wifi_capacity_AX200 CT-US-002":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"lf_wifi_capacity_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-wct",
+                    " --upstream UPSTREAM_PORT --batch_size 1,5,25 --loop_iter 1 --protocol UDP-IPv4 --duration 6000",
+                    " --pull_report --local_lf_report_dir REPORT_PATH --stations 1.1.wlan4 --test_tag 'ATH10K(9984)' ",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "CT-US-002_create_chamberview_dut_AX200_wan1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]},
+            "CT-US-002_create_chamberview_AX200_wan1":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ucentral-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 1 'DUT: DUT_NAME Radio-1' NA wiphy4,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA \" "                    
+                ]
+            },
+            "CT-US-002_dataplane_AX200":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"lf_dataplane_test.py",
+                "args":"",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge --instance_name cicd-dpt",
+                    " --config_name test_con --upstream UPSTREAM_PORT --dut DUT_NAME --duration 30s --station 1.1.wlan4",
+                    " --download_speed 85% --upload_speed 0 --raw_line 'pkts: 60;88;120;256;512;1024;MTU' ",
+                    " --raw_line 'directions: DUT Transmit' --raw_line 'traffic_types: UDP' --raw_line 'bandw_options: 20'",
+                    " --raw_line 'spatial_streams: 4' --pull_report --local_lf_report_dir REPORT_PATH --test_tag 'AX200'",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "CT-US-002_create_chamberview_dut_auto":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview_dut.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --dut_name DUT_NAME",
+                    " --ssid 'ssid_idx=0 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --ssid 'ssid_idx=1 ssid=NETGEAR59-5G security=WPA2 password=crispynest798 bssid=DUT_BSSID_5G'",
+                    " --sw_version DUT_SW --hw_version DUT_HW --serial_num DUT_SERIAL --model_num DUT_NAME"
+                ]},
+            "CT-US-002_create_chamberview_auto":{
+                "enabled":"TRUE",
+                "load_db":"skip",
+                "command":"create_chamberview.py",
+                "args":"",
+                "args_list":[
+                    " --lfmgr LF_MGR_IP --port LF_MGR_PORT --delete_scenario",
+                    " --create_scenario ucentral-scenario ",
+                    " --raw_line \"profile_link 1.1 STA-AC 64 'DUT: DUT_NAME Radio-1' NA wiphy1,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 STA-AC 1 'DUT: DUT_NAME Radio-1' NA wiphy4,AUTO -1 NA\" ",
+                    " --raw_line \"profile_link 1.1 upstream-dhcp 1 NA NA UPSTREAM_PORT,AUTO -1 NA \" "
+                ]
+            },
+            "CT-US-002_lf_ap_auto_test": {
+                "enabled": "FALSE",
+                "command": "lf_ap_auto_test.py",
+                "timeout": "1200",
+                "args": "",
+                "args_list":[
+                    " --mgr LF_MGR_IP --port LF_MGR_PORT --lf_user lanforge --lf_password lanforge",
+                    " --instance_name ap-auto-instance --config_name test_con --upstream UPSTREAM_PORT",
+                    " --dut5_0 'DUT_NAME lanforge DUT_BSSID_5G (1)' --dut2_0 'DUT_NAME lanforge DUT_BSSID_5G (1)'",
+                    " --max_stations_2 32 --max_stations_5 32 --max_stations_dual 100 --radio2 1.1.wiphy1",
+                    " --radio5 1.1.wiphy2 --set 'Basic Client Connectivity' 1",
+                    " --set 'Multi Band Performance' 0 --set 'Stability' 0 --set 'Multi-Station Throughput vs Pkt Size'  0,",
+                    " --set 'Throughput vs Pkt Size' 0 --set 'Capacity' 0 --set 'Band-Steering' 0 --set 'Skip 2.4 Ghz Tests' 1",
+                    " --pull_report --local_lf_report_dir REPORT_PATH  --test_tag 'AX200'",
+                    " --test_rig TEST_RIG --influx_host DATABASE_HOST --influx_port DATABASE_PORT --influx_org DATABASE_ORG",
+                    " --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET --influx_tag DATABASE_TAG --set DUT_SET_NAME"
+                ]
+            },
+            "GHOST":{"enabled":"TRUE","load_db":"skip","command":"ghost_profile.py","args":"",
+                "args_list":[
+                    " --ghost_token BLOG_TOKEN --ghost_host BLOG_HOST --authors BLOG_AUTHORS --customer BLOG_CUSTOMER",
+                    " --user_push BLOG_USER_PUSH --password BLOG_PASSWORD_PUSH BLOG_FLAG --grafana_token DASHBOARD_TOKEN",
+                    " --grafana_host DASHBOARD_HOST --grafana_bucket DATABASE_BUCKET --parent_folder REPORT_PATH",
+                    " --influx_host DATABASE_HOST --influx_org DATABASE_ORG --influx_token=DATABASE_TOKEN --influx_bucket DATABASE_BUCKET",
+                    " --influx_tag DATABASE_TAG "
+                ]
+            }
+        }
+>>>>>>> Stashed changes
+    }
+}
+			
+	
+		
+	

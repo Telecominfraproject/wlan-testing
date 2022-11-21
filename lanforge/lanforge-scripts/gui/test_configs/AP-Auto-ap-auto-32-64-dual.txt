@@ -1,0 +1,171 @@
+show_events: 1
+show_log: 1
+port_sorting: 0
+notes0: Chamber to Chamber test.
+bg: 0xE0ECF8
+test_rig: TR-398 test bed
+show_scan: 1
+auto_helper: 1
+skip_2: 1
+skip_5: 1
+dut5-0: TR398-DUT NETGEAR68-5G
+dut2-0: TR398-DUT NETGEAR68
+dut5-1: NA
+dut2-1: NA
+dut5-2: NA
+dut2-2: NA
+spatial_streams: AUTO
+bandw_options: AUTO
+modes: Auto
+upstream_port: 1.1.1 eth1
+operator: Ben Greear  @ Candela Technologies
+mconn: 1
+tos: 0
+vid_buf: 500000
+vid_speed: 700000
+reset_stall_thresh_udp_dl: 100000
+reset_stall_thresh_udp_ul: 100000
+reset_stall_thresh_tcp_dl: 100000
+reset_stall_thresh_tcp_ul: 100000
+reset_stall_thresh_l4: 100000
+reset_stall_thresh_voip: 0
+stab_udp_dl_min: 500000
+stab_udp_dl_max: 1544000
+stab_udp_ul_min: 500000
+stab_udp_ul_max: 1544000
+stab_tcp_dl_min: 500000
+stab_tcp_dl_max: 1544000
+stab_tcp_ul_min: 500000
+stab_tcp_ul_max: 1544000
+dl_speed: 85%
+ul_speed: 85%
+max_stations_2: 32
+max_stations_5: 64
+max_stations_dual: 64
+lt_sta: 2
+voip_calls: 10
+lt_dur: 120
+reset_dur: 300
+lt_gi: 30
+dur20: 20
+hunt_retries: 1
+cap_dl: 1
+cap_ul: 1
+cap_use_pkt_sizes: 0
+stability_reset_radios: 0
+pkt_loss_thresh: 10000
+frame_sizes: 200, 512, 1024, MTU
+capacities: 1, 10, 32, 64, 128
+pf_text0: # modes:  /a, /an-20 4x4, /an-40 4x4, /b, /bg, /bgn-20, /anAC-20,40,80
+pf_text1: # stations: 1, 10, 20, 50, ...
+pf_text2: # Non-specified and fields set to "*" means match all.
+pf_text3: # For a/b/g modes, Auto-BW == 20, Auto-NSS == 1
+pf_text4: # For /n modes, Auto-BW == 40, Auto-NSS == 4
+pf_text5: # For /ac and /ax modes, Auto-BW == 80, Auto-NSS == 4
+pf_text6:
+pf_text7: # /a mode
+pf_text8: 5 * 64 2Mbps mode=802.11a sta=1
+pf_text9: 5 * 1370 25Mbps mode=802.11a sta=1
+pf_text10: 5 * MTU 26Mbps mode=802.11a sta=1
+pf_text11:
+pf_text12: 5 * 64 50Mbps mode=802.11an sta=1 bw=20 nss=4
+pf_text13: 5 * 1370 245Mbps mode=802.11an sta=1 bw=20 nss=4
+pf_text14: 5 * MTU 245Mbps mode=802.11an sta=1 bw=20 nss=4
+pf_text15:
+pf_text16: 5 * 64 50Mbps mode=802.11an sta=1 bw=40 nss=4
+pf_text17: 5 * 1370 455Mbps mode=802.11an sta=1 bw=40 nss=4
+pf_text18: 5 * MTU 456Mbps mode=802.11an sta=1 bw=40 nss=4
+pf_text19:
+pf_text20: # For any amount of /b stations
+pf_text21: 2.4 * 64 1Mbps mode=802.11b sta=*
+pf_text22: 2.4 * 1370 7Mbps mode=802.11b sta=*
+pf_text23: 2.4 * MTU 7Mbps mode=802.11b sta=*
+pf_text24:
+pf_text25: # For any amount of /bg stations
+pf_text26: 2.4 * 64 2Mbps mode=802.11bg sta=*
+pf_text27: 2.4 * 1370 21Mbps mode=802.11bg sta=*
+pf_text28: 2.4 * MTU 22Mbps mode=802.11bg sta=*
+pf_text29:
+pf_text30: # For /bgn 20Mhz stations.
+pf_text31: 2.4 * 64 50Mbps mode=802.11bgn sta=1 bw=20 nss=4
+pf_text32: 2.4 * 1370 240Mbps mode=802.11bgn sta=1 bw=20 nss=4
+pf_text33: 2.4 * MTU 241Mbps mode=802.11bgn sta=1 bw=20 nss=4
+pf_text34:
+pf_text35: 2.4 * 64 50Mbps mode=802.11bgn sta=10 bw=20 nss=4
+pf_text36: 2.4 * 1370 240Mbps mode=802.11bgn sta=10 bw=20 nss=4
+pf_text37: 2.4 * MTU 241Mbps mode=802.11bgn sta=10 bw=20 nss=4
+pf_text38:
+pf_text39: 2.4 * 64 50Mbps mode=802.11bgn sta=50 bw=20 nss=4
+pf_text40: 2.4 * 1370 240Mbps mode=802.11bgn sta=50 bw=20 nss=4
+pf_text41: 2.4 * MTU 245Mbps mode=802.11bgn sta=50 bw=20 nss=4
+pf_text42:
+pf_text43: 2.4 * 64 50Mbps mode=802.11bgn sta=100 bw=20 nss=4
+pf_text44: 2.4 * 1370 235Mbps mode=802.11bgn sta=100 bw=20 nss=4
+pf_text45: 2.4 * MTU 245Mbps mode=802.11bgn sta=100 bw=20 nss=4
+pf_text46:
+pf_text47: 2.4 * 64 50Mbps mode=802.11bgn sta=200 bw=20 nss=4
+pf_text48: 2.4 * 1370 230Mbps mode=802.11bgn sta=200 bw=20 nss=4
+pf_text49: 2.4 * MTU 235Mbps mode=802.11bgn sta=200 bw=20 nss=4
+pf_text50:
+pf_text51: # 40Mhz /n on 2.4, same values for all number of stations currently.
+pf_text52: 2.4 * 64 50Mbps mode=802.11bgn sta=* bw=40 nss=4
+pf_text53: 2.4 * 1370 280Mbps mode=802.11bgn sta=* bw=40 nss=4
+pf_text54: 2.4 * MTU 281Mbps mode=802.11bgn sta=* bw=40 nss=4
+pf_text55:
+pf_text56: # For /an-AC 20Mhz stations.
+pf_text57: 5 * 64 50Mbps mode=802.11an-AC sta=1 bw=20 nss=4
+pf_text58: 5 * 1370 300Mbps mode=802.11an-AC sta=1 bw=20 nss=4
+pf_text59: 5 * MTU 305Mbps mode=802.11an-AC sta=1 bw=20 nss=4
+pf_text60:
+pf_text61: # For /an-AC 40Mhz stations
+pf_text62: 5 * 64 50Mbps mode=802.11an-AC sta=1 bw=40 nss=4
+pf_text63: 5 * 1370 615Mbps mode=802.11an-AC sta=1 bw=40 nss=4
+pf_text64: 5 * MTU 630Mbps mode=802.11an-AC sta=1 bw=40 nss=4
+pf_text65:
+pf_text66: # For /an-AC 80Mhz stations.
+pf_text67: 5 DL 64 50Mbps mode=802.11an-AC sta=1 bw=80 nss=4
+pf_text68: 5 DL 1370 1300Mbps mode=802.11an-AC sta=1 bw=80 nss=4
+pf_text69: 5 DL MTU 1300Mbps mode=802.11an-AC sta=1 bw=80 nss=4
+pf_text70: 5 UL 64 50Mbps mode=802.11an-AC sta=1 bw=80 nss=4
+pf_text71: 5 UL 1370 1100Mbps mode=802.11an-AC sta=1 bw=80 nss=4
+pf_text72: 5 UL MTU 1100Mbps mode=802.11an-AC sta=1 bw=80 nss=4
+pf_text73:
+pf_text74: 5 DL 64 50Mbps mode=802.11an-AC sta=10 bw=80 nss=4
+pf_text75: 5 DL 1370 1300Mbps mode=802.11an-AC sta=10 bw=80 nss=4
+pf_text76: 5 DL MTU 1300Mbps mode=802.11an-AC sta=10 bw=80 nss=4
+pf_text77: 5 UL 64 50Mbps mode=802.11an-AC sta=10 bw=80 nss=4
+pf_text78: 5 UL 1370 1200Mbps mode=802.11an-AC sta=10 bw=80 nss=4
+pf_text79: 5 UL MTU 1200Mbps mode=802.11an-AC sta=10 bw=80 nss=4
+pf_text80:
+pf_text81: 5 * 64 50Mbps mode=802.11an-AC sta=50 bw=80 nss=4
+pf_text82: 5 * 1370 1200Mbps mode=802.11an-AC sta=50 bw=80 nss=4
+pf_text83: 5 * MTU 1200Mbps mode=802.11an-AC sta=50 bw=80 nss=4
+pf_text84:
+pf_text85: 5 * 64 50Mbps mode=802.11an-AC sta=100 bw=80 nss=4
+pf_text86: 5 * 1370 1100Mbps mode=802.11an-AC sta=100 bw=80 nss=4
+pf_text87: 5 * MTU 1100Mbps mode=802.11an-AC sta=100 bw=80 nss=4
+pf_text88:
+pf_text89: # Auto (full capabilities) entries, for tput test, DUT is wave-1 3x3/2x2
+pf_text90: 2.4 * 64 50Mbps mode=Auto sta=* bw=Auto nss=Auto
+pf_text91: 2.4 * 1370 280Mbps mode=Auto sta=* bw=Auto nss=Auto
+pf_text92: 2.4 * MTU 282Mbps mode=Auto sta=* bw=Auto nss=Auto
+pf_text93:
+pf_text94: 5 * 64 50Mbps mode=Auto sta=* bw=Auto nss=Auto
+pf_text95: 5 * 1370 650Mbps mode=Auto sta=* bw=Auto nss=Auto
+pf_text96: 5 * MTU 650Mbps mode=Auto sta=* bw=Auto nss=Auto
+radio2-0: 1.1.8 wiphy1
+radio2-1: 1.1.9 wiphy3
+radio2-2: 1.1.10 wiphy5
+radio5-0: 1.1.3 wiphy0
+radio5-1: 1.1.5 wiphy2
+radio5-2: 1.1.7 wiphy4
+basic_cx: 1
+tput: 0
+dual_band_tput: 0
+capacity: 0
+longterm: 0
+mix_stability: 0
+loop_iter: 1
+reset_batch_size: 1
+reset_duration_min: 20000
+reset_duration_max: 30000

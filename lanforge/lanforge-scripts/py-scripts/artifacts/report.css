@@ -1,0 +1,516 @@
+html, body,div {
+  margin: 0;
+  padding:0;
+  font-size: 14px;
+}
+h1,h2,h3,h4 {
+   padding: 0em;
+   line-height: 1.5;
+   text-align: left;
+   color: rgb(42,91,41);
+}
+@font-face {
+   font-family: CenturyGothic;
+   src: url("CenturyGothic.woff"),
+        url("images/CenturyGothic.woff"),
+        url("/images/CenturyGothic.woff"),
+        url("http://www.candelatech.com/images/CenturyGothic.woff");
+}
+body,h1,h2,h3,h4 {
+   font-family: CenturyGothic, "Century Gothic", Arial, Helvetica, sans-serif;
+}
+h1 { font-size: 30px;}
+h2 { font-size: 24px;}
+h3 { font-size: 18px;}
+h4 { font-size: 14px;}
+
+li,pre,tt {
+  text-align: left;
+}
+pre {
+  font-size: 10px;
+}
+table {
+   border-collapse: collapse;
+   background: #e0e0e0;
+}
+table, td, th {
+   border: 1px solid gray;
+   padding: 4px;
+   background: white;
+}
+table.noborder, table.noborder td, table.noborder th  {
+   border: 0 none;
+}
+tr {
+   background: white;
+}
+td {
+   background: white;
+   padding: 6px;
+}
+td.ar {
+   text-align: right;
+}
+th {
+   color: rgb(42,91,41);
+   text-align: center;
+}
+td a, td a:visited {
+   color: #005500;
+}
+
+.score_card {
+}
+
+.report_card {
+}
+
+.snapshot {
+}
+
+table.snapshot th {
+    font-size: 10px;
+    padding: 2px;
+    margin: 0;
+}
+
+table.snapshot td {
+    font-size: 10px;
+    padding: 2px;
+    margin: 0;
+}
+
+table.snapshot td:not(:first-child) {
+    text-align: right;
+}
+table.snapshot td:nth-child(2),
+table.snapshot td:nth-child(3),
+table.snapshot td:nth-child(4),
+table.snapshot td:nth-child(5),
+table.snapshot td:nth-child(6),
+table.snapshot td:nth-child(8),
+table.snapshot td:nth-child(9),
+table.snapshot td:nth-child(10) {
+    white-space: nowrap;
+}
+
+table.snapshot td:nth-child(11),
+table.snapshot td:nth-child(13) {
+    font-size: 9px;
+    font-family: "Lucida Typewriter", "DejaVu Sans Mono", "Courier New", courier, monospace; 
+}
+
+.down_color {
+    color: blue;
+}
+
+.neutral_color {
+    color: #777;
+}
+
+.up_color {
+    color: green;
+}
+.fail_metric.down_color {
+   color: orange;
+}
+.fail_metric.neutral_color {
+   color: #555;
+}
+.fail_metric.up_color {
+   color: red;
+}
+.pass_metric.up_color {
+   color: green;
+}
+.pass_metric.neutral_color {
+   color: #555;
+}
+.pass_metric.down_color {
+   color: red;
+}
+
+#lf_title {
+   text-align:          center;
+   background-image:    url(candela_swirl_small-72h.png);
+   background-position: right;
+   background-repeat:   no-repeat;
+   height:              90px;
+}
+#new_chart {
+   display:       block;
+   height:        250px;
+   min-width:     200px;
+   width:         80%;
+   border:        1px solid black;
+   margin:        14px auto;
+   padding:       14px;
+   vertical-align: bottom;
+   text-align:    center;
+}
+.lf_chart {
+    margin: 1em;
+    padding: 5px;
+}
+#error_types ul {
+  background: #f0f0f0;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 1em;
+  padding-top: 0.25em;
+  padding-right: inherit;
+  padding-bottom: 0.25em;
+  padding-left: inherit;
+  max-height: 8em;
+  overflow: auto;
+}
+li {
+  line-height: 1.5;
+}
+.contentDiv2 {
+   min-width: 800px;
+   max-width: 8in;
+   margin: 1em;
+   padding: 0;
+}
+@media screen {
+    .contentDiv {
+       min-width: 800px;
+       max-width: 8in;
+       margin: 1em auto;
+       padding: 0;
+    }
+    .contentDiv pre {
+        max-height: 384px;
+    }
+    .report_card * {
+        font-size: 10px;
+        border-color: #d0d0d0;
+    }
+    .report_card td, .report_card th {
+        padding: 0 2px;
+    }
+}
+@media print {
+    .contentDiv {
+       min-width: 6in;
+       max-width: 7.5in;
+       margin: 0.125in;
+       padding: 0;
+       left: 0;
+    }
+    .report_card * {
+        font-size: 8pt;
+        border-color: #d0d0d0;
+    }
+    .report_card td, .report_card th {
+        padding: 0 1pt;
+    }
+    .report_results {
+        margin-left:-0.125in;
+    }
+    table {
+        page-break-inside: auto;
+    }
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+    thead {
+        page-break-inside: avoid;
+        display: table-header-group;
+    }
+    tfoot {
+        page-break-inside: avoid;
+        display: table-footer-group;
+    }
+}
+.ct-point {
+  stroke-width: 6px;
+}
+
+.o_el {
+   display:       inline-block;
+   width:         100px;
+   height:        230px;
+   border:        none;
+   margin:        1px  1px 16px 1px;
+   padding:       10px 10px 0 10px;
+   background:    #eee;
+   text-align:    center;
+   vertical-align: bottom;
+}
+.bar_el {
+   display:    block;
+   background: green;
+   border:     none;
+   min-height: 1px;
+
+   margin:     0 0 5px 0;
+   padding:    0;
+   text-align: center;
+}
+.label_el {
+   color:         black;
+   display:       block;
+   font-size:     14px;
+   font-family:   Arial,Helvetica,sans-serif,mono;
+   margin:        1px;
+   text-align:    center;
+   vertical-align: bottom;
+   width:         inherit;
+}
+.value_el {
+   font-family:   Arial,Helvetica,sans-serif,mono;
+   color:         black;
+   display:       block;
+   font-size:     14px;
+   margin:        0 auto;
+   padding:       0;
+   border:        none;
+   background:    white;
+   text-align:    center;
+   vertical-align: bottom;
+   width:         auto;
+}
+.value_el>span {
+  background: #f0f0f0a0;
+  border: 1px solid #f0f0f0a0;
+  border-radius: 5px;
+  padding: 1px;
+  min-width: 2em;
+}
+.error {
+   color: red;
+}
+
+@media only screen {
+.hideFromPrint { }
+.hideFromScreen { display:none; }
+}
+@media only print {
+.hideFromScreen { }
+.hideFromPrint { display:none; }
+}
+
+/* these styles will get overridden by custom.css */
+#BannerBack {
+   background-color: #e68b15;
+   height:           205px;
+   max-height:       205px;
+   border:           0 none;
+   margin:           0;
+   padding:          0;
+   top:              0;
+   left:             0;
+   width:            100%;
+}
+#Banner {
+   background-image:url("banner.png");
+   background-repeat:no-repeat;
+   padding:    0;
+   margin:     0 auto;
+   min-width:  1000px;
+   min-height: 205px;
+   width:      1000px;
+   height:     205px;
+   max-width:  1000px;
+   max-height: 205px;
+}
+
+#BannerLeft {
+   background-image:url("banner.png");
+   background-repeat:no-repeat;
+   padding:    0;
+   margin:     0 1em;
+   min-width:  1000px;
+   min-height: 205px;
+   width:      1000px;
+   height:     205px;
+   max-width:  1000px;
+   max-height: 205px;
+}
+
+#BannerLogo {
+   text-align: right;
+   padding:    25px;
+   margin:     5px;
+   width:      200px;
+   border:     none;
+   filter:         drop-shadow(4px 1px 2px #D0D7FE);
+   -webkit-filter: drop-shadow(4px 1px 2px #D0D7FE);
+}
+#BannerLogoFooter {
+   text-align: right;
+   padding:    1px;
+   margin:     1px;
+   width:      200px;
+   border:     none;
+}
+.TitleFontScreen {
+   margin-left:   auto;
+   margin-right:  auto;
+   margin-top:    1em;
+   margin-bottom: 0.2em;
+   font-size:     50px;
+   padding-top:   1em;
+}
+
+.TitleFontPrint {
+   line-height:   1;
+   margin-left:   0px;
+   margin-right:  auto;
+   margin-top:    0.5em;
+   margin-bottom: 0.2em;
+   /* font-size:     50px;  Let h1 control */
+   padding-top:   20px;
+   padding-left:  20px;
+   color:         darkgreen;
+}
+
+.TitleFontPrintSub {
+   line-height:   1;
+   margin-left:   0px;
+   margin-right:  auto;
+   margin-top:    12px;
+   margin-bottom: 0;
+   /*font-size: 20px; Let 'h3', etc control this */
+   padding-top:   4px;
+   padding-left:  20px;
+}
+
+.HeaderFont {}
+.TableFont {}
+.TableBorder {}
+.ImgStyle {}
+div.HeaderStyle>h1.TitleFontPrint {
+    font-size: 45px;
+    /*height: 85px;*/
+    max-height: 160px;
+}
+div.HeaderStyle>h3.TitleFontPrintSub {
+    padding-top: 5px;
+    font-size: 30px;
+}
+div.HeaderStyle>h4.TitleFontPrintSub {
+    padding-top: 5px;
+    font-size: 18px;
+}
+
+div.Section h1, div.Section h2 {
+   margin: 0 0 0 0em;
+}
+div.HeaderStyle h1, div.HeaderStyle h2 {
+   text-align: left;
+   margin: 0 0 0 0;
+   max-width: 8in;
+   min-width: 800px;
+}
+div.Section {
+   padding: 5px;
+   position: relative;
+}
+div.Section img {
+   margin: 0;
+   padding: 0;
+   position: relative;
+   top: 50%;
+   transform: translateY(-50%);
+}
+footer.FooterStyle, div.FooterStyle {
+   width: 100%;
+   vertical-align: middle;
+   border: 0 none;
+   border-top: 2px solid #2A5B29;
+   color: #2A5B29;
+   font-size: 12px;
+   margin-top: 2em;
+}
+footer.FooterStyle img, div.FooterStyle img {
+   width: auto;
+   height: auto;
+   text-align: right;
+}
+footer.FooterStyle span.Gradient, div.FooterStyle span.Gradient {
+   background: white;
+   color: #2A5B29;
+   display: inline-block;  
+   height: 30px;
+   line-height: 1;
+   padding-top: 22px;
+   padding-bottom: 20px;
+   padding-left: 2em;
+   vertical-align: middle;
+   max-width:80%;
+   float:left;
+   width:50%;
+}
+.FooterStyle a, .FooterStyle a:visited {
+   color: #2A5B29;
+   font-size: 12px;
+   line-height: 1;
+   height: 30px;
+   margin: 0;
+   padding: 0;
+   vertical-align: middle;
+}
+footer.FooterStyle a.LogoImgLink, div.FooterStyle a.LogoImgLink {
+   display: inline-block;
+   text-align: right;
+   float: right;
+}
+a .LogoImgLink {
+}
+a.LogoImgLink img {
+}
+
+.DateFont {
+   white-space: pre;
+   font-size: smaller;
+}
+.TimeFont {
+   white-space: pre;
+}
+
+table.dataframe {
+   margin: 1em;
+   padding: 0;
+}
+table.dataframe tr th {
+   padding: 0.5em;
+}
+
+.scriptdetails tt {
+   font-size: 10px;
+   overflow: auto;
+   font-family: Consolas,monaco,"Lucida Sans Typewriter","Lucida Typewriter","Courier New",monospace;
+   color: #777;
+   padding: 2px;
+   line-height: 1.05;
+   display: block;
+   margin: 0;
+   padding: 0;
+   width: inherit;
+   height: inherit;
+   background: inherit;
+   white-space: break-spaces;
+}
+.scriptdetails:hover tt {
+   background: #dfd;
+   cursor: pointer;
+}
+td.scriptdetails {
+   padding: 2px !important;
+}
+td.scriptdetails span.copybtn {
+   display: none;
+}
+td.scriptdetails:hover span.copybtn {
+   display: inline-block;
+   padding: 2px;
+   font-size:10px;
+   float: left;
+   color: #050;
+   background: white;
+}

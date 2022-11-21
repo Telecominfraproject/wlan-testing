@@ -1,0 +1,55 @@
+[BLANK]
+sel_port-0: 1.1.sta0000
+show_events: 1
+show_log: 0
+port_sorting: 0
+bg: 0xE0ECF8
+test_rig:
+show_scan: 1
+auto_helper: 0
+skip_2: 0
+skip_5: 0
+selected_dut: TR398-DUT
+duration: 10000
+traffic_port: 1.1.10 sta00000
+upstream_port: 1.1.1 eth1
+path_loss: 10
+speed: 75%
+speed2: 56Kbps
+min_rssi_bound: -150
+max_rssi_bound: 0
+channels: AUTO
+modes: Auto
+pkts: 60;142;256;512;1024;MTU;4000
+spatial_streams: AUTO
+security_options: AUTO
+bandw_options: AUTO
+traffic_types: UDP
+directions: DUT Transmit
+txo_preamble: OFDM
+txo_mcs: 0 CCK, OFDM, HT, VHT
+txo_retries: No Retry
+txo_sgi: OFF
+txo_txpower: 15
+attenuator: 0
+attenuator2: 0
+attenuator_mod: 255
+attenuator_mod2: 255
+attenuations: 0 300
+attenuations2: 0 300
+chamber: 0
+tt_deg: 0..+45..359
+cust_pkt_sz:
+show_3s: 0
+show_ll_graphs: 0
+show_gp_graphs: 1
+show_1m: 1
+pause_iter: 0
+show_realtime: 1
+operator:
+mconn: 1
+mpkt: 1000
+tos: 0
+loop_iterations: 1
+
+

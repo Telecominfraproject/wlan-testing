@@ -1,0 +1,64 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "simple": {
+            "format": "%(created)f %(name)s %(levelname)-8s %(filename)s %(lineno)s %(funcName)s  [%(module)s]: %(message)s"
+        },
+        "extra": {
+            "format":"%(asctime)-16s %(name)-8s %(filename)-12s %(lineno)-6s %(funcName)-16s %(levelname)-8s [%(module)s]: %(message)s",
+                 "datefmt":"%m-%d %H:%M:%S"},
+        "extra2": {
+            "format":"%(created)f %(name)-8s %(filename)-12s %(lineno)-6s %(funcName)-16s %(levelname)-8s [%(module)s]: %(message)s",
+                    "datefmt":"%m-%d %H:%M:%S"}
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "extra2",
+            "stream": "ext://sys.stdout"
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "extra2",
+            "filename": "test.log",
+            "mode": "w",
+            "encoding": "utf-8"
+        }
+    },
+    "loggers": {
+        "py-scripts.sandbox.lf_sublogger_2":{
+            "level": "CRITICAL",
+            "handlers": ["console", "file"],
+            "propagate": false
+        },
+        "py-json.LANforge.LFRequest":{
+            "level": "CRITICAL",
+            "handlers": ["console", "file"],
+            "propagate": false
+        },
+        "py-scripts.sandbox.lf_sublogger_2.json":{
+            "level": "DEBUG",
+            "handlers": ["console", "file"],
+            "propagate": false
+        },
+        "py-scripts.sandbox.lf_sublogger_2.http":{
+            "level": "INFO",
+            "handlers": ["console", "file"],
+            "propagate": false
+        },
+        "__main__":{
+            "level": "CRITICAL",
+            "handlers": ["console", "file"],
+            "propagate": false
+        }
+    },        
+    "root": {
+        "level": "CRITICAL",
+        "handlers": ["console", "file"],
+        "propagate": false
+    }
+}
