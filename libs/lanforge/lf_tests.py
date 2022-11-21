@@ -118,6 +118,10 @@ class RunTest:
                 print("hi", self.lanforge_port)
                 self.local_report_path = local_report_path
             else:
+                self.controller_ip = configuration_data['controller']["ip"]
+                self.controller_user = configuration_data['controller']["username"]
+                self.controller_passwd = configuration_data['controller']["password"]
+                self.controller_prompt = configuration_data['controller']["prompt"]
                 self.lanforge_ip = configuration_data['traffic_generator']['details']["ip"]
                 print("lanforge ip ", self.lanforge_ip)
                 self.lanforge_port = configuration_data['traffic_generator']['details']["port"]
@@ -1252,7 +1256,13 @@ class RunTest:
         return atten_serial_radio
 
     def create_n_clients(self, start_id=0, sta_prefix=None, num_sta=None, dut_ssid=None,
-                         dut_security=None, dut_passwd=None, band=None, radio=None, lf_tools=None, type=None, identity=None, ttls_pass=None):
+                         dut_security=None, dut_passwd=None, band=None, radio=None, lf_tools=None,
+                         type=None, identity=None, ttls_pass=None):
+        print(dut_ssid)
+        print(dut_security)
+        print(dut_passwd)
+        print(type)
+
 
         local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         station_profile = local_realm.new_station_profile()
@@ -1275,7 +1285,7 @@ class RunTest:
                                                debug=True)
             time.sleep(2)
             print("pre cleanup done")
-
+        print("creating station on LANforge")
         station_list = LFUtils.portNameSeries(prefix_=sta_prefix, start_id_=start_id,
                                                             end_id_=num_sta - 1, padding_number_=10000,
                                                             radio=radio)
@@ -1283,6 +1293,7 @@ class RunTest:
         if type == "11r-sae-802.1x":
             dut_passwd = "[BLANK]"
         station_profile.use_security(dut_security, dut_ssid, dut_passwd)
+
         station_profile.set_number_template("00")
 
         station_profile.set_command_flag("add_sta", "create_admin_down", 1)
@@ -1551,10 +1562,10 @@ class RunTest:
                            traffic_type="lf_udp",
                            path="../lanforge/lanforge-scripts",
                            scheme="ssh",
-                           dest="localhost",
-                           user="admin",
-                           passwd="Cisco123",
-                           prompt="WLC2",
+                           dest=self.controller_ip,
+                           user=self.controller_user,
+                           passwd=self.controller_passwd,
+                           prompt=self.controller_prompt,
                            series_cc="9800",
                            ap="AP687D.B45C.1D1C",
                            port="8888",
