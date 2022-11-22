@@ -22,8 +22,10 @@ setup_params_general = {
 }
 
 
-@allure.suite("performance")
-@allure.feature("BRIDGE MODE open security and Dataplane Throughput Test")
+@allure.feature("Dataplane Tests")
+@allure.parent_suite("Dataplane Tests")
+@allure.suite(suite_name="Open Security")
+@allure.sub_suite(sub_suite_name="BRIDGE Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -39,6 +41,7 @@ class TestDataplaneThroughputBRIDGE(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
     @pytest.mark.open
     @pytest.mark.twog
+    @allure.title("Test for TCP UDP 2.4 GHz")
     def test_tcp_upd_open_bridge_2g_band(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs, client_type,
                                          get_target_object,
@@ -63,6 +66,7 @@ class TestDataplaneThroughputBRIDGE(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3674", name="WIFI-3674")
     @pytest.mark.open
     @pytest.mark.fiveg
+    @allure.title("Test for TCP UDP 5 GHz")
     def test_tcp_upd_open_bridge_5g_band(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs, client_type,
                                          get_target_object,

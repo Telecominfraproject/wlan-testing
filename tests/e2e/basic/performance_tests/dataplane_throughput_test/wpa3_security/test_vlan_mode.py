@@ -25,8 +25,10 @@ setup_params_general = {
 }
 
 
-@allure.suite("performance")
-@allure.feature("VLAN MODE wpa3_personal security and Dataplane Throughput Test")
+@allure.feature("Dataplane Tests")
+@allure.parent_suite("Dataplane Tests")
+@allure.suite(suite_name="WPA3 Personal Security")
+@allure.sub_suite(sub_suite_name="VLAN Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -42,6 +44,7 @@ class TestDataplaneThroughputVLAN(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3673", name="WIFI-3673")
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
+    @allure.title("Test for TCP UDP Download 2.4 GHz")
     def test_tcp_udp_wpa3_personal_vlan_2g_band(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs, client_type,
                                                 get_target_object,
@@ -69,6 +72,7 @@ class TestDataplaneThroughputVLAN(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3674", name="WIFI-3674")
     @pytest.mark.wpa3_personal
     @pytest.mark.fiveg
+    @allure.title("Test for TCP UDP Download 5 GHz")
     def test_tcp_udp_wpa3_personal_vlan_5g_band(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs, client_type,
                                                 get_target_object,
@@ -95,6 +99,7 @@ class TestDataplaneThroughputVLAN(object):
 
     @pytest.mark.wpa3_personal
     @pytest.mark.sixg
+    @allure.title("Test for TCP UDP Download 6 GHz")
     def test_tcp_udp_wpa3_personal_vlan_6g_band(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs, client_type,
                                                 get_target_object,

@@ -22,7 +22,10 @@ setup_params_general_2G = {
 }
 
 
-@allure.feature("Client Scale Test")
+@allure.feature("Client Scale Tests")
+@allure.parent_suite("Client Scale Tests")
+@allure.suite(suite_name="WPA2 Personal Security")
+@allure.sub_suite(sub_suite_name="BRIDGE Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_2G],
@@ -41,6 +44,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3928", name="WIFI-3928")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_download
+    @allure.title("Test for TCP Download 2.4 GHz")
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
         """ Client Scale Test BRIDGE mode
@@ -59,6 +63,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3930", name="WIFI-3930")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_download
+    @allure.title("Test for UDP Download 2.4 GHz")
     def test_client_wpa2_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
         """ Client Scale Test BRIDGE mode
@@ -77,6 +82,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3934", name="WIFI-3934")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_bidirectional
+    @allure.title("Test for TCP Bidirectional 2.4 GHz")
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
@@ -96,6 +102,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3935", name="WIFI-3935")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_bidirectional
+    @allure.title("Test for UDP Bidirectional 2.4 GHz")
     def test_client_wpa2_BRIDGE_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
@@ -115,6 +122,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_upload
+    @allure.title("Test for TCP Upload 2.4 GHz")
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
@@ -134,6 +142,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_upload
+    @allure.title("Test for UDP Upload 2.4 GHz")
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
@@ -163,7 +172,10 @@ setup_params_general_5G = {
 }
 
 
-@allure.feature("Client Scale Test")
+@allure.feature("Client Scale Tests")
+@allure.parent_suite("Client Scale Tests")
+@allure.suite(suite_name="WPA2 Personal Security")
+@allure.sub_suite(sub_suite_name="BRIDGE Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_5G],
@@ -182,6 +194,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3929", name="WIFI-3929")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_download
+    @allure.title("Test for TCP Download 5 GHz")
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
@@ -202,6 +215,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3931", name="WIFI-3931")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_download
+    @allure.title("Test for UDP Download 5 GHz")
     def test_client_wpa2_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
@@ -221,6 +235,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3936", name="WIFI-3936")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_bidirectional
+    @allure.title("Test for TCP Bidirectional 5 GHz")
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
@@ -240,6 +255,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3937", name="WIFI-3937")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_bidirectional
+    @allure.title("Test for UDP Bidirectional 5 GHz")
     def test_client_wpa2_BRIDGE_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
@@ -258,6 +274,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
     @pytest.mark.udp_upload
     @pytest.mark.wpa2_personal
+    @allure.title("Test for UDP Upload 5 GHz")
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
@@ -276,6 +293,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
     @pytest.mark.tcp_upload
     @pytest.mark.wpa2_personal
+    @allure.title("Test for TCP Upload 5 GHz")
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
