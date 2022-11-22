@@ -53,6 +53,7 @@ class TestBridgeModeConnectSuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.twog
+    @pytest.mark.general_securtiy
     @allure.story('OPEN 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connect Test with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4565", name="JIRA LINK")
@@ -75,6 +76,7 @@ class TestBridgeModeConnectSuiteA(object):
 
     @pytest.mark.open
     @pytest.mark.fiveg
+    @pytest.mark.general_securtiy
     @allure.story('OPEN 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connect Test with open encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4566", name="JIRA LINK")
@@ -98,6 +100,7 @@ class TestBridgeModeConnectSuiteA(object):
 
     @pytest.mark.wpa
     @pytest.mark.twog
+    @pytest.mark.general_securtiy
     @allure.story('wpa 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connect Test with wpa encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4567", name="JIRA LINK")
@@ -120,6 +123,7 @@ class TestBridgeModeConnectSuiteA(object):
 
     @pytest.mark.wpa
     @pytest.mark.fiveg
+    @pytest.mark.general_securtiy
     @allure.story('wpa 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connect Test with wpa encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4568", name="JIRA LINK")
@@ -142,6 +146,7 @@ class TestBridgeModeConnectSuiteA(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.general_securtiy
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connect Test with wpa2_personal encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4569", name="JIRA LINK")
@@ -166,6 +171,7 @@ class TestBridgeModeConnectSuiteA(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.general_securtiy
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connect Test with wpa2_personal encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4570", name="JIRA LINK")
@@ -176,7 +182,7 @@ class TestBridgeModeConnectSuiteA(object):
             pytest -m "client_connect_tests and bridge and general and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = profile_data["ssid_name"]
+        ssid_name = "ssid_wpa2_2g_RL_NDF2716"
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
