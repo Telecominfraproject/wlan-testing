@@ -440,4 +440,3 @@ class TestNATModeEnterpriseTLSSuiteTwo(object):
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
-
