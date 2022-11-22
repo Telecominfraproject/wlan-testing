@@ -46,6 +46,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa enterprise 2.4 GHz")
     def test_wpa_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                get_test_device_logs, execution_number,
@@ -77,6 +78,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa enterprise 5 GHz")
     def test_wpa_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                get_test_device_logs, execution_number,
@@ -108,6 +110,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa2 enterprise 2.4 GHz")
     def test_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, execution_number,
@@ -137,6 +140,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa2 enterprise 5 GHz")
     def test_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, execution_number,
@@ -166,6 +170,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa3 enterprise 2.4 GHz")
     def test_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, execution_number,
@@ -196,6 +201,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa3 enterprise 5 GHz")
     def test_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, execution_number,
@@ -258,6 +264,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa wpa2 enterprise 2.4 GHz")
     def test_wpa_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, execution_number,
@@ -289,6 +296,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa wpa2 enterprise 5 GHz")
     def test_wpa_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, execution_number,
@@ -320,6 +328,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa3 enterprise mixed 2.4 GHz")
     def test_wpa3_enterprise_mixed_2g(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, execution_number,
@@ -349,6 +358,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
+    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa3 enterprise mixed 5 GHz")
     def test_wpa3_enterprise_mixed_5g(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, execution_number,
