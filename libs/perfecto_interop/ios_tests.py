@@ -44,7 +44,7 @@ class ios_tests(ios_libs):
         try:
             ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
-            if ssid_with_internet is True and ssid_found is True:
+            if ssid_with_internet is not None and ssid_found is True:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -75,7 +75,7 @@ class ios_tests(ios_libs):
             ssid_with_internet, setup, ssid_found = self.wifi_connect_eap(ssid=ssid, user=identity, ttls_passwd=ttls_passwd,
                                                               setup_perfectoMobile=setup_perfecto_mobile,
                                                               connData=self.connData)
-            if ssid_with_internet is True and ssid_found is True:
+            if ssid_with_internet is not None and ssid_found is True:
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -104,7 +104,7 @@ class ios_tests(ios_libs):
         try:
             ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
-            if ssid_with_internet is True and ssid_found is True:
+            if ssid_with_internet is not None and ssid_found is True:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 current_result = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -134,7 +134,7 @@ class ios_tests(ios_libs):
             ssid_with_internet, setup, ssid_found = self.wifi_connect_eap(ssid=ssid, user=identity, ttls_passwd=ttls_passwd,
                                                               setup_perfectoMobile=setup_perfecto_mobile,
                                                               connData=self.connData)
-            if ssid_with_internet is True and ssid_found is True:
+            if ssid_with_internet is not None and ssid_found is True:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 current_result = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -162,7 +162,7 @@ class ios_tests(ios_libs):
         ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
         try:
-            if ssid_with_internet is True and ssid_found is True:
+            if ssid_with_internet is not None and ssid_found is True:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
@@ -194,7 +194,7 @@ class ios_tests(ios_libs):
             ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid, passkey=passkey,
                                                           setup_perfectoMobile=setup_perfecto_mobile,
                                                           connData=self.connData)
-            if ssid_with_internet is True and ssid_found is True:
+            if ssid_with_internet is not None and ssid_found is True:
                 wifi_toggleing = self.toggle_wifi_mode(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile,
                                                     connData=self.connData)
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
@@ -225,7 +225,7 @@ class ios_tests(ios_libs):
                                                                           ttls_passwd=ttls_passwd,
                                                                           setup_perfectoMobile=setup_perfecto_mobile,
                                                                           connData=self.connData)
-            if ssid_with_internet is True and ssid_found is True:
+            if ssid_with_internet is not None and ssid_found is True:
                 wifi_toggleing = self.toggle_wifi_mode(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile,
                                                     connData=self.connData)
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)

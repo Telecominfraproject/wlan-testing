@@ -1278,6 +1278,7 @@ class android_libs:
                             "android.widget.LinearLayout[4]/android.widget.RelativeLayout[1]/"
                             "android.widget.TextView[2]")
                         ip_address_element_text = ip_address_element_text.text
+                        print("IP Address:", ip_address_element_text)
 
                     except:
                         print("Unable to get IP address")
