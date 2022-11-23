@@ -23,7 +23,7 @@ from xml.etree import ElementTree as ET
 
 
 class android_libs:
-    global driver, perfecto_execution_context
+    global driver, perfecto_execution_context, deviceModel
     android_devices = {
         "Galaxy S20": {
             "platformName-android": "Android",
@@ -390,7 +390,7 @@ class android_libs:
     # Used to get the Android Device driver obj for further utility,Base function for Android Tests
     def setup_perfectoMobile_android(self, get_device_configuration, perfecto_data):
         from appium import webdriver
-        global perfecto_execution_context, driver
+        global perfecto_execution_context, driver, deviceModel
         driver = None
         reporting_client = None
         print("Device CONFIG:", get_device_configuration)
@@ -461,7 +461,7 @@ class android_libs:
 
     # Teardown function used to release all the data that presently hold from Perfecto
     def teardown(self):
-        global driver, perfecto_execution_context
+        global driver, perfecto_execution_context, deviceModel
         reporting_client = PerfectoReportiumClient(perfecto_execution_context)
         try:
             print("\n---------- Tear Down ----------")

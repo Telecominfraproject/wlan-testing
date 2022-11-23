@@ -108,7 +108,7 @@ class TestBridgeModeConnectSuiteA(object):
                                                num_stations, setup_configuration):
         """
             BRIDGE Mode Client Connect Test with wpa encryption 2.4 GHz Band
-            pytest -m "client_connectivity_tests and bridge and general and wpa and twog"
+            pytest -m "client_connect_tests and bridge and general and wpa and twog"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"][0]
         ssid_name = profile_data["ssid_name"]
