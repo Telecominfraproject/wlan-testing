@@ -1047,7 +1047,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-        echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
