@@ -15,16 +15,16 @@ setup_params_general = {
              "appliedRadios": ["2G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 100,
-                 "egress-rate": 100
+                 "ingress-rate": 10,
+                 "egress-rate": 5
              }
              },
             {"ssid_name": "ssid_wpa2_5g_br",
              "appliedRadios": ["5G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 100,
-                 "egress-rate": 100
+                 "ingress-rate": 10,
+                 "egress-rate": 5
              }
              }]},
     "rf": {},
@@ -62,8 +62,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -93,8 +93,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -126,8 +126,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -157,8 +157,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         profile_data["rate-limit"][0] = 0
@@ -190,8 +190,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -221,8 +221,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -253,8 +253,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -284,8 +284,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -315,8 +315,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -348,8 +348,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -379,8 +379,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -410,8 +410,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -441,8 +441,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -472,8 +472,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -503,8 +503,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -534,8 +534,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -565,8 +565,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -598,8 +598,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -630,8 +630,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]
@@ -662,8 +662,8 @@ class TestRateLimitingBridge(object):
                         "appliedRadios": ["5G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 100,
-                            "egress-rate": 100
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }
                         }
         ssid_name = profile_data["ssid_name"]

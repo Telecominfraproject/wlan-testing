@@ -21,8 +21,8 @@ setup_params_general = {
              "appliedRadios": ["2G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 50,
-                 "egress-rate": 50
+                 "ingress-rate": 10,
+                 "egress-rate": 5
              },
              "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
              "radius_acc_data": RATE_LIMITING_RADIUS_ACCOUNTING_DATA
@@ -32,8 +32,8 @@ setup_params_general = {
              "appliedRadios": ["5G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 50,
-                 "egress-rate": 50
+                 "ingress-rate": 10,
+                 "egress-rate": 5
              },
              "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
              "radius_acc_data": RATE_LIMITING_RADIUS_ACCOUNTING_DATA
@@ -73,8 +73,8 @@ class TestRateLimitingWithRadiusBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 50,
-                            "egress-rate": 50
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -118,8 +118,8 @@ class TestRateLimitingWithRadiusBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 50,
-                            "egress-rate": 50
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -162,8 +162,8 @@ class TestRateLimitingWithRadiusBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 50,
-                            "egress-rate": 50
+                            "ingress-rate": 10,
+                            "egress-rate": 5
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
