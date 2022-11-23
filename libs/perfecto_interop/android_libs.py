@@ -1279,6 +1279,7 @@ class android_libs:
                             "android.widget.TextView[2]")
                         ip_address_element_text = ip_address_element_text.text
                         print("IP Address:", ip_address_element_text)
+                        return ip_address_element_text
 
                     except:
                         print("Unable to get IP address")
