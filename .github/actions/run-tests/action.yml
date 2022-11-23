@@ -44,7 +44,7 @@ runs:
     - name: set job name
       shell: bash
       id: job
-      run: echo "::set-output name=name::testing"
+      run: echo "name=testing" >> $GITHUB_OUTPUT
 
     - name: create configuration secret
       shell: bash
@@ -146,7 +146,7 @@ runs:
 
     - name: upload Allure results as artifact
       if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.allure_results_artifact_name }}
         path: allure-results

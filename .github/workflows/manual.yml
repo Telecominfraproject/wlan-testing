@@ -41,7 +41,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
@@ -55,7 +55,7 @@ jobs:
     timeout-minutes: 1440
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install JRE
         run: |
           sudo apt-get update
@@ -79,7 +79,7 @@ jobs:
       - name: save time for logs gathering
         id: logs_start_time
         run: |
-          echo ::set-output name=time::$(date --iso-8601=s)
+          echo "time::$(date --iso-8601=s)" >> $GITHUB_OUTPUT
 
       - name: tests env info
         run: |
@@ -143,9 +143,9 @@ jobs:
     if: always()
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: allure-results
           path: allure-results
@@ -156,7 +156,7 @@ jobs:
           results_path: ./allure-results
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: allure-report
           path: allure-report
@@ -176,7 +176,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:

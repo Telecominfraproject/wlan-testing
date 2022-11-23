@@ -40,12 +40,12 @@ jobs:
     steps:
     # checkout needed repositories
     - name: Checkout Testing repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: wlan-testing
 
     - name: Checkout LANforge scripts
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: wlan-lanforge-scripts
         repository: Telecominfraproject/wlan-lanforge-scripts
@@ -69,9 +69,9 @@ jobs:
     timeout-minutes: 1440
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.8'
 
@@ -90,8 +90,8 @@ jobs:
       if: always()
       id: reservation
       run: |
-        echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-        echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+        echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
+        echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
 
     - name: install JRE
       run: |
@@ -117,7 +117,7 @@ jobs:
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_id }}"
-        echo "::set-output name=name::${NAMESPACE}"
+        echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
     - name: prepare configuration
       env:
@@ -171,7 +171,7 @@ jobs:
         results_path: ./allure-results
 
     - name: upload Allure report as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: allure-report
         path: allure-report

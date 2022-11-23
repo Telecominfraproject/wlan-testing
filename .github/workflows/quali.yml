@@ -54,10 +54,10 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'release-latest' }}")
-          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'ow_sanity_lf' }}")
-          echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || 'qa01' }}")
+          echo "openwifi=$(echo ${{ github.event.inputs.openwifi_revision || 'main' }})" >> $GITHUB_OUTPUT
+          echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'release-latest' }})" >> $GITHUB_OUTPUT
+          echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'ow_sanity_lf' }})" >> $GITHUB_OUTPUT
+          echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
 
           DOW=$(date +%u)
           SLOT=$(( 10#$DOW % 7 % 2 )) # 0 - slot 1, 1 - slot 2
@@ -73,13 +73,13 @@ jobs:
           fi
           echo "List of AP models to test - $AP_MODELS"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-          echo "::set-output name=ap_models::${AP_MODELS}"
+          echo "ap_models=${AP_MODELS}" >> $GITHUB_OUTPUT
 
   # Build test image
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
@@ -101,11 +101,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -125,12 +125,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -146,7 +146,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -232,11 +232,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -258,12 +258,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -279,7 +279,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -362,11 +362,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -386,12 +386,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -407,7 +407,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -490,11 +490,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -514,12 +514,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -535,7 +535,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -618,11 +618,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -642,12 +642,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -663,7 +663,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -746,11 +746,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -770,12 +770,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -791,7 +791,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -874,11 +874,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -898,12 +898,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -919,7 +919,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -1002,11 +1002,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -1026,12 +1026,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -1047,7 +1047,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+        echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -1130,11 +1130,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -1154,12 +1154,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -1175,7 +1175,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -1259,11 +1259,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -1283,12 +1283,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo identifier="$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -1304,7 +1304,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -1388,11 +1388,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -1412,12 +1412,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -1433,7 +1433,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -1517,11 +1517,11 @@ jobs:
       - name: Set AP model output
         id: ap_model
         run: |
-          echo "::set-output name=model::${AP_MODEL}"
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -1541,12 +1541,12 @@ jobs:
         if: always()
         id: reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
-            echo ::set-output name=namespace::"${{ needs.vars.outputs.existing_controller }}"
+            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
           fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
@@ -1562,7 +1562,7 @@ jobs:
         id: namespace
         run: |
           NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "::set-output name=name::${NAMESPACE}"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
         run: |
@@ -1645,9 +1645,9 @@ jobs:
 
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: allure-results-${{ matrix.model }}
           path: allure-results
@@ -1667,7 +1667,7 @@ jobs:
             Ap.Model=${{ matrix.model }}
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: allure-report-${{ matrix.model }}
           path: allure-report
@@ -1692,7 +1692,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:

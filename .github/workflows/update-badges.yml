@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3.8
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-lanforge-scripts
         path: lanforge/lanforge-scripts
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         ref: badges
         path: badges
@@ -55,7 +55,7 @@ jobs:
         git diff-index --quiet HEAD || git commit -m "Updating test count badges: $(date -u)"
 
     - name: push changes
-      uses: ad-m/github-push-action@v0.6.0
+      uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         directory: badges
