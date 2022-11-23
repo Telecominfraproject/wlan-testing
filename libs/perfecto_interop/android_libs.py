@@ -1131,6 +1131,7 @@ class android_libs:
                             "TextView[@resource-id='com.android.settings:id/summary']")
                         ip_address_ele_text = ip_address_ele.text
                         print("Device IP address is :", ip_address_ele_text)
+                        return ip_address_ele_text
                     except:
                         try:
                             time.sleep(2)
@@ -1139,6 +1140,7 @@ class android_libs:
                                 "TextView[@resource-id='android:id/summary']")
                             ip_address_element_text = ip_address_element.text
                             print("Device IP address is :", ip_address_element_text)
+                            return ip_address_element_text
                         except:
                             print("IP address element not found")
                             logging.error("IP address element not found")
@@ -1284,6 +1286,7 @@ class android_libs:
                     except:
                         print("Unable to get IP address")
                         logging.error("Unable to get IP address")
+                        return None
                 except:
                     print("Couldn't get into Additional settings")
                     logging.error("Couldn't get into Additional settings")
@@ -1353,6 +1356,7 @@ class android_libs:
                     return ip_address_element_text
                 except:
                     print("IP address element not found")
+                    return None
             except:
                 print("Couldn't get into Additional settings")
 
