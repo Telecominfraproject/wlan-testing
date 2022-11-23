@@ -23,7 +23,7 @@ from xml.etree import ElementTree as ET
 
 
 class android_libs:
-    global driver, perfecto_execution_context
+    global driver, perfecto_execution_context, deviceModel
     android_devices = {
         "Galaxy S20": {
             "platformName-android": "Android",
@@ -390,7 +390,7 @@ class android_libs:
     # Used to get the Android Device driver obj for further utility,Base function for Android Tests
     def setup_perfectoMobile_android(self, get_device_configuration, perfecto_data):
         from appium import webdriver
-        global perfecto_execution_context, driver
+        global perfecto_execution_context, driver, deviceModel
         driver = None
         reporting_client = None
         print("Device CONFIG:", get_device_configuration)
@@ -461,7 +461,7 @@ class android_libs:
 
     # Teardown function used to release all the data that presently hold from Perfecto
     def teardown(self):
-        global driver, perfecto_execution_context
+        global driver, perfecto_execution_context, deviceModel
         reporting_client = PerfectoReportiumClient(perfecto_execution_context)
         try:
             print("\n---------- Tear Down ----------")
@@ -1131,6 +1131,7 @@ class android_libs:
                             "TextView[@resource-id='com.android.settings:id/summary']")
                         ip_address_ele_text = ip_address_ele.text
                         print("Device IP address is :", ip_address_ele_text)
+                        return ip_address_ele_text
                     except:
                         try:
                             time.sleep(2)
@@ -1139,6 +1140,7 @@ class android_libs:
                                 "TextView[@resource-id='android:id/summary']")
                             ip_address_element_text = ip_address_element.text
                             print("Device IP address is :", ip_address_element_text)
+                            return ip_address_element_text
                         except:
                             print("IP address element not found")
                             logging.error("IP address element not found")
@@ -1279,10 +1281,12 @@ class android_libs:
                             "android.widget.TextView[2]")
                         ip_address_element_text = ip_address_element_text.text
                         print("IP Address:", ip_address_element_text)
+                        return ip_address_element_text
 
                     except:
                         print("Unable to get IP address")
                         logging.error("Unable to get IP address")
+                        return None
                 except:
                     print("Couldn't get into Additional settings")
                     logging.error("Couldn't get into Additional settings")
@@ -1352,6 +1356,7 @@ class android_libs:
                     return ip_address_element_text
                 except:
                     print("IP address element not found")
+                    return None
             except:
                 print("Couldn't get into Additional settings")
 
