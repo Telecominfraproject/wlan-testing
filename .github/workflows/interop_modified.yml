@@ -84,8 +84,8 @@ jobs:
         if: always()
         id: quali_reservation
         run: |
-          echo "identifier::$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
+          echo "namespace="$(cat ./reservation_id.txt | cut -d "-" -f 1)"
 #          echo "reservation_id=$(cat ./reservation_id.txt)" >> $GITHUB_ENV
 #          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_ENV
 #          echo "${{ env.reservation_id}}"

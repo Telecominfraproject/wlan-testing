@@ -79,7 +79,7 @@ jobs:
       - name: save time for logs gathering
         id: logs_start_time
         run: |
-          echo "time::$(date --iso-8601=s)" >> $GITHUB_OUTPUT
+          echo "time=$(date --iso-8601=s)" >> $GITHUB_OUTPUT
 
       - name: tests env info
         run: |
