@@ -57,10 +57,10 @@ class AndroidTests(android_libs):
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
-                self.teardown()
                 print(ip_address, ssid_with_internet)
                 if ip_address is not None:
                     return "PASS", "Device got the IP address"
+                    self.teardown()
                 else:
                     self.teardown()
                     return "FAIL", "Device didn't get the IP address"
@@ -89,10 +89,10 @@ class AndroidTests(android_libs):
                 ip_address = self.get_ip_address(ssid, setup, self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
-                self.teardown()
                 print(ip_address, ssid_with_internet)
                 if ip_address is not None:
                     return "PASS", "Device got the IP address"
+                    self.teardown()
                 else:
                     self.teardown()
                     return "FAIL", "Device didn't get the IP address"
@@ -119,9 +119,9 @@ class AndroidTests(android_libs):
                 self.closeApp(self.connData["appPackage-android"], setup)
                 down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
-                self.teardown()
                 if down_speed is not None and up_speed is not None:
                     return "PASS", "Device connected to SSID and ran Internet speed test"
+                    self.teardown()
                 else:
                     self.teardown()
                     return "Fail", "Device didn't get connected to SSID"
@@ -144,15 +144,15 @@ class AndroidTests(android_libs):
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
         try:
             ssid_with_internet, setup, ssid_found = self.wifi_connect_eap(ssid=ssid, user=identity, passkey=ttls_passwd,
-                                                              setup_perfectoMobile=setup_perfecto_mobile,
-                                                              connData=self.connData)
+                                                                          setup_perfectoMobile=setup_perfecto_mobile,
+                                                                          connData=self.connData)
             if ssid_with_internet is not None and ssid_found is True:
                 self.closeApp(self.connData["appPackage-android"], setup)
                 down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
-                self.teardown()
                 if down_speed is not None and up_speed is not None:
                     return "PASS", "Device connected to SSID and ran Internet speed test"
+                    self.teardown()
                 else:
                     self.teardown()
                     return "Fail", "Device didn't get connected to SSID"
@@ -203,12 +203,13 @@ class AndroidTests(android_libs):
                 self.closeApp(self.connData["appPackage-android"], setup)
                 down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
-                self.teardown()
                 if down_speed is not None and up_speed is not None:
                     if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
                         return "PASS", "Device connected to SSID and ran rate-limiting test"
+                        self.teardown()
                     else:
                         return "Fail", "Failed Rate-limiting test"
+                        self.teardown()
                 else:
                     self.teardown()
                     return "Fail", "Device didn't get connected to SSID"
@@ -237,11 +238,12 @@ class AndroidTests(android_libs):
                                                     connData=self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
-                self.teardown()
                 if wifi_toggling is True:
                     return "PASS", "Connected to same ssid, after toggling the wifi button."
+                    self.teardown()
                 else:
                     return "FAIL", "Not connected to same ssid, after toggling the wifi button."
+                    self.teardown()
             elif ssid_found is False:
                 self.teardown()
                 return "FAIL", "SSID is not seen in Device"
@@ -268,11 +270,12 @@ class AndroidTests(android_libs):
                                                     connData=self.connData)
                 self.closeApp(self.connData["appPackage-android"], setup)
                 self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
-                self.teardown()
                 if wifi_toggling is True:
                     return "PASS", "Connected to same ssid, after toggling the wifi button."
+                    self.teardown()
                 else:
                     return "FAIL", "Not connected to same ssid, after toggling the wifi button."
+                    self.teardown()
             elif ssid_found is False:
                 self.teardown()
                 return "FAIL", "SSID is not seen in Device"
