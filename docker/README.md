@@ -32,5 +32,5 @@ connectivity tests on a specific lab. **NOTE:** Use appropriate marker for your 
 configuration.py and replace ${YOUR_ALLURE_RESULTS_DIR} with your allure result dir.
 
 ```bash
-docker run -i -t -v $(YOUR_ALLURE_RESULT_DIR):/allure-results -v $(pwd)/configuration.py:/wlan-testing/configuration.py wlantest /bin/bash -c "cd tests; pytest -s -vvv --testbed=basic-02 -m client_connectivity_test --skip-testrail --alluredir=/allure-result"
+docker run -i -t -v $(YOUR_ALLURE_RESULT_DIR):/allure-results -v $(pwd)/configuration.py:/wlan-testing/configuration.py wlantest -c "cd tests; pytest -s -vvv --testbed=basic-02 -m client_connectivity_test --skip-testrail --alluredir=/allure-result"
 ```
