@@ -1145,7 +1145,7 @@ Create_lab_info_json()
 },
 
 "RATE_LIMITING_RADIUS_SERVER_DATA" : {
-    "ip": "18.189.85.200",
+    "ip": "10.28.3.100",
     "port": 1812,
     "secret": "testing123",
     "user": "user",
@@ -1154,7 +1154,7 @@ Create_lab_info_json()
 },
 
 "RATE_LIMITING_RADIUS_ACCOUNTING_DATA" : {
-    "ip": "18.189.85.200",
+    "ip": "10.28.3.100",
     "port": 1813,
     "secret": "testing123",
     "user": "user",
