@@ -182,7 +182,7 @@ class TestBridgeModeConnectSuiteA(object):
             pytest -m "client_connect_tests and bridge and general and wpa2_personal and fiveg"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
-        ssid_name = "ssid_wpa2_2g_RL_NDF2716"
+        ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
