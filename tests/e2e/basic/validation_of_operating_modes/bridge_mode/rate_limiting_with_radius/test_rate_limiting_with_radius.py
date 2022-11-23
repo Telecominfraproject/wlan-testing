@@ -61,6 +61,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.ow_sanity_lf
+    @pytest.mark.kl
     @pytest.mark.twog_upload_per_ssid
     @allure.title("Test for Upload per SSID 2.4 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
@@ -84,6 +85,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -129,6 +131,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -173,6 +176,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -210,6 +214,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -247,6 +252,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -284,6 +290,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -322,6 +329,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -359,6 +367,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -400,6 +409,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -438,6 +448,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -476,6 +487,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -514,6 +526,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -552,6 +565,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -590,6 +604,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -633,6 +648,7 @@ class TestRateLimitingWithRadiusBridge(object):
         identity = 'user1'
         configured = 10
         allure.attach(name="Max-Upload-User1", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -689,6 +705,7 @@ class TestRateLimitingWithRadiusBridge(object):
         identity = 'user1'
         configured = 10
         allure.attach(name="Max-Download-User1", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -745,6 +762,7 @@ class TestRateLimitingWithRadiusBridge(object):
         identity = 'user2'
         configured = 20
         allure.attach(name="Max-Upload-User2", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -800,6 +818,7 @@ class TestRateLimitingWithRadiusBridge(object):
         ttls_passwd = 'password'
         identity = 'user2'
         configured = 20
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -858,6 +877,7 @@ class TestRateLimitingWithRadiusBridge(object):
         identity = 'user3'
         configured = 10
         allure.attach(name="Max-Upload-User3", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -913,6 +933,7 @@ class TestRateLimitingWithRadiusBridge(object):
         identity = 'user3'
         configured = 50
         allure.attach(name="Max-Download-User3", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -970,6 +991,7 @@ class TestRateLimitingWithRadiusBridge(object):
         identity = 'user4'
         configured = 50
         allure.attach(name="Max-Upload-User4", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
@@ -1026,6 +1048,7 @@ class TestRateLimitingWithRadiusBridge(object):
         identity = 'user4'
         configured = 10
         allure.attach(name="Max-Download-User4", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
