@@ -44,13 +44,14 @@ jobs:
         run: |
           mv allure-report tmp-report
           rm -rf allure-*
-          git checkout gh-pages
-          mv tmp-report report
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           echo https://tip-automation:${{ secrets.GIT_PUSH_PAT }}@github.com > ~/.git-credentials
           git config --global credential.helper store
           git config --global user.email "tip-automation@telecominfraproject.com"
           git config --global user.name "TIP Automation User"
+          git pull
+          git checkout gh-pages
+          mv tmp-report report
           git commit -a -m'Update allure report for github pages'
 
       - name: Publish Allure report to GitHub Pages
