@@ -13,20 +13,20 @@ import random
 import string
 import time
 
-pytestmark = [pytest.mark.toggle_airplane_tests, pytest.mark.bridge, pytest.mark.enterprise]
+pytestmark = [pytest.mark.toggle_airplane_tests, pytest.mark.vlan, pytest.mark.enterprise]
 
 setup_params_enterprise = {
-    "mode": "BRIDGE",
+    "mode": "VLAN",
     "ssid_modes": {
         "wpa_enterprise": [
-            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa2_enterprise": [
-            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise": [
-            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+            {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]},
 
     "rf": {},
     "radius": True
@@ -36,12 +36,12 @@ for sec_modes in setup_params_enterprise['ssid_modes'].keys():
     for i in range(len(setup_params_enterprise['ssid_modes'][sec_modes])):
         N = 3
         rand_string = (''.join(random.choices(string.ascii_uppercase +
-                                              string.digits, k=N))) + str(int(time.time_ns()) % 10000)
-        setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
+                                     string.digits, k=N)))+str(int(time.time_ns())%10000)
+        setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_enterprise['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-@allure.feature("BRIDGE MODE TOGGLE AIRPLANE")
+@allure.feature("VLAN MODE TOGGLE AIRPLANE")
 @allure.parent_suite("Toggle Airplane Tests")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.suite(suite_name="VLAN Mode")
 @allure.sub_suite(sub_suite_name="Enterprise ttls Toggle Airplane")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -50,7 +50,7 @@ for sec_modes in setup_params_enterprise['ssid_modes'].keys():
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
+class TestVlanModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
     """ Client Connect SuiteA
         pytest -m "client_connect and bridge and InteropsuiteA"
     """
@@ -58,16 +58,16 @@ class TestBridgeModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
     @allure.story('wpa enterprise 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa enterprise encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa enterprise encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa_enterprise_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa_enterprise_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                       get_test_device_logs, num_stations, setup_configuration,
                                                       radius_info):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         # security_key = "[BLANK]"
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -80,16 +80,16 @@ class TestBridgeModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
     @allure.story('wpa enterprise 5 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa enterprise encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa enterprise encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa_enterprise_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa_enterprise_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                       get_test_device_logs, num_stations, setup_configuration,
                                                       radius_info):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         # security_key = "[BLANK]"
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -99,19 +99,18 @@ class TestBridgeModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
 
         assert passes == "PASS", result
 
-
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @allure.story('wpa2 enterprise 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa2 enterprise encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa2 enterprise encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa2_enterprise_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa2_enterprise_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration, radius_info):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         # security_key = "[BLANK]"
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -121,20 +120,19 @@ class TestBridgeModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
 
         assert passes == "PASS", result
 
-
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @allure.story('wpa2 enterprise 5 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa2 enterprise encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa2 enterprise encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa2_enterprise_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa2_enterprise_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                        get_test_device_logs, num_stations, setup_configuration,
                                                        radius_info):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         # security_key = "[BLANK]"
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -147,15 +145,15 @@ class TestBridgeModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @allure.story('wpa3 enterprise 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa3 enterprise encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa3 enterprise encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa3_enterprise_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa3_enterprise_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration, radius_info):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
         ssid_name = profile_data["ssid_name"]
         # security_key = "[BLANK]"
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -168,16 +166,16 @@ class TestBridgeModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     @allure.story('wpa3 enterprise 5 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa3 enterprise encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa3 enterprise encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa3_enterprise_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa3_enterprise_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                        get_test_device_logs, num_stations, setup_configuration,
                                                        radius_info):
         profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
         ssid_name = profile_data["ssid_name"]
         # security_key = "[BLANK]"
         security = "wpa"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -187,39 +185,39 @@ class TestBridgeModeToggleAirplaneEnterpriseTTLSSuiteOne(object):
 
         assert passes == "PASS", result
 
-setup_params_enterprise_two_br = {
-    "mode": "BRIDGE",
+setup_params_enterprise_two_vlan = {
+    "mode": "VLAN",
     "ssid_modes": {
         "wpa_wpa2_enterprise_mixed": [
-            {"ssid_name": "wpa_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"], "vlan": 100}],
         "wpa3_enterprise_mixed": [
-            {"ssid_name": "wpa3_m_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "wpa3_m_eap_5g", "appliedRadios": ["5G"]}]
+            {"ssid_name": "ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"], "vlan": 100},
+            {"ssid_name": "ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"], "vlan": 100}]
     },
     "rf": {},
     "radius": True
 }
 
-for sec_modes in setup_params_enterprise_two_br['ssid_modes'].keys():
-    for i in range(len(setup_params_enterprise_two_br['ssid_modes'][sec_modes])):
+for sec_modes in setup_params_enterprise_two_vlan['ssid_modes'].keys():
+    for i in range(len(setup_params_enterprise_two_vlan['ssid_modes'][sec_modes])):
         N = 3
         rand_string = (''.join(random.choices(string.ascii_uppercase +
                                      string.digits, k=N)))+str(int(time.time_ns())%10000)
-        setup_params_enterprise_two_br['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_enterprise_two_br['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
+        setup_params_enterprise_two_vlan['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_enterprise_two_vlan['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 
-@allure.feature("BRIDGE MODE TOGGLE AIRPLANE")
+@allure.feature("VLAN MODE TOGGLE AIRPLANE")
 @allure.parent_suite("Toggle Airplane Tests")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.suite(suite_name="VLAN Mode")
 @allure.sub_suite(sub_suite_name="Enterprise ttls Toggle Airplane")
 @pytest.mark.parametrize(
     'setup_configuration',
-    [setup_params_enterprise_two_br],
+    [setup_params_enterprise_two_vlan],
     indirect=True,
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
+class TestVlanModeEnterpriseTTLSSuiteTwo(object):
     """ SuiteA Enterprise Test Cases
         pytest -m "client_connectivity and bridge and enterprise and ttls and suiteB"
     """
@@ -227,16 +225,16 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
     @allure.story('wpa_wpa2_enterprise_mixed 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa_wpa2_enterprise_mixed encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa_wpa2_enterprise_mixed encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-4565", name="JIRA LINK")
-    def test_bridge_wpa_wpa2_enterprise_mixed_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa_wpa2_enterprise_mixed_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration, radius_info):
 
-        profile_data = setup_params_enterprise_two_br["ssid_modes"]["wpa_wpa2_enterprise_mixed"][0]
+        profile_data = setup_params_enterprise_two_vlan["ssid_modes"]["wpa_wpa2_enterprise_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         # security_key = profile_data["#security_key"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -249,15 +247,15 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
     @allure.story('wpa_wpa2_enterprise_mixed 5 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa_wpa2_enterprise_mixed encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa_wpa2_enterprise_mixed encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa_wpa2_enterprise_mixed_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa_wpa2_enterprise_mixed_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration, radius_info):
-        profile_data = setup_params_enterprise_two_br["ssid_modes"]["wpa_wpa2_enterprise_mixed"][1]
+        profile_data = setup_params_enterprise_two_vlan["ssid_modes"]["wpa_wpa2_enterprise_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         # security_key = profile_data["#security_key"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -270,15 +268,15 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
     @allure.story('wpa3_enterprise_mixed 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa3_enterprise_mixed encryption 2.4 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa3_enterprise_mixed encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa3_enterprise_mixed_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa3_enterprise_mixed_2g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration, radius_info):
-        profile_data = setup_params_enterprise_two_br["ssid_modes"]["wpa3_enterprise_mixed"][0]
+        profile_data = setup_params_enterprise_two_vlan["ssid_modes"]["wpa3_enterprise_mixed"][0]
         ssid_name = profile_data["ssid_name"]
         # security_key = profile_data["#security_key"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
@@ -291,15 +289,15 @@ class TestBridgeModeEnterpriseTTLSSuiteTwo(object):
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
     @allure.story('wpa3_enterprise_mixed 5 GHZ Band')
-    @allure.title("BRIDGE Mode Toggle Airplane Test with wpa3_enterprise_mixed encryption 5 GHz Band")
+    @allure.title("VLAN Mode Toggle Airplane Test with wpa3_enterprise_mixed encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11102", name="JIRA LINK")
-    def test_bridge_wpa3_enterprise_mixed_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
+    def test_vlan_wpa3_enterprise_mixed_5g_toggle_airplane(self, get_test_library, get_dut_logs_per_test_case,
                                                          get_test_device_logs, num_stations, setup_configuration, radius_info):
-        profile_data = setup_params_enterprise_two_br["ssid_modes"]["wpa3_enterprise_mixed"][1]
+        profile_data = setup_params_enterprise_two_vlan["ssid_modes"]["wpa3_enterprise_mixed"][1]
         ssid_name = profile_data["ssid_name"]
         # security_key = profile_data["#security_key"]
         security = "wpa3"
-        mode = "BRIDGE"
+        mode = "VLAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         identity = radius_info["user"]
