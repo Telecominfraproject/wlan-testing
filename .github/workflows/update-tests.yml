@@ -33,8 +33,7 @@ jobs:
       - name: Generate tests as allure results
         run: |
           docker run -v $PWD/allure-results:/allure-results tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }} -c "cd tests; pytest -s -vvv --alluredir=/allure-results --skip-all"
-          id
-          ls -al $PWD/allure-results
+          sudo chown runner:docker -R $PWD/allure-results
 
       - name: Generate Allure report
         uses: ./.github/actions/generate-allure-report
