@@ -191,7 +191,9 @@ class AndroidTests(android_libs):
             print(e)
             self.teardown()
 
-    def rate_limiting_test(self, ssid, passkey, up_rate=None, down_rate=None):
+    def rate_limiting_test(self, ssid, passkey, up_rate, down_rate, instance_name=None, mode=None,download_rate=None,
+                           batch_size=None, upload_rate=None, protocol=None, duration=None, move_to_influx=None,
+                           dut_data=None, num_stations=None):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_android(get_device_configuration=
                                                                            self.perfecto_data[self.device],
                                                                            perfecto_data=self.perfecto_data))
