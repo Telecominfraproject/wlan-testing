@@ -40,6 +40,12 @@ jobs:
         with:
           results_path: ./allure-results
 
+      - name: List current dir
+        run: |
+          echo $PWD
+          ls
+          git status
+
       - name: Publish Allure report to GitHub Pages
         uses: ad-m/github-push-action@v0.6.0
         with:
