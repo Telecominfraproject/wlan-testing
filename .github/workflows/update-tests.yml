@@ -53,7 +53,8 @@ jobs:
           git pull
           git checkout gh-pages
           mv tmp-report report
-          git commit -a -m'Update allure report for github pages'
+          git add report
+          git commit -m'Update allure report for github pages'
 
       - name: Publish Allure report to GitHub Pages
         uses: ad-m/github-push-action@v0.6.0
