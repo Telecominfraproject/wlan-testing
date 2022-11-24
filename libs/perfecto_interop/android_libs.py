@@ -2693,6 +2693,264 @@ class android_libs:
 
             return WifiFlag
 
+    def toggle_airplane_mode(self, ssid, setup_perfectoMobile, connData):
+        print("\n-----------------------")
+        print("Toggle Airplane Mode")
+        print("-----------------------")
+
+        report = setup_perfectoMobile[1]
+        driver = setup_perfectoMobile[0]
+
+        report.step_start("Switching Driver Context")
+        print("Switching Context to Native")
+        driver.switch_to.context('NATIVE_APP')
+        contexts = driver.contexts
+        # print(contexts)
+
+        deviceModelName = self.getDeviceModelName(setup_perfectoMobile)
+        print("Selected Device Model: " + deviceModelName)
+
+        airplaneFlag = False
+
+        if deviceModelName != "Pixel 4":
+            try:
+                print("Clicking Connections")
+                report.step_start("Clicking Connections")
+                conn_element = driver.find_element_by_xpath('//*[@content-desc="Navigate up"]')
+                conn_element.click()
+            except:
+                print("Exception: Verify Xpath - Update/check Xpath for Connections")
+            if self.get_phone_information(setup_perfectoMobile,
+                                          search_this="osVersion") != "12":
+                try:
+                    report.step_start("Toggle Airplane Mode to On")
+                    print("Toggle Airplane Mode to On")
+                    ToggleAirplanEle = driver.find_element_by_xpath(
+                        "//*[@content-desc='Airplane mode' and @text='Off']")
+                    ToggleAirplanEle.click()
+                    airplaneFlag = True
+
+                    report.step_start("Toggle Airplane Mode to Off")
+                    print("Toggle Airplane Mode to Off")
+                    ToggleAirplanEle2 = driver.find_element_by_xpath(
+                        "//*[@content-desc='Airplane mode' and @text='On']")
+                    ToggleAirplanEle2.click()
+                except NoSuchElementException:
+                    print("Toggle Airplane Exception, Airplane mode may be on Already.")
+
+                    try:
+                        print("Checking to see if Airplane is already enabled")
+                        report.step_start("Checking to see if Airplane is already enabled")
+                        connElement = driver.find_element_by_xpath("//*[@content-desc='Airplane mode' and @text='On']")
+                        airplaneFlag = True
+                        report.step_start("Disable Airplane Mode")
+                        connElement.click()
+
+                    except NoSuchElementException:
+                        print("Airplane Mode is On & Off status elements Error, please check xpath or if the Page Loaded")
+                try:
+                    print("Clicking Wi-Fi")
+                    report.step_start("Clicking Wi-Fi")
+                    time.sleep(3)
+                    connElement = driver.find_element_by_xpath('//*[@text="Wi-Fi"]')
+                    connElement.click()
+                except NoSuchElementException:
+                    print("Exception: Verify Xpath - Update/check Xpath for Wi-Fi")
+                logging.info("Selected Model is not Pixel 4")
+                # Get into Additional Details
+                # To Get an IP Address
+                # -------------------------------------------------------
+                try:
+                    print("Into additional details")
+                    logging.info("Into additional details")
+                    time.sleep(2)
+                    additional_details_element = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/layout_details']")
+                    additional_details_element.click()
+                    # --------------------Added for ssid Name check--------------------------
+                    try:
+                        time.sleep(2)
+                        ssid_name_element = driver.find_element_by_xpath(
+                            "//*[@resource-id='com.android.settings:id/entity_header_title']")
+                        ssid_name_element_text = ssid_name_element.text
+                        print("Ssid Name is :", ssid_name_element_text)
+                        allure.attach(name="Ssid connected:", body=str(ssid_name_element_text))
+                    except:
+                        print("Ssid name not available")
+                        logging.error("Ssid name not available")
+                        self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                        assert False
+                except:
+                    print("Couldn't get into Additional settings")
+                    logging.error("Couldn't get into Additional settings")
+                # -------------------------------------------------------
+            else:
+                try:
+                    print("Clicking Airplane mode")
+                    report.step_start("Clicking Airplane Mode")
+                    conn_element = driver.find_element_by_xpath('//*[@text="Airplane mode"]')
+                    conn_element.click()
+                except:
+                    print("Exception: Verify Xpath - Update/check Xpath for Airplane Mode")
+                try:
+                    report.step_start("Toggle Airplane Mode to On")
+                    print("Toggle Airplane Mode to On")
+                    ToggleAirplanEle = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/switch_widget' and @text='Off']")
+                    ToggleAirplanEle.click()
+                    airplaneFlag = True
+
+                    report.step_start("Toggle Airplane Mode to Off")
+                    print("Toggle Airplane Mode to Off")
+                    ToggleAirplanEle2 = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/switch_widget' and @text='On']")
+                    ToggleAirplanEle2.click()
+                except NoSuchElementException:
+                    print("Toggle Airplane Exception, Airplane mode may be on Already.")
+
+                    try:
+                        print("Checking to see if Airplane is already enabled")
+                        report.step_start("Checking to see if Airplane is already enabled")
+                        connElement = driver.find_element_by_xpath(
+                            "//*[@resource-id='com.android.settings:id/switch_widget' and @text='On']")
+                        airplaneFlag = True
+                        report.step_start("Disable Airplane Mode")
+                        connElement.click()
+
+                    except NoSuchElementException:
+                        print("Airplane Mode is On & Off status elements Error, please check xpath or if the Page Loaded")
+                try:
+                    print("Clicking Connections")
+                    report.step_start("Clicking Connections")
+                    conn_element = driver.find_element_by_xpath('//*[@content-desc="Navigate up"]')
+                    conn_element.click()
+                except:
+                    print("Exception: Verify Xpath - Update/check Xpath for Connections")
+                try:
+                    print("Clicking Wi-Fi")
+                    report.step_start("Clicking Wi-Fi")
+                    time.sleep(3)
+                    connElement = driver.find_element_by_xpath('//*[@text="Wi-Fi"]')
+                    connElement.click()
+                except NoSuchElementException:
+                    print("Exception: Verify Xpath - Update/check Xpath for Wi-Fi")
+                logging.info("Selected Model is not Pixel 4")
+                # Get into Additional Details
+                # To Get an IP Address
+                # -------------------------------------------------------
+                try:
+                    report.step_start("additional_details")
+                    print("Into additional details")
+                    logging.info("Into additional details")
+                    time.sleep(2)
+                    additional_details_element = driver.find_element_by_xpath(
+                        "//*[@resource-id='com.android.settings:id/wifi_details']")
+                    additional_details_element.click()
+
+                    try:
+                        print("click on view more")
+                        logging.info("click on view more")
+                        additional_details_element = WebDriverWait(driver, 50).until(
+                            EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='View more']")))
+                        additional_details_element.click()
+                    except:
+                        pass
+
+                    try:
+                        time.sleep(2)
+                        ssid_name_element = driver.find_element_by_xpath(
+                            "//*[@resource-id='com.android.settings:id/entity_header_title']")
+                        ssid_name_element_text = ssid_name_element.text
+                        print("Ssid Name is :", ssid_name_element_text)
+                        allure.attach(name="Ssid connected:", body=str(ssid_name_element_text))
+                    except:
+                        print("Ssid name not available")
+                        logging.error("Ssid name not available")
+                        pass
+                except:
+                    print("Couldn't get into Additional settings")
+                    logging.error("Couldn't get into Additional settings")
+
+            if ssid.__eq__(ssid_name_element_text):
+                return True
+            else:
+                return False
+
+        # ----------------Pixel 4 code------------
+        else:
+            try:
+                print("Clicking Network & Internet")
+                report.step_start("Clicking Network & Internet")
+                conn_element = driver.find_element_by_xpath('//*[@content-desc="Navigate up"]')
+                conn_element.click()
+            except:
+                print("Exception: Verify Xpath - Update/check Xpath for Network & Internet")
+            try:
+                report.step_start("Toggle Airplane Mode to On")
+                print("Toggle Airplane Mode to On")
+                ToggleAirplanEle = driver.find_element_by_xpath(
+                    '//*[@resource-id="android:id/switch_widget" and @text="OFF"]')
+                ToggleAirplanEle.click()
+                airplaneFlag = True
+
+                report.step_start("Toggle Airplane Mode to Off")
+                print("Toggle Airplane Mode to Off")
+                ToggleAirplanEle2 = driver.find_element_by_xpath(
+                    '//*[@resource-id="android:id/switch_widget" and @text="ON"]')
+                ToggleAirplanEle2.click()
+            except NoSuchElementException:
+                print("Toggle Airplane Exception, Airplane mode may be on Already.")
+
+                try:
+                    print("Checking to see if Airplane is already enabled")
+                    report.step_start("Checking to see if Airplane is already enabled")
+                    connElement = driver.find_element_by_xpath(
+                        '//*[@resource-id="android:id/switch_widget" and @text="ON"]')
+                    airplaneFlag = True
+                    report.step_start("Disable Airplane Mode")
+                    connElement.click()
+
+                except NoSuchElementException:
+                    print("Airplane Mode is On & Off status elements Error, please check xpath or if the Page Loaded")
+            try:
+                report.step_start("Clicking Wi-Fi")
+                print("Clicking WIFI")
+                time.sleep(3)
+                wifi_element = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((MobileBy.XPATH, "//*[@text='Wi‑Fi']")))
+                wifi_element.click()
+            except:
+                print("Couldn't find wifi Button")
+            try:
+                print("Into additional details")
+                time.sleep(5)
+                report.step_start("Into additional details")
+                additional_details_element = driver.find_element_by_xpath(
+                    '//*[@resource-id="android:id/widget_frame"]')
+                additional_details_element.click()
+                print("Entered ssid")
+                try:
+                    try:
+                        time.sleep(2)
+                        ssid_name_element = driver.find_element_by_xpath(
+                            '//*[@resource-id="com.android.settings:id/entity_header_title"]')
+                        ssid_name_element_text = ssid_name_element.text
+                        print("Ssid Name is :", ssid_name_element_text)
+                        allure.attach(name="Ssid connected:", body=str(ssid_name_element_text))
+                    except:
+                        print("Ssid name not available")
+                        logging.error("Ssid name not available")
+                        self.closeApp(connData["appPackage-android"], setup_perfectoMobile)
+                        assert False
+                except:
+                    print("No advanced options")
+            except:
+                print("Couldn't get into Additional settings")
+
+            if ssid.__eq__(ssid_name_element_text):
+                return True
+            else:
+                return False
 
 if __name__ == '__main__':
     perfecto_data = {

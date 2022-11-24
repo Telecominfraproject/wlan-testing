@@ -1200,6 +1200,105 @@ class ios_libs:
 
         return WifiFlag
 
+    def toggle_airplane_mode(self, ssid, setup_perfectoMobile, connData):
+        print("\n-----------------------")
+        print("Toggle Airplane Mode")
+        print("-----------------------")
+
+        report = setup_perfectoMobile[1]
+        driver = setup_perfectoMobile[0]
+        currentResult = True
+
+        # Open Settings Application
+        self.openApp(self.connData["bundleId-iOS-Settings"], setup_perfectoMobile)
+
+        # Toggle Airplane Mode
+        print("Toggle Airplane Mode..")
+        report.step_start("Toggle Airplane Mode")
+        try:
+            AirplaneMode = driver.find_element_by_xpath("//XCUIElementTypeSwitch[@label='Airplane Mode']")
+            # Toggle Airplane Mode
+            AirplaneMode.click()
+
+            # Verify Cellular Mode Text
+            report.step_start("Verify Cellular Mode")
+            try:
+                CellularMsgEle = driver.find_element_by_xpath("//*[@name='Airplane Mode' and @value='Airplane Mode']")
+                # ssertEqual(CellularMsgEle.text, "Airplane Mode", "Airplane Mode Not Triggerd")
+                print("Verify Cellular Mode Text: Airplane Mode Success")
+            except NoSuchElementException:
+                currentResult = False
+                print("Cellular Mode Not in Airplane Mode: ERROR")
+
+            AirplaneMode.click()
+        except NoSuchElementException:
+            currentResult = False
+            print("Airplane Wifi Button not loaded...")
+
+        report.step_start("Verify No Sim Card Installed Msg Popup")
+        print("Verify No Sim Card Installed Msg Popup..")
+        try:
+            NoSimCardErrorMsg = driver.find_element_by_xpath("//*[@value='No SIM Card Installed']")
+        except NoSuchElementException:
+            print("No Sim Card AlertMsg")
+
+        print("Click ok on No Sim Card Msg Popup..")
+        report.step_start("Click ok on No Sim Card Msg Popup")
+        try:
+            NoSimCardErrorMsgOK = driver.find_element_by_xpath("//*[@label='OK']")
+            NoSimCardErrorMsgOK.click()
+        except NoSuchElementException:
+            print("No Sim Card AlertMsg")
+
+        try:
+            print("Verifying Connected Wifi Connection")
+            report.step_start("Loading Wifi Page")
+            element = driver.find_element_by_xpath("//XCUIElementTypeCell[@name='Wi-Fi']")
+            element.click()
+        except NoSuchElementException:
+            print("Exception: Verify Xpath - unable to click on Wifi")
+            logging.error("Exception: Verify Xpath - unable to click on Wifi")
+
+        wifi_name = ssid
+        # ---------------------Additional INFO-------------------------------
+        try:
+            driver.implicitly_wait(5)
+            print("Selecting SSID: ", wifi_name)
+            report.step_start("Additional details of SSID")
+            additional_details_element = WebDriverWait(driver, 35).until(
+                EC.presence_of_element_located((MobileBy.XPATH,
+                                                "//*[@label='" + wifi_name + "']")))
+            # //*[@label='selected']/parent::*/parent::*/XCUIElementTypeButton[@label='More Info']
+            additional_details_element.click()
+
+            try:
+                driver.implicitly_wait(2)
+                report.step_start("Checking SSID Name as Expected")
+                print("Checking SSID Name")
+                ssid_name_text = driver.find_element_by_xpath("//*[@label='" + wifi_name + "']").text
+                print(ssid_name_text)
+                if (ssid_name_text == wifi_name):
+                    print("SSID Matched")
+                    logging.info("SSID Matched")
+                    allure.attach(name="SSID Matched ", body=str(wifi_name))
+                else:
+                    print("SSID Not Matched")
+                    logging.info("SSID Not Matched")
+                    allure.attach(name="SSID Not Matched ", body=str(wifi_name))
+                    reportFlag = False
+                    assert reportFlag
+            except:
+                print("SSID is not Checked in more Info")
+                logging.warning("SSID is not Checked in more Info")
+        except Exception as e:
+            print("Select Additional Info failed")
+            logging.warning("Select Additional Info failed")
+
+        if ssid.__eq__(ssid_name_text):
+            return True
+        else:
+            return False
+
 if __name__ == '__main__':
     perfecto_data = {
         "securityToken": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks",
