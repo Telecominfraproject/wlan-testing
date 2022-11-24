@@ -64,6 +64,7 @@ class ios_tests(ios_libs):
         except Exception as e:
             print(e)
             self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
 
     def enterprise_client_connect(self, ssid, identity, ttls_passwd):
         global ip_address
@@ -95,6 +96,7 @@ class ios_tests(ios_libs):
         except Exception as e:
             print(e)
             self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
 
     def client_connectivity_test(self, ssid, security=None, dut_data=None, passkey=None, mode=None, band=None, num_sta=None):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
@@ -123,6 +125,7 @@ class ios_tests(ios_libs):
         except Exception as e:
             print(e)
             self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
 
     def enterprise_client_connectivity_test(self, ssid, security=None, extra_securities=None, mode=None, band=None,
                                             eap=None, ttls_passwd=None, identity=None, num_sta=None, dut_data=None):
@@ -153,6 +156,7 @@ class ios_tests(ios_libs):
         except Exception as e:
             print(e)
             self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
 
     def rate_limiting_test(self, ssid, passkey, up_rate=None, down_rate=None):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
@@ -184,6 +188,7 @@ class ios_tests(ios_libs):
         except Exception as e:
             print(e)
             self.teardown()
+            return "Fail", "Failed due to exception or Unable to find the API path"
 
     def toggle_wifi_mode_test(self, ssid, passkey):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
