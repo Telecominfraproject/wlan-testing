@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
@@ -27,7 +27,7 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Generate tests as allure results
         run: docker run -i -t -v $PWD/allure-results:/allure-results tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }} -c "cd tests; pytest -s -vvv --alluredir=/allure-results --skip-all"
@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:
