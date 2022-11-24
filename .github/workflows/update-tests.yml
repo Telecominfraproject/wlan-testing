@@ -51,7 +51,7 @@ jobs:
           git config --global user.email "tip-automation@telecominfraproject.com"
           git config --global user.name "TIP Automation User"
           git pull
-          git checkout gh-pages
+          git checkout gh-pages || git checkout -b gh-pages
           mv tmp-docs docs
           git add docs
           git commit -m'Update allure report for github pages'
