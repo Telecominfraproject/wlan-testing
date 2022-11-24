@@ -1,0 +1,98 @@
+{
+  "uid" : "686dc8cdbe637e10",
+  "name" : "testmesh_2g",
+  "fullName" : "e2e.mesh.Mesh.test_mesh_bridge#testmesh_2g",
+  "historyId" : "3e85b1db4ebe691f75e36bf484eac34e",
+  "time" : {
+    "start" : 1669295132280,
+    "stop" : 1669295132281,
+    "duration" : 1
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "newFailed" : false,
+  "beforeStages" : [ {
+    "name" : "add_allure_environment_property",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "afterStages" : [ {
+    "name" : "add_allure_environment_property::0",
+    "time" : {
+      "start" : 1669295132335,
+      "stop" : 1669295132335,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "MESH BASIC"
+  }, {
+    "name" : "tag",
+    "value" : "mesh"
+  }, {
+    "name" : "tag",
+    "value" : "bridge"
+  }, {
+    "name" : "tag",
+    "value" : "wpa2_personal"
+  }, {
+    "name" : "parentSuite",
+    "value" : "e2e.mesh.Mesh"
+  }, {
+    "name" : "suite",
+    "value" : "test_mesh_bridge"
+  }, {
+    "name" : "subSuite",
+    "value" : "TestMesh"
+  }, {
+    "name" : "host",
+    "value" : "00914e7e4ab0"
+  }, {
+    "name" : "thread",
+    "value" : "1-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "e2e.mesh.Mesh.test_mesh_bridge"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ ],
+  "links" : [ ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ ],
+    "tags" : [ "wpa2_personal", "bridge", "mesh" ]
+  },
+  "source" : "686dc8cdbe637e10.json",
+  "parameterValues" : [ ]
+}

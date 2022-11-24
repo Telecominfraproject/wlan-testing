@@ -1,0 +1,285 @@
+{
+  "uid" : "37b7f67953d69f58",
+  "name" : "test_client_wpa2_personal_2g_11b[setup_configuration0]",
+  "fullName" : "e2e.advanced.rate_vs_range.wpa2_personal.test_nat_mode#test_client_wpa2_personal_2g_11b",
+  "historyId" : "3bda6fed8c1f1dd68be5052d8e891201",
+  "time" : {
+    "start" : 1669295114610,
+    "stop" : 1669295114610,
+    "duration" : 0
+  },
+  "description" : "\n\n        pytest -m \"ratevsrange and client11b\" -s -vvv --skip-testrail --testbed=advanced-02\n        jira- wifi-2495\n        ",
+  "descriptionHtml" : "<pre><code>    pytest -m &quot;ratevsrange and client11b&quot; -s -vvv --skip-testrail --testbed=advanced-02\n    jira- wifi-2495\n</code></pre>\n",
+  "status" : "skipped",
+  "statusMessage" : "Skipped: Skipping all",
+  "statusTrace" : "('/wlan-testing/tests/conftest.py', 251, 'Skipped: Skipping all')",
+  "flaky" : false,
+  "newFailed" : false,
+  "beforeStages" : [ {
+    "name" : "add_allure_environment_property",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "selected_testbed",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_target_object",
+    "time" : {
+      "start" : 1669295113694,
+      "stop" : 1669295113694,
+      "duration" : 0
+    },
+    "status" : "skipped",
+    "statusMessage" : "Skipped: Skipping all\n",
+    "statusTrace" : "  File \"/usr/local/lib/python3.8/site-packages/pluggy/callers.py\", line 187, in _multicall\n    res = hook_impl.function(*args)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 1126, in pytest_fixture_setup\n    result = call_fixture_func(fixturefunc, request, kwargs)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 925, in call_fixture_func\n    fixture_result = next(generator)\n  File \"/wlan-testing/tests/conftest.py\", line 251, in get_target_object\n    pytest.skip(\"Skipping all\")\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/outcomes.py\", line 139, in skip\n    raise Skipped(msg=msg, allow_module_level=allow_module_level)\n",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  }, {
+    "name" : "run_lf",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_security_flags",
+    "time" : {
+      "start" : 1669295113876,
+      "stop" : 1669295113876,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_testbed_details",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113694,
+      "duration" : 1
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "ff78e40a950332aa",
+      "name" : "Testbed Details",
+      "source" : "ff78e40a950332aa.json",
+      "type" : "application/json",
+      "size" : 1597
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 1,
+    "shouldDisplayMessage" : false,
+    "hasContent" : true
+  }, {
+    "name" : "get_markers",
+    "time" : {
+      "start" : 1669295113876,
+      "stop" : 1669295114074,
+      "duration" : 198
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "afterStages" : [ {
+    "name" : "add_allure_environment_property::0",
+    "time" : {
+      "start" : 1669295132335,
+      "stop" : 1669295132335,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "selected_testbed::0",
+    "time" : {
+      "start" : 1669295133323,
+      "stop" : 1669295133323,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "run_lf::0",
+    "time" : {
+      "start" : 1669295132481,
+      "stop" : 1669295132481,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_security_flags::0",
+    "time" : {
+      "start" : 1669295133480,
+      "stop" : 1669295133480,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_testbed_details::0",
+    "time" : {
+      "start" : 1669295133180,
+      "stop" : 1669295133180,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_markers::0",
+    "time" : {
+      "start" : 1669295133445,
+      "stop" : 1669295133445,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "NAT MODE CLIENT CONNECTIVITY"
+  }, {
+    "name" : "tag",
+    "value" : "client11b"
+  }, {
+    "name" : "tag",
+    "value" : "wpa2_personal"
+  }, {
+    "name" : "tag",
+    "value" : "@pytest.mark.usefixtures('setup_configuration')"
+  }, {
+    "name" : "tag",
+    "value" : "twog"
+  }, {
+    "name" : "parentSuite",
+    "value" : "e2e.advanced.rate_vs_range.wpa2_personal"
+  }, {
+    "name" : "suite",
+    "value" : "test_nat_mode"
+  }, {
+    "name" : "subSuite",
+    "value" : "TestRatevsRangeNat"
+  }, {
+    "name" : "host",
+    "value" : "00914e7e4ab0"
+  }, {
+    "name" : "thread",
+    "value" : "1-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "e2e.advanced.rate_vs_range.wpa2_personal.test_nat_mode"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "setup_configuration",
+    "value" : "{'mode': 'NAT', 'ssid_modes': {'wpa2_personal': [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something'}]}, 'rf': {}, 'radius': False}"
+  } ],
+  "links" : [ {
+    "name" : "WIFI-2495",
+    "url" : "https://telecominfraproject.atlassian.net/browse/WIFI-2495",
+    "type" : "test_case"
+  } ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ ],
+    "tags" : [ "@pytest.mark.usefixtures('setup_configuration')", "client11b", "wpa2_personal", "twog" ]
+  },
+  "source" : "37b7f67953d69f58.json",
+  "parameterValues" : [ "{'mode': 'NAT', 'ssid_modes': {'wpa2_personal': [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something'}]}, 'rf': {}, 'radius': False}" ]
+}

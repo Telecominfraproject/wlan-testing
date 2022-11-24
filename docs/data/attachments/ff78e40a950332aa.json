@@ -1,0 +1,69 @@
+{
+  "target": "tip_2x",
+  "controller": {
+    "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+    "username": "tip@ucentral.com",
+    "password": "OpenWifi%1234"
+  },
+  "device_under_tests": [
+    {
+      "model": "wallys_dr40x9",
+      "supported_bands": [
+        "2G",
+        "5G"
+      ],
+      "supported_modes": [
+        "BRIDGE",
+        "NAT",
+        "VLAN"
+      ],
+      "wan_port": "1.1.eth2",
+      "lan_port": null,
+      "ssid": {},
+      "mode": "wifi5",
+      "identifier": "c44bd1005b30",
+      "method": "serial",
+      "host_ip": "10.28.3.100",
+      "host_username": "lanforge",
+      "host_password": "pumpkin77",
+      "host_ssh_port": 22,
+      "serial_tty": "/dev/ttyAP8",
+      "firmware_version": "next-latest"
+    }
+  ],
+  "traffic_generator": {
+    "name": "lanforge",
+    "testbed": "basic",
+    "scenario": "dhcp-bridge",
+    "details": {
+      "manager_ip": "10.28.3.6",
+      "http_port": 8080,
+      "ssh_port": 22,
+      "setup": {
+        "method": "build",
+        "DB": "Test_Scenario_Automation"
+      },
+      "wan_ports": {
+        "1.1.eth2": {
+          "addressing": "dhcp-server",
+          "subnet": "172.16.0.1/16",
+          "dhcp": {
+            "lease-first": 10,
+            "lease-count": 10000,
+            "lease-time": "6h"
+          }
+        }
+      },
+      "lan_ports": {},
+      "uplink_nat_ports": {
+        "1.1.eth3": {
+          "addressing": "static",
+          "ip": "10.28.2.6",
+          "gateway_ip": "10.28.2.1/24",
+          "ip_mask": "255.255.255.0",
+          "dns_servers": "BLANK"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "uid" : "37f7d4e9bd7dda79",
+  "name" : "test_multi_hard_roam_5g_to_5g_ft_psk_wpa2[setup_configuration0]",
+  "fullName" : "e2e.advanced.roam_test.hard_roam.OTA.test_roam_ota#test_multi_hard_roam_5g_to_5g_ft_psk_wpa2",
+  "historyId" : "82ac16a75380c1650e2b87c3025a2df1",
+  "time" : {
+    "start" : 1669295115224,
+    "stop" : 1669295115224,
+    "duration" : 0
+  },
+  "status" : "skipped",
+  "statusMessage" : "Skipped: Skipping all",
+  "statusTrace" : "('/wlan-testing/tests/conftest.py', 251, 'Skipped: Skipping all')",
+  "flaky" : false,
+  "newFailed" : false,
+  "beforeStages" : [ {
+    "name" : "add_allure_environment_property",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "selected_testbed",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_target_object",
+    "time" : {
+      "start" : 1669295113694,
+      "stop" : 1669295113694,
+      "duration" : 0
+    },
+    "status" : "skipped",
+    "statusMessage" : "Skipped: Skipping all\n",
+    "statusTrace" : "  File \"/usr/local/lib/python3.8/site-packages/pluggy/callers.py\", line 187, in _multicall\n    res = hook_impl.function(*args)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 1126, in pytest_fixture_setup\n    result = call_fixture_func(fixturefunc, request, kwargs)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 925, in call_fixture_func\n    fixture_result = next(generator)\n  File \"/wlan-testing/tests/conftest.py\", line 251, in get_target_object\n    pytest.skip(\"Skipping all\")\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/outcomes.py\", line 139, in skip\n    raise Skipped(msg=msg, allow_module_level=allow_module_level)\n",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  }, {
+    "name" : "run_lf",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_security_flags",
+    "time" : {
+      "start" : 1669295113876,
+      "stop" : 1669295113876,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_testbed_details",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113694,
+      "duration" : 1
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "ff78e40a950332aa",
+      "name" : "Testbed Details",
+      "source" : "ff78e40a950332aa.json",
+      "type" : "application/json",
+      "size" : 1597
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 1,
+    "shouldDisplayMessage" : false,
+    "hasContent" : true
+  }, {
+    "name" : "get_markers",
+    "time" : {
+      "start" : 1669295113876,
+      "stop" : 1669295114074,
+      "duration" : 198
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "afterStages" : [ {
+    "name" : "add_allure_environment_property::0",
+    "time" : {
+      "start" : 1669295132335,
+      "stop" : 1669295132335,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "selected_testbed::0",
+    "time" : {
+      "start" : 1669295133323,
+      "stop" : 1669295133323,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "run_lf::0",
+    "time" : {
+      "start" : 1669295132481,
+      "stop" : 1669295132481,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_security_flags::0",
+    "time" : {
+      "start" : 1669295133480,
+      "stop" : 1669295133480,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_testbed_details::0",
+    "time" : {
+      "start" : 1669295133180,
+      "stop" : 1669295133180,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_markers::0",
+    "time" : {
+      "start" : 1669295133445,
+      "stop" : 1669295133445,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "Roam Test"
+  }, {
+    "name" : "suite",
+    "value" : "Hard Roam over the air"
+  }, {
+    "name" : "tag",
+    "value" : "wpa2_personal"
+  }, {
+    "name" : "tag",
+    "value" : "@pytest.mark.usefixtures('setup_configuration')"
+  }, {
+    "name" : "tag",
+    "value" : "roam_test"
+  }, {
+    "name" : "tag",
+    "value" : "hard_roam_5g_ota"
+  }, {
+    "name" : "tag",
+    "value" : "roam_ota"
+  }, {
+    "name" : "tag",
+    "value" : "bridge"
+  }, {
+    "name" : "tag",
+    "value" : "wpa3_personal"
+  }, {
+    "name" : "parentSuite",
+    "value" : "e2e.advanced.roam_test.hard_roam.OTA"
+  }, {
+    "name" : "subSuite",
+    "value" : "TestRoamOTA"
+  }, {
+    "name" : "host",
+    "value" : "00914e7e4ab0"
+  }, {
+    "name" : "thread",
+    "value" : "1-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "e2e.advanced.roam_test.hard_roam.OTA.test_roam_ota"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "setup_configuration",
+    "value" : "{'mode': 'BRIDGE', 'roam': True, 'ft+psk': True, 'ft-otd': False, 'ft-dot1x': False, 'ft-dot1x_sha256': True, 'ssid_modes': {'wpa2_personal': [{'ssid_name': 'RoamAP2g', 'appliedRadios': ['2G'], 'security_key': 'something'}, {'ssid_name': 'RoamAP5g', 'appliedRadios': ['5G'], 'security_key': 'something'}], 'wpa3_personal': [{'ssid_name': 'RoamAP6g', 'appliedRadios': ['6G'], 'security_key': 'something'}]}, 'rf': {}, 'radius': False}"
+  } ],
+  "links" : [ ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ ],
+    "tags" : [ "roam_test", "@pytest.mark.usefixtures('setup_configuration')", "wpa2_personal", "hard_roam_5g_ota", "roam_ota", "bridge", "wpa3_personal" ]
+  },
+  "source" : "37f7d4e9bd7dda79.json",
+  "parameterValues" : [ "{'mode': 'BRIDGE', 'roam': True, 'ft+psk': True, 'ft-otd': False, 'ft-dot1x': False, 'ft-dot1x_sha256': True, 'ssid_modes': {'wpa2_personal': [{'ssid_name': 'RoamAP2g', 'appliedRadios': ['2G'], 'security_key': 'something'}, {'ssid_name': 'RoamAP5g', 'appliedRadios': ['5G'], 'security_key': 'something'}], 'wpa3_personal': [{'ssid_name': 'RoamAP6g', 'appliedRadios': ['6G'], 'security_key': 'something'}]}, 'rf': {}, 'radius': False}" ]
+}

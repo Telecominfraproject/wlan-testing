@@ -1,0 +1,114 @@
+{
+  "total" : 183,
+  "items" : [ {
+    "uid" : "4a89e45cb3980381c4ba141955c98099",
+    "name" : "MESH BASIC",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 8,
+      "unknown" : 0,
+      "total" : 8
+    }
+  }, {
+    "uid" : "26663a7bf4c61f54433aa7a9f7c3767c",
+    "name" : "Test Connectivity",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 5,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 6
+    }
+  }, {
+    "uid" : "bb6dfc15e7c8a06bfb9c52965e475220",
+    "name" : "PEAK THROUGHPUT TESTS",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 3120,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 3120
+    }
+  }, {
+    "uid" : "dd828f8819bfa886edd120c34916bb98",
+    "name" : "Channel vs Country Code",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 449,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 449
+    }
+  }, {
+    "uid" : "3cb2e8e0c14218e67b9b44be2958d9ef",
+    "name" : "VLAN MODE CLIENT CONNECTIVITY",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 239,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 239
+    }
+  }, {
+    "uid" : "ce4a789f5c028f8cc075b85ff44bbf89",
+    "name" : "BRIDGE MODE CLIENT CONNECTIVITY",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 231,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 231
+    }
+  }, {
+    "uid" : "2bbc5c750303fad36580ab0bf9d66ec5",
+    "name" : "NAT MODE CLIENT CONNECTIVITY",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 231,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 231
+    }
+  }, {
+    "uid" : "a3b9c5e7a3e2d16821c4dc4b9d8026de",
+    "name" : "Client Connectivity",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 93,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 93
+    }
+  }, {
+    "uid" : "8f5c537b08b0dc85e65c112cd8b38388",
+    "name" : "Client Scale Tests",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 54,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 54
+    }
+  }, {
+    "uid" : "2fcd6490ef07a3e4bc2808ae5f24b5a8",
+    "name" : "BRIDGE MODE WPA2 PERSONAL Multi_Station_Throughput",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 48,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 48
+    }
+  } ]
+}

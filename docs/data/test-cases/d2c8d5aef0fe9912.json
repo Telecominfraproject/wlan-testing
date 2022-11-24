@@ -1,0 +1,464 @@
+{
+  "uid" : "d2c8d5aef0fe9912",
+  "name" : "test_client_wpa3_eap_eap_nat_tcp_ul[setup_configuration0]",
+  "fullName" : "e2e.basic.performance_tests.peak_throughput_tests.nat_mode.wpa3_enterprise_encryption.test_peak_throughput_wpa3_eap_20Mhz_5g#test_client_wpa3_eap_eap_nat_tcp_ul",
+  "historyId" : "df21bd453e5e0b42c43a4e63cd88a66c",
+  "time" : {
+    "start" : 1669295123629,
+    "stop" : 1669295123629,
+    "duration" : 0
+  },
+  "description" : " Wifi Capacity Test NAT mode\n            pytest -m \"wifi_capacity_test and nat and wpa3_enterprise and twog\"\n        ",
+  "descriptionHtml" : "<p>Wifi Capacity Test NAT mode\npytest -m &quot;wifi_capacity_test and nat and wpa3_enterprise and twog&quot;</p>\n",
+  "status" : "skipped",
+  "statusMessage" : "Skipped: Skipping all",
+  "statusTrace" : "('/wlan-testing/tests/conftest.py', 332, 'Skipped: Skipping all')",
+  "flaky" : false,
+  "newFailed" : false,
+  "beforeStages" : [ {
+    "name" : "add_allure_environment_property",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "selected_testbed",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_target_object",
+    "time" : {
+      "start" : 1669295113694,
+      "stop" : 1669295113694,
+      "duration" : 0
+    },
+    "status" : "skipped",
+    "statusMessage" : "Skipped: Skipping all\n",
+    "statusTrace" : "  File \"/usr/local/lib/python3.8/site-packages/pluggy/callers.py\", line 187, in _multicall\n    res = hook_impl.function(*args)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 1126, in pytest_fixture_setup\n    result = call_fixture_func(fixturefunc, request, kwargs)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 925, in call_fixture_func\n    fixture_result = next(generator)\n  File \"/wlan-testing/tests/conftest.py\", line 251, in get_target_object\n    pytest.skip(\"Skipping all\")\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/outcomes.py\", line 139, in skip\n    raise Skipped(msg=msg, allow_module_level=allow_module_level)\n",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  }, {
+    "name" : "get_device_configuration",
+    "time" : {
+      "start" : 1669295114196,
+      "stop" : 1669295114196,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "run_lf",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113693,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_test_library",
+    "time" : {
+      "start" : 1669295114196,
+      "stop" : 1669295114197,
+      "duration" : 1
+    },
+    "status" : "skipped",
+    "statusMessage" : "Skipped: Skipping all\n",
+    "statusTrace" : "  File \"/usr/local/lib/python3.8/site-packages/pluggy/callers.py\", line 187, in _multicall\n    res = hook_impl.function(*args)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 1126, in pytest_fixture_setup\n    result = call_fixture_func(fixturefunc, request, kwargs)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 925, in call_fixture_func\n    fixture_result = next(generator)\n  File \"/wlan-testing/tests/conftest.py\", line 332, in get_test_library\n    pytest.skip(\"Skipping all\")\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/outcomes.py\", line 139, in skip\n    raise Skipped(msg=msg, allow_module_level=allow_module_level)\n",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  }, {
+    "name" : "get_security_flags",
+    "time" : {
+      "start" : 1669295113876,
+      "stop" : 1669295113876,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_testbed_details",
+    "time" : {
+      "start" : 1669295113693,
+      "stop" : 1669295113694,
+      "duration" : 1
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "ff78e40a950332aa",
+      "name" : "Testbed Details",
+      "source" : "ff78e40a950332aa.json",
+      "type" : "application/json",
+      "size" : 1597
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 1,
+    "shouldDisplayMessage" : false,
+    "hasContent" : true
+  }, {
+    "name" : "device",
+    "time" : {
+      "start" : 1669295114196,
+      "stop" : 1669295114196,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "is_test_library_perfecto_android",
+    "time" : {
+      "start" : 1669295114196,
+      "stop" : 1669295114196,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_markers",
+    "time" : {
+      "start" : 1669295113876,
+      "stop" : 1669295114074,
+      "duration" : 198
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "is_test_library_perfecto_ios",
+    "time" : {
+      "start" : 1669295114196,
+      "stop" : 1669295114196,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "num_stations",
+    "time" : {
+      "start" : 1669295131456,
+      "stop" : 1669295131456,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "afterStages" : [ {
+    "name" : "add_allure_environment_property::0",
+    "time" : {
+      "start" : 1669295132335,
+      "stop" : 1669295132335,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "selected_testbed::0",
+    "time" : {
+      "start" : 1669295133323,
+      "stop" : 1669295133323,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_device_configuration::0",
+    "time" : {
+      "start" : 1669295132591,
+      "stop" : 1669295132591,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "run_lf::0",
+    "time" : {
+      "start" : 1669295132481,
+      "stop" : 1669295132481,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_security_flags::0",
+    "time" : {
+      "start" : 1669295133480,
+      "stop" : 1669295133480,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_testbed_details::0",
+    "time" : {
+      "start" : 1669295133180,
+      "stop" : 1669295133180,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "device::0",
+    "time" : {
+      "start" : 1669295132810,
+      "stop" : 1669295132810,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "is_test_library_perfecto_android::0",
+    "time" : {
+      "start" : 1669295133035,
+      "stop" : 1669295133035,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_markers::0",
+    "time" : {
+      "start" : 1669295133445,
+      "stop" : 1669295133445,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "is_test_library_perfecto_ios::0",
+    "time" : {
+      "start" : 1669295132921,
+      "stop" : 1669295132921,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "num_stations::0",
+    "time" : {
+      "start" : 1669295133335,
+      "stop" : 1669295133335,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "PEAK THROUGHPUT TESTS"
+  }, {
+    "name" : "tag",
+    "value" : "fiveg"
+  }, {
+    "name" : "tag",
+    "value" : "peak_throughput_tests"
+  }, {
+    "name" : "tag",
+    "value" : "tcp_upload"
+  }, {
+    "name" : "tag",
+    "value" : "channel_52"
+  }, {
+    "name" : "tag",
+    "value" : "wpa3_enterprise"
+  }, {
+    "name" : "tag",
+    "value" : "@pytest.mark.usefixtures('setup_configuration')"
+  }, {
+    "name" : "tag",
+    "value" : "channel_width_20"
+  }, {
+    "name" : "tag",
+    "value" : "nat"
+  }, {
+    "name" : "parentSuite",
+    "value" : "e2e.basic.performance_tests.peak_throughput_tests.nat_mode.wpa3_enterprise_encryption"
+  }, {
+    "name" : "suite",
+    "value" : "test_peak_throughput_wpa3_eap_20Mhz_5g"
+  }, {
+    "name" : "subSuite",
+    "value" : "TestCountryCA20Mhz5GChannel52PeakThroughput"
+  }, {
+    "name" : "host",
+    "value" : "00914e7e4ab0"
+  }, {
+    "name" : "thread",
+    "value" : "1-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "e2e.basic.performance_tests.peak_throughput_tests.nat_mode.wpa3_enterprise_encryption.test_peak_throughput_wpa3_eap_20Mhz_5g"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "setup_configuration",
+    "value" : "{'mode': 'NAT', 'ssid_modes': {'wpa3_enterprise': [{'ssid_name': 'ssid_wpa3_eap_eap_5g_52', 'appliedRadios': ['5G'], 'security_key': 'something'}]}, 'rf': {'5G': {'band': '5G', 'channel-width': 20, 'channel': 52}}, 'radius': True}"
+  } ],
+  "links" : [ {
+    "name" : "WIFI-6942",
+    "url" : "https://telecominfraproject.atlassian.net/browse/WIFI-6942",
+    "type" : "test_case"
+  } ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ ],
+    "tags" : [ "peak_throughput_tests", "wpa3_enterprise", "nat", "@pytest.mark.usefixtures('setup_configuration')", "channel_52", "channel_width_20", "tcp_upload", "fiveg" ]
+  },
+  "source" : "d2c8d5aef0fe9912.json",
+  "parameterValues" : [ "{'mode': 'NAT', 'ssid_modes': {'wpa3_enterprise': [{'ssid_name': 'ssid_wpa3_eap_eap_5g_52', 'appliedRadios': ['5G'], 'security_key': 'something'}]}, 'rf': {'5G': {'band': '5G', 'channel-width': 20, 'channel': 52}}, 'radius': True}" ]
+}

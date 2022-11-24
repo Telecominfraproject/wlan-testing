@@ -1,0 +1,13 @@
+[ {
+  "buildOrder" : 16,
+  "reportUrl" : "../16/index.html",
+  "reportName" : "Telecominfraproject/wlan-testing Update tests list from master branch #16",
+  "data" : {
+    "failed" : 0,
+    "broken" : 0,
+    "skipped" : 5336,
+    "passed" : 9,
+    "unknown" : 0,
+    "total" : 5345
+  }
+} ]
