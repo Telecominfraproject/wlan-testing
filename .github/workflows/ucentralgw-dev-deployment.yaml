@@ -61,7 +61,8 @@ on:
 jobs:
   test:
     name: Test output variable
-    outputs: ${{ steps.assign_outputs.outputs.x64_image_name }}
+    outputs:
+      x64_image_name: ${{ steps.assign_outputs.outputs.x64_image_name }}
     steps:
     - name: Assign output variables
       id: assign_outputs
