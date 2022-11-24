@@ -45,7 +45,7 @@ jobs:
           directory: ./allure-report
 
   cleanup:
-    needs: [build]
+    needs: [build, testgen]
     runs-on: ubuntu-latest
     if: always()
     steps:
