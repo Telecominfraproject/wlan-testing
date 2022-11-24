@@ -13,6 +13,8 @@ This test automation tied into our overall tooling at TIP as shown below:
 
 ![Tools and Test Automation](.img/Tools_and_Testing.png)
 
+You can get the full list of tests on [GitHub Pages](https://telecominfraproject.github.io/wlan-testing/) that's updated automatically.
+
 ### General guidelines
 
 This testing code adheres to generic [pep8](https://www.python.org/dev/peps/pep-0008/#introduction) style guidelines, most notably:

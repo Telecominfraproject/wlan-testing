@@ -158,18 +158,20 @@ class ios_tests(ios_libs):
             self.teardown()
             return "Fail", "Failed due to exception or Unable to find the API path"
 
-    def rate_limiting_test(self, ssid, passkey, up_rate=None, down_rate=None):
+    def rate_limiting_test(self, ssid_name, passkey, up_rate, down_rate, instance_name=None, mode=None,download_rate=None,
+                           batch_size=None, upload_rate=None, protocol=None, duration=None, move_to_influx=None,
+                           dut_data=None, num_stations=None):
         self.setup_perfectoMobile = list(self.setup_perfectoMobile_iOS(get_device_configuration=
                                                                        self.perfecto_data[self.device],
                                                                        perfecto_data=self.perfecto_data))
         setup_perfecto_mobile = self.setup_perfectoMobile[0]
-        ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid, passkey=passkey, setup_perfectoMobile=
+        ssid_with_internet, setup, ssid_found = self.wifi_connect(ssid=ssid_name, passkey=passkey, setup_perfectoMobile=
                                                       setup_perfecto_mobile, connData=self.connData)
         try:
             if ssid_with_internet is not None and ssid_found is True:
                 self.closeApp(self.connData["bundleId-iOS-Settings"], setup)
                 down_speed, up_speed = self.speed_test(setup_perfecto_mobile)
-                self.wifi_disconnect(ssid=ssid, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
+                self.wifi_disconnect(ssid=ssid_name, setup_perfectoMobile=setup_perfecto_mobile, connData=self.connData)
                 self.teardown()
                 if down_speed is not None and up_speed is not None:
                     if float(down_speed) < float(down_rate) and float(up_speed) < float(up_rate):
