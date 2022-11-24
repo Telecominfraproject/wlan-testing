@@ -49,161 +49,135 @@ env:
 
 on:
   workflow_dispatch:
-#    inputs:
-#      force_latest:
-#        default: 'false'
-#        description: 'Force deployment of the latest versions of all microservices ignoring matrix versions'
-#        required: true
-#      id:
-#        description: 'run identifier'
-#        required: false
+    inputs:
+      force_latest:
+        default: 'false'
+        description: 'Force deployment of the latest versions of all microservices ignoring matrix versions'
+        required: true
+      id:
+        description: 'run identifier'
+        required: false
 
 jobs:
-  test:
-    name: Test output variable
+  id:
+    name: Workflow ID Provider
     runs-on: ubuntu-latest
+    steps:
+      - name: ${{ github.event.inputs.id }}
+        run: echo run identifier ${{ inputs.id }}
+
+  generate-matrix:
+    name: Generate matrix for build
+    runs-on: ubuntu-latest
+    needs:
+      - id
     outputs:
-      namespace: ${{ steps.assign_outputs.outputs.namespace }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - name: Assign output variables
-      id: assign_outputs
+    - name: generate-matrix
+      id: set-matrix
       run: |
-        IMG_NAME="$(date +%Y%m%d)-edgecore_ecs4100-12ph-v2.0.0-rc1-7d57891-upgrade.bin"
         echo "matrix={\"include\":${{ env.testbeds }}}" >> $GITHUB_OUTPUT
-        echo "namespace=$(echo f4b5a10a-ce26-4ddb-af1f-4394c951a585 | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
 
-    - name: Show output variable
-      run: |
-        echo "${{ steps.assign_outputs.outputs.matrix }}"
-
-  test2:
-    name: Test output variable
+  deploy:
+    name: Update OpenWIFI Cloud SDK instances
     runs-on: ubuntu-latest
-    needs: test
+    needs:
+      - id
+      - generate-matrix
+    strategy:
+      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
+      fail-fast: false
     steps:
-    - name: Show output variable
-      run: |
-        echo "${{ needs.test.outputs.namespace }}"
 
-#  id:
-#    name: Workflow ID Provider
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: ${{ github.event.inputs.id }}
-#        run: echo run identifier ${{ inputs.id }}
-#
-#  generate-matrix:
-#    name: Generate matrix for build
-#    runs-on: ubuntu-latest
-#    needs:
-#      - id
-#    outputs:
-#      matrix: ${{ steps.set-matrix.outputs.matrix }}
-#    steps:
-#    - name: generate-matrix
-#      id: set-matrix
-#      run: |
-#        echo "matrix={\"include\":${{ env.testbeds }}}" >> $GITHUB_OUTPUT
-#
-#  deploy:
-#    name: Update OpenWIFI Cloud SDK instances
-#    runs-on: ubuntu-latest
-#    needs:
-#      - id
-#      - generate-matrix
-#    strategy:
-#      matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
-#      fail-fast: false
-#    steps:
-#
-#    - name: Checkout repo with Helm values
-#      uses: actions/checkout@v3
-#      with:
-#        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
-#        path: wlan-cloud-ucentral-deploy
-#        ref: ${{ matrix.chart_version }}
-#
-#    - name: Prepare certificates from secrets
-#      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
-#      run: |
-#        echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
-#        echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
-#
-#    - name: Fetch kubeconfig
-#      run: |
-#        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-#
-#    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
-#    - name: install kubectl
-#      run: |
-#        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
-#        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-#
-#    - name: Deploy OpenWIFI Cloud SDK
-#      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
-#      run: |
-#        export NAMESPACE=${{ matrix.namespace }}
-#        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
-#        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
-#        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
-#        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
-#        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
-#        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
-#        export CERT_LOCATION=cert.pem
-#        export KEY_LOCATION=key.pem
-#        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
-#        export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
-#        export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
-#        export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
-#        if [[ "${{ github.event.inputs.force_latest }}" == "false" ]]; then
-#          export DEPLOY_METHOD=${{ matrix.deploy_method }}
-#          export CHART_VERSION=${{ matrix.chart_version }}
-#          export OWGW_VERSION=${{ matrix.owgw_version }}
-#          export OWGWUI_VERSION=${{ matrix.owgwui_version }}
-#          export OWSEC_VERSION=${{ matrix.owsec_version }}
-#          export OWFMS_VERSION=${{ matrix.owfms_version }}
-#          export OWPROV_VERSION=${{ matrix.owprov_version }}
-#          export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
-#          export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
-#          export OWSUB_VERSION=${{ matrix.owsub_version }}
-#          export OWRRM_VERSION=${{ matrix.owrrm_version }}
-#          ./deploy.sh
-#        else
-#          export DEPLOY_METHOD=git
-#          export CHART_VERSION=main
-#          export OWGW_VERSION=master
-#          export OWGWUI_VERSION=main
-#          export OWSEC_VERSION=main
-#          export OWFMS_VERSION=main
-#          export OWPROV_VERSION=main
-#          export OWPROVUI_VERSION=main
-#          export OWANALYTICS_VERSION=main
-#          export OWSUB_VERSION=main
-#          export OWRRM_VERSION=main
-#          ./deploy.sh
-#        fi
-#
-#    - name: Show resource state on deployment failure
-#      if: failure()
-#      run: |
-#        kubectl get pods --namespace openwifi-${{ matrix.namespace }}
-#        kubectl get services --namespace openwifi-${{ matrix.namespace }}
-#        kubectl get persistentvolumeclaims --namespace openwifi-${{ matrix.namespace }}
-#    - name: Describe pods on deployment failure
-#      if: failure()
-#      run: |
-#        kubectl describe pods --namespace openwifi-${{ matrix.namespace }}
-#    - name: Describe services on deployment failure
-#      if: failure()
-#      run: |
-#        kubectl describe services --namespace openwifi-${{ matrix.namespace }}
-#    - name: Describe persistentvolumeclaims on deployment failure
-#      if: failure()
-#      run: |
-#        kubectl describe persistentvolumeclaims --namespace openwifi-${{ matrix.namespace }}
-#
-#    - name: Rollback Cloud SDK
-#      if: failure()
-#      run: |
-#        helm rollback tip-openwifi --namespace openwifi-${{ matrix.namespace }} --wait --timeout 20m
+    - name: Checkout repo with Helm values
+      uses: actions/checkout@v3
+      with:
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: ${{ matrix.chart_version }}
+
+    - name: Prepare certificates from secrets
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
+        echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
+
+    - name: Fetch kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Deploy OpenWIFI Cloud SDK
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        export NAMESPACE=${{ matrix.namespace }}
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
+        export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
+        export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
+        export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
+        export OWFMS_S3_SECRET=${{ secrets.UCENTRALFMS_S3_SECRET }}
+        export OWFMS_S3_KEY=${{ secrets.UCENTRALFMS_S3_KEY }}
+        export CERT_LOCATION=cert.pem
+        export KEY_LOCATION=key.pem
+        export OWSEC_NEW_PASSWORD=${{ secrets.OWSEC_NEW_PASSWORD }}
+        export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
+        export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
+        export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
+        if [[ "${{ github.event.inputs.force_latest }}" == "false" ]]; then
+          export DEPLOY_METHOD=${{ matrix.deploy_method }}
+          export CHART_VERSION=${{ matrix.chart_version }}
+          export OWGW_VERSION=${{ matrix.owgw_version }}
+          export OWGWUI_VERSION=${{ matrix.owgwui_version }}
+          export OWSEC_VERSION=${{ matrix.owsec_version }}
+          export OWFMS_VERSION=${{ matrix.owfms_version }}
+          export OWPROV_VERSION=${{ matrix.owprov_version }}
+          export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
+          export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
+          export OWSUB_VERSION=${{ matrix.owsub_version }}
+          export OWRRM_VERSION=${{ matrix.owrrm_version }}
+          ./deploy.sh
+        else
+          export DEPLOY_METHOD=git
+          export CHART_VERSION=main
+          export OWGW_VERSION=master
+          export OWGWUI_VERSION=main
+          export OWSEC_VERSION=main
+          export OWFMS_VERSION=main
+          export OWPROV_VERSION=main
+          export OWPROVUI_VERSION=main
+          export OWANALYTICS_VERSION=main
+          export OWSUB_VERSION=main
+          export OWRRM_VERSION=main
+          ./deploy.sh
+        fi
+
+    - name: Show resource state on deployment failure
+      if: failure()
+      run: |
+        kubectl get pods --namespace openwifi-${{ matrix.namespace }}
+        kubectl get services --namespace openwifi-${{ matrix.namespace }}
+        kubectl get persistentvolumeclaims --namespace openwifi-${{ matrix.namespace }}
+    - name: Describe pods on deployment failure
+      if: failure()
+      run: |
+        kubectl describe pods --namespace openwifi-${{ matrix.namespace }}
+    - name: Describe services on deployment failure
+      if: failure()
+      run: |
+        kubectl describe services --namespace openwifi-${{ matrix.namespace }}
+    - name: Describe persistentvolumeclaims on deployment failure
+      if: failure()
+      run: |
+        kubectl describe persistentvolumeclaims --namespace openwifi-${{ matrix.namespace }}
+
+    - name: Rollback Cloud SDK
+      if: failure()
+      run: |
+        helm rollback tip-openwifi --namespace openwifi-${{ matrix.namespace }} --wait --timeout 20m
 
