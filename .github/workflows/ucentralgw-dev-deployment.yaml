@@ -72,7 +72,7 @@ jobs:
 
     - name: Show output variable
       run: |
-        echo ${{ steps.assign_outputs.outputs.matrix }}
+        echo "${{ steps.assign_outputs.outputs.matrix }}"
 
   test2:
     name: Test output variable
@@ -80,7 +80,7 @@ jobs:
     steps:
     - name: Show output variable
       run: |
-        echo ${{ needs.test.outputs.x64_image_name }}
+        echo "${{ needs.test.outputs.x64_image_name }}"
 
 #  id:
 #    name: Workflow ID Provider
