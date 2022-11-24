@@ -61,6 +61,7 @@ on:
 jobs:
   test:
     name: Test output variable
+    runs-on: ubuntu-latest
     outputs:
       x64_image_name: ${{ steps.assign_outputs.outputs.x64_image_name }}
     steps:
@@ -77,6 +78,7 @@ jobs:
 
   test2:
     name: Test output variable
+    runs-on: ubuntu-latest
     needs: test
     steps:
     - name: Show output variable
