@@ -55,6 +55,10 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
+@allure.feature("BRIDGE MODE CLIENT ISOLATION")
+@allure.parent_suite("CLIENT ISOLATION")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Client Isolation Enabled SSIDs")
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.ci_enabled
 class TestClientIsolationEnabled(object):
@@ -63,8 +67,8 @@ class TestClientIsolationEnabled(object):
         pytest -m "client_isolation and ci_enabled and bridge"
     """
     @pytest.mark.wpa2_personal
+    @pytest.mark.hi
     @pytest.mark.fiveg
-    @pytest.mark.ci_new2
     @pytest.mark.ci_enabled_in_5g_ssid
     @allure.title("Verify the connectivity of 2 clients connected to the different SSID by enabling the client "
                                                 "isolation in both the SSID's.(5Ghz)")
@@ -77,35 +81,32 @@ class TestClientIsolationEnabled(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_5g_radios[0]
+        station_name = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][2]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][3]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                         mode=mode,band="fiveg", num_sta=1, dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                         mode=mode,band="fiveg", num_sta=1, dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list,side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=sta,side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -113,7 +114,7 @@ class TestClientIsolationEnabled(object):
         rx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[0]}")
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], sta_port_list[1]],
+        table_data = {"Station Name": [sta[0], sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -142,8 +143,8 @@ class TestClientIsolationEnabled(object):
                 print("Layer3 not ran properly.")
 
     @pytest.mark.wpa2_personal
+    @pytest.mark.hi
     @pytest.mark.twog
-    @pytest.mark.ci_new1
     @pytest.mark.ci_enabled_in_2g_ssid
     @allure.title("Run traffic between eth2 port (AP) and station (with client isolation enabled) -2.4GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10620", name="WIFI-10620")
@@ -153,26 +154,24 @@ class TestClientIsolationEnabled(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_2g_radios[0]
+        station_list = get_test_library.twog_prefix
 
         allure.attach(name="station_ssid_config-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]))
-        station_result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names = list(station_result.keys())
-        sta_port_list = []
-        a = sta_port_names[0].split('.')[-1]
-        sta_port_list.append(a)
-        print(sta_port_list)
-        result = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
+        station_result = get_test_library.client_connect_using_radio(ssid=ssid_name, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[station_list])
+        result = get_test_library.json_get(_req_url="port/1/1/%s" % (station_list))
         get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station_port_data",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (station_list))
 
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b="")
+                                               traffic_type="lf_udp", sta_list=[station_list], side_b="")
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -181,7 +180,7 @@ class TestClientIsolationEnabled(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],"eth2"],
+        table_data = {"Station Name": [station_list,"eth2"],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"], rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"], rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -213,7 +212,6 @@ class TestClientIsolationEnabled(object):
     # clients_connected to different ssid, enabling isolation in both(2.4GH)
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.ci_new2
     @pytest.mark.ci_ebabled_in_2g
     @allure.title("Verify the connectivity of 2 clients connected to the different SSID by enabling the client "
                   "isolation in both the SSID's.(2.4Ghz)")
@@ -226,38 +224,33 @@ class TestClientIsolationEnabled(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_2g_radios[0]
+        station_name = get_test_library.twog_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][1]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
 
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -266,7 +259,7 @@ class TestClientIsolationEnabled(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], sta_port_list[1]],
+        table_data = {"Station Name": [sta[0], sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -297,7 +290,6 @@ class TestClientIsolationEnabled(object):
     # Running traffic between eth2 to station with client-isolation enabled in (5GH) ssid
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.ci_new1
     @pytest.mark.eth_to_5g_station_true
     @allure.title("Run traffic between eth2 port (AP) and station (with client isolation enabled) -5GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10621", name="WIFI-10621")
@@ -307,26 +299,25 @@ class TestClientIsolationEnabled(object):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        station_list = "sta100"
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_5g_radios[0]
+        station_list = get_test_library.fiveg_prefix
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][2]))
-        station_result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                         mode=mode, band="fiveg", num_sta=1,
-                                                         dut_data=setup_configuration)
-        sta_port_names = list(station_result.keys())
-        sta_port_list = []
-        a = sta_port_names[0].split('.')[-1]
-        sta_port_list.append(a)
-        print(sta_port_list)
-        result = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
+        station_result = get_test_library.client_connect_using_radio(ssid=ssid_name, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[station_list])
+        result = get_test_library.json_get(_req_url="port/1/1/%s" % (station_list))
         get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station_port_data",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (station_list))
 
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b="")
+                                               traffic_type="lf_udp", sta_list=[station_list], side_b="")
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -335,7 +326,7 @@ class TestClientIsolationEnabled(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],"eth2"],
+        table_data = {"Station Name": [station_list,"eth2"],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -408,6 +399,10 @@ setup_params_general1 = {
     indirect=True,
     scope="class"
 )
+@allure.feature("BRIDGE MODE CLIENT ISOLATION")
+@allure.parent_suite("CLIENT ISOLATION")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Client Isolation Disabled SSIDs")
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.ci_disabled
 class TestClientIsolationDisabled(object):
@@ -429,37 +424,34 @@ class TestClientIsolationDisabled(object):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][1]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_2g_radios[0]
+        station_name = get_test_library.twog_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][0]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][1]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
         cx_list = get_test_library.get_cx_list()
@@ -467,7 +459,7 @@ class TestClientIsolationDisabled(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], sta_port_list[1]],
+        table_data = {"Station Name": [sta[0], sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -505,25 +497,23 @@ class TestClientIsolationDisabled(object):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_2g_radios[0]
+        station_list = get_test_library.twog_prefix
 
         allure.attach(name="station_ssid_config-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][0]))
-        station_result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                         mode=mode, band="twog", num_sta=1,
-                                                         dut_data=setup_configuration)
-        sta_port_names = list(station_result.keys())
-        sta_port_list = []
-        a = sta_port_names[0].split('.')[-1]
-        sta_port_list.append(a)
-        print(sta_port_list)
-        result = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
+        station_result = get_test_library.client_connect_using_radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=[station_list])
+        result = get_test_library.json_get(_req_url="port/1/1/%s" % (station_list))
         get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station_port_data",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (station_list))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b="")
+                                               traffic_type="lf_udp", sta_list=[station_list], side_b="")
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -532,7 +522,7 @@ class TestClientIsolationDisabled(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],"eth2"],
+        table_data = {"Station Name": [station_list,"eth2"],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -574,37 +564,32 @@ class TestClientIsolationDisabled(object):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_5g_radios[0]
+        station_name = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][2]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][3]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                             security=security, mode=mode, radio=radio_name, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -613,7 +598,7 @@ class TestClientIsolationDisabled(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], sta_port_list[1]],
+        table_data = {"Station Name": [sta[0], sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -652,25 +637,23 @@ class TestClientIsolationDisabled(object):
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][2]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_5g_radios[0]
+        station_list = get_test_library.fiveg_prefix
 
         allure.attach(name="station_ssid_config-info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"][2]))
-        station_result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                         mode=mode, band="fiveg", num_sta=1,
-                                                         dut_data=setup_configuration)
-        sta_port_names = list(station_result.keys())
-        sta_port_list = []
-        a = sta_port_names[0].split('.')[-1]
-        sta_port_list.append(a)
-        print(sta_port_list)
-        result = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
+        station_result = get_test_library.client_connect_using_radio(ssid=ssid_name, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[station_list])
+        result = get_test_library.json_get(_req_url="port/1/1/%s" % (station_list))
         get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station_port_data",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (station_list))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b="")
+                                               traffic_type="lf_udp", sta_list=[station_list], side_b="")
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -679,7 +662,7 @@ class TestClientIsolationDisabled(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], "eth2"],
+        table_data = {"Station Name": [station_list,"eth2"],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -750,6 +733,10 @@ setup_params_general2 = {
     indirect=True,
     scope="class"
 )
+@allure.feature("BRIDGE MODE CLIENT ISOLATION")
+@allure.parent_suite("CLIENT ISOLATION")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Client Isolation Same SSIDs")
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.ci_same_ssid
 class TestClientIsolationSameSSID(object):
@@ -769,43 +756,41 @@ class TestClientIsolationSameSSID(object):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_2g_radios[0]
+        station_name = get_test_library.twog_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
 
         allure.attach(name="station_ssid_config-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][0]))
-        print("########### client_connect starts")
-        station_result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key, security="wpa2",
-                                        scan_ssid=True, mode=mode,band="twog", num_sta=2, dut_data=setup_configuration)
-        sta_port_names = list(station_result.keys())
-        sta_port_list = []
-        for i in range(2):
-            a = sta_port_names[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result = get_test_library.client_connect_using_radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=sta)
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
-
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                                        side_b_min_rate=6291456, side_b_max_rate=0,traffic_type="lf_udp",
-                                                        sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               side_b_min_rate=6291456, side_b_max_rate=0,
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
         cx_list = get_test_library.get_cx_list()
-        print("cx_list", cx_list)
         rx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[0]}")
-        print("rx_data", rx_data)
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], sta_port_list[1]],
-                      "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"], rx_data[f"{cx_list[0]}"]["bps rx b"]],
-                      "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"], rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
+        table_data = {"Station Name": [sta[0], sta[1]],
+                      "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
+                      "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
         print(table)
 
@@ -817,7 +802,6 @@ class TestClientIsolationSameSSID(object):
             print("Station creation passed. Successful.")
             if layer3_restult is None:
                 print("Layer3 traffic ran.")
-                assert True
                 if rx_data[f"{cx_list[0]}"]["rx drop % a"] and rx_data[f"{cx_list[0]}"]["rx drop % b"] == 100:
                     allure.attach(name="Test Result",body="TEST PASS, Rx drop has 100% when isolation enabled in ssid."+"\n\n"+str(table))
                     print("Test PASS,Rx drop has 100%")
@@ -829,7 +813,6 @@ class TestClientIsolationSameSSID(object):
                     assert False
             else:
                 print("Layer3 not ran properly.")
-                assert False
 
     # clients_connected to same ssid, disabled isolation(2.4GH)
     @pytest.mark.wpa2_personal
@@ -844,28 +827,30 @@ class TestClientIsolationSameSSID(object):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_2g_radios[0]
+        station_name = get_test_library.twog_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
 
         allure.attach(name="station_ssid_config-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][1]))
-        station_result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key, security="wpa2",
-                                         scan_ssid=True, mode=mode,band="twog", num_sta=2, dut_data=setup_configuration)
-        sta_port_names = list(station_result.keys())
-        sta_port_list = []
-        for i in range(2):
-            a = sta_port_names[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result = get_test_library.client_connect_using_radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=sta)
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -874,7 +859,7 @@ class TestClientIsolationSameSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], sta_port_list[1]],
+        table_data = {"Station Name": [sta[0], sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -904,7 +889,6 @@ class TestClientIsolationSameSSID(object):
     # clients_connected to same ssid, enabled isolation(5GHZ)
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.ci
     @pytest.mark.same_ssid_enabling_isolation_5g
     @allure.title("Verify the connectivity of 2 clients connected to the same SSID by enabling client isolation.(5Ghz)")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10606", name="WIFI-10606")
@@ -912,30 +896,32 @@ class TestClientIsolationSameSSID(object):
                                             get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
 
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][2]
-        print("profile data:", profile_data)
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
-        allure.attach(name="station_ssid_config-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][2]))
-        station_result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                         mode=mode,band="fiveg", num_sta=2, dut_data=setup_configuration)
-        sta_port_names = list(station_result.keys())
-        sta_port_list = []
+        radio_name = get_test_library.wave2_5g_radios[0]
+        station_name = get_test_library.fiveg_prefix
+        sta = []
         for i in range(2):
-            a = sta_port_names[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+            sta.append(station_name + str(i))
+        print(sta)
+
+        allure.attach(name="station_ssid_config-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][2]))
+        station_result = get_test_library.client_connect_using_radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=sta)
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -944,9 +930,9 @@ class TestClientIsolationSameSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], sta_port_list[1]],
-                      "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"], rx_data[f"{cx_list[0]}"]["bps rx b"]],
-                      "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"], rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
+        table_data = {"Station Name": [sta[0], sta[1]],
+                      "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
+                      "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
         print(table)
 
@@ -972,7 +958,6 @@ class TestClientIsolationSameSSID(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.ci
     @pytest.mark.same_ssid_disabling_isolation_5g
     @allure.title("Verify the connectivity of 2 clients connected to the same SSID disabling the client isolation.(5Ghz)")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10612", name="WIFI-10612")
@@ -982,29 +967,30 @@ class TestClientIsolationSameSSID(object):
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][3]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_5g_radios[0]
+        station_name = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
 
         allure.attach(name="station_ssid_config-info", body=str(setup_params_general2["ssid_modes"]["wpa2_personal"][3]))
-        station_result = get_test_library.client_connect(ssid=ssid_name, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                         mode=mode, band="fiveg", num_sta=2,
-                                                         dut_data=setup_configuration)
-        sta_port_names = list(station_result.keys())
-        sta_port_list = []
-        for i in range(2):
-            a = sta_port_names[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result = get_test_library.client_connect_using_radio(ssid=ssid_name, passkey=security_key,
+                                                            security=security, mode=mode, radio=radio_name,
+                                                            station_name=sta)
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS",value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=sta, side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1013,9 +999,9 @@ class TestClientIsolationSameSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0], sta_port_list[1]],
-                      "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"], rx_data[f"{cx_list[0]}"]["bps rx b"]],
-                      "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"], rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
+        table_data = {"Station Name": [sta[0], sta[1]],
+                      "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
+                      "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
         print(table)
 
@@ -1040,7 +1026,6 @@ class TestClientIsolationSameSSID(object):
             else:
                 print("Layer3 not ran properly.")
 
-########################################################################################################################
 
 setup_params_general3 = {
     "mode": "BRIDGE",
@@ -1085,6 +1070,10 @@ setup_params_general3 = {
     indirect=True,
     scope="class"
 )
+@allure.feature("BRIDGE MODE CLIENT ISOLATION")
+@allure.parent_suite("CLIENT ISOLATION")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Client Isolation Enable and Disabled with Different SSIDs")
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.ci_different_ssid
 class TestClientIsolationDifferentSSID(object):
@@ -1095,8 +1084,8 @@ class TestClientIsolationDifferentSSID(object):
 
     # clients_connected to different ssid,enabling isolation in ssid (2GH)& isolation disabled in ssid (2GHZ)
     @pytest.mark.wpa2_personal
+    @pytest.mark.ci
     @pytest.mark.twog
-    @pytest.mark.ci_tarun
     @pytest.mark.ci_enable_and_disable_2g
     @allure.title("Verify the connectivity of 2 clients connected to different SSID's where Client isolation is enabled"
                   " in one and disabled in other.(2.4Ghz)")
@@ -1109,37 +1098,34 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][1]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name = get_test_library.wave2_2g_radios[0]
+        station_name = get_test_library.twog_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]], side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1148,7 +1134,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1179,8 +1165,8 @@ class TestClientIsolationDifferentSSID(object):
 
     # clients_connected to different ssid,enabling isolation in ssid (5GH)& isolation disabled in ssid (5GHZ)
     @pytest.mark.wpa2_personal
+    @pytest.mark.ci
     @pytest.mark.fiveg
-    @pytest.mark.ci_tarun
     @pytest.mark.ci_enable_and_disable_5g
     @allure.title("Verify the connectivity of 2 clients connected to different SSID's where Client isolation is enabled"
                   " in one and disabled in other.(5Ghz)")
@@ -1193,37 +1179,33 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
-
+        radio_name = get_test_library.wave2_5g_radios[0]
+        station_name = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(2):
+            sta.append(station_name + str(i))
+        print(sta)
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name,
+                                                             station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=sta_port_list, side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]], side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1232,7 +1214,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1276,37 +1258,35 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name1 = get_test_library.wave2_2g_radios[0]
+        radio_name2 = get_test_library.wave2_5g_radios[0]
+        station_name1 = get_test_library.twog_prefix
+        station_name2 = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(1):
+            sta.append(station_name1 + str(i))
+            sta.append(station_name2 + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                        security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                         security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="0 (zero)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=[sta_port_list[0]], side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]], side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1315,7 +1295,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0], sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1358,37 +1338,35 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name1 = get_test_library.wave2_2g_radios[0]
+        radio_name2 = get_test_library.wave2_5g_radios[0]
+        station_name1 = get_test_library.twog_prefix
+        station_name2 = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(1):
+            sta.append(station_name1 + str(i))
+            sta.append(station_name2 + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                        security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                         security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="0 (zero)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=[sta_port_list[0]], side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]], side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1397,7 +1375,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1442,37 +1420,35 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name1 = get_test_library.wave2_2g_radios[0]
+        radio_name2 = get_test_library.wave2_5g_radios[0]
+        station_name1 = get_test_library.twog_prefix
+        station_name2 = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(1):
+            sta.append(station_name1 + str(i))
+            sta.append(station_name2 + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                     security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                      security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="0 (zero)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=[sta_port_list[0]],side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]],side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1481,7 +1457,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1526,37 +1502,35 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name1 = get_test_library.wave2_2g_radios[0]
+        radio_name2 = get_test_library.wave2_5g_radios[0]
+        station_name1 = get_test_library.twog_prefix
+        station_name2 = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(1):
+            sta.append(station_name1 + str(i))
+            sta.append(station_name2 + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                      security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                        security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="0 (zero)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=[sta_port_list[0]],side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]],side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1565,7 +1539,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1608,37 +1582,35 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name1 = get_test_library.wave2_2g_radios[0]
+        radio_name2 = get_test_library.wave2_5g_radios[0]
+        station_name1 = get_test_library.twog_prefix
+        station_name2 = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(1):
+            sta.append(station_name1 + str(i))
+            sta.append(station_name2 + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                        security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                        security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="0 (zero)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=[sta_port_list[0]],side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]],side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1647,7 +1619,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1692,37 +1664,37 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name1 = get_test_library.wave2_2g_radios[0]
+        radio_name2 = get_test_library.wave2_5g_radios[0]
+        station_name1 = get_test_library.twog_prefix
+        station_name2 = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(1):
+            sta.append(station_name1 + str(i))
+            sta.append(station_name2 + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name1,
+                                                             station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                                             security=security, mode=mode, radio=radio_name2,
+                                                             station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="0 (zero)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=[sta_port_list[0]], side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]], side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1731,7 +1703,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1778,37 +1750,35 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][3]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name1 = get_test_library.wave2_2g_radios[0]
+        radio_name2 = get_test_library.wave2_5g_radios[0]
+        station_name1 = get_test_library.twog_prefix
+        station_name2 = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(1):
+            sta.append(station_name1 + str(i))
+            sta.append(station_name2 + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][0]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][3]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                        security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                        security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="0 (zero)")
         allure.attach(name="Min Tx rate -B", body="6291456 (6.2 Mbps)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=0, side_a_max_rate=0,
                                                side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=[sta_port_list[0]],side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]],side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1817,7 +1787,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
@@ -1863,37 +1833,35 @@ class TestClientIsolationDifferentSSID(object):
         profile_data = setup_params_general3["ssid_modes"]["wpa2_personal"][2]
         ssid_name2 = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
+        security = "wpa2"
         mode = "BRIDGE"
+        radio_name1 = get_test_library.wave2_2g_radios[0]
+        radio_name2 = get_test_library.wave2_5g_radios[0]
+        station_name1 = get_test_library.twog_prefix
+        station_name2 = get_test_library.fiveg_prefix
+        sta = []
+        for i in range(1):
+            sta.append(station_name1 + str(i))
+            sta.append(station_name2 + str(i))
+        print(sta)
 
         allure.attach(name="station1_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][1]))
         allure.attach(name="station2_ssid_config-info", body=str(setup_params_general3["ssid_modes"]["wpa2_personal"][2]))
-        station_result1 = get_test_library.client_connect(ssid=ssid_name1, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="twog", num_sta=1,
-                                                          dut_data=setup_configuration)
-        station_result2 = get_test_library.client_connect(ssid=ssid_name2, passkey=security_key, security="wpa2", scan_ssid=True,
-                                                          mode=mode, band="fiveg", num_sta=1,
-                                                          dut_data=setup_configuration)
-        sta_port_names1 = list(station_result1.keys())
-        sta_port_names2 = list(station_result2.keys())
-        sta_list = [sta_port_names1, sta_port_names2]
-        sta_list1 = []
-        [sta_list1.extend(i) for i in sta_list]
-        sta_port_list = []
-        for i in range(2):
-            a = sta_list1[i].split('.')[-1]
-            sta_port_list.append(a)
-        print(sta_port_list)
-        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[0]))
-        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta_port_list[1]))
+        station_result1 = get_test_library.client_connect_using_radio(ssid=ssid_name1, passkey=security_key,
+                                         security=security, mode=mode, radio=radio_name1, station_name=[sta[0]])
+        station_result2 = get_test_library.client_connect_using_radio(ssid=ssid_name2, passkey=security_key,
+                                         security=security, mode=mode, radio=radio_name2, station_name=[sta[1]])
+        sta_data1 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[0]))
+        sta_data2 = get_test_library.json_get(_req_url="port/1/1/%s" % (sta[1]))
         get_test_library.allure_report_table_format(dict_data=sta_data1["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[0]))
+                                           name="%s info" % (sta[0]))
         get_test_library.allure_report_table_format(dict_data=sta_data2["interface"], key="STATION DETAILS", value="VALUE",
-                                           name="%s info" % (sta_port_list[1]))
+                                           name="%s info" % (sta[1]))
         allure.attach(name="Min Tx rate -A", body="6291456 (6.2 Mbps)")
         allure.attach(name="Min Tx rate -B", body="0 (zero)")
         layer3_restult = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
                                                side_b_min_rate=0, side_b_max_rate=0,
-                                               traffic_type="lf_udp", sta_list=[sta_port_list[0]],side_b=sta_port_list[1])
+                                               traffic_type="lf_udp", sta_list=[sta[0]],side_b=sta[1])
         print("waiting 30 sec for getting cx_list data...")
         time.sleep(30)
 
@@ -1902,7 +1870,7 @@ class TestClientIsolationDifferentSSID(object):
         get_test_library.allure_report_table_format(dict_data=rx_data[f"{cx_list[0]}"], key="Layer-3 Column Names",
                                                      value="VALUE", name="cx_data")
         get_test_library.l3_cleanup()
-        table_data = {"Station Name": [sta_port_list[0],sta_port_list[1]],
+        table_data = {"Station Name": [sta[0],sta[1]],
                       "bps rx a": [rx_data[f"{cx_list[0]}"]["bps rx a"],rx_data[f"{cx_list[0]}"]["bps rx b"]],
                       "rx drop %": [rx_data[f"{cx_list[0]}"]["rx drop % a"],rx_data[f"{cx_list[0]}"]["rx drop % b"]]}
         table = tabulate(table_data, headers='keys', tablefmt='fancy_grid', showindex=True)
