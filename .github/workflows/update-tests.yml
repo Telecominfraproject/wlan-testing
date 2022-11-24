@@ -44,6 +44,7 @@ jobs:
         run: |
           mv allure-report tmp-report
           rm -rf allure-*
+          mkdir -p ~/.ssh
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           echo https://tip-automation:${{ secrets.GIT_PUSH_PAT }}@github.com > ~/.git-credentials
           git config --global credential.helper store
