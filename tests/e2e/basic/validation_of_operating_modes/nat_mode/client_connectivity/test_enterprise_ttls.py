@@ -46,10 +46,9 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa enterprise 2.4 GHz")
     def test_wpa_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
-                               get_test_device_logs, execution_number,
+                               get_test_device_logs,
                                get_target_object,
                                num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -59,10 +58,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -78,10 +74,9 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa enterprise 5 GHz")
     def test_wpa_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
-                               get_test_device_logs, execution_number,
+                               get_test_device_logs,
                                get_target_object,
                                num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 5g
@@ -91,10 +86,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "fiveg"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -110,10 +102,9 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.sanity_light
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa2 enterprise 2.4 GHz")
     def test_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, execution_number,
+                                get_test_device_logs,
                                 get_target_object,
                                 num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -122,10 +113,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
         profile_data = {"ssid_name": "ssid_wpa2_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa2"
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -140,10 +128,9 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa2 enterprise 5 GHz")
     def test_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, execution_number,
+                                get_test_device_logs,
                                 get_target_object,
                                 num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -152,10 +139,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa2"
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "fiveg"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -170,10 +154,9 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa3 enterprise 2.4 GHz")
     def test_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, execution_number,
+                                get_test_device_logs,
                                 get_target_object,
                                 num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -182,10 +165,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
         profile_data = {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -201,10 +181,9 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa3 enterprise 5 GHz")
     def test_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, execution_number,
+                                get_test_device_logs,
                                 get_target_object,
                                 num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -213,10 +192,7 @@ class TestNATModeEnterpriseTTLSSuiteA(object):
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "fiveg"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -264,10 +240,9 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa wpa2 enterprise 2.4 GHz")
     def test_wpa_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                    get_test_device_logs, execution_number,
+                                    get_test_device_logs,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -277,10 +252,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -296,10 +268,9 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa wpa2 enterprise 5 GHz")
     def test_wpa_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                    get_test_device_logs, execution_number,
+                                    get_test_device_logs,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -309,10 +280,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "fiveg"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -328,10 +296,9 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa3 enterprise mixed 2.4 GHz")
     def test_wpa3_enterprise_mixed_2g(self, get_test_library, get_dut_logs_per_test_case,
-                                      get_test_device_logs, execution_number,
+                                      get_test_device_logs,
                                       get_target_object,
                                       num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -340,10 +307,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
         profile_data = {"ssid_name": "ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -358,10 +322,9 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
-    @pytest.mark.parametrize('execution_number', range(2))
     @allure.title("Test for wpa3 enterprise mixed 5 GHz")
     def test_wpa3_enterprise_mixed_5g(self, get_test_library, get_dut_logs_per_test_case,
-                                      get_test_device_logs, execution_number,
+                                      get_test_device_logs,
                                       get_target_object,
                                       num_stations, setup_configuration, check_connectivity, radius_info):
         """ wpa enterprise 2g
@@ -370,10 +333,7 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
         profile_data = {"ssid_name": "ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        if execution_number == 0:
-            mode = "NAT-WAN"
-        if execution_number == 1:
-            mode = "NAT-LAN"
+        mode = "NAT-WAN"
         band = "fiveg"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
