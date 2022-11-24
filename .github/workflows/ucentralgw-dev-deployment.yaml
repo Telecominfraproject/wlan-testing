@@ -63,14 +63,14 @@ jobs:
     name: Test output variable
     runs-on: ubuntu-latest
     outputs:
-      x64_image_name: ${{ steps.assign_outputs.outputs.x64_image_name }}
+      namespace: ${{ steps.assign_outputs.outputs.namespace }}
     steps:
     - name: Assign output variables
       id: assign_outputs
       run: |
         IMG_NAME="$(date +%Y%m%d)-edgecore_ecs4100-12ph-v2.0.0-rc1-7d57891-upgrade.bin"
         echo "matrix={\"include\":${{ env.testbeds }}}" >> $GITHUB_OUTPUT
-        echo "x64_image_name=$(echo $IMG_NAME)" >> $GITHUB_OUTPUT
+        echo "namespace=$(echo f4b5a10a-ce26-4ddb-af1f-4394c951a585 | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
 
     - name: Show output variable
       run: |
@@ -83,7 +83,7 @@ jobs:
     steps:
     - name: Show output variable
       run: |
-        echo "${{ needs.test.outputs.x64_image_name }}"
+        echo "${{ needs.test.outputs.namespace }}"
 
 #  id:
 #    name: Workflow ID Provider
