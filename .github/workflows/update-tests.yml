@@ -42,7 +42,7 @@ jobs:
 
       - name: Update allure report
         run: |
-          mv allure-report tmp-report
+          mv allure-report tmp-docs
           rm -rf allure-*
           mkdir -p ~/.ssh
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
@@ -52,8 +52,8 @@ jobs:
           git config --global user.name "TIP Automation User"
           git pull
           git checkout gh-pages
-          mv tmp-report report
-          git add report
+          mv tmp-docs docs
+          git add docs
           git commit -m'Update allure report for github pages'
 
       - name: Publish Allure report to GitHub Pages
@@ -61,7 +61,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
-          directory: ./report
+          directory: ./docs
 
   cleanup:
     needs: [build, testsgen]
