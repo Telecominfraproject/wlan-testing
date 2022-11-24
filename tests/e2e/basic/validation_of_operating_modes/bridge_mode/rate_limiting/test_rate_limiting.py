@@ -67,12 +67,16 @@ class TestRateLimitingBridge(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up", mode=mode,
                                             download_rate="0Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5})
+                                            num_stations={"2G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -98,12 +102,16 @@ class TestRateLimitingBridge(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_dw", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5})
+                                            num_stations={"2G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
         print("Test Completed... Cleaning up Stations")
         assert True
 
@@ -131,12 +139,16 @@ class TestRateLimitingBridge(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_dw", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5})
+                                            num_stations={"2G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -164,12 +176,16 @@ class TestRateLimitingBridge(object):
         profile_data["rate-limit"][0] = 0
         profile_data["rate-limit"][1] = 0
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_dw_di", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5})
+                                            num_stations={"2G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -195,13 +211,17 @@ class TestRateLimitingBridge(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         raw_lines = [["dl_rate_sel: Per-Station Download Rate:"], ["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_bridge_up_dw_per_cl", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5}, raw_lines=raw_lines)
+                                            num_stations={"2G": 5}, raw_lines=raw_lines, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
         assert True
 
     @pytest.mark.wpa2_personal
@@ -226,13 +246,17 @@ class TestRateLimitingBridge(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         raw_lines = [["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_per_cl", mode=mode,
                                             download_rate="0Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5}, raw_lines=raw_lines)
+                                            num_stations={"2G": 5}, raw_lines=raw_lines, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -258,13 +282,17 @@ class TestRateLimitingBridge(object):
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         raw_lines = [["dw_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_dw_per_cl", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5}, raw_lines=raw_lines)
+                                            num_stations={"2G": 5}, raw_lines=raw_lines, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -290,12 +318,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_125", mode=mode,
                                             download_rate="0Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 5})
+                                            num_stations={"5G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -321,13 +353,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
-        vlan = 1
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_dw_125", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 5})
+                                            num_stations={"5G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -354,12 +389,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_dw_125", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 5})
+                                            num_stations={"5G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -385,12 +424,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_1", mode=mode,
                                             download_rate="0Gbps", batch_size="1",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 1})
+                                            num_stations={"2G": 1}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -416,12 +459,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_1", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
                                             upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 1})
+                                            num_stations={"2G": 1}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -447,12 +494,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_tcp_dl_up_dw_1", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 1})
+                                            num_stations={"2G": 1}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -478,12 +529,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_1_5g", mode=mode,
                                             download_rate="0Gbps", batch_size="1",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 1})
+                                            num_stations={"5G": 1}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -509,12 +564,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_dw_1_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
                                             upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 1})
+                                            num_stations={"5G": 1}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -540,12 +599,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_dw_1_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 1})
+                                            num_stations={"5G": 1}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -573,12 +636,16 @@ class TestRateLimitingBridge(object):
         profile_data["rate-limit"][0] = 0
         profile_data["rate-limit"][1] = 0
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_dw_di_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 5})
+                                            num_stations={"5G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -604,13 +671,17 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         raw_lines = [["dl_rate_sel: Per-Station Download Rate:"], ["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_per_cl_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 5}, raw_lines=raw_lines)
+                                            num_stations={"5G": 5}, raw_lines=raw_lines, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -636,13 +707,17 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         raw_lines = [["ul_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_per_cl_5g", mode=mode,
                                             download_rate="0Gbps", batch_size="1,2,5",
                                             upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 5}, raw_lines=raw_lines)
+                                            num_stations={"5G": 5}, raw_lines=raw_lines, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
 
@@ -668,12 +743,16 @@ class TestRateLimitingBridge(object):
                         }
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
         raw_lines = [["dw_rate_sel: Per-Station Download Rate:"]]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_dw_per_cl_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
                                             upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"5G": 5}, raw_lines=raw_lines)
+                                            num_stations={"5G": 5}, raw_lines=raw_lines, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
 
         assert True
