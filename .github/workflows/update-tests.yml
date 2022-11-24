@@ -40,11 +40,18 @@ jobs:
         with:
           results_path: ./allure-results
 
-      - name: List current dir
+      - name: Update allure report
         run: |
-          echo $PWD
-          ls
-          git status
+          mv allure-report tmp-report
+          rm -rf allure-*
+          git checkout gh-pages
+          mv tmp-report report
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          echo https://tip-automation:${{ secrets.GIT_PUSH_PAT }}@github.com > ~/.git-credentials
+          git config --global credential.helper store
+          git config --global user.email "tip-automation@telecominfraproject.com"
+          git config --global user.name "TIP Automation User"
+          git commit -a -m'Update allure report for github pages'
 
       - name: Publish Allure report to GitHub Pages
         uses: ad-m/github-push-action@v0.6.0
