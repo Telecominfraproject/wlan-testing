@@ -273,8 +273,17 @@ class tip_2x:
             r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
             uuid_before_apply = r_data["latest"]
 
+            # attaching ap logs before config push
+            ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+            allure.attach(body=ap_logs, name="AP Log Before config push: ")
             # Apply the Config
-            resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
+            try:
+                resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
+            except Exception as e:
+                ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+                allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
+                allure.attach(body=str(e), name="Exception data after config push: ")
+                logging.info("Error in apply config" + str(e))
             logging.info("Response for Config apply: " + str(resp.status_code))
             if resp.status_code != 200:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
