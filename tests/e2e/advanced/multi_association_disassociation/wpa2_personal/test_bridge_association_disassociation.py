@@ -108,4 +108,3 @@ class TestMultiAssoDisassoBridge(object):
             assert True
         else:
             assert False, discription
-
