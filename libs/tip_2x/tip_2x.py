@@ -274,18 +274,30 @@ class tip_2x:
             try:
                 resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
             except Exception as e:
+                resp = None
                 ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
                 allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
                 allure.attach(body=str(e), name="Exception data after config push: ")
                 logging.info("Error in apply config" + str(e))
             logging.info("Response for Config apply: " + str(resp.status_code))
-            if resp.status_code != 200:
+            if resp is None or resp.status_code != 200:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
                              str(resp.status_code) +
                              "Retrying in 5 Seconds... ")
+                ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+                allure.attach(body=ap_logs, name="AP logs during config fails: ")
                 time.sleep(5)
-                resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
-                if resp.status_code != 200:
+                try:
+                    resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
+                except Exception as e:
+                    resp = None
+                    ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+                    allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
+                    allure.attach(body=str(e), name="Exception data after config push: ")
+                    logging.info("Error in apply config" + str(e))
+                if resp is None or resp.status_code != 200:
+                    ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+                    allure.attach(body=ap_logs, name="AP logs during config fails: ")
                     logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
                     pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
 
@@ -326,6 +338,7 @@ class tip_2x:
                 logging.info("latest_uuid: " + str(latest_uuid))
                 r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
                 active_uuid = r_data["active"]
+                latest_uuid = r_data["latest"]
                 if x == 5:
                     break
             if latest_uuid != active_uuid:
