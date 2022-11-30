@@ -83,7 +83,7 @@ class TestMultiStaPerfVlan(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_dis_nss1_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -165,7 +165,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_38dB_dis_nss1_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -247,7 +247,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_38dB_48dB_dis_nss1_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -317,7 +317,7 @@ class TestMultiStaPerfVlan(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_dis_nss1_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -397,7 +397,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_38dB_dis_nss1_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size="3,6",
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -479,7 +479,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_38dB_48dB_dis_nss1_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -548,7 +548,7 @@ class TestMultiStaPerfVlan(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_dis_nss1_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -628,7 +628,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_25dB_dis_nss1_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -712,7 +712,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_25dB_35dB_dis_nss1_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -779,7 +779,7 @@ class TestMultiStaPerfVlan(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_dis_nss1_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -861,7 +861,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_25dB_dis_nss1_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -943,7 +943,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_25dB_35dB_dis_nss1_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1010,7 +1010,7 @@ class TestMultiStaPerfVlan(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_dis_nss2_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1090,7 +1090,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_38dB_dis_nss2_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1172,7 +1172,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_38dB_48dB_dis_nss2_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1239,7 +1239,7 @@ class TestMultiStaPerfVlan(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_dis_nss2_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1319,7 +1319,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_38dB_dis_nss2_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1401,7 +1401,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_38dB_48dB_dis_nss2_2g", mode=mode, vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1468,7 +1468,7 @@ class TestMultiStaPerfVlan(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_dis_nss2_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1548,7 +1548,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_25dB_dis_nss2_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1630,7 +1630,7 @@ class TestMultiStaPerfVlan(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_upload_10dB_40dB_50dB_dis_nss2_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="0Gbps", batch_size=batch_size,
-                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1697,7 +1697,7 @@ class TestMultiStaPerfVlan(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_dis_nss2_5g", mode=mode, vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1778,7 +1778,7 @@ class TestMultiStaPerfVlan(object):
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_25dB_dis_nss2_5g", mode=mode,
                                         vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
         get_test_library.attach_report_graphs(report_name=report_name)
         csv_val = get_test_library.read_csv_individual_station_throughput(dir_name=report_name, option=None,
@@ -1861,7 +1861,7 @@ class TestMultiStaPerfVlan(object):
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_VLAN_download_10dB_40dB_50dB_dis_nss2_5g", mode=mode,
                                         vlan_id=[vlan],
                                         download_rate="1Gbps", batch_size="3,6,9",
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear",create_vlan=False)
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 

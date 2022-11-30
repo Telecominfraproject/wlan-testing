@@ -49,7 +49,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3"
         station_name = get_test_library.twog_prefix
@@ -116,7 +116,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6"
         station_name = get_test_library.twog_prefix
@@ -198,7 +198,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6,9"
         station_name = get_test_library.twog_prefix
@@ -281,7 +281,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3"
         station_name = get_test_library.twog_prefix
@@ -351,7 +351,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6"
         station_name = get_test_library.twog_prefix
@@ -434,7 +434,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6,9"
         station_name = get_test_library.twog_prefix
@@ -518,7 +518,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3"
         station_name = get_test_library.fiveg_prefix
@@ -587,7 +587,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6"
         station_name = get_test_library.fiveg_prefix
@@ -669,7 +669,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6,9"
         station_name = get_test_library.fiveg_prefix
@@ -753,7 +753,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3"
         station_name = get_test_library.fiveg_prefix
@@ -822,7 +822,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6"
         station_name = get_test_library.fiveg_prefix
@@ -903,7 +903,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6,9"
         station_name = get_test_library.fiveg_prefix
@@ -988,7 +988,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3"
         station_name = get_test_library.twog_prefix
@@ -1057,7 +1057,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6"
         station_name = get_test_library.twog_prefix
@@ -1139,7 +1139,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6,9"
         station_name = get_test_library.twog_prefix
@@ -1223,7 +1223,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3"
         station_name = get_test_library.twog_prefix
@@ -1292,7 +1292,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6"
         station_name = get_test_library.twog_prefix
@@ -1374,7 +1374,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6,9"
         station_name = get_test_library.twog_prefix
@@ -1458,7 +1458,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3"
         station_name = get_test_library.fiveg_prefix
@@ -1527,7 +1527,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6"
         station_name = get_test_library.fiveg_prefix
@@ -1609,7 +1609,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6,9"
         station_name = get_test_library.fiveg_prefix
@@ -1693,7 +1693,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3"
         station_name = get_test_library.fiveg_prefix
@@ -1762,7 +1762,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6"
         station_name = get_test_library.fiveg_prefix
@@ -1844,7 +1844,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         batch_size = "3,6,9"
         station_name = get_test_library.fiveg_prefix

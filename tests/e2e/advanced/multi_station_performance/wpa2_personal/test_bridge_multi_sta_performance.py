@@ -43,7 +43,6 @@ class TestMultiStaPerfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.tps
-    @pytest.mark.hi
     @pytest.mark.udp_upload_10dB_dis_nss1_2g
     def test_multi_station_udp_upload_10dB_dis_nss1_2g(self, setup_configuration, get_test_library, num_stations,
                                             get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
@@ -111,7 +110,6 @@ class TestMultiStaPerfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.tpsm
-    @pytest.mark.hi
     @pytest.mark.udp_upload_10dB_38dB_dis_nss1_2g
     def test_multi_station_udp_upload_10dB_38dB_dis_nss1_2g(self, setup_configuration, get_test_library, num_stations,
                                             get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
@@ -193,7 +191,6 @@ class TestMultiStaPerfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.tpsml
-    @pytest.mark.hi
     @pytest.mark.udp_upload_10dB_38dB_48dB_dis_nss1_2g
     def test_multi_station_udp_upload_10dB_38dB_48dB_dis_nss1_2g(self, setup_configuration, get_test_library, num_stations,
                                             get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
@@ -277,7 +274,6 @@ class TestMultiStaPerfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.tps
-    @pytest.mark.hi
     @pytest.mark.udp_download_10dB_dis_nss1_2g
     def test_multi_station_udp_download_10dB_dis_nss1_2g(self, setup_configuration, get_test_library, num_stations,
                                             get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
@@ -346,7 +342,6 @@ class TestMultiStaPerfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.tpsm
-    @pytest.mark.hi
     @pytest.mark.udp_download_10dB_38dB_dis_nss1_2g
     def test_multi_station_udp_download_10dB_38dB_dis_nss1_2g(self, setup_configuration, get_test_library, num_stations,
                                             get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
@@ -427,7 +422,6 @@ class TestMultiStaPerfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.tpsml
-    @pytest.mark.hi
     @pytest.mark.udp_download_10dB_38dB_48dB_dis_nss1_2g
     def test_multi_station_udp_download_10dB_38dB_48dB_dis_nss1_2g(self, setup_configuration, get_test_library, num_stations,
                                             get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
