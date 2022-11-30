@@ -12,6 +12,7 @@ import json
 pytestmark = [pytest.mark.test_resources,
               pytest.mark.sanity,
               pytest.mark.ow_sanity_lf,
+              pytest.mark.ow_sanity_interop,
               pytest.mark.uc_sanity,
               pytest.mark.sanity_55,
               pytest.mark.interop_uc_sanity,
