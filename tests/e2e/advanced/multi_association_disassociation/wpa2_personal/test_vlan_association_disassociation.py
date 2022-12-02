@@ -108,4 +108,3 @@ class TestMultiAssoDisassoVlan(object):
             assert True
         else:
             assert False, discription
-
