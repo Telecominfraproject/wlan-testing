@@ -1,11 +1,14 @@
+"""
+
+    Multi Association and Disassociation: BRIDGE Mode
+    pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge"
+
+"""
+
 import pytest
 import allure
-import os
-import time
-import pandas as pd
-import threading
 
-pytestmark = [pytest.mark.advance, pytest.mark.multiassodisasso, pytest.mark.bridge, pytest.mark.report]
+pytestmark = [pytest.mark.advance, pytest.mark.multi_assoc_disassoc_tests, pytest.mark.bridge, pytest.mark.wpa2_personal]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -24,15 +27,22 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
+@allure.parent_suite("Multi Association and Disassociation Tests")
+@allure.suite("WPA2 Personal Security")
+@allure.sub_suite("Bridge Mode")
+@allure.feature("UDP upload")
 @pytest.mark.usefixtures("setup_configuration")
 class TestMultiAssoDisassoBridge(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5691", name="WIFI-5691")
-    @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_upload_2g
-    @pytest.mark.karthika_new
-    def test_multi_asso_disasso_udp_upload_nss2_2g(self, get_test_library, setup_configuration, get_target_object):
+    @pytest.mark.karthika
+    @allure.title("Test for Multi Association and Disassociation for UDP upload 2.4G")
+    def test_multi_asso_disasso_udp_upload_nss2_2g(self, get_test_library, setup_configuration, check_connectivity):
+        """
+                pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge and twog and udp_upload_2g"
+        """
         mode = "BRIDGE"
         vlan = 1
         result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16, dut_data=setup_configuration,
@@ -43,12 +53,14 @@ class TestMultiAssoDisassoBridge(object):
         else:
             assert False, discription
 
-
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5692", name="WIFI-5692")
-    @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_download_2g
-    def test_multi_asso_disasso_udp_download_nss2_2g(self, get_test_library, setup_configuration):
+    @allure.title("Test for Multi Association and Disassociation for UDP download 2.4G")
+    def test_multi_asso_disasso_udp_download_nss2_2g(self, get_test_library, setup_configuration, check_connectivity):
+        """
+                pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge and twog and udp_download_2g"
+        """
         mode = "BRIDGE"
         vlan = 1
         result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16,
@@ -61,10 +73,13 @@ class TestMultiAssoDisassoBridge(object):
             assert False, discription
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5693", name="WIFI-5693")
-    @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.udp_upload_5g
-    def test_multi_asso_disasso_udp_upload_nss2_5g(self, get_test_library, setup_configuration):
+    @allure.title("Test for Multi Association and Disassociation for UDP upload 5G")
+    def test_multi_asso_disasso_udp_upload_nss2_5g(self, get_test_library, setup_configuration, check_connectivity):
+        """
+                pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge and fiveg and udp_upload_5g"
+        """
         mode = "BRIDGE"
         vlan = 1
         result, discription = get_test_library.multi_asso_disasso(band="5G", num_stations=16,
@@ -77,10 +92,13 @@ class TestMultiAssoDisassoBridge(object):
             assert False, discription
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5694", name="WIFI-5694")
-    @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.udp_download_5g
-    def test_multi_asso_disasso_udp_download_nss2_5g(self, get_test_library, setup_configuration):
+    @allure.title("Test for Multi Association and Disassociation for UDP download 5G")
+    def test_multi_asso_disasso_udp_download_nss2_5g(self, get_test_library, setup_configuration,check_connectivity):
+        """
+                pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge and fiveg and udp_download_5g"
+        """
         mode = "BRIDGE"
         vlan = 1
         result, discription = get_test_library.multi_asso_disasso(band="5G", num_stations=16,
