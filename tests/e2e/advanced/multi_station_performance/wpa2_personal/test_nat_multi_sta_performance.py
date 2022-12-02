@@ -1,12 +1,12 @@
 """
     Test Multi-Station Performance: Bridge Mode
-    pytest -m multistaperf_nat
+    pytest -m multistaperf
 """
 import pytest
 import allure
 import time
 
-pytestmark = [pytest.mark.advance, pytest.mark.multistaperf_nat, pytest.mark.nat]
+pytestmark = [pytest.mark.advance, pytest.mark.multistaperf, pytest.mark.nat]
 
 setup_params_general = {
     "mode": "NAT",
@@ -91,6 +91,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (35 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 35 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -98,9 +101,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                if list(csv_val["Up"].values())[-1] >= pass_value:
+                    get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                                value="Shorter Distance (10dB)", name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                if list(csv_val["Up"].values())[-1] >= pass_value:
+                    get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                                value="Shorter Distance (10dB)", name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -173,6 +182,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (30 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 38dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 30 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -180,9 +192,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter & Medium Distance (10dB, 38dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter & Medium Distance (10dB, 38dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -256,6 +274,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (25 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 38dB ,48dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 25 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -263,9 +284,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 38dB, 48dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 38dB, 48dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -325,6 +352,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (35 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 35 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -332,9 +362,13 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter Distance (10dB)", name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter Distance (10dB)", name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -408,6 +442,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (30 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 38dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 30 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -415,9 +452,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter & Medium Distance (10dB, 38dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter & Medium Distance (10dB, 38dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -493,6 +536,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (25 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 38dB ,48dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 25 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -500,9 +546,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 38dB, 48dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (2G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 38dB, 48dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -562,6 +614,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (250 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 250 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -569,9 +624,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter Distance (10dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter Distance (10dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -644,6 +705,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (250 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 25dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 250 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -651,9 +715,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter & Medium Distance (10dB, 25dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter & Medium Distance (10dB, 25dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -728,6 +798,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (200 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 25dB ,35dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 200 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -735,9 +808,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 25dB ,35dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 25dB ,35dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -797,6 +876,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (250 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 250 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -804,9 +886,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter Distance (10dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter Distance (10dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -878,6 +966,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (250 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 25dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 250 Mbpsps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -885,9 +976,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter & Medium Distance (10dB, 25dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter & Medium Distance (10dB, 25dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -963,6 +1060,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (200 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 25dB ,35dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 200 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -970,9 +1070,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 25dB ,35dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-1 (5G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 25dB ,35dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1032,6 +1138,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (70 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 70 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1039,9 +1148,13 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter Distance (10dB)", name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter Distance (10dB)", name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1114,6 +1227,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (60 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 38dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 60 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1121,9 +1237,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter & Medium Distance (10dB, 38dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter & Medium Distance (10dB, 38dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1198,6 +1320,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (50 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 38dB ,48dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 50 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1205,9 +1330,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 38dB, 48dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 38dB, 48dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1267,6 +1398,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (70 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 70 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1274,9 +1408,13 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter Distance (10dB)", name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter Distance (10dB)", name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1349,6 +1487,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (60 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 38dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 60 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1356,9 +1497,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter & Medium Distance (10dB, 38dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter & Medium Distance (10dB, 38dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1433,6 +1580,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (50 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 38dB ,48dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 50 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1440,9 +1590,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 38dB, 48dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (2G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 38dB, 48dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1502,6 +1658,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (500 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 500 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1509,9 +1668,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter Distance (10dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter Distance (10dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1584,6 +1749,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (500 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 25dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 500 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1591,9 +1759,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter & Medium Distance (10dB, 25dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter & Medium Distance (10dB, 25dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1668,6 +1842,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (400 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 25dB ,35dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 400 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1675,9 +1852,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Up"].values())[-1]))
             if list(csv_val["Up"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 25dB, 35dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 25dB, 35dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1737,6 +1920,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (500 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 500 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1744,9 +1930,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter Distance (10dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter Distance (10dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1819,6 +2011,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (500 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 25dB",
+                      "Expected Throughput (Mbps)": str(pass_value) + " (70% of 500 Mbps)",
+                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1826,9 +2021,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter & Medium Distance (10dB, 25dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter & Medium Distance (10dB, 25dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
@@ -1904,6 +2105,9 @@ class TestMultiStaPerfNat(object):
         pass_value = (400 * 0.7)
         print("pass value ", pass_value)
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+        table_data = {"Attenuation (dB)": "10dB, 25dB ,35dB",
+                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 400 Mbps)",
+                       "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1911,9 +2115,15 @@ class TestMultiStaPerfNat(object):
         else:
             allure.attach(name="Csv Data", body="Throughput value : " + str(list(csv_val["Down"].values())[-1]))
             if list(csv_val["Down"].values())[-1] >= pass_value:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 25dB, 35dB)",
+                                                            name="Test_results")
                 print("Test passed successfully")
                 assert True
             else:
+                get_test_library.allure_report_table_format(dict_data=table_data, key="NSS-2 (5G)",
+                                                            value="Shorter & Medium & Long Distance (10dB, 25dB, 35dB)",
+                                                            name="Test_results")
                 print("Test failed due to lesser value")
                 assert False, "Test failed due to lesser value"
         print("Test Completed... Cleaning up Stations")
