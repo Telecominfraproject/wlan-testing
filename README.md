@@ -194,11 +194,14 @@ npm install -g allure-commandline --save-dev
 ### [Test Plans and Markers](TEST_PLANS.md):bookmark_tabs:
 =======
 
+<<<<<<< HEAD
 # Docker Setup Instructions
 
 This repository support building Docker image from bundled [Dockerfile](./docker/Dockerfile). If you want to use it for testing, please refer to the [related directory for details](./docker).
 
 >>>>>>> [WIFI-11619] Upd: Docker instructions update (#739)
+=======
+>>>>>>> Updated Readme file in wlan-testing
 ### Executing and Contributing new test cases
 
 Follow instructions provided [here](./tests/README.md)  to understand the Testing Framework, and How to run and 
