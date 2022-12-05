@@ -36,14 +36,14 @@ runs:
       shell: bash
       id: set_outputs
       run: |
-        echo ::set-output name=ami::"$(aws ec2 describe-images --owners self --filters 'Name=name,Values=*-x64_vmware-*' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)"
-        echo ::set-output name=instance_name::openwifi-virtual-ap-${{ github.run_id }}
+        echo "ami=$(aws ec2 describe-images --owners self --filters 'Name=name,Values=*-x64_vmware-*' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)" >> $GITHUB_OUTPUT
+        echo "instance_name=openwifi-virtual-ap-${{ github.run_id }}" >> $GITHUB_OUTPUT
 
     - name: Create openwifi-virtual-ap EC2 instance
       shell: bash
       id: ec2_instance
       run: |
-        echo ::set-output name=instance_id::"$(aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.set_outputs.outputs.ami }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.set_outputs.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]' | jq -r '.Instances[].InstanceId')"
+        echo "instance_id=$(aws ec2 run-instances --key-name openwifi-virtual-ap --security-groups openwifi-virtual-ap --instance-type t2.nano --image-id ${{ steps.set_outputs.outputs.ami }} --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.set_outputs.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]' | jq -r '.Instances[].InstanceId')" >> $GITHUB_OUTPUT
 
     - name: Wait for virtual AP instance to get ready
       shell: bash
@@ -55,8 +55,8 @@ runs:
       shell: bash
       id: get_virtual_ap_facts
       run: |
-        echo ::set-output name=public_ip::"$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)"
-        echo ::set-output name=serial_number::"$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')"
+        echo "public_ip=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)" >> $GITHUB_OUTPUT
+        echo "serial_number=$(aws ec2 describe-instances --instance-id ${{ steps.ec2_instance.outputs.instance_id }} --query 'Reservations[*].Instances[*].NetworkInterfaces[*].MacAddress' --output text | sed 's/://g')" >> $GITHUB_OUTPUT
 
     - name: Upload AP certificate, key and dev-id to instance
       env:

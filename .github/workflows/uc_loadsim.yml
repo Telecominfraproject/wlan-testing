@@ -45,8 +45,8 @@ jobs:
       run: |
         AMI=$(aws ec2 describe-images --filters '[{"Name":"description","Values":["Canonical, Ubuntu, 20.04 LTS, amd64*"]},{"Name":"owner-id","Values":["099720109477"]}]' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
         INSTANCE_NAME=owgw-dc-sqlite-${{ github.run_number }}
-        echo "::set-output name=ami::${AMI}"
-        echo "::set-output name=instance_name::${INSTANCE_NAME}"
+        echo "ami=${AMI}" >> $GITHUB_OUTPUT
+        echo "instance_name=${INSTANCE_NAME}" >> $GITHUB_OUTPUT
 
     # Create EC2 infrastructure
     - name: Create EC2 instance for CloudSDK
@@ -55,8 +55,8 @@ jobs:
         aws ec2 run-instances --key-name $EC2_KEY_NAME --subnet-id $VPC_SUBNET_ID --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.ec2_facts.outputs.ami }} --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.ec2_facts.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]" --output text
         INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
         INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].InstanceId' --output text)
-        echo "::set-output name=instance_public_ip::${INSTANCE_PUBLIC_IP}"
-        echo "::set-output name=instance_id::${INSTANCE_ID}"
+        echo "instance_public_ip=${INSTANCE_PUBLIC_IP}" >> $GITHUB_OUTPUT
+        echo "instance_id=${INSTANCE_ID}" >> $GITHUB_OUTPUT
 
     - name: Create Route53 record
       run: |
@@ -121,7 +121,7 @@ jobs:
 
     # Deploy CloudSDK with OWLS in K8s
     - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -138,15 +138,15 @@ jobs:
 
     - name: Set gateway URL output
       id: gateway
-      run: echo "::set-output name=url::gw-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+      run: echo "url=gw-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set sec service URL output
       id: sec
-      run: echo "::set-output name=url::sec-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+      run: echo "url=sec-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set ls service URL output
       id: ls
-      run: echo "::set-output name=url::ls-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+      run: echo "url=ls-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
@@ -187,7 +187,7 @@ jobs:
 
     # Run tests
     - name: Checkout OWLS for CLI tool
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
@@ -309,8 +309,8 @@ jobs:
       run: |
         AMI=$(aws ec2 describe-images --filters '[{"Name":"description","Values":["Canonical, Ubuntu, 20.04 LTS, amd64*"]},{"Name":"owner-id","Values":["099720109477"]}]' --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
         INSTANCE_NAME=owgw-dc-psql-${{ github.run_number }}
-        echo "::set-output name=ami::${AMI}"
-        echo "::set-output name=instance_name::${INSTANCE_NAME}"
+        echo "ami=${AMI}" >> $GITHUB_OUTPUT
+        echo "instance_name=${INSTANCE_NAME}" >> $GITHUB_OUTPUT
 
     # Create EC2 infrastructure
     - name: Create EC2 instance for CloudSDK
@@ -319,8 +319,8 @@ jobs:
         aws ec2 run-instances --key-name $EC2_KEY_NAME --subnet-id $VPC_SUBNET_ID --security-group-ids $EC2_SECURITY_GROUP_ID --instance-type $EC2_INSTANCE_TYPE --image-id ${{ steps.ec2_facts.outputs.ami }} --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${{ steps.ec2_facts.outputs.instance_name }}},{Key=Owner,Value=gha-wlan-testing}]" --output text
         INSTANCE_PUBLIC_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
         INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${{ steps.ec2_facts.outputs.instance_name }}" --query 'Reservations[*].Instances[*].InstanceId' --output text)
-        echo "::set-output name=instance_public_ip::${INSTANCE_PUBLIC_IP}"
-        echo "::set-output name=instance_id::${INSTANCE_ID}"
+        echo "instance_public_ip=${INSTANCE_PUBLIC_IP}" >> $GITHUB_OUTPUT
+        echo "instance_id=${INSTANCE_ID}" >> $GITHUB_OUTPUT
 
     - name: Create Route53 record
       run: |
@@ -387,7 +387,7 @@ jobs:
 
     # Deploy CloudSDK with OWLS in K8s
     - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -404,15 +404,15 @@ jobs:
 
     - name: Set gateway URL output
       id: gateway
-      run: echo "::set-output name=url::gw-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+      run: echo "url=gw-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set sec service URL output
       id: sec
-      run: echo "::set-output name=url::sec-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+      run: echo "url=sec-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set ls service URL output
       id: ls
-      run: echo "::set-output name=url::ls-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build"
+      run: echo "url=ls-${{ steps.ec2_facts.outputs.instance_name }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
@@ -453,7 +453,7 @@ jobs:
 
     # Run tests
     - name: Checkout OWLS for CLI tool
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
@@ -572,7 +572,7 @@ jobs:
       - docker-compose-psql
     steps:
     - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -593,19 +593,19 @@ jobs:
         NAMESPACE="ls-sqlite-${{ github.run_number }}"
         kubectl create ns openwifi-$NAMESPACE
         kubectl config set-context --current --namespace=openwifi-$NAMESPACE
-        echo "::set-output name=namespace::${NAMESPACE}"
+        echo "namespace=${NAMESPACE}" >> $GITHUB_OUTPUT
 
     - name: Set gateway URL output
       id: gateway
-      run: echo "::set-output name=url::gw-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+      run: echo "url=gw-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set sec service URL output
       id: sec
-      run: echo "::set-output name=url::sec-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+      run: echo "url=sec-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set ls service URL output
       id: ls
-      run: echo "::set-output name=url::ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+      run: echo "url=ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
@@ -645,7 +645,7 @@ jobs:
         ./deploy.sh
 
     - name: Checkout OWLS for CLI tool
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
@@ -738,7 +738,7 @@ jobs:
       - kubernetes-sqlite
     steps:
     - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -759,19 +759,19 @@ jobs:
         NAMESPACE="ls-psql-${{ github.run_number }}"
         kubectl create ns openwifi-$NAMESPACE
         kubectl config set-context --current --namespace=openwifi-$NAMESPACE
-        echo "::set-output name=namespace::${NAMESPACE}"
+        echo "namespace=${NAMESPACE}" >> $GITHUB_OUTPUT
 
     - name: Set gateway URL output
       id: gateway
-      run: echo "::set-output name=url::gw-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+      run: echo "url=gw-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set sec service URL output
       id: sec
-      run: echo "::set-output name=url::sec-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+      run: echo "url=sec-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set ls service URL output
       id: ls
-      run: echo "::set-output name=url::ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build"
+      run: echo "url=ls-${{ steps.namespace.outputs.namespace }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
@@ -811,7 +811,7 @@ jobs:
         ./deploy.sh
 
     - name: Checkout OWLS for CLI tool
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls

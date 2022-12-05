@@ -42,19 +42,19 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          echo "::set-output name=marker_overwrite::${{ github.event.inputs.marker_overwrite || '' }}"
+          echo "marker_overwrite=${{ github.event.inputs.marker_overwrite || '' }}" >> $GITHUB_OUTPUT
           DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12' }}"
           DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-          echo "::set-output name=devices::${DEVICES}"
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
-          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'uc_sanity' }}")
-          echo ::set-output name=existing_controller::$(echo "${{ github.event.inputs.existing_controller || 'qa01' }}")
+          echo "devices=${DEVICES}" >> $GITHUB_OUTPUT
+          echo "openwifi=$(echo ${{ github.event.inputs.openwifi_revision || 'main' }})" >> $GITHUB_OUTPUT
+          echo "ap_models=$(echo ${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }})" >> $GITHUB_OUTPUT
+          echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
+          echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'uc_sanity' }})" >> $GITHUB_OUTPUT
+          echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
@@ -68,7 +68,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled()"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -84,8 +84,8 @@ jobs:
         if: always()
         id: quali_reservation
         run: |
-          echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-          echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
+          echo "namespace="$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
 #          echo "reservation_id=$(cat ./reservation_id.txt)" >> $GITHUB_ENV
 #          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_ENV
 #          echo "${{ env.reservation_id}}"
@@ -102,7 +102,7 @@ jobs:
     needs: [vars, quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -165,7 +165,7 @@ jobs:
     needs: [vars, quali_reservation, test-galaxy-s9]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -231,7 +231,7 @@ jobs:
     needs: [vars, quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -294,7 +294,7 @@ jobs:
     needs: [vars, quali_reservation, test-galaxy-s10]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -357,7 +357,7 @@ jobs:
     needs: [vars, quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -420,7 +420,7 @@ jobs:
     needs: [vars, quali_reservation, test-galaxy-s20]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -483,7 +483,7 @@ jobs:
     needs: [vars,  quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -545,7 +545,7 @@ jobs:
     needs: [vars, quali_reservation, test-pixel-4]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install dependencies
         run: |
@@ -615,9 +615,9 @@ jobs:
 
 
       - name: checkout testing repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: allure-results-${{ matrix.device }}
           path: allure-results
@@ -635,7 +635,7 @@ jobs:
           additional_metadata: |
             Device=${{ matrix.device }}
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: allure-report-${{ matrix.device }}
           path: allure-report
@@ -659,7 +659,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:

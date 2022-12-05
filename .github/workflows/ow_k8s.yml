@@ -79,7 +79,7 @@ jobs:
       namespace: ${{ steps.namespace.outputs.value }}
     steps:
     - name: Checkout repo with Helm values
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -103,15 +103,15 @@ jobs:
 
     - name: Set namespace output
       id: namespace
-      run: echo "::set-output name=value::deploy-k8s-${{ github.run_id }}"
+      run: echo "value=deploy-k8s-${{ github.run_id }}" >> $GITHUB_OUTPUT
 
     - name: Set gateway URL output
       id: gateway_url
-      run: echo "::set-output name=value::gw-${{ steps.namespace.outputs.value }}.cicd.lab.wlan.tip.build"
+      run: echo "value=gw-${{ steps.namespace.outputs.value }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Set sec service URL output
       id: sec_url
-      run: echo "::set-output name=value::sec-${{ steps.namespace.outputs.value }}.cicd.lab.wlan.tip.build"
+      run: echo "value=sec-${{ steps.namespace.outputs.value }}.cicd.lab.wlan.tip.build" >> $GITHUB_OUTPUT
 
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
@@ -168,7 +168,7 @@ jobs:
       serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
       instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use deploy-virtual-ap-instance composite action
         id: deploy-virtual-ap-instance

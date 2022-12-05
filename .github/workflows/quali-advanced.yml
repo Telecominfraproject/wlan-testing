@@ -39,10 +39,10 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          echo ::set-output name=openwifi::$(echo "${{ github.event.inputs.openwifi_revision || 'main' }}")
-          echo ::set-output name=ap_models::$(echo "${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf194c4' }}")
-          echo ::set-output name=ap_version::$(echo "${{ github.event.inputs.ap_version || 'next-latest' }}")
-          echo ::set-output name=marker_expression::$(echo "${{ github.event.inputs.marker_expression || 'advance' }}")
+          echo "openwifi=$(echo ${{ github.event.inputs.openwifi_revision || 'main' }})" >> $GITHUB_OUTPUT
+          echo "ap_models=$(echo ${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf194c4' }})" >> $GITHUB_OUTPUT
+          echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
+          echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'advance' }})" >> $GITHUB_OUTPUT
 
   generate-matrix:
     name: generate AP model matrix
@@ -57,12 +57,12 @@ jobs:
         AP_MODELS="${{ needs.vars.outputs.ap_models }}"
         AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         AP_MODELS=$(echo "$AP_MODELS" | jq -c 'map({"ap_model":.})')
-        echo "::set-output name=matrix::{\"include\":${AP_MODELS}}"
+        echo "matrix={\"include\":${AP_MODELS}}" >> $GITHUB_OUTPUT
 
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: build and push Docker image
       uses: ./.github/actions/build-and-push-docker
       with:
@@ -103,12 +103,12 @@ jobs:
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.8'
 
     - name: checkout testing repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: install dependencies
       run: pip install -r .quali/requirements.txt
@@ -121,8 +121,8 @@ jobs:
       if: always()
       id: reservation
       run: |
-        echo ::set-output name=identifier::"$(cat ./reservation_id.txt)"
-        echo ::set-output name=namespace::"$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+        echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
+        echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -131,7 +131,7 @@ jobs:
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ matrix.ap_model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-        echo "::set-output name=name::${NAMESPACE}"
+        echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
     - name: prepare configuration
       run: |
@@ -206,9 +206,9 @@ jobs:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
     - name: checkout testing repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: allure-results-${{ matrix.ap_model }}
         path: allure-results
@@ -228,7 +228,7 @@ jobs:
           Ap.Model=${{ matrix.ap_model }}
 
     - name: upload Allure report as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: allure-report-${{ matrix.ap_model }}
         path: allure-report
@@ -253,7 +253,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: cleanup Docker image
       uses: ./.github/actions/cleanup-docker
       with:

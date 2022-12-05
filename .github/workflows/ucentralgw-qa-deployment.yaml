@@ -74,7 +74,7 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        echo '::set-output name=matrix::{"include":${{ env.testbeds }}}'
+        echo "matrix={\"include\":${{ env.testbeds }}}" >> $GITHUB_OUTPUT
 
   deploy:
     name: Update OpenWIFI Cloud SDK instances
@@ -86,7 +86,7 @@ jobs:
     steps:
 
     - name: Checkout repo with Helm values
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
