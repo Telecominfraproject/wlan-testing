@@ -85,7 +85,7 @@ jobs:
         id: quali_reservation
         run: |
           echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace="$(cat ./reservation_id.txt | cut -d "-" -f 1)"
+          echo "namespace="$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
 #          echo "reservation_id=$(cat ./reservation_id.txt)" >> $GITHUB_ENV
 #          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_ENV
 #          echo "${{ env.reservation_id}}"
