@@ -54,7 +54,7 @@ class TestDynamicVlanOverSsid5GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
     @allure.title("Test for dynamic precedence over ssid")
     def test_dynamic_precedence_over_ssid_vlan_5g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan and fiveg"
         """

@@ -33,7 +33,6 @@ setup_params_general = {
 }
 
 
-# @allure.suite("regression")
 @allure.parent_suite("Dynamic Vlan Test")
 @allure.suite("WPA2 Enterprise Security")
 @allure.sub_suite("2.4 GHz Band")
@@ -54,7 +53,7 @@ class TestDynamicVlanOverSsid2GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5705")
     @allure.title("Test for dynamic precedence over ssid")
     def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan and twog"
         """
