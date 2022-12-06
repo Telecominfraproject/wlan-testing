@@ -63,6 +63,8 @@ PASSPOINT_VENUE_INFO = data["PASSPOINT_VENUE_INFO"]
 
 PASSPOINT_PROFILE_INFO = data["PASSPOINT_PROFILE_INFO"]
 
+PASSPOINT = data["PASSPOINT"]
+
 open_flow = data["open_flow"]
 
 influx_params = data["influx_params"]
