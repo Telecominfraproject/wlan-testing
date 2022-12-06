@@ -217,40 +217,74 @@ class tip_2x:
     """
 
     def setup_basic_configuration(self, configuration=None,
-                                  requested_combination=None):
+                                  requested_combination=None, open_roaming=False):
         f_conf = self.setup_configuration_data(configuration=configuration,
                                                requested_combination=requested_combination)
+        if open_roaming:
+            logging.info("Selected Configuration of open roaming: " + str(json.dumps(f_conf, indent=2)))
+            final_configuration = f_conf.copy()
+            # Setup Mode
+            profile_object = UProfileUtility(sdk_client=self.controller_library_object)
+            if final_configuration["mode"] in self.supported_modes:
+                profile_object.set_mode(mode=final_configuration["mode"], open_roaming=open_roaming)
+            else:
+                pytest.skip(final_configuration["mode"] + " Mode is not supported")
 
-        logging.info("Selected Configuration: " + str(json.dumps(f_conf, indent=2)))
-        final_configuration = f_conf.copy()
-        # Setup Mode
-        profile_object = UProfileUtility(sdk_client=self.controller_library_object)
-        if final_configuration["mode"] in self.supported_modes:
-            profile_object.set_mode(mode=final_configuration["mode"])
-        else:
-            pytest.skip(final_configuration["mode"] + " Mode is not supported")
-
-        # Setup Radio Scenario
-        if final_configuration["rf"] != {}:
-            profile_object.set_radio_config(radio_config=final_configuration["rf"])
-        else:
-            final_configuration["rf"] = {"2G": {}, "5G": {}, "6G": {}}
-            profile_object.set_radio_config()
-        for ssid in final_configuration["ssid_modes"]:
-            for ssid_data in final_configuration["ssid_modes"][ssid]:
-                if final_configuration["radius"]:
-                    if "radius_auth_data" in ssid_data:
-                        RADIUS_SERVER_DATA = ssid_data["radius_auth_data"]
-                        RADIUS_ACCOUNTING_DATA = ssid_data["radius_acc_data"]
+            # Setup Radio Scenario
+            if final_configuration["rf"] != {}:
+                profile_object.set_radio_config(radio_config=final_configuration["rf"], open_roaming=open_roaming)
+            else:
+                final_configuration["rf"] = {"2G": {}, "5G": {}, "6G": {}}
+                profile_object.set_radio_config(open_roaming=open_roaming)
+            for ssid in final_configuration["ssid_modes"]:
+                for ssid_data in final_configuration["ssid_modes"][ssid]:
+                    if final_configuration["radius"]:
+                        if "radius_auth_data" in ssid_data:
+                            RADIUS_SERVER_DATA = ssid_data["radius_auth_data"]
+                            RADIUS_ACCOUNTING_DATA = ssid_data["radius_acc_data"]
+                        else:
+                            RADIUS_SERVER_DATA = self.configuration.PASSPOINT_RADIUS_SERVER_DATA
+                            RADIUS_ACCOUNTING_DATA = self.configuration.PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA
+                            PASSPOINT_DATA = self.configuration.PASSPOINT
+                        profile_object.add_ssid(ssid_data=ssid_data, radius=True, radius_auth_data=RADIUS_SERVER_DATA,
+                                                radius_accounting_data=RADIUS_ACCOUNTING_DATA,
+                                                pass_point_data=PASSPOINT_DATA, open_roaming=open_roaming)
                     else:
-                        RADIUS_SERVER_DATA = self.configuration.RADIUS_SERVER_DATA
-                        RADIUS_ACCOUNTING_DATA = self.configuration.RADIUS_ACCOUNTING_DATA
-                    profile_object.add_ssid(ssid_data=ssid_data, radius=True, radius_auth_data=RADIUS_SERVER_DATA,
-                                            radius_accounting_data=RADIUS_ACCOUNTING_DATA)
-                else:
-                    profile_object.add_ssid(ssid_data=ssid_data, radius=False)
-        logging.info(
-            "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
+                        profile_object.add_ssid(ssid_data=ssid_data, radius=False, open_roaming=open_roaming)
+            logging.info(
+                "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
+        else:
+            logging.info("Selected Configuration: " + str(json.dumps(f_conf, indent=2)))
+            final_configuration = f_conf.copy()
+            # Setup Mode
+            profile_object = UProfileUtility(sdk_client=self.controller_library_object)
+            if final_configuration["mode"] in self.supported_modes:
+                profile_object.set_mode(mode=final_configuration["mode"])
+            else:
+                pytest.skip(final_configuration["mode"] + " Mode is not supported")
+
+            # Setup Radio Scenario
+            if final_configuration["rf"] != {}:
+                profile_object.set_radio_config(radio_config=final_configuration["rf"])
+            else:
+                final_configuration["rf"] = {"2G": {}, "5G": {}, "6G": {}}
+                profile_object.set_radio_config()
+            for ssid in final_configuration["ssid_modes"]:
+                for ssid_data in final_configuration["ssid_modes"][ssid]:
+                    if final_configuration["radius"]:
+                        if "radius_auth_data" in ssid_data:
+                            RADIUS_SERVER_DATA = ssid_data["radius_auth_data"]
+                            RADIUS_ACCOUNTING_DATA = ssid_data["radius_acc_data"]
+                        else:
+                            RADIUS_SERVER_DATA = self.configuration.RADIUS_SERVER_DATA
+                            RADIUS_ACCOUNTING_DATA = self.configuration.RADIUS_ACCOUNTING_DATA
+                        profile_object.add_ssid(ssid_data=ssid_data, radius=True, radius_auth_data=RADIUS_SERVER_DATA,
+                                                radius_accounting_data=RADIUS_ACCOUNTING_DATA)
+                    else:
+                        profile_object.add_ssid(ssid_data=ssid_data, radius=False)
+            logging.info(
+                "Configuration That is getting pushed: " + json.dumps(profile_object.base_profile_config, indent=2))
+
         # Setup Config Apply on all AP's
         ret_val = dict()
         for i in range(0, len(self.device_under_tests_info)):
