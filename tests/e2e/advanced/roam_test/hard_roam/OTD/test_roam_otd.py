@@ -26,9 +26,9 @@ setup_params_general = {
 @allure.feature("Roam Test")
 @pytest.mark.parametrize(
    'setup_profiles',
-  [setup_params_general],
+   [setup_params_general],
    indirect=True,
-  scope="class"
+   scope="class"
 )
 @pytest.mark.usefixtures("setup_profiles")
 
