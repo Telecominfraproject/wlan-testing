@@ -1,5 +1,5 @@
 """
-    Test Multi-Station Performance: Bridge Mode
+    Test Multi-Station Performance: Vlan Mode
     pytest -m multistaperf
 """
 import pytest
@@ -41,7 +41,7 @@ setup_params_general = {
 class TestMultiStaPerfVlan(object):
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-upload 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5942", name="WIFI-5942")
     @pytest.mark.vlan_msp
     @pytest.mark.wpa2_personal
@@ -117,7 +117,7 @@ class TestMultiStaPerfVlan(object):
             assert True
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB(NSS-1) distance UDP-upload 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,38dB(NSS-1) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5944", name="WIFI-5944")
     @pytest.mark.vlan_msp
     @pytest.mark.wpa2_personal
@@ -206,7 +206,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB,48DdB(NSS-1) distance UDP-upload 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,38dB,48DdB(NSS-1) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5945", name="WIFI-5945")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -300,7 +300,7 @@ class TestMultiStaPerfVlan(object):
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title(
-        "BRIDGE Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 2.4 GHz Band")
+        "VLAN Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5949", name="WIFI-5949")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -374,7 +374,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB(NSS-1) distance UDP-download 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,38dB(NSS-1) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5950", name="WIFI-5950")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -463,7 +463,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB,48DdB(NSS-1) distance UDP-download 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,38dB,48DdB(NSS-1) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6085", name="WIFI-6085")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -556,7 +556,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6092", name="WIFI-6092")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -632,7 +632,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6093", name="WIFI-6093")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -723,7 +723,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6094", name="WIFI-6094")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -814,7 +814,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5946", name="WIFI-5946")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -892,7 +892,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5947", name="WIFI-5947")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -981,7 +981,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5948", name="WIFI-5948")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1072,7 +1072,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-upload 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5951", name="WIFI-5951")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1146,7 +1146,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB(NSS-2) distance UDP-upload 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,38dB(NSS-2) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5966", name="WIFI-5966")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1235,7 +1235,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-2) distance UDP-upload 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-2) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5954", name="WIFI-5954")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1326,7 +1326,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-download 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5969", name="WIFI-5969")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1400,7 +1400,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB(NSS-2) distance UDP-download 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,38dB(NSS-2) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5968", name="WIFI-5968")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1489,7 +1489,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-2) distance UDP-download 2.4 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-2) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5967", name="WIFI-5967")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1580,7 +1580,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-upload 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5952", name="WIFI-5952")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1656,7 +1656,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-upload 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5953", name="WIFI-5953")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1745,7 +1745,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,40dB,50dB(NSS-2) distance UDP-upload 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,40dB,50dB(NSS-2) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5973", name="WIFI-5973")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1836,7 +1836,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5971", name="WIFI-5971")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1912,7 +1912,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5970", name="WIFI-5970")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -2002,7 +2002,7 @@ class TestMultiStaPerfVlan(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,40dB,50dB(NSS-2) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,40dB,50dB(NSS-2) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5972", name="WIFI-5972")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg

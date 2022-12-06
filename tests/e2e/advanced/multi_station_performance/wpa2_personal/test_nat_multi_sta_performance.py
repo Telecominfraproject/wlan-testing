@@ -1,5 +1,5 @@
 """
-    Test Multi-Station Performance: Bridge Mode
+    Test Multi-Station Performance: Nat Mode
     pytest -m multistaperf
 """
 import pytest
@@ -39,7 +39,7 @@ setup_params_general = {
 class TestMultiStaPerfNat(object):
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-upload 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5897", name="WIFI-5897")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -115,7 +115,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB(NSS-1) distance UDP-upload 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,38dB(NSS-1) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5898", name="WIFI-5898")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -206,7 +206,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-1) distance UDP-upload 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-1) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5901", name="WIFI-5901")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -298,7 +298,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5905", name="WIFI-5905")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -339,7 +339,7 @@ class TestMultiStaPerfNat(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -375,7 +375,7 @@ class TestMultiStaPerfNat(object):
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title(
-        "BRIDGE Mode Multi Station Performance Test with 10dB,38dB(NSS-1) distance UDP-download 2.4 GHz Band")
+        "NAT Mode Multi Station Performance Test with 10dB,38dB(NSS-1) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5906", name="WIFI-5906")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -429,7 +429,7 @@ class TestMultiStaPerfNat(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_38dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -467,7 +467,7 @@ class TestMultiStaPerfNat(object):
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title(
-        "BRIDGE Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-1) distance UDP-download 2.4 GHz Band")
+        "NAT Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-1) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6084", name="WIFI-6084")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -523,7 +523,7 @@ class TestMultiStaPerfNat(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_38dB_48dB_dis_nss1_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -560,7 +560,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-upload 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6089", name="WIFI-6089")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -638,7 +638,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-upload 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6090", name="WIFI-6090")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -729,7 +729,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-upload 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6091", name="WIFI-6091")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -822,7 +822,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5902", name="WIFI-5902")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -863,7 +863,7 @@ class TestMultiStaPerfNat(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -900,7 +900,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5903", name="WIFI-5903")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -953,7 +953,7 @@ class TestMultiStaPerfNat(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_25dB_dis_nss1_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -990,7 +990,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5904", name="WIFI-5904")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1047,7 +1047,7 @@ class TestMultiStaPerfNat(object):
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_25dB_35dB_dis_nss1_5g", mode=mode,
                                         vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1084,7 +1084,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-upload 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5907", name="WIFI-5907")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1160,7 +1160,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB(NSS-2) distance UDP-upload 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,38dB(NSS-2) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5911", name="WIFI-5911")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -1251,14 +1251,14 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-2) distance UDP-upload 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-2) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5910", name="WIFI-5910")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_upload_10dB_38dB_48dB_dis_nss2_2g
     def test_multi_station_NAT_udp_upload_10dB_38dB_48dB_dis_nss2_2g(self, setup_configuration, get_test_library, num_stations,
                                                                      get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
-        get_test_library.reset_scenario()
+        get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
@@ -1344,14 +1344,14 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-download 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5914", name="WIFI-5914")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_download_10dB_dis_nss2_2g
     def test_multi_station_NAT_udp_download_10dB_dis_nss2_2g(self, setup_configuration, get_test_library, num_stations,
                                                              get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
-        get_test_library.reset_scenario()
+        get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
@@ -1385,7 +1385,7 @@ class TestMultiStaPerfNat(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1420,14 +1420,14 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB(NSS-2) distance UDP-download 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,38dB(NSS-2) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5913", name="WIFI-5913")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_download_10dB_38dB_dis_nss2_2g
     def test_multi_station_NAT_udp_download_10dB_38dB_dis_nss2_2g(self, setup_configuration, get_test_library, num_stations,
                                                                   get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
-        get_test_library.reset_scenario()
+        get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
@@ -1474,7 +1474,7 @@ class TestMultiStaPerfNat(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_38dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1511,14 +1511,14 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-2) distance UDP-download 2.4 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,38dB,48dB(NSS-2) distance UDP-download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5912", name="WIFI-5912")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_download_10dB_38dB_48dB_dis_nss2_2g
     def test_multi_station_NAT_udp_download_10dB_38dB_48dB_dis_nss2_2g(self, setup_configuration, get_test_library,
                                                                        num_stations, get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
-        get_test_library.reset_scenario()
+        get_test_library.chamber_view()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
@@ -1567,7 +1567,7 @@ class TestMultiStaPerfNat(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_38dB_48dB_dis_nss2_2g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1604,7 +1604,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-upload 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5908", name="WIFI-5908")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1682,7 +1682,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-upload 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5909", name="WIFI-5909")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1773,7 +1773,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-2) distance UDP-upload 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-2) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5918", name="WIFI-5918")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1866,7 +1866,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-download 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB(NSS-2) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5916", name="WIFI-5916")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1907,7 +1907,7 @@ class TestMultiStaPerfNat(object):
             time.sleep(0.5)
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -1944,7 +1944,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-download 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5915", name="WIFI-5915")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -1998,7 +1998,7 @@ class TestMultiStaPerfNat(object):
 
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_25dB_dis_nss2_5g", mode=mode, vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
@@ -2035,7 +2035,7 @@ class TestMultiStaPerfNat(object):
         print("Test Completed... Cleaning up Stations")
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-2) distance UDP-upload 5 GHz Band")
+    @allure.title("NAT Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-2) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5917", name="WIFI-5917")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -2092,7 +2092,7 @@ class TestMultiStaPerfNat(object):
         wct_obj = get_test_library.wifi_capacity(instance_name="udp_NAT_download_10dB_25dB_35dB_dis_nss2_5g", mode=mode,
                                         vlan_id=vlan,
                                         download_rate="1Gbps", batch_size=batch_size,
-                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="120000", sort="linear")
+                                        upload_rate="9.6Kbps", protocol="UDP-IPv4", duration="120000", sort="linear")
 
         report_name = wct_obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
 
