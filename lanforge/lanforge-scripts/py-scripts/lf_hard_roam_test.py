@@ -803,11 +803,13 @@ class HardRoam(Realm):
                                 logging.info("number " + str(number))
 
                                 # set attenuation to zero in first attenuator and high in second attenuator
-                                self.attenuator_modify(ser_1, "all", 950)
+                                self.attenuator_modify(ser_1, "all", 700)
                                 self.attenuator_modify(ser_2, "all", 0)
                             else:
                                 print("odd,  c1 is already at  highest and c2 is at  lowest")
                                 logging.info("odd,  c1 is already at  highest and c2 is at  lowest")
+                                self.attenuator_modify(ser_1, "all", 0)
+                                self.attenuator_modify(ser_2, "all", 700) # 700 == 300/400 bgscan 15:-70:300
                                 number = "odd"
                                 print("number", number)
                                 logging.info("number " + str(number))
@@ -978,8 +980,8 @@ class HardRoam(Realm):
                                             logging.info("checking attenuation")
                                             print("ser num", ser_num)
                                             logging.info("ser num " + str(ser_num))
-                                            for atten_val2 in range(900, 0, -50):
-                                                # print("hi")
+                                            for atten_val2 in range(700, -10, -10):
+                                                print(atten_val2)
                                                 self.attenuator_modify(int(ser_num), "all", atten_val2)
                                                 # TODO:  You are changing in 1db increments.  So, sleep for only 4 seconds
                                                 # should be enough.
@@ -1018,7 +1020,7 @@ class HardRoam(Realm):
 
                                             if status == "station did not roamed":
                                                 # set c1 to high
-                                                for atten_val1 in (range(0, 950, 50)):
+                                                for atten_val1 in (range(0, 700, 10)):
                                                     print(atten_val1)
                                                     logging.info(str(atten_val1))
                                                     self.attenuator_modify(int(ser_num2), "all", atten_val1)
@@ -1212,6 +1214,7 @@ class HardRoam(Realm):
                                                                 pcap_file=str(file_name),
                                                                 filter="(wlan.fixed.category_code == 6)  && (wlan.sa == %s)" % (
                                                                     str(i)))
+                                                            print("action frame", query_action_frame)
                                                             if len(query_action_frame) != 0 and query_action_frame != "empty":
                                                                 print("Action frame  is present")
                                                                 logging.info("Action frame is present")
@@ -1239,6 +1242,7 @@ class HardRoam(Realm):
                                                                 pcap_file=str(file_name),
                                                                 filter="(wlan.fixed.auth.alg == 2 && wlan.fixed.status_code == 0x0000 && wlan.fixed.auth_seq == 0x0001) && (wlan.sa == %s)" % (
                                                                     str(i)))
+                                                            print("auth response", query_auth_response)
                                                             if len(query_auth_response) != 0 and query_auth_response != "empty":
                                                                 if query_auth_response == "Successful":
                                                                     print("authentication request is present")
