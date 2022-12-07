@@ -149,13 +149,10 @@ class TestRxSensitivityBRIDGE2G(object):
 
         instance_name = "rx_sens_TR398"
         result, description = get_test_library.tr398(radios_2g=radios_2g, radios_5g=radios_5g, radios_ax=radios_ax,
-                                                     dut_name=dut_name,
-                                                     dut_5g=dut_5g, dut_2g=dut_2g, mode=mode, vlan_id=vlan,
-                                                     skip_2g=False,
-                                                     skip_5g=True, instance_name=instance_name, test="rxsens",
-                                                     ssid_name=ssid_name,
-                                                     security_key=security_key, security=security,
-                                                     move_to_influx=False, dut_data=setup_configuration)
+                                                     dut_name=dut_name, dut_5g=dut_5g, dut_2g=dut_2g, mode=mode,
+                                                     vlan_id=vlan, skip_2g=True, skip_5g=False, instance_name=instance_name,
+                                                     test="rxsens", ssid_name=ssid_name, security_key=security_key,
+                                                     security=security, move_to_influx=False, dut_data=setup_configuration)
 
         if result:
             assert True
