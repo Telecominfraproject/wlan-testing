@@ -354,7 +354,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 35 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -444,7 +444,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB, 38dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 30 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -538,7 +538,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB, 38dB ,48dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 25 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -878,7 +878,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 250 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -968,7 +968,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB, 25dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 250 Mbpsps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1062,7 +1062,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB, 25dB ,35dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 200 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1400,7 +1400,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 70 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1489,7 +1489,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB, 38dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 60 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1582,7 +1582,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB, 38dB ,48dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 50 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -1922,7 +1922,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 500 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -2013,7 +2013,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB, 25dB",
                       "Expected Throughput (Mbps)": str(pass_value) + " (70% of 500 Mbps)",
-                      "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                      "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
@@ -2107,7 +2107,7 @@ class TestMultiStaPerfNat(object):
         get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
         table_data = {"Attenuation (dB)": "10dB, 25dB ,35dB",
                        "Expected Throughput (Mbps)": str(pass_value) + " (70% of 400 Mbps)",
-                       "Actual Throughput (Mbps)": str(list(csv_val["Up"].values())[-1])}
+                       "Actual Throughput (Mbps)": str(list(csv_val["Down"].values())[-1])}
         if not csv_val:
             print("csv file does not exist, Test failed")
             allure.attach(name="Csv Data", body="csv file does not exist, Test failed")
