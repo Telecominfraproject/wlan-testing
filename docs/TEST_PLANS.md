@@ -1,7 +1,7 @@
 #
 Test Plans and Markers associated with them are provided in this file
 
-SANITY
+:speaking_head: SANITY 
 
     1. Client Connectivity Tests
         client_connectivity_tests and tls and bridge
@@ -27,7 +27,7 @@ SANITY
         ow_sanity_lf and ow_sdk_tests
 
 
-INTEROP
+:speaking_head: INTEROP
 
     1. Client Connect Tests
         client_connect_tests and general and bridge/nat/vlan
