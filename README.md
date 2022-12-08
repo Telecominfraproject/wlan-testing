@@ -190,7 +190,7 @@ wpa3_enterprise_mixed: Use this marker to run wpa3_enterprise_mixed Encryption t
 # install allure command
 npm install -g allure-commandline --save-dev
 ```
-### [Test Plans and Markers](docs/TEST_PLANS.md)
+### [Test Plans and Markers](docs/TEST_PLANS.md):bookmark_tabs:
 ### Executing and Contributing new test cases
 
 Follow instructions provided [here](./tests/README.md)  to understand the Testing Framework, and How to run and 
