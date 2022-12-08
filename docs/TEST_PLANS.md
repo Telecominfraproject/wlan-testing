@@ -1,4 +1,4 @@
-## Test Plans and Markers associated with them are provided in this file
+## Test Plans and Markers associated with them are provided in this file :ledger:
 
 :speaking_head: SANITY 
 
@@ -43,3 +43,6 @@
         toggle_wifi_mode and general and bridge/nat/vlan
         toggle_wifi_mode and enterprise and bridge/nat/vlan
 
+
+
+More Markers related to other test plans will be added soon in the future
