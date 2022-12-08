@@ -32,7 +32,6 @@ setup_params_general = {
 }
 
 
-# @allure.suite("regression")
 @allure.parent_suite("Dynamic Vlan Test")
 @allure.suite("WPA3 Enterprise Security")
 @allure.sub_suite("5 GHz Band")
@@ -53,7 +52,7 @@ class TestDynamicVlanOverSsid5GWpa3(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-6096")
     @allure.title("Test for dynamic precedence over ssid")
     def test_dynamic_precedence_over_ssid_vlan_5g_wpa3(self,  get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "dynamic_precedence_over_ssid and wpa3_enterprise and vlan and fiveg"
         """

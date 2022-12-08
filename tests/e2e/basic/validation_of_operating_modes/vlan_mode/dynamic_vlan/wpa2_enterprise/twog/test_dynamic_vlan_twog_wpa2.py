@@ -51,13 +51,15 @@ class TestDynamicVlan2GWpa2(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.ow_sanity_lf
-    @allure.testcase(name="test_ssid_vlan_in_the_absence_of_radius_vlan_identifier",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5704")
-    @allure.title("Test for ssid vlan in the absence of radius vlan identifier")
+    @allure.title("Verify that SSID VLAN is used in the absence of radius VLAN tunnel type identifiers")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5704", name="WIFI-5704")
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "absence_of_radius_vlan_identifier and wpa2_enterprise and vlan and twog"
+
+        To verify that SSID VLAN is used in the absence of radius VLAN tunnel type identifiers
+               Unique Marker:  pytest -m " absence_of_radius_vlan_identifier and wpa2_enterprise and vlan"
+
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -111,7 +113,7 @@ class TestDynamicVlan2GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5706")
     @allure.title("Test for invalid vlan identifier")
     def test_dynamic_invalid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "invalidradiusvlan and wpa2_enterprise and vlan and twog"
         """
@@ -164,7 +166,7 @@ class TestDynamicVlan2GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5707")
     @allure.title("Test for radius vlan information retained after periodic reauthentication")
     def test_radius_vlan_info_retained_after_periodic_reauthentication_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "periodic_reauthentication and wpa2_enterprise and vlan and twog"
         """
@@ -233,7 +235,7 @@ class TestDynamicVlan2GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5708")
     @allure.title("test for ssid vlan used in absence of radius vlan")
     def test_ssid_vlan_used_in_absence_of_radius_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "absenceofvlanid and wpa2_enterprise and vlan and twog"
         """
@@ -279,61 +281,6 @@ class TestDynamicVlan2GWpa2(object):
         elif not val:
             assert False, result
 
-    '''
-    @pytest.mark.unsupported
-    @pytest.mark.wpa2_enterprise
-    @pytest.mark.twog
-    @allure.testcase(name="test_dynamic_unsupported_vlan",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-5710")
-    def test_dynamic_unsupported_vlan(self,  get_test_library,
-                                      create_lanforge_chamberview_dut, get_test_library, get_configuration,
-                                      station_names_twog):
-        """
-                pytest -m "unsupported and wpa2_enterprise and vlan"
-        """
-
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
-        ssid_name = profile_data[0]["ssid_name"]
-        mode = "VLAN"
-        vlan = 100
-        upstream_port = get_test_library.upstream_port
-        print(upstream_port)
-        port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
-        print(get_test_library.dut_idx_mapping)
-        get_test_library.reset_scenario()
-        get_test_library.add_vlan(vlan_ids=[vlan])
-
-        passes, result, station_ip = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, passkey="[BLANK]", security="wpa2", extra_securities=[],
-                            mode=mode, band="twog", vlan_id=100,
-                            station_name=station_names_twog, key_mgmt="WPA-EAP",
-                            pairwise="NA", group="NA", wpa_psk="DEFAULT",
-                            ttls_passwd="passwordinvalidvlanuser", ieee80211w=0,
-                            wep_key="NA", ca_cert="NA", eap="TTLS", identity="invalidvlanuser", d_vlan=True)
-
-        eth_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                        "/" + port_resources[2] + "." + str(vlan))["interface"]["ip"]
-        eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                   "/" + port_resources[2])["interface"]["ip"]
-
-        sta_ip_1 = station_ip.split('.')
-        eth_vlan_ip_1 = eth_ip.split('.')
-        print("station ip...", station_ip)
-        print("vlan ip...", eth_vlan_ip)
-        print("eth_vlan_ip..", eth_ip)
-        for i, j in zip(sta_ip_1[0:2], eth_vlan_ip_1[0:2]):
-            if i != j:
-                allure.attach(name="station ip....", body=str(station_ip))
-                allure.attach(name="vlan ip....", body=str(eth_vlan_ip))
-                print("Station ip not assigned as per vlan")
-                assert False
-            else:
-                assert True
-                allure.attach(name="station ip....", body=str(station_ip))
-                allure.attach(name="vlan ip....", body=str(eth_vlan_ip))
-                allure.attach(name="vlan ip....", body=str(eth_ip))
-                print("Station ip assigned as per vlan")
-    '''
-
     @pytest.mark.outofboundvlanid
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -341,7 +288,7 @@ class TestDynamicVlan2GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5711")
     @allure.title("test for out of bound vlan identifier")
     def test_out_of_bound_vlanid_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "outofboundvlanid and wpa2_enterprise and vlan and twog"
         """
@@ -381,7 +328,7 @@ class TestDynamicVlan2GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5712")
     @allure.title("test for client association ap with dynamic vlan")
     def test_client_association_ap_with_dynamic_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "client_association_ap_with_dynamic_vlan and wpa2_enterprise and vlan and twog"
         """
@@ -439,7 +386,7 @@ class TestDynamicVlan2GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5713")
     @allure.title("test for subsequent user for same user account")
     def test_subsequent_user_for_same_user_account_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "subsequent_user_for_same_user_account and wpa2_enterprise and vlan and twog"
         """
@@ -492,7 +439,7 @@ class TestDynamicVlan2GWpa2(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-5714")
     @allure.title("test for subsequent user for different user account")
     def test_subsequent_user_for_different_user_account_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration):
+                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
                 pytest -m "subsequent_user_for_different_user_account and wpa2_enterprise and vlan and twog"
         """

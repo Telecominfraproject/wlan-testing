@@ -37,14 +37,14 @@ class TestMultiAssoDisassoVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5873", name="WIFI-5873")
     @pytest.mark.twog
     @pytest.mark.udp_upload_2g
+    @allure.title("Test for Multi Association and Disassociation for UDP upload 2.4G")
     def test_multi_asso_disasso_VLAN_udp_upload_2g(self, get_test_library, setup_configuration, check_connectivity):
         """
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and twog and udp_upload_2g"
         """
         mode = "VLAN"
         vlan = 100
-        result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16,
-                                                                  dut_data=setup_configuration,
+        result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16, dut_data=setup_configuration,
                                                                   mode=mode, vlan=vlan, instance_name="udp_upload_2g",
                                                                   traffic_direction="upload", traffic_rate="4Mbps")
         if result:

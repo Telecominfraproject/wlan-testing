@@ -1728,56 +1728,95 @@ class UProfileUtility:
                         ssid_info.append(temp)
         return ssid_info
 
-    def set_radio_config(self, radio_config={}):
-        base_radio_config_2g = {
-            "band": "2G",
-            "country": "US",
-            "channel-mode": "HE",
-            "channel": "auto"
-        }
-        base_radio_config_5g = {
-            "band": "5G",
-            "country": "US",
-            "allow-dfs": True,
-            "channel-mode": "HE",
-            "channel": "auto"
-        }
-        base_radio_config_6g = {
-            "band": "6G",
-            "country": "US",
-            "channel-mode": "HE",
-            "channel": "auto"
-        }
-        for band in radio_config:
-            if band == "2G" and radio_config[band] is not None:
-                for keys in radio_config[band]:
-                    base_radio_config_2g[keys] = radio_config[band][keys]
-            if band == "5G" and radio_config[band] is not None:
-                for keys in radio_config[band]:
-                    base_radio_config_5g[keys] = radio_config[band][keys]
-            if band == "6G" and radio_config[band] is not None:
-                for keys in radio_config[band]:
-                    base_radio_config_6g[keys] = radio_config[band][keys]
+    def set_radio_config(self, radio_config={}, open_roaming=False):
+        if open_roaming:
+            base_radio_config_2g = {
+              "band": "2G",
+              "country": "CA",
+              "channel-mode": "HT",
+              "channel-width": 20,
+              "channel": "auto"
+            }
+            base_radio_config_5g = {
+              "band": "5G",
+              "country": "CA",
+              "channel-mode": "VHT",
+              "channel-width": 80,
+              "channel": "auto"
+            }
 
-        self.base_profile_config["radios"].append(base_radio_config_2g)
-        self.base_profile_config["radios"].append(base_radio_config_5g)
-        self.base_profile_config["radios"].append(base_radio_config_6g)
+            for band in radio_config:
+                if band == "2G" and radio_config[band] is not None:
+                    for keys in radio_config[band]:
+                        base_radio_config_2g[keys] = radio_config[band][keys]
+                if band == "5G" and radio_config[band] is not None:
+                    for keys in radio_config[band]:
+                        base_radio_config_5g[keys] = radio_config[band][keys]
+            self.base_profile_config["radios"].append(base_radio_config_2g)
+            self.base_profile_config["radios"].append(base_radio_config_5g)
+        else:
+            base_radio_config_2g = {
+                "band": "2G",
+                "country": "US",
+                "channel-mode": "HE",
+                "channel": "auto"
+            }
+            base_radio_config_5g = {
+                "band": "5G",
+                "country": "US",
+                "allow-dfs": True,
+                "channel-mode": "HE",
+                "channel": "auto"
+            }
+            base_radio_config_6g = {
+                "band": "6G",
+                "country": "US",
+                "channel-mode": "HE",
+                "channel": "auto"
+            }
+            for band in radio_config:
+                if band == "2G" and radio_config[band] is not None:
+                    for keys in radio_config[band]:
+                        base_radio_config_2g[keys] = radio_config[band][keys]
+                if band == "5G" and radio_config[band] is not None:
+                    for keys in radio_config[band]:
+                        base_radio_config_5g[keys] = radio_config[band][keys]
+                if band == "6G" and radio_config[band] is not None:
+                    for keys in radio_config[band]:
+                        base_radio_config_6g[keys] = radio_config[band][keys]
+
+            self.base_profile_config["radios"].append(base_radio_config_2g)
+            self.base_profile_config["radios"].append(base_radio_config_5g)
+            self.base_profile_config["radios"].append(base_radio_config_6g)
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
-    def set_mode(self, mode, mesh=False):
+    def set_mode(self, mode, mesh=False, open_roaming=False):
         self.mode = mode
         if mode == "NAT":
             if mesh:
                 self.base_profile_config['interfaces'][0]['tunnel'] = {
                     "proto": "mesh"
                 }
+            elif open_roaming:
+                self.base_profile_config['metrics']['statistics']['interval'] = 120
+                self.base_profile_config['interfaces'][1]['ipv4']['subnet'] = "192.168.1.1/24"
+                self.base_profile_config['interfaces'][1]['ipv4']['dhcp']['lease-count'] = 100
+                del self.base_profile_config['metrics']['dhcp-snooping']
             self.base_profile_config['interfaces'][1]['ssids'] = []
         elif mode == "BRIDGE":
             if mesh:
                 self.base_profile_config['interfaces'][0]['tunnel'] = {
                     "proto": "mesh"
                 }
+            elif open_roaming:
+                self.base_profile_config['metrics']['statistics']['interval'] = 120
+                self.base_profile_config['interfaces'][1]['ipv4']['subnet'] = "192.168.1.1/24"
+                self.base_profile_config['interfaces'][1]['ipv4']['dhcp']['lease-count'] = 100
+                del self.base_profile_config['interfaces'][0]['services']
+                del self.base_profile_config['metrics']['wifi-frames']
+                del self.base_profile_config['metrics']['dhcp-snooping']
+                del self.base_profile_config['services']['lldp']
             self.base_profile_config['interfaces'][0]['ssids'] = []
         elif mode == "VLAN":
             if mesh:
@@ -1807,40 +1846,94 @@ class UProfileUtility:
             logging.error("Invalid Mode")
             return 0
 
-    def add_ssid(self, ssid_data, radius=False, radius_auth_data={}, radius_accounting_data={}):
-        ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
-        for options in ssid_data:
-            if options == "multi-psk":
-                ssid_info[options] = ssid_data[options]
-            if options == "rate-limit":
-                ssid_info[options] = ssid_data[options]
-            if options == "isolate-clients":
-                ssid_info[options] = ssid_data[options]
-        for i in ssid_data["appliedRadios"]:
-            ssid_info["wifi-bands"].append(i)
-        ssid_info['encryption'] = {}
-        ssid_info['encryption']['proto'] = ssid_data["security"]
-        try:
-            ssid_info['encryption']['key'] = ssid_data["security_key"]
-        except Exception as e:
-            pass
-        ssid_info['encryption']['ieee80211w'] = "optional"
-        if radius:
-            ssid_info["radius"] = {}
-            ssid_info["radius"]["authentication"] = {
-                "host": radius_auth_data["ip"],
-                "port": radius_auth_data["port"],
-                "secret": radius_auth_data["secret"]
+    def add_ssid(self, ssid_data, radius=False, radius_auth_data={}, radius_accounting_data={}, pass_point_data=None,
+                 open_roaming=False):
+        open_ssid = {
+            "name": "To_Download_profile",
+            "wifi-bands": [
+                "5G"
+            ],
+            "bss-mode": "ap",
+            "encryption": {
+                "proto": "none",
+                "ieee80211w": "optional"
             }
-            ssid_info["radius"]["accounting"] = {
-                "host": radius_accounting_data["ip"],
-                "port": radius_accounting_data["port"],
-                "secret": radius_accounting_data["secret"]
-            }
+        }
+        if open_roaming:
+            ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": []}
+            for options in ssid_data:
+                if options == "multi-psk":
+                    ssid_info[options] = ssid_data[options]
+                if options == "rate-limit":
+                    ssid_info[options] = ssid_data[options]
+                if options == "isolate-clients":
+                    ssid_info[options] = ssid_data[options]
+            for i in ssid_data["appliedRadios"]:
+                ssid_info["wifi-bands"].append(i)
+            ssid_info['encryption'] = {}
+            ssid_info['encryption']['proto'] = ssid_data["security"]
+            try:
+                ssid_info['encryption']['key'] = ssid_data["security_key"]
+            except Exception as e:
+                pass
+            ssid_info['encryption']['ieee80211w'] = "optional"
+            if radius:
+                ssid_info["radius"] = {}
+                ssid_info["radius"]["authentication"] = {
+                    "nas-identifier": radius_auth_data["nas-identifier"],
+                    "chargeable-user-id": radius_auth_data["chargeable-user-id"],
+                    "host": radius_auth_data["ip"],
+                    "port": radius_auth_data["port"],
+                    "secret": radius_auth_data["secret"],
+                    "request-attribute": radius_auth_data["request-attribute"],
+                }
+                ssid_info["radius"]["accounting"] = {
+                    "host": radius_accounting_data["ip"],
+                    "port": radius_accounting_data["port"],
+                    "secret": radius_accounting_data["secret"],
+                    "request-attribute": radius_accounting_data["request-attribute"],
+                    "interval": radius_accounting_data["interval"]
+                }
+                ssid_info["pass-point"] = pass_point_data
+
+        else:
+            ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
+            for options in ssid_data:
+                if options == "multi-psk":
+                    ssid_info[options] = ssid_data[options]
+                if options == "rate-limit":
+                    ssid_info[options] = ssid_data[options]
+                if options == "isolate-clients":
+                    ssid_info[options] = ssid_data[options]
+            for i in ssid_data["appliedRadios"]:
+                ssid_info["wifi-bands"].append(i)
+            ssid_info['encryption'] = {}
+            ssid_info['encryption']['proto'] = ssid_data["security"]
+            try:
+                ssid_info['encryption']['key'] = ssid_data["security_key"]
+            except Exception as e:
+                pass
+            ssid_info['encryption']['ieee80211w'] = "optional"
+            if radius:
+                ssid_info["radius"] = {}
+                ssid_info["radius"]["authentication"] = {
+                    "host": radius_auth_data["ip"],
+                    "port": radius_auth_data["port"],
+                    "secret": radius_auth_data["secret"]
+                }
+                ssid_info["radius"]["accounting"] = {
+                    "host": radius_accounting_data["ip"],
+                    "port": radius_accounting_data["port"],
+                    "secret": radius_accounting_data["secret"]
+                }
         if self.mode == "NAT":
             self.base_profile_config['interfaces'][1]['ssids'].append(ssid_info)
+            if open_roaming is True:
+                self.base_profile_config['interfaces'][1]['ssids'].append(open_ssid)
         elif self.mode == "BRIDGE":
             self.base_profile_config['interfaces'][0]['ssids'].append(ssid_info)
+            if open_roaming is True:
+                self.base_profile_config['interfaces'][0]['ssids'].append(open_ssid)
         elif self.mode == "VLAN":
             vid = ssid_data["vlan"]
             self.vlan_section = {

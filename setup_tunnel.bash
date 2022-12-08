@@ -103,7 +103,7 @@ Create_lab_info_json()
                     "6g-bssid": "68:7d:b4:5f:5c:38"
                 },
                 "mode": "wifi5",
-                "identifier": "c44bd1005b30",
+                "identifier": "c44bd1a022c1",
                 "method": "serial",
                 "host_ip": "localhost",
                 "host_username": "lanforge",
@@ -1177,62 +1177,56 @@ Create_lab_info_json()
     "secret": "yeababy20!"
 },
 
-"PASSPOINT_PROVIDER_INFO" : {
-    "mcc": null,
-    "mnc": null,
-    "network": null,
-    "nai_realms": {
-        "domain": "oss.ameriband.com",
-        "encoding": 0,
-        "eap_map": {"EAP-TTLS with username/password": ["Credential Type:username/password",
-                                                        "Non-EAP Inner Authentication Type:MSCHAPV2"]}
-    },
-    "osu_nai_standalone": "anonymous@ameriband.com",
-    "osu_nai_shared": "anonymous@ameriband.com",
-    "roaming_oi": []
-},
-
-"PASSPOINT_OPERATOR_INFO" : {
-    "osen": "Disabled",
-    "domain_name_list": ["telecominfraproject.atlassian.net"],
-    "operator_names": [
-        {"locale": "eng", "name": "Default friendly passpoint_operator name"},
-        {"locale": "fra", "name": "Nom de lopérateur convivial par défaut"}
-    ]
-},
-
-"PASSPOINT_VENUE_INFO" : {
-    "venue_type": {"group": "Business", "type": "Police Station"},
-    "venue_names": [
-        {"locale": "eng", "name": "Example passpoint_venue", "url": "http://www.example.com/info-eng"},
-        {"locale": "fra", "name": "Exemple de lieu", "url": "http://www.example.com/info-fra"}
-    ]
-},
-
-"PASSPOINT_PROFILE_INFO" : {
-    "profile_download_url_ios": "https://onboard.almondlabs.net/ttls/AmeriBand-Profile.mobileconfig",
-    "profile_download_url_android": "https://onboard.almondlabs.net/ttls/androidconfig.cfg",
-    "profile_name_on_device": "AmeriBand",
-    "radius_configuration": {
-        "user_defined_nas_id": "FB001AP001",
-        "operator_id": "AmeribandTIP",
-        "radius_acounting_service_interval": 60
-    },
-    "interworking_hs2dot0": "Enabled",
-    "hessid": null,
-    "access_network": {
-        "Access Network Type": "Free Public Network",
-        "Authentication Type": "Acceptance of Terms & Conditions",
-        "Emergency Services Reachable": "Enabled",
-        "Unauthenticated Emergency Service": "Disabled"
-    },
-    "ip_connectivity": {
-        "Internet Connectivity": "Enabled",
-        "IP Address Type": "Public IPv4 Address Available",
-        "Connection Capability": [{"status": "open", "protocol": "TCP", "port": 8888}],
-        "ANQP Domain ID": 1234,
-        "GAS Address 3 Behaviour": "P2P Spec Workaround From Request",
-        "Disable DGAF": false
+"PASSPOINT": {
+    "venue-name": [
+      "eng:Example passpoint_venue",
+      "fra:Exemple de lieu"
+    ],
+    "domain-name": [
+      "onboard.almondlabs.net",
+      "test.com"
+    ],
+    "asra": false,
+    "internet": true,
+    "esr": false,
+    "uesa": false,
+    "access-network-type": 0,
+    "hessid": "11:22:33:44:55:66",
+    "venue-group": 2,
+    "venue-type": 8,
+    "connection-capability": [
+      "1:0:2",
+      "6:22:1",
+      "17:5060:0"
+    ],
+    "roaming-consortium": [
+      "F4F5E8F5F4",
+      "BAA2D00100",
+      "BAA2D00000",
+      "DEADBEEF01"
+    ],
+    "disable-dgaf": true,
+    "anqp-domain": 8888,
+    "ipaddr-type-available": 14,
+    "nai-realm": [
+      "0,oss.ameriband.com,21[5:7][2:4],13[5:-1]",
+      "0,test.com,21[5:7][2:4]"
+    ],
+    "osen": false,
+    "anqp-3gpp-cell-net": [
+      "310,260",
+      "310,410"
+    ],
+    "friendly-name": [
+      "eng:AlmondLabs",
+      "fra:AlmondLabs"
+    ],
+    "venue-url": [
+      "http://www.example.com/info-fra",
+      "http://www.example.com/info-eng"
+    ],
+    "auth-type": {
+      "type": "terms-and-conditions"
     }
 },
 "open_flow":{},

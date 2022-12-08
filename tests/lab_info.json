@@ -251,6 +251,83 @@
     "password": "password",
     "pk_password": "whatever"
   },
+  "PASSPOINT_RADIUS_SERVER_DATA": {
+    "nas-identifier": "TIPLABAP101",
+    "chargeable-user-id": true,
+    "ip": "52.234.179.191",
+    "port": 11812,
+    "secret": "yeababy20!",
+    "request-attribute": [
+                {
+                  "id": 126,
+                  "value": "s:TIP"
+                }
+              ]
+  },
+  "PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA": {
+    "ip": "52.234.179.191",
+    "port": 11813,
+    "secret": "yeababy20!",
+    "request-attribute": [
+                {
+                  "id": 126,
+                  "value": "s:TIP"
+                }
+              ],
+    "interval": 600
+  },
+  "PASSPOINT": {
+    "venue-name": [
+      "eng:Example passpoint_venue",
+      "fra:Exemple de lieu"
+    ],
+    "domain-name": [
+      "onboard.almondlabs.net",
+      "test.com"
+    ],
+    "asra": false,
+    "internet": true,
+    "esr": false,
+    "uesa": false,
+    "access-network-type": 0,
+    "hessid": "11:22:33:44:55:66",
+    "venue-group": 2,
+    "venue-type": 8,
+    "connection-capability": [
+      "1:0:2",
+      "6:22:1",
+      "17:5060:0"
+    ],
+    "roaming-consortium": [
+      "F4F5E8F5F4",
+      "BAA2D00100",
+      "BAA2D00000",
+      "DEADBEEF01"
+    ],
+    "disable-dgaf": true,
+    "anqp-domain": 8888,
+    "ipaddr-type-available": 14,
+    "nai-realm": [
+      "0,oss.ameriband.com,21[5:7][2:4],13[5:-1]",
+      "0,test.com,21[5:7][2:4]"
+    ],
+    "osen": false,
+    "anqp-3gpp-cell-net": [
+      "310,260",
+      "310,410"
+    ],
+    "friendly-name": [
+      "eng:AlmondLabs",
+      "fra:AlmondLabs"
+    ],
+    "venue-url": [
+      "http://www.example.com/info-fra",
+      "http://www.example.com/info-eng"
+    ],
+    "auth-type": {
+      "type": "terms-and-conditions"
+    }
+  },
   "open_flow": {},
   "influx_params": {}
 }

@@ -37,7 +37,6 @@ class TestMultiAssoDisassoBridge(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5691", name="WIFI-5691")
     @pytest.mark.twog
     @pytest.mark.udp_upload_2g
-    @pytest.mark.karthika
     @allure.title("Test for Multi Association and Disassociation for UDP upload 2.4G")
     def test_multi_asso_disasso_udp_upload_nss2_2g(self, get_test_library, setup_configuration, check_connectivity):
         """
