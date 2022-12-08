@@ -73,7 +73,9 @@ jobs:
           fi
           echo "List of AP models to test - $AP_MODELS"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-          echo "ap_models=${AP_MODELS}" >> $GITHUB_OUTPUT
+          cat >> $GITHUB_OUTPUT << 'EOF'
+          ap_models=${AP_MODELS}
+          EOF
 
   # Build test image
   build:

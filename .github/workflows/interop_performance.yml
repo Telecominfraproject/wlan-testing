@@ -46,7 +46,9 @@ jobs:
 
           DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12' }}"
           DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-          echo "devices=${DEVICES}" >> $GITHUB_OUTPUT
+          cat >> $GITHUB_OUTPUT << 'EOF'
+          devices=${DEVICES}
+          EOF
           echo "testbed=${{ github.event.inputs.testbed || '' }}" >> $GITHUB_OUTPUT
 
   build:

@@ -74,7 +74,9 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        echo "matrix={\"include\":${{ env.testbeds }}}" >> $GITHUB_OUTPUT
+        cat >> $GITHUB_OUTPUT << 'EOF'
+        matrix={"include":${{ env.testbeds }}}
+        EOF
 
   deploy:
     name: Update OpenWIFI Cloud SDK instances
