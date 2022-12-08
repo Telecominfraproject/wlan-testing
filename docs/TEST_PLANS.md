@@ -1,3 +1,6 @@
+#
+Test Plans and Markers associated with them are provided in this file
+
 SANITY
 
     1. Client Connectivity Tests
@@ -24,4 +27,20 @@ SANITY
         ow_sanity_lf and ow_sdk_tests
 
 
- 
+INTEROP
+
+    1. Client Connect Tests
+        client_connect_tests and general and bridge/nat/vlan
+        client_connect_tests and enterprise and bridge/nat/vlan
+    2. Client Connectivity Tests
+        client_connectivity_tests and general and bridge/nat/vlan
+        client_connectivity_tests and enterprise and bridge/nat/vlan
+    3. Rate Limiting Tests
+        rate_limiting_tests and bridge/nat/vlan
+    4. Toggle Airplane mode Tests (Client Reconnect Tests)
+        toggle_airplane_tests and general and bridge/nat/vlan
+        toggle_airplane_tests and enterprise and bridge/nat/vlan
+    5. Toggle Wifi mode Tests (Client Reconnect Tests)
+        toggle_wifi_mode and general and bridge/nat/vlan
+        toggle_wifi_mode and enterprise and bridge/nat/vlan
+
