@@ -17,8 +17,8 @@ import logging
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Inventory API tests")
 class TestProvAPIInventory(object):
     global device_name, entity_id, contact_id, location_id, venue_id, map_id, operator_id, service_class_id, \
@@ -107,8 +107,8 @@ class TestProvAPIInventory(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service System commands API tests")
 class TestProvAPISystemCommands(object):
 
@@ -125,8 +125,8 @@ class TestProvAPISystemCommands(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Entity API tests")
 class TestProvAPIEntity(object):
     @pytest.mark.prov_api_entity_test
@@ -197,8 +197,8 @@ class TestProvAPIEntity(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Contact API tests")
 class TestProvAPIContact(object):
     # Contact related Test cases
@@ -291,8 +291,8 @@ class TestProvAPIContact(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Location API tests")
 class TestProvAPILocation(object):
     # Location related Test cases
@@ -386,8 +386,8 @@ class TestProvAPILocation(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Venue API tests")
 class TestProvAPIVenue(object):
     # Venue related Test cases
@@ -482,8 +482,8 @@ class TestProvAPIVenue(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Maps API tests")
 class TestProvAPIMaps(object):
     @pytest.mark.prov_api_maps
@@ -602,8 +602,8 @@ class TestProvAPIMaps(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Operator API tests")
 class TestProvAPIOperators(object):
     @pytest.mark.prov_api_operator_test
@@ -687,8 +687,8 @@ class TestProvAPIOperators(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Service Class API tests")
 class TestProvAPIServiceClass(object):
     @pytest.mark.prov_api_service_class_test
@@ -797,8 +797,8 @@ class TestProvAPIServiceClass(object):
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owprov_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Provisioning Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Provisioning Service Tests")
 @allure.sub_suite("Provisioning Service Configuration API tests")
 class TestProvAPIConfigurations(object):
     @pytest.mark.prov_api_config

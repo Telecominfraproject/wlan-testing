@@ -13,8 +13,8 @@ import allure
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owsec_api_tests
-@allure.parent_suite("OpenWifi SDK Tests")
-@allure.suite("OpenWifi Security Service Tests")
+@allure.parent_suite("SDK Tests")
+@allure.suite("Security Service Tests")
 class TestUcentralSecService(object):
 
     @allure.title("Get System Endpoints")
