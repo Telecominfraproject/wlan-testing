@@ -94,6 +94,7 @@ class TestDataplaneThroughputNAT(object):
 
     @pytest.mark.wpa3_personal
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Test for TCP UDP Download 6 GHz")
     def test_tcp_udp_wpa3_personal_nat_6g_band(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, client_type,

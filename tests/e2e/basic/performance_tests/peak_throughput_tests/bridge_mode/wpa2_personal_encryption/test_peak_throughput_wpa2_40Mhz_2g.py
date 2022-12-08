@@ -1364,6 +1364,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @pytest.mark.ow_sanity_lf
+    @pytest.mark.performance
     @allure.parent_suite("Throughput Benchmark Test")
     @allure.suite("2.4 Ghz Band")
     @allure.title("Single client TCP Download wifi capacity 40Mhz Bw")
@@ -1382,6 +1383,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @pytest.mark.performance
     def test_client_wpa2_personal_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -1399,6 +1401,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @pytest.mark.performance
     def test_client_wpa2_personal_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -1416,6 +1419,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @pytest.mark.performance
     def test_client_wpa2_personal_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -1433,6 +1437,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     def test_client_wpa2_personal_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
@@ -1450,6 +1455,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     def test_client_wpa2_personal_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode

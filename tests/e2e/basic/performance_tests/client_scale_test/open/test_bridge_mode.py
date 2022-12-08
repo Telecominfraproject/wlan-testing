@@ -8,7 +8,7 @@ import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.bridge, pytest.mark.client_scale_tests]
+pytestmark = [pytest.mark.bridge, pytest.mark.client_scale_tests]
 
 setup_params_general_2G = {
     "mode": "BRIDGE",

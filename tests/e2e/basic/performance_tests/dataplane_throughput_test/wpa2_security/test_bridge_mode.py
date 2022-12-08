@@ -9,7 +9,7 @@ import pytest
 import allure
 
 pytestmark = [pytest.mark.dataplane_tests,
-              pytest.mark.bridge, pytest.mark.wpa2_personal]
+              pytest.mark.bridge, pytest.mark.wpa2_personal, pytest.mark.performance]
 
 setup_params_general = {
     "mode": "BRIDGE",

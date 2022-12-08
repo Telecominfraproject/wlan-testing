@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.wifi_capacity_test, pytest.mark.bridge, pytest.mark.client_scale_tests]
+pytestmark = [pytest.mark.bridge, pytest.mark.client_scale_tests]
 
 setup_params_general_2G = {
     "mode": "BRIDGE",
@@ -328,6 +328,7 @@ setup_params_general_6G = {
 @pytest.mark.wpa3_personal
 @pytest.mark.sixg
 @pytest.mark.sixg_band
+@pytest.mark.performance
 class TestWifiCapacityBRIDGEMode6G(object):
     """ Client Scale Test BRIDGE mode
            client_scale_tests and bridge and wpa3_personal and sixg"
