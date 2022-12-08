@@ -45,7 +45,7 @@ env:
       "owgwui_version": "main",
       "owprovui_version": "main"
     },
-{
+   {
       "namespace": "qa02",
       "deploy_method": "git",
       "chart_version": "main",
