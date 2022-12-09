@@ -774,7 +774,7 @@ Create_lab_info_json()
                 "wan_port": "1.1.eth2",
                 "lan_port": null,
                 "ssid": {},
-                "mode": "wifi6",
+                "mode": "wifi5",
                 "identifier": "50987100327b",
                 "method": "serial",
                 "host_ip": "10.28.3.103",
