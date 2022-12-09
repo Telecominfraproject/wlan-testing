@@ -26,7 +26,7 @@ defaults:
 jobs:
   id:
     name: Workflow ID Provider
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: ${{ github.event.inputs.id }}
         run: echo run identifier ${{ inputs.id }}
@@ -34,7 +34,7 @@ jobs:
   deploy-controller:
     name: Deploy OpenWiFi cloud SDK
     needs: id
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       AWS_DEFAULT_OUTPUT: json
       AWS_DEFAULT_REGION: us-east-2
@@ -64,7 +64,7 @@ jobs:
   deploy-virtual-ap-instance:
     name: Deploy virtual AP EC2 instance
     needs: [deploy-controller]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       AWS_DEFAULT_REGION: us-east-1
     outputs:
@@ -87,7 +87,7 @@ jobs:
   test:
    name: Test all microservices
    needs: [deploy-controller, deploy-virtual-ap-instance]
-   runs-on: ubuntu-latest
+   runs-on: ubuntu-22.04
    env:
      OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
@@ -121,7 +121,7 @@ jobs:
     env:
       AWS_DEFAULT_REGION: us-east-2
     needs: [deploy-controller, test]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Save SSH key for access to EC2 instance
         env:
@@ -163,7 +163,7 @@ jobs:
   test-after-upgrade:
    name: Test all microservices after deployment upgrade
    needs: [deploy-controller, deploy-virtual-ap-instance, upgrade-controller-deployment]
-   runs-on: ubuntu-latest
+   runs-on: ubuntu-22.04
    env:
      OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
@@ -195,7 +195,7 @@ jobs:
   destroy-controller:
     name: Destroy OpenWiFi cloud SDK instance
     needs: [deploy-controller, test-after-upgrade]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       AWS_DEFAULT_REGION: us-east-2
     if: always()
@@ -209,7 +209,7 @@ jobs:
   terminate-virtual-ap-instance:
     name: Terminate virtual AP instance
     needs: [deploy-virtual-ap-instance, test-after-upgrade]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       AWS_DEFAULT_REGION: us-east-1
     if: always()
