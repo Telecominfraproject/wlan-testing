@@ -50,7 +50,7 @@ defaults:
 jobs:
   id:
     name: Workflow ID Provider
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: ${{ github.event.inputs.id }}
         run: echo run identifier ${{ inputs.id }}
@@ -58,7 +58,7 @@ jobs:
   deploy-controller:
     name: Deploy OpenWIFI Cloud SDK
     needs: id
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_OUTPUT: json
       AWS_DEFAULT_REGION: us-east-2
@@ -94,7 +94,7 @@ jobs:
   deploy-virtual-ap-instance:
     name: Deploy virtual AP EC2 instance
     needs: deploy-controller
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
     outputs:
@@ -117,7 +117,7 @@ jobs:
   test:
    name: Test specified microservice
    needs: [deploy-controller, deploy-virtual-ap-instance]
-   runs-on: ubuntu-22.04
+   runs-on: ubuntu-latest
    env:
      OWSEC: "${{ needs.deploy-controller.outputs.sec_url }}:16001"
      OWSEC_USERNAME: ${{ secrets.OWSEC_DEFAULT_USERNAME }}
@@ -152,7 +152,7 @@ jobs:
   destroy-controller:
     name: Destroy OpenWiFi cloud SDK instance
     needs: [deploy-controller, test]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-2
     if: always()
@@ -165,7 +165,7 @@ jobs:
   terminate-virtual-ap-instance:
     name: Terminate virtual AP instance
     needs: [deploy-virtual-ap-instance, test]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
     if: always()
