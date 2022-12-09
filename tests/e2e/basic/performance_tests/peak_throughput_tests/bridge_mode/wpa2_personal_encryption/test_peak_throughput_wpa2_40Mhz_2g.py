@@ -1356,7 +1356,7 @@ setup_params_general_11 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test20Mhz2GChannel11PeakThroughput(object):
+class Test40Mhz2GChannel11PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "ow_sanity_lf and tcp_download and channel_11"
     """
@@ -1367,7 +1367,6 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @pytest.mark.performance
     @allure.parent_suite("Throughput Benchmark Test")
     @pytest.mark.channel_11
-    @allure.parent_suite("Throughput Test")
     @allure.suite("2.4 Ghz Band")
     @allure.title("Single client TCP Download wifi capacity 40Mhz Bw")
     @allure.sub_suite("BRIDGE Mode")
