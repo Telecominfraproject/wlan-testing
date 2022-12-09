@@ -304,9 +304,11 @@ class tip_2x:
             # attaching ap logs before config push
             ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
             allure.attach(body=ap_logs, name="AP Log Before config push: ")
+            resp = object()
             # Apply the Config
             try:
                 resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
+                logging.info("Response" + str(resp))
             except Exception as e:
                 ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
                 allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
@@ -322,6 +324,7 @@ class tip_2x:
                 time.sleep(5)
                 try:
                     resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
+                    logging.info("Response" + str(resp))
                 except Exception as e:
                     ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
                     allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
