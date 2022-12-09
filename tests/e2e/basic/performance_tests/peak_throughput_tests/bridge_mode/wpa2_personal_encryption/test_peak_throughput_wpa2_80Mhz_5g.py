@@ -51,6 +51,9 @@ class Test80Mhz5GChannel36PeakThroughput(object):
     @allure.sub_suite("BRIDGE Mode")
     def test_client_wpa2_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, check_connectivity):
+        """ Single client TCP download Wifi Capacity Test 5GHz band 80MHz bandwidth wpa2 personal security BRIDGE mode
+            pytest -m "ow_sanity_lf and channel_36"
+        """
         profile_data = {"ssid_name": "ssid_wpa2_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -83,11 +86,9 @@ class Test80Mhz5GChannel36PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     @pytest.mark.performance
     @pytest.mark.channel_36
-    @pytest.mark.ow_sanity_lf
     def test_client_wpa2_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test BRIDGE mode
-            pytest -m "ow_sanity_lf and channel_36"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
