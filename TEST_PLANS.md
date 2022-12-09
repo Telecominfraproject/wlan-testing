@@ -29,19 +29,37 @@
 :speaking_head: INTEROP
 
     1. Client Connect Tests
-        client_connect_tests and general and bridge/nat/vlan
-        client_connect_tests and enterprise and bridge/nat/vlan
+        client_connect_tests and general and bridge
+        client_connect_tests and general and nat
+        client_connect_tests and general and vlan
+        client_connect_tests and enterprise and bridge
+        client_connect_tests and enterprise and nat
+        client_connect_tests and enterprise and vlan
     2. Client Connectivity Tests
-        client_connectivity_tests and general and bridge/nat/vlan
-        client_connectivity_tests and enterprise and bridge/nat/vlan
+        client_connectivity_tests and general and bridge
+        client_connectivity_tests and general and nat
+        client_connectivity_tests and general and vlan
+        client_connectivity_tests and enterprise and bridge
+        client_connectivity_tests and enterprise and nat
+        client_connectivity_tests and enterprise and vlan
     3. Rate Limiting Tests
-        rate_limiting_tests and bridge/nat/vlan
+        rate_limiting_tests and bridge
+        rate_limiting_tests and nat
+        rate_limiting_tests and vlan
     4. Toggle Airplane mode Tests (Client Reconnect Tests)
-        toggle_airplane_tests and general and bridge/nat/vlan
-        toggle_airplane_tests and enterprise and bridge/nat/vlan
+        toggle_airplane_tests and general and bridge
+        toggle_airplane_tests and general and nat
+        toggle_airplane_tests and general and vlan
+        toggle_airplane_tests and enterprise and bridge
+        toggle_airplane_tests and enterprise and nat
+        toggle_airplane_tests and enterprise and vlan
     5. Toggle Wifi mode Tests (Client Reconnect Tests)
-        toggle_wifi_mode and general and bridge/nat/vlan
-        toggle_wifi_mode and enterprise and bridge/nat/vlan
+        toggle_wifi_mode and general and bridge
+        toggle_wifi_mode and general and nat
+        toggle_wifi_mode and general and vlan
+        toggle_wifi_mode and enterprise and bridge
+        toggle_wifi_mode and enterprise and nat
+        toggle_wifi_mode and enterprise and vlan
 
 
 
