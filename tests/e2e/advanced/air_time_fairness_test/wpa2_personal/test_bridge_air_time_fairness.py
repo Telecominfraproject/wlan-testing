@@ -18,18 +18,23 @@ setup_params_general = {
     "radius": False
 }
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Air Time Fairness Test")
+@allure.parent_suite("Air Time Fairness Test")
+@allure.suite("BRIDGE Mode")
+@allure.sub_suite("WPA2 Personal Security")
+@pytest.mark.usefixtures("setup_configuration")
 class TestAtfBridge(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6394", name="WIFI-6394")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.atf_sta1_greenfieldmode_sta2_atten30dB_2g
+    @allure.title("Test for station 1 green field mode and station 2 with attenuation 30 dB 2.4 GHz")
     def test_atf_sta1_greenfieldmode_sta2_atten30dB_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -66,6 +71,7 @@ class TestAtfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.atf_sta1_greenfieldmode_sta2_legacymode_2g
+    @allure.title("Test for station 1 green field mode and station 2 legacy mode 2.4 GHz")
     def test_atf_sta1_greenfieldmode_sta2_legacymode_2g(self, lf_test, lf_tools, station_names_twog):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
@@ -97,6 +103,7 @@ class TestAtfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.atf_sta1_greenfieldmode_sta2_atten30dB_5g
+    @allure.title("Test for station 1 green field mode and station 2 with attenuation 30 dB 5 GHz")
     def test_atf_sta1_greenfieldmode_sta2_atten30dB_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
@@ -135,6 +142,7 @@ class TestAtfBridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.atf_sta1_greenfieldmode_sta2_legacymode_5g
+    @allure.title("Test for station 1 green field mode and station 2 legacy mode 5 GHz")
     def test_atf_sta1_greenfieldmode_sta2_legacymode_5g(self, lf_test, lf_tools, station_names_fiveg):
         lf_tools.reset_scenario()
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]

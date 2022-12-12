@@ -33,18 +33,18 @@ setup_params_general = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestRxSensitivityBRIDGEAllMcs5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2445", name="WIFI-2445")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.all_mcs
-    def test_client_wpa2_personal_bridge_all_mcs_5g(self, get_vif_state,
+    def test_client_wpa2_personal_bridge_all_mcs_5g(self, 
                                                     lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
                                                     get_configuration):
         """Receiver Sensitivity Bridge Mode
@@ -97,7 +97,7 @@ class TestRxSensitivityBRIDGEAllMcs5G(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.all_mcs
-    def test_client_wpa2_personal_bridge_all_mcs_2g(self, get_vif_state,
+    def test_client_wpa2_personal_bridge_all_mcs_2g(self, 
                                                     lf_test, station_names_twog, create_lanforge_chamberview_dut,
                                                     get_configuration):
         """Receiver Sensitivity Bridge Mode

@@ -23,12 +23,12 @@ setup_params_general = {
 @allure.suite("Hard Roam over the air")
 @allure.feature("Roam Test")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 
 
 class TestRoamOTA(object):
@@ -245,12 +245,12 @@ class TestRoamOTA(object):
 # @allure.suite("Hard Roam over the air")
 # @allure.feature("Roam Test")
 # @pytest.mark.parametrize(
-#     'setup_profiles',
+#     'setup_configuration',
 #     [setup_params_general_two],
 #     indirect=True,
 #     scope="class"
 # )
-# @pytest.mark.usefixtures("setup_profiles")
+# @pytest.mark.usefixtures("setup_configuration")
 # class TestRoamOTAdot1xSha256(object):
 #
 #     @pytest.mark.hard_roam_6g_to_6g_dot1x_sha256

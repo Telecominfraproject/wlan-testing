@@ -4,35 +4,31 @@
      pytest -m "multipsk and wpa2_personal and twog" -s -vvv --skip-testrail --testbed=basic-03 --alluredir=../allure_reports
         wifi-3493
 """
-import time
-
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_regression_lf,
+pytestmark = [pytest.mark.multi_psk_tests,
+              pytest.mark.bridge,
+              pytest.mark.wpa2_personal,
               pytest.mark.ow_sanity_lf,
-              pytest.mark.ow_multipsk_tests_lf,
-              pytest.mark.bridge]
+              pytest.mark.twog]
 
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "MDU Wi-Fi",
+            {"ssid_name": "MDU-Wi-Fi-2g",
              "appliedRadios": ["2G"],
              "security": "psk2",
-             "security_key": "something",
+             "security_key": "OpenWifi",
              "multi-psk": [
                  {
-                     "key": "lanforge1",
+                     "key": "OpenWifi1",
                      "vlan-id": 100
                  },
                  {
-                     "key": "lanforge2",
+                     "key": "OpenWifi2",
                      "vlan-id": 200
-                 },
-                 {
-                     "key": "lanforge3"
                  }
              ],
              }]},
@@ -41,88 +37,92 @@ setup_params_general = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.feature("MultiPsk Test")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
-class TestMultipskBridge(object):
+@allure.parent_suite("MultiPsk Test")
+@allure.suite("BRIDGE Mode")
+@allure.sub_suite("WPA2 Security")
+@pytest.mark.usefixtures("setup_configuration")
+class TestMultipskBridgeWPA2(object):
 
-    @pytest.mark.multipsk
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.twogvlan1
+    @pytest.mark.vlan1
+    @pytest.mark.ow_sanity_lf
+    @pytest.mark.wpa2
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
-    def test_client_wpa2_2g_vlan1(self, lf_test, lf_tools):
-
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        lf_tools.reset_scenario()
-        ssid_name = profile_data["ssid_name"]
-        print(ssid_name)
+    @allure.title("Test for Client Connect with 1 VLAN")
+    def test_client_wpa2_2g_vlan1(self, get_test_library, get_dut_logs_per_test_case,
+                                  get_test_device_logs, num_stations, setup_configuration, check_connectivity):
+        """
+                    To verify a client operating on BRIDGE Mode Multipsk Test with wpa encryption 2.4 GHz Band is connecting or not.
+                    pytest -m "ow_sanity_lf and vlan1 and wpa2 and multipsk"
+        """
+        profile_data = {"ssid_name": "MDU-Wi-Fi-2g",
+                        "appliedRadios": ["2G"],
+                        "security": "psk2",
+                        "security_key": "OpenWifi",
+                        "multi-psk": [
+                            {
+                                "key": "OpenWifi1",
+                                "vlan-id": 100
+                            },
+                            {
+                                "key": "OpenWifi2",
+                                "vlan-id": 200
+                            }
+                        ],
+                        }
+        ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        key1 = profile_data["multi-psk"][0]["key"]
-        key2 = profile_data["multi-psk"][2]["key"]
-        vlan_id = []
-        vlan_id.append(profile_data["multi-psk"][0]['vlan-id'])
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
-        # create vlan
-        lf_tools.add_vlan(vlan_ids=[int(vlan_id[0])])
-        time.sleep(10)
-        station_name = []
-        station_name.append("sta" + str(vlan_id[0]))
-        station_name.append("sta00")
-        print(station_name)
-        allure.attach(name="multipsk-config", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]["multi-psk"]))
-        multipsk_obj = lf_test.multipsk(ssid=ssid_name,  security="wpa2", mode="BRIDGE",
-                                        vlan_id=vlan_id, key1=key1, key2=key2, band=band, station_name=station_name, n_vlan="1")
-        if multipsk_obj == True:
-            assert True
-        else:
-            assert False, "Expected and Attained IP's of Station are Different"
+        mpsk_data = {"default": {"num_stations": 1, "passkey": profile_data["security_key"]},
+                     100: {"num_stations": 1, "passkey": profile_data["multi-psk"][0]["key"]}}
 
-    @pytest.mark.multipsk
-    @pytest.mark.wpa2_personal
-    @pytest.mark.twog
-    @pytest.mark.twogvlan2
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
-    def test_client_wpa2_2g_vlan2(self, lf_test, lf_tools):
+        get_test_library.multi_psk_test(band=band, mpsk_data=mpsk_data, ssid=ssid, bssid="['BLANK']",
+                                        passkey=security_key,
+                                        encryption=security, mode=mode, num_sta=1, dut_data=setup_configuration)
+        assert True
 
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
-        print(profile_data)
-        ssid_name = profile_data["ssid_name"]
-        print(ssid_name)
+    @pytest.mark.vlan2
+    @pytest.mark.ow_sanity_lf
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10657", name="WIFI-10657")
+    @allure.title("Test for Client Connect with 2 VLAN's")
+    def test_client_wpa2_2g_vlan2(self, get_test_library, get_dut_logs_per_test_case,
+                                  get_test_device_logs, num_stations, setup_configuration, check_connectivity):
+        """
+            To verify a client operating on BRIDGE Mode Multipsk Test with wpa encryption 2.4 GHz Band is connecting or not.
+            pytest -m "multi_psk_tests and bridge and wpa2_personal and vlan2 and twog"
+        """
+        profile_data = {"ssid_name": "MDU-Wi-Fi-2g",
+                        "appliedRadios": ["2G"],
+                        "security": "psk2",
+                        "security_key": "OpenWifi",
+                        "multi-psk": [
+                            {
+                                "key": "OpenWifi1",
+                                "vlan-id": 100
+                            },
+                            {
+                                "key": "OpenWifi2",
+                                "vlan-id": 200
+                            }
+                        ],
+                        }
+        ssid = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
-        key1 = profile_data["multi-psk"][0]["key"]
-        key2 = profile_data["multi-psk"][1]["key"]
-        key3 = profile_data["multi-psk"][2]["key"]
-        vlan_id = []
-        vlan_id.append(profile_data["multi-psk"][0]['vlan-id'])
-        vlan_id.append(profile_data["multi-psk"][1]['vlan-id'])
-
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
-        vlan = 1
-        # create vlan
-        station_name = []
-        for i in vlan_id:
-            lf_tools.add_vlan(vlan_ids=[int(i)])
-            station_name.append("sta" + str(i))
-        time.sleep(10)
-
-        station_name.append("sta00")
-        print(station_name)
-        allure.attach(name="multipsk-config", body=str(setup_params_general["ssid_modes"]["wpa2_personal"][0]["multi-psk"]))
-        multipsk_obj = lf_test.multipsk(ssid=ssid_name, security="wpa2", mode="BRIDGE",
-                                        vlan_id=vlan_id, key1=key1, key2=key2, band=band,
-                                        station_name=station_name, n_vlan="2", key3=key3)
-        if multipsk_obj == True:
-            assert True
-        else:
-            assert False, "Expected and Attained IP's of Station are Different"
+        mpsk_data = {"default": {"num_stations": 1, "passkey": profile_data["security_key"]},
+                     100: {"num_stations": 1, "passkey": profile_data["multi-psk"][0]["key"]},
+                     200: {"num_stations": 1, "passkey": profile_data["multi-psk"][1]["key"]}}
+        get_test_library.multi_psk_test(band=band, mpsk_data=mpsk_data, ssid=ssid, bssid="['BLANK']",
+                                        passkey=security_key,
+                                        encryption=security, mode=mode, num_sta=1, dut_data=setup_configuration)
+        assert True

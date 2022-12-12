@@ -36,19 +36,19 @@
 #
 # @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 # @pytest.mark.parametrize(
-#     'setup_profiles',
+#     'setup_configuration',
 #     [setup_params_general],
 #     indirect=True,
 #     scope="class"
 # )
-# @pytest.mark.usefixtures("setup_profiles")
+# @pytest.mark.usefixtures("setup_configuration")
 # @pytest.mark.Mhz20
 # class TestRatevsRangeVlan(object):
 #
 #     @pytest.mark.wpa2_personal
 #     @pytest.mark.twog
 #     @pytest.mark.client11b
-#     def test_client_wpa2_personal_2g_11b(self, get_vif_state,
+#     def test_client_wpa2_personal_2g_11b(self,
 #                                                  lf_test, station_names_twog, create_lanforge_chamberview_dut,
 #                                                  get_configuration, lf_tools):
 #         """
@@ -101,7 +101,7 @@
 #     @pytest.mark.wpa2_personal
 #     @pytest.mark.twog
 #     @pytest.mark.client11g
-#     def test_client_wpa2_personal_2g_11g(self, get_vif_state,
+#     def test_client_wpa2_personal_2g_11g(self,
 #                                          lf_test, station_names_twog, create_lanforge_chamberview_dut,
 #                                          get_configuration, lf_tools):
 #         """
@@ -155,7 +155,7 @@
 #     @pytest.mark.wpa2_personal
 #     @pytest.mark.fiveg
 #     @pytest.mark.client11a
-#     def test_client_wpa2_personal_5g_11a(self, get_vif_state,
+#     def test_client_wpa2_personal_5g_11a(self,
 #                                          lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
 #                                          get_configuration, lf_tools):
 #         """
@@ -208,7 +208,7 @@
 #     @pytest.mark.wpa2_personal
 #     @pytest.mark.fiveg
 #     @pytest.mark.client11an
-#     def test_client_wpa2_personal_5g_11an(self, get_vif_state,
+#     def test_client_wpa2_personal_5g_11an(self,
 #                                          lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
 #                                          get_configuration,lf_tools):
 #         """
@@ -262,7 +262,7 @@
 #     @pytest.mark.wpa2_personal
 #     @pytest.mark.fiveg
 #     @pytest.mark.client11ac
-#     def test_client_wpa2_personal_5g_11ac(self, get_vif_state,
+#     def test_client_wpa2_personal_5g_11ac(self,
 #                                           lf_test, station_names_fiveg, create_lanforge_chamberview_dut,
 #                                           get_configuration, lf_tools):
 #         """

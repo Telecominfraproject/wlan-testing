@@ -36,12 +36,12 @@ setup_params_general_20Mhz = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_20Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw20MhzNAT(object):
     """Throughput Across Bw NAT Mode
        pytest -m "throughput_across_bw_test and NAT"
@@ -149,12 +149,12 @@ setup_params_general_40Mhz = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_40Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw40MhzNAT(object):
     """Throughput Across Bw NAT Mode
        pytest -m "throughput_across_bw_test and NAT"
@@ -256,12 +256,12 @@ setup_params_general_80Mhz = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_80Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw80MhzNAT(object):
     """Throughput Across Bw NAT Mode
        pytest -m "throughput_across_bw_test and NAT"
@@ -307,7 +307,6 @@ class TestThroughputAcrossBw80MhzNAT(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-9743", name="WIFI-9743")
-    @pytest.mark.ow_sanity_lf
     @allure.parent_suite("Throughput Test")
     @allure.suite("OpenWifi Throughput across channel bandwidth")
     @allure.title("Single client wifi capacity 80Mhz Bw")
@@ -364,12 +363,12 @@ setup_params_general_160Mhz = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_160Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw160MhzNAT(object):
     """Throughput Across Bw NAT Mode
        pytest -m "throughput_across_bw_test and NAT"

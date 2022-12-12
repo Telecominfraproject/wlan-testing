@@ -28,12 +28,12 @@ setup_params_general = {
 @pytest.mark.wifi5
 @pytest.mark.wifi6
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestDualbandPerformanceVLAN(object):
     """
          pytest -m "performance and dual_band_test and vlan and wpa_personal and twog  and fiveg"
@@ -43,7 +43,7 @@ class TestDualbandPerformanceVLAN(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_wpa_personal_vlan(self, get_vif_state, lf_tools,
+    def test_client_wpa_personal_vlan(self,  lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["wpa"]
         ssid_2G = profile_data[0]["ssid_name"]

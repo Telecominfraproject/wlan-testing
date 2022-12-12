@@ -1,226 +1,249 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.ow_client_connectivity_lf, pytest.mark.ow_sanity_lf,
+pytestmark = [pytest.mark.client_connectivity_tests, pytest.mark.ow_sanity_lf,
               pytest.mark.bridge, pytest.mark.enterprise, pytest.mark.tls, pytest.mark.uc_sanity]
 
 setup_params_enterprise = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa_enterprise": [
-            {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa2_enterprise": [
-            {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
+            {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_enterprise": [
-            {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+            {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
 
     "rf": {},
     "radius": True
 }
 
 
-@allure.suite(suite_name="OpenWifi Sanity LF")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP TLS Client Connectivity : Suite-A")
+@allure.parent_suite("Client Connectivity Tests")
+@allure.feature("Client Connectivity")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-A")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_enterprise],
     indirect=True,
     scope="class"
 )
 @pytest.mark.uc_sanity
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestBridgeModeEnterpriseTLSSuiteA(object):
     """ SuiteA Enterprise Test Cases
-            pytest -m "client_connectivity and bridge and enterprise and tls"
+            pytest -m "client_connectivity_tests and bridge and enterprise and tls"
         """
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.twog
-    def test_tls_wpa_enterprise_2g(self, get_ap_logs, get_lf_logs,
-                                   station_names_twog, setup_profiles, lf_test, update_report,
-                                   test_cases, radius_info, exit_on_fail, get_ap_channel):
-        """ wpa enterprise 2g
-                    pytest -m "client_connectivity and bridge and enterprise and tts and twog"
+    @allure.title("Bridge Mode Client Connectivity Test with WPA-Enterprise-TLS in 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3742", name="WIFI-3742")
+    def test_tls_wpa_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
+                                   get_test_device_logs,
+                                   get_target_object,
+                                   num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+         To verify that a client created on 2G radio connects to AP in Bridge mode with WPA enterprise TLS security
+         Unique Marker: pytest -m "client_connectivity_tests and enterprise and wpa_enterprise and ow_sanity_lf and tls and bridge and twog"
                 """
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][0]
+        profile_data = {"ssid_name": "tls_ssid_wpa_eap_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
-        print("output of get_ap_channel ", get_ap_channel)
-        channel = get_ap_channel[0]["2G"]
-        print("ssid 2G channel:- ", channel)
-        vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                             mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                             identity=identity, station_name=station_names_twog,
-                                             key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              extra_securities=extra_secu,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa_enterprise_5g(self, get_ap_logs, get_lf_logs,
-                                   station_names_fiveg, setup_profiles, lf_test,
-                                   update_report, exit_on_fail,
-                                   test_cases, radius_info, get_ap_channel):
-        """ wpa enterprise 2g
-                    pytest -m "client_connectivity and bridge and enterprise and tts and twog"
+    @allure.title("Bridge Mode Client Connectivity Test with WPA-Enterprise-TLS in 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3743", name="WIFI-3743")
+    def test_tls_wpa_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
+                                   get_test_device_logs,
+                                   get_target_object,
+                                   num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+        To verify that a client created on 5G radio connects to AP in Bridge mode with WPA enterprise TLS security
+        Unique Marker: pytest -m "client_connectivity_tests and enterprise and wpa_enterprise and ow_sanity_lf and tls and bridge and fiveg"
                 """
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa_enterprise"][1]
+        profile_data = {"ssid_name": "tls_ssid_wpa_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
-        print("output of get_ap_channel ", get_ap_channel)
-        channel = get_ap_channel[0]["5G"]
-        print("ssid 5G channel:- ", channel)
-        vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radcius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                             mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                             identity=identity, station_name=station_names_fiveg,
-                                             key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              extra_securities=extra_secu,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    def test_tls_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
-                                    station_names_twog, setup_profiles, lf_test, update_report,
-                                    test_cases, radius_info, exit_on_fail, get_ap_channel):
-        """ wpa enterprise 2g
-                    pytest -m "client_connectivity and bridge and enterprise and tts and twog"
+    @allure.title("Bridge Mode Client Connectivity Test with WPA2-Enterprise-TLS in 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3739", name="WIFI-3739")
+    def test_tls_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
+                                    get_test_device_logs,
+                                    get_target_object,
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+        To verify that a client created on 2G radio connects to AP in Bridge mode with WPA2 enterprise TLS security
+        Unique Marker: pytest -m "client_connectivity_tests and enterprise and wpa2_enterprise and ow_sanity_lf and tls and bridge and twog"
                 """
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "tls_ssid_wpa2_eap_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
-        channel = get_ap_channel[0]["2G"]
-        print("ssid channel:- ", channel)
-        vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                             mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                             identity=identity, station_name=station_names_twog,
-                                             key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
-                                    station_names_fiveg, setup_profiles, lf_test,
-                                    update_report, exit_on_fail,
-                                    test_cases, radius_info, get_ap_channel):
-        """ wpa enterprise 2g
-                    pytest -m "client_connectivity and bridge and enterprise and tts and twog"
+    @allure.title("Bridge Mode Client Connectivity Test with WPA2-Enterprise-TLS in 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3713", name="WIFI-3713")
+    def test_tls_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
+                                    get_test_device_logs,
+                                    get_target_object,
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+        To verify that a client created on 5G radio connects to AP in Bridge mode with WAP2 enterprise TLS security
+        Unique Marker: pytest -m "client_connectivity_tests and enterprise and wpa2_enterprise and ow_sanity_lf and tls and bridge and fiveg"
                 """
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa2_enterprise"][1]
+        profile_data = {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa2"
         mode = "BRIDGE"
         band = "fiveg"
-        print("output of get_ap_channel ", get_ap_channel)
-        channel = get_ap_channel[0]["5G"]
-        vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                             mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                             identity=identity, station_name=station_names_fiveg,
-                                             key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
-    def test_tls_wpa3_enterprise_2g(self, get_ap_logs, get_lf_logs,
-                                    station_names_twog, setup_profiles, lf_test, update_report,
-                                    test_cases, radius_info, exit_on_fail, get_ap_channel):
-        """ wpa enterprise 2g
-                    pytest -m "client_connectivity and bridge and enterprise and tts and twog"
+    @allure.title("Bridge Mode Client Connectivity Test with WPA3-Enterprise-TLS in 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3736", name="WIFI-3736")
+    def test_tls_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
+                                    get_test_device_logs,
+                                    get_target_object,
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+        To verify that a client created on 2G radio connects to AP in Bridge mode with WPA3 enterprise TLS security
+                 Unique Marker: pytest -m "To verify that a client created on 2G radio connects to AP in Bridge mode with WPA3 enterprise TLS security"
                 """
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][0]
+        profile_data = {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
-        channel = get_ap_channel[0]["2G"]
-        print("ssid channel:- ", channel)
-        vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP-SHA256"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                             mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                             identity=identity, station_name=station_names_twog,
-                                             key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
-    def test_tls_wpa3_enterprise_5g(self, get_ap_logs, get_lf_logs,
-                                    station_names_fiveg, setup_profiles, lf_test,
-                                    update_report, exit_on_fail,
-                                    test_cases, radius_info, get_ap_channel):
-        """ wpa enterprise 5g
-                    pytest -m "client_connectivity and bridge and enterprise and tts and twog"
+    @allure.title("Bridge Mode Client Connectivity Test with WPA3-Enterprise-TLS in 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3734", name="WIFI-3734")
+    def test_tls_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
+                                    get_test_device_logs,
+                                    get_target_object,
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+        To verify that a client created on 5G radio connects to AP in Bridge mode with WPA3 enterprise TLS security
+        Unique Marker: pytest -m "client_connectivity_tests and enterprise and wpa3_enterprise and ow_sanity_lf and tls and bridge and fiveg"
                 """
 
-        profile_data = setup_params_enterprise["ssid_modes"]["wpa3_enterprise"][1]
+        profile_data = {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
-        channel = get_ap_channel[0]["5G"]
-        print("ssid channel:- ", channel)
-        vlan = 100
         tls_passwd = radius_info["password"]
         eap = "TLS"
         key_mgmt = "WPA-EAP-SHA256"
         identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
         # pk_passwd = radius_info['pk_password']
         # lf_tools.add_vlan(vlan)
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                             mode=mode, band=band, eap=eap, ttls_passwd=tls_passwd,
-                                             identity=identity, station_name=station_names_fiveg,
-                                             key_mgmt=key_mgmt, vlan_id=vlan, ssid_channel=channel)
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
@@ -240,125 +263,139 @@ setup_params_enterprise_two = {
 }
 
 
-@allure.suite(suite_name="OpenWifi Sanity LF")
-@allure.sub_suite(sub_suite_name="Bridge Mode EAP TLS Client Connectivity : Suite-B")
+@allure.parent_suite("Client Connectivity Tests")
+@allure.feature("Client Connectivity")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-B")
 @pytest.mark.suiteB
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_enterprise_two],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestBridgeModeEnterpriseTLSSuiteTwo(object):
     """ SuiteA Enterprise Test Cases
-        pytest -m "client_connectivity and bridge and enterprise and ttls and suiteB"
+        pytest -m "client_connectivity_tests and bridge and enterprise and ttls and suiteB"
     """
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    def test_wpa_wpa2_enterprise_2g(self, get_ap_logs, get_lf_logs,
-                                    station_names_twog, setup_profiles, lf_test, update_report,
-                                    test_cases, radius_info, exit_on_fail, get_ap_channel):
-        """ wpa enterprise 2g
-            pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_wpa2_enterprise_mixed and twog"
+    @allure.title("Bridge Mode Client Connectivity Test with WAP-WPA2-Enterprise-TLS in 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10589", name="WIFI-10589")
+    def test_wpa_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
+                                    get_test_device_logs,
+                                    get_target_object,
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """
-        profile_data = setup_params_enterprise_two["ssid_modes"]["wpa_wpa2_enterprise_mixed"][0]
+        To verify that a client created on 2G radio connects to AP in Bridge mode with WAP-WPA2-Enterprise  TLS security
+          Unique Marker:  pytest -m "client_connectivity_tests and wpa_wpa2_enterprise_mixed and enterprise and ow_sanity_lf and tls and bridge and twog"
+        """
+        profile_data = {"ssid_name": "tls_ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "twog"
-        channel = get_ap_channel[0]["2G"]
-        print("ssid channel:- ", channel)
-        vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                             mode=mode, band=band,
-                                             eap=eap, ttls_passwd=tls_passwd, identity=identity,
-                                             station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+        pk_passwd = radius_info['pk_password']
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              extra_securities=extra_secu,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa_wpa2_enterprise_5g(self, get_ap_logs, get_lf_logs,
-                                    station_names_fiveg, setup_profiles, lf_test,
-                                    update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
-        """ wpa enterprise 2g
-            pytest -m "client_connectivity and bridge and enterprise and ttls and wpa_wpa2_enterprise_mixed and fiveg"
+    @allure.title("Bridge Mode Client Connectivity Test with WAP-WPA2-Enterprise-TLS in 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10590", name="WIFI-10590")
+    def test_wpa_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
+                                    get_test_device_logs,
+                                    get_target_object,
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
         """
-        profile_data = setup_params_enterprise_two["ssid_modes"]["wpa_wpa2_enterprise_mixed"][1]
+               To verify that a client created on 5G radio connects to AP in Bridge mode with WAP-WPA2-Enterprise  TLS security
+                 Unique Marker:  pytest -m "client_connectivity_tests and wpa_wpa2_enterprise_mixed and enterprise and ow_sanity_lf and tls and bridge and fiveg"
+               """
+        profile_data = {"ssid_name": "tls_ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa"
         extra_secu = ["wpa2"]
         mode = "BRIDGE"
         band = "fiveg"
-        channel = get_ap_channel[0]["5G"]
-        print("ssid channel:- ", channel)
-        vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security, extra_securities=extra_secu,
-                                             mode=mode, band=band,
-                                             eap=eap, ttls_passwd=tls_passwd, identity=identity,
-                                             station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+        pk_passwd = radius_info['pk_password']
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              extra_securities=extra_secu,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
-    def test_wpa3_enterprise_mixed_2g(self, get_ap_logs, get_lf_logs,
-                                      station_names_twog, setup_profiles, lf_test,
-                                      update_report, test_cases, radius_info, exit_on_fail, get_ap_channel):
-        """ wpa enterprise 2g
-            pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise_mixed and twog"
+    @allure.title("Bridge Mode Client Connectivity Test with WAP3-Enterprise-Mixed-TLS in 2.4GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10591", name="WIFI-10591")
+    def test_wpa3_enterprise_mixed_2g(self, get_test_library, get_dut_logs_per_test_case,
+                                      get_test_device_logs,
+                                      get_target_object,
+                                      num_stations, setup_configuration, check_connectivity, radius_info):
         """
-        profile_data = setup_params_enterprise_two["ssid_modes"]["wpa3_enterprise_mixed"][0]
+                       To verify that a client created on 2G radio connects to AP in Bridge mode with WAP3-Enterprise-Mixed  TLS security
+                         Unique Marker: pytest -m "client_connectivity_tests and wpa3_enterprise_mixed and enterprise and ow_sanity_lf and tls and bridge and twog"
+                       """
+        profile_data = {"ssid_name": "tls_ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         mode = "BRIDGE"
         band = "twog"
-        channel = get_ap_channel[0]["2G"]
-        print("ssid channel:- ", channel)
-        vlan = 1
-        vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                             mode=mode, band=band,
-                                             eap=eap, ttls_passwd=tls_passwd, identity=identity,
-                                             station_name=station_names_twog, vlan_id=vlan, ssid_channel=channel)
+        pk_passwd = radius_info['pk_password']
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
-    def test_wpa3_enterprise_mixed_5g(self, get_ap_logs, get_lf_logs,
-                                      station_names_fiveg, setup_profiles, lf_test,
-                                      update_report, exit_on_fail,
-                                      test_cases, radius_info, get_ap_channel):
-        """ wpa enterprise 2g
-            pytest -m "client_connectivity and bridge and enterprise and ttls and wpa3_enterprise_mixed and fiveg"
+    @allure.title("Bridge Mode Client Connectivity Test with WAP3-Enterprise-Mixed-TLS in 5GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10592", name="WIFI-10592")
+    def test_wpa3_enterprise_mixed_5g(self, get_test_library, get_dut_logs_per_test_case,
+                                      get_test_device_logs,
+                                      get_target_object,
+                                      num_stations, setup_configuration, check_connectivity, radius_info):
         """
-        profile_data = setup_params_enterprise_two["ssid_modes"]["wpa3_enterprise_mixed"][1]
+         To verify that a client created on 5G radio connects to AP in Bridge mode with WAP3-Enterprise-Mixed  TLS security
+         Unique Marker: pytest -m "client_connectivity_tests and wpa3_enterprise_mixed and enterprise and ow_sanity_lf and tls and bridge and fiveg"
+                              """
+        profile_data = {"ssid_name": "tls_ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         mode = "BRIDGE"
         band = "fiveg"
-        channel = get_ap_channel[0]["5G"]
-        print("ssid channel:- ", channel)
-        vlan = 1
         tls_passwd = radius_info["password"]
         eap = "TLS"
         identity = radius_info['user']
-        passes, result = lf_test.EAP_Connect(ssid=ssid_name, security=security,
-                                             mode=mode, band=band,
-                                             eap=eap, ttls_passwd=tls_passwd, identity=identity,
-                                             station_name=station_names_fiveg, vlan_id=vlan, ssid_channel=channel)
+        pk_passwd = radius_info['pk_password']
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration)
 
         assert passes == "PASS", result

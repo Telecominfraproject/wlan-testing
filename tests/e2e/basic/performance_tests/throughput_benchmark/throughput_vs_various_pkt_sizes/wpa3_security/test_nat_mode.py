@@ -26,12 +26,12 @@ setup_params_general = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputVsPktWpa3Nat2G(object):
     """Throughput vs Various Pkt Size Test nat mode
        pytest -m "throughput_vs_pkt and nat"
@@ -344,12 +344,12 @@ setup_params_5g = {
 
 @allure.feature("NAT MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_5g],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputVsPktWpa3Nat5G(object):
     """Throughput vs Various Pkt Size Test nat mode
        pytest -m "throughput_vs_pkt and nat"

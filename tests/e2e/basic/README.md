@@ -64,12 +64,12 @@ profile_config = {
 # Class level Marking
 @pytest.mark.suite_a
 @pytest.mark.parametrize(
-    'setup_profiles',   # Name of the fixture
+    'setup_configuration',   # Name of the fixture
     [profile_config],   # Passing the above static profile_config data for setup for tests in this class
     indirect=True,
     scope="class"       # Scope of the fixture (Its experimental for current framework (keep it "class" for default scenario))
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestFeatureABridge(object):
 
     @pytest.mark.wpa        # Marker for the wifi encryption needed - Compulsory

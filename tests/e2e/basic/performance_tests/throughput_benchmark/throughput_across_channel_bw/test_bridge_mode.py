@@ -36,12 +36,12 @@ setup_params_general_20Mhz = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_20Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw20MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"
@@ -148,12 +148,12 @@ setup_params_general_40Mhz = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_40Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw40MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"
@@ -255,12 +255,12 @@ setup_params_general_80Mhz = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_80Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw80MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"
@@ -306,7 +306,6 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-9742", name="WIFI-9742")
-    @pytest.mark.ow_sanity_lf
     @allure.parent_suite("Throughput Test")
     @allure.suite("OpenWifi Throughput across channel bandwidth")
     @allure.title("Single client wifi capacity 80Mhz Bw")
@@ -362,12 +361,12 @@ setup_params_general_160Mhz = {
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general_160Mhz],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestThroughputAcrossBw160MhzBRIDGE(object):
     """Throughput Across Bw Bridge Mode
        pytest -m "throughput_across_bw_test and Bridge"

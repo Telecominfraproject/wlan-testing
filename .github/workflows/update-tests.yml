@@ -31,19 +31,37 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Generate tests as allure results
-        run: docker run -v $PWD/allure-results:/allure-results tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }} -c "cd tests; pytest -s -vvv --alluredir=/allure-results --skip-all"
+        run: |
+          docker run -v $PWD/allure-results:/allure-results tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }} -c "cd tests; pytest -s -vvv --alluredir=/allure-results --skip-all"
+          sudo chown runner:docker -R $PWD/allure-results
 
       - name: Generate Allure report
         uses: ./.github/actions/generate-allure-report
         with:
           results_path: ./allure-results
 
+      - name: Update allure report
+        run: |
+          mv allure-report tmp-docs
+          rm -rf allure-*
+          mkdir -p ~/.ssh
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          echo https://tip-automation:${{ secrets.GIT_PUSH_PAT }}@github.com > ~/.git-credentials
+          git config --global credential.helper store
+          git config --global user.email "tip-automation@telecominfraproject.com"
+          git config --global user.name "TIP Automation User"
+          git pull
+          git checkout gh-pages || git checkout -b gh-pages
+          mv tmp-docs docs
+          git add docs
+          git commit -m'Update allure report for github pages'
+
       - name: Publish Allure report to GitHub Pages
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
-          directory: ./allure-report
+          directory: ./docs
 
   cleanup:
     needs: [build, testsgen]

@@ -306,8 +306,8 @@ class Controller(ConfigureController):
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
         return resp
 
-    def get_commands(self, serial_number):
-        uri = self.build_uri("commands?serialNumber=" + serial_number)
+    def get_commands(self):
+        uri = self.build_uri("commands")
         print("Sending Command: " + "\n" +
               "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
               "URI: " + str(uri) + "\n" +
@@ -1645,16 +1645,16 @@ class UProfileUtility:
     def add_ssid(self, ssid_data, radius=False, radius_auth_data={}, radius_accounting_data={}):
         print("ssid data : ", ssid_data)
         ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
-
         for options in ssid_data:
             if options == "multi-psk":
                 ssid_info[options] = ssid_data[options]
                 print("hi", ssid_info)
             if options == "rate-limit":
                 ssid_info[options] = ssid_data[options]
-            if options == "isolate-clients":
+            if options == "radius_auth_data":
                 ssid_info[options] = ssid_data[options]
-
+            if options == "radius_acc_data":
+                ssid_info[options] = ssid_data[options]
         for i in ssid_data["appliedRadios"]:
             ssid_info["wifi-bands"].append(i)
         ssid_info['encryption'] = {}

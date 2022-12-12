@@ -36,12 +36,12 @@ setup_params_general = {
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.Mhz20
 class TestThroughputUnderCombinationsVLAN20MHz(object):
 
@@ -598,12 +598,12 @@ setup_params_general = {
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.Mhz80
 class TestThroughputUnderCombinationsVLAN80MHz(object):
 
@@ -1177,12 +1177,12 @@ setup_params_general = {
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.Mhz160
 class TestThroughputUnderCombinationsVLAN160MHz(object):
 

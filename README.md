@@ -13,6 +13,8 @@ This test automation tied into our overall tooling at TIP as shown below:
 
 ![Tools and Test Automation](.img/Tools_and_Testing.png)
 
+You can get the full list of tests on [GitHub Pages](https://telecominfraproject.github.io/wlan-testing/) that's updated automatically.
+
 ### General guidelines
 
 This testing code adheres to generic [pep8](https://www.python.org/dev/peps/pep-0008/#introduction) style guidelines, most notably:
@@ -128,32 +130,67 @@ All code must be written in python 3 and conform to PEP 8 style guide. The test 
 cd ~/
 mkdir automation
 cd automation
-git clone https://github.com/Telecominfraproject/wlan-testing
-git clone https://github.com/Telecominfraproject/wlan-lanforge-scripts
-cd wlan-testing
-./sync_repos.bash
-mkdir ~/.pip
-echo "[global]" > ~/.pip/pip.conf
-echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
-echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple" >> ~/.pip/pip.conf
-pip3 install -r requirements.txt
 
-cd tests
-vim configuration.py    # Setup your testbed data info here
+git clone https://github.com/Telecominfraproject/wlan-testing 
+cd wlan-testing/
 
-# Check if everything is good 
-pytest --collect-only 
+cd tests/
+vim lab_info.json    # Setup your testbed data info here
+docker build -f docker/Dockerfile -t wlantest .
+docker run -i -t -v $(YOUR_ALLURE_RESULT_DIR):/allure-results wlantest -c “cd tests;pytest -m ‘marker’ -s -vvv –testbed=basic-testbed –alluredir=allure-results”
 
+
+# Check List of Available Tests
+https://telecominfraproject.github.io/wlan-testing/
+
+# Test Suites Marker
+ow_sanity_lf: OpenWifi Sanity Test Plan
+
+
+
+# List of Available Markers
+
+client_connectivity_tests: Client Connectivity Test Cases with bridge|nat|vlan modes across 2.4|5|6 GHz bands with Various Encryptions
+dfs_tests: Dynamic Frequency Selection Test Cases
+multi_psk_tests: Multi PSK Test Cases
+rate_limiting_tests: Rate Limiting Test Cases
+dvlan_tests: Dynamic VLAN Test Cases
+dynamic_qos_tests: Dynamic QOS Test Cases
+multi_vlan_tests: Multi VLAN Combination based Test Cases
+client_scale_tests: Client Capacity Tests with maximum possible Stations bridge|nat|vlan 2.4|5|6 GHz Bands
+peak_throughput_tests: Single Client Peak Performance Test with various Bandwidths across 2.4|5|6 GHz Bands with various Client Types
+dataplane_tests: Single Client Throughput Test with various pkt sizes with UL|DL|BI with AC|AX Client Types across 2.4|5|6 GHz Bands
+country_code: Country Code Test Cases 
+
+# Supported Modes, Bands, Encryptions
+bridge: Use this marker to run bridge mode tests in each of the above test plans/suites
+nat: Use this marker to run nat mode tests in each of the above test plans/suites
+vlan: Use this marker to run vlan mode tests in each of the above test plans/suites
+
+twog: Use this marker to run 2.4 GHz tests in each of the above test plans/suites
+fiveg: Use this marker to run 5 GHz tests in each of the above test plans/suites
+sixg: Use this marker to run 6 GHz tests in each of the above test plans/suites
+
+open: Use this marker to run open Encryption tests in each of the above test plans/suites
+wpa: Use this marker to run wpa Encryption tests in each of the above test plans/suites
+wpa2_personal: Use this marker to run wpa2_personal Encryption tests in each of the above test plans/suites
+wpa3_personal: Use this marker to run wpa3_personal Encryption tests in each of the above test plans/suites
+wpa3_personal_mixed: Use this marker to run wpa3_personal_mixed Encryption tests in each of the above test plans/suites
+wpa_wpa2_personal_mixed: Use this marker to run wpa_wpa2_personal_mixed Encryption tests in each of the above test plans/suites
+
+wpa_enterprise: Use this marker to run wpa_enterprise Encryption tests in each of the above test plans/suites
+wpa2_enterprise: Use this marker to run wpa2_enterprise Encryption tests in each of the above test plans/suites
+wpa3_enterprise: Use this marker to run wpa3_enterprise Encryption tests in each of the above test plans/suites
+wpa_wpa2_enterprise_mixed: Use this marker to run wpa_wpa2_enterprise_mixed Encryption tests in each of the above test plans/suites
+wpa3_enterprise_mixed: Use this marker to run wpa3_enterprise_mixed Encryption tests in each of the above test plans/suites
 
 # for visualizing allure reports, Install nodejs
 # Set Java home
 
 # install allure command
 npm install -g allure-commandline --save-dev
-
 ```
-
-
+### [Test Plans and Markers](TEST_PLANS.md):bookmark_tabs:
 ### Executing and Contributing new test cases
 
 Follow instructions provided [here](./tests/README.md)  to understand the Testing Framework, and How to run and 

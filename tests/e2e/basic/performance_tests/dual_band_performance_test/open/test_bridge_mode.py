@@ -27,12 +27,12 @@ setup_params_general = {
 @pytest.mark.wifi5
 @pytest.mark.wifi6
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@pytest.mark.usefixtures("setup_configuration")
 class TestDualbandPerformanceBridge(object):
     """
          pytest -m "performance and dual_band_test and bridge and open and twog  and fiveg"
@@ -41,7 +41,7 @@ class TestDualbandPerformanceBridge(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_open_bridge(self, get_vif_state, lf_tools,
+    def test_client_open_bridge(self,  lf_tools,
                                   create_lanforge_chamberview_dut, lf_test, get_configuration):
         profile_data = setup_params_general["ssid_modes"]["open"]
         ssid_2G = profile_data[0]["ssid_name"]

@@ -36,14 +36,17 @@ setup_params_general1 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general1],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-1)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel1(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -53,7 +56,8 @@ class TestCountrySG40Mhz2GChannel1(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel1
-    def test_client_bridge_wpa2_chn1_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 1")
+    def test_client_bridge_wpa2_chn1_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel1"
         """
@@ -67,10 +71,10 @@ class TestCountrySG40Mhz2GChannel1(object):
         channel = setup_params_general1['rf']['2G']['channel']
         channel_width = setup_params_general1['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -101,14 +105,17 @@ setup_params_general2 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general2],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-2)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel2(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -118,7 +125,8 @@ class TestCountrySG40Mhz2GChannel2(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel2
-    def test_client_bridge_wpa2_chn2_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 2")
+    def test_client_bridge_wpa2_chn2_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel2"
         """
@@ -132,10 +140,10 @@ class TestCountrySG40Mhz2GChannel2(object):
         channel = setup_params_general2['rf']['2G']['channel']
         channel_width = setup_params_general2['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -166,14 +174,17 @@ setup_params_general3 = {
 }
 
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general3],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-3)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel3(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -183,7 +194,8 @@ class TestCountrySG40Mhz2GChannel3(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel3
-    def test_client_bridge_wpa2_chn3_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 3")
+    def test_client_bridge_wpa2_chn3_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel3"
         """
@@ -197,10 +209,10 @@ class TestCountrySG40Mhz2GChannel3(object):
         channel = setup_params_general3['rf']['2G']['channel']
         channel_width = setup_params_general3['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -230,14 +242,17 @@ setup_params_general4 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general4],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-4)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel4(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -247,7 +262,8 @@ class TestCountrySG40Mhz2GChannel4(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel4
-    def test_client_bridge_wpa2_chn4_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 4")
+    def test_client_bridge_wpa2_chn4_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel4"
         """
@@ -261,10 +277,10 @@ class TestCountrySG40Mhz2GChannel4(object):
         channel = setup_params_general4['rf']['2G']['channel']
         channel_width = setup_params_general4['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -294,14 +310,17 @@ setup_params_general5 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general5],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-5)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel5(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -311,7 +330,8 @@ class TestCountrySG40Mhz2GChannel5(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel5
-    def test_client_bridge_wpa2_chn5_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 5")
+    def test_client_bridge_wpa2_chn5_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel5"
         """
@@ -325,10 +345,10 @@ class TestCountrySG40Mhz2GChannel5(object):
         channel = setup_params_general5['rf']['2G']['channel']
         channel_width = setup_params_general5['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -358,14 +378,17 @@ setup_params_general6 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general6],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-6)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel6(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -375,7 +398,8 @@ class TestCountrySG40Mhz2GChannel6(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel6
-    def test_client_bridge_wpa2_chn6_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 6")
+    def test_client_bridge_wpa2_chn6_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel6"
         """
@@ -389,10 +413,10 @@ class TestCountrySG40Mhz2GChannel6(object):
         channel = setup_params_general6['rf']['2G']['channel']
         channel_width = setup_params_general6['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -422,14 +446,17 @@ setup_params_general7 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general7],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-7)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel7(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -439,7 +466,8 @@ class TestCountrySG40Mhz2GChannel7(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel7
-    def test_client_bridge_wpa2_chn7_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 7")
+    def test_client_bridge_wpa2_chn7_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel7"
         """
@@ -453,10 +481,10 @@ class TestCountrySG40Mhz2GChannel7(object):
         channel = setup_params_general7['rf']['2G']['channel']
         channel_width = setup_params_general7['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -486,14 +514,17 @@ setup_params_general8 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general8],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-8)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel8(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -503,7 +534,8 @@ class TestCountrySG40Mhz2GChannel8(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel8
-    def test_client_bridge_wpa2_chn8_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 8")
+    def test_client_bridge_wpa2_chn8_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel8"
         """
@@ -517,10 +549,10 @@ class TestCountrySG40Mhz2GChannel8(object):
         channel = setup_params_general8['rf']['2G']['channel']
         channel_width = setup_params_general8['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -550,14 +582,17 @@ setup_params_general9 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general9],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-9)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel9(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -567,7 +602,8 @@ class TestCountrySG40Mhz2GChannel9(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel9
-    def test_client_bridge_wpa2_chn9_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 9")
+    def test_client_bridge_wpa2_chn9_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel9"
         """
@@ -581,10 +617,10 @@ class TestCountrySG40Mhz2GChannel9(object):
         channel = setup_params_general9['rf']['2G']['channel']
         channel_width = setup_params_general9['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -614,14 +650,17 @@ setup_params_general10 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general10],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-10)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel10(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -631,7 +670,8 @@ class TestCountrySG40Mhz2GChannel10(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel10
-    def test_client_bridge_wpa2_chn10_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 10")
+    def test_client_bridge_wpa2_chn10_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel10"
         """
@@ -645,10 +685,10 @@ class TestCountrySG40Mhz2GChannel10(object):
         channel = setup_params_general10['rf']['2G']['channel']
         channel_width = setup_params_general10['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -678,14 +718,17 @@ setup_params_general11 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general11],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-11)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel11(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -695,7 +738,8 @@ class TestCountrySG40Mhz2GChannel11(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel11
-    def test_client_bridge_wpa2_chn11_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 11")
+    def test_client_bridge_wpa2_chn11_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel11"
         """
@@ -709,10 +753,10 @@ class TestCountrySG40Mhz2GChannel11(object):
         channel = setup_params_general11['rf']['2G']['channel']
         channel_width = setup_params_general11['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -742,14 +786,17 @@ setup_params_general12 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general12],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-12)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel12(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -759,7 +806,8 @@ class TestCountrySG40Mhz2GChannel12(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel12
-    def test_client_bridge_wpa2_chn12_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 12")
+    def test_client_bridge_wpa2_chn12_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel12"
         """
@@ -773,10 +821,10 @@ class TestCountrySG40Mhz2GChannel12(object):
         channel = setup_params_general12['rf']['2G']['channel']
         channel_width = setup_params_general12['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
@@ -806,14 +854,17 @@ setup_params_general13 = {
     "radius": False
 }
 
-@allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
-    'setup_profiles',
+    'setup_configuration',
     [setup_params_general13],
     indirect=True,
     scope="class"
 )
-@pytest.mark.usefixtures("setup_profiles")
+@allure.feature("Channel vs Country Code")
+@allure.parent_suite("Country Code Tests")
+@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.sub_suite("SG country code (Channel-13)")
+@pytest.mark.usefixtures("setup_configuration")
 class TestCountrySG40Mhz2GChannel13(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
@@ -823,7 +874,8 @@ class TestCountrySG40Mhz2GChannel13(object):
     @pytest.mark.fourtyMhz
     @pytest.mark.twog
     @pytest.mark.channel13
-    def test_client_bridge_wpa2_chn13_40Mhz_SG_2g(self, lf_test, station_names_twog, get_configuration):
+    @allure.title("Test for bandwidth 40 and channel 13")
+    def test_client_bridge_wpa2_chn13_40Mhz_SG_2g(self, get_test_library, setup_configuration):
         """Country code Bridge Mode
            pytest -m "country_code and fourtyMhz and wpa2 and twog and channel13"
         """
@@ -837,10 +889,10 @@ class TestCountrySG40Mhz2GChannel13(object):
         channel = setup_params_general13['rf']['2G']['channel']
         channel_width = setup_params_general13['rf']['2G']['channel-width']
 
-        result = lf_test.country_code_channel_division(ssid=ssid, security=security, passkey=security_key, mode=mode,
-                                                       band=band, station_name=station_names_twog, vlan_id=vlan,
-                                                       channel=channel,channel_width=channel_width,country_num=702,
-                                                       country='Singapore(SG)')
+        result = get_test_library.country_code_channel_division(ssid=ssid, security=security, passkey=security_key,
+                                                       band=band,  vlan_id=vlan, channel=channel, mode=mode,
+                                                       channel_width=channel_width,country_num=702,
+                                                       country='Singapore(SG)', dut_data=setup_configuration)
         if result:
             assert True
         else:
