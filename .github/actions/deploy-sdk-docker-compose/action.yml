@@ -164,6 +164,7 @@ runs:
           export OWSUB_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16006";
           export OWRRM_SERVICECONFIG_PRIVATEENDPOINT="http://owrrm.wlan.local:17007";
           export OWRRM_SERVICECONFIG_PUBLICENDPOINT="http://${{ steps.set_outputs.outputs.gateway_url }}:16789";
+          export CERTIFICATES_ALLOWMISMATCH="false";
           ./deploy.sh
         EOF
 
