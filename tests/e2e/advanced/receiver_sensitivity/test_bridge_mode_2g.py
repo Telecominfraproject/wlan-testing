@@ -44,7 +44,7 @@ class TestRxSensitivityBRIDGE2G(object):
         """Receiver Sensitivity Bridge Mode
            pytest -m "rx_sensitivity_tests and bridge and wpa2_personal and twog"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
@@ -103,12 +103,12 @@ class TestRxSensitivityBRIDGE2G(object):
         """Receiver Sensitivity Bridge Mode
            pytest -m "rx_sensitivity_tests and bridge and wpa2_personal and fiveg"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_personal"][1]
+        profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
-        band = "twog"
+        band = "fiveg"
         vlan = 1
         dut_name = list(setup_configuration.keys())[0]
         dut_5g, dut_2g = "", ""
