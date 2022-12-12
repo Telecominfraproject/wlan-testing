@@ -43,7 +43,7 @@ class TestMultiAssoDisassoVlan(object):
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and twog and udp_upload_2g"
         """
         mode = "VLAN"
-        vlan = 100
+        vlan = [100]
         result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16, dut_data=setup_configuration,
                                                                   mode=mode, vlan=vlan, instance_name="udp_upload_2g",
                                                                   traffic_direction="upload", traffic_rate="4Mbps")
@@ -61,7 +61,7 @@ class TestMultiAssoDisassoVlan(object):
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and twog and udp_download_2g"
         """
         mode = "VLAN"
-        vlan = 1
+        vlan = [100]
         result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16,
                                                                   dut_data=setup_configuration,
                                                                   mode=mode, vlan=vlan, instance_name="udp_download_2g",
@@ -80,7 +80,7 @@ class TestMultiAssoDisassoVlan(object):
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and fiveg and udp_upload_5g"
         """
         mode = "VLAN"
-        vlan = 1
+        vlan = [100]
         result, discription = get_test_library.multi_asso_disasso(band="5G", num_stations=16,
                                                                   dut_data=setup_configuration,
                                                                   mode=mode, vlan=vlan, instance_name="udp_upload_5g",
@@ -99,7 +99,7 @@ class TestMultiAssoDisassoVlan(object):
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and fiveg and udp_download_5g"
         """
         mode = "VLAN"
-        vlan = 1
+        vlan = [100]
         result, discription = get_test_library.multi_asso_disasso(band="5G", num_stations=16,
                                                                   dut_data=setup_configuration,
                                                                   mode=mode, vlan=vlan, instance_name="udp_download_5g",
