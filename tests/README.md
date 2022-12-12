@@ -115,6 +115,3 @@ Read the README.md in each e2e directory to get sample test case.
 
 **_For any Clarifications, regarding Framework,_** <br> 
 **_Email : shivam.thakur@candelatech.com_**
-
-
-

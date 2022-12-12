@@ -5,31 +5,31 @@ defaults:
     shell: bash
 
 env:
-  AWS_EKS_NAME: tip-wlan-main
-  AWS_DEFAULT_OUTPUT: json
-  AWS_DEFAULT_REGION: us-east-2
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-
-  # DigiCert certs
-  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
-  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
-
-  # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
-  # Required object fiels per environment:
-  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'openwifi-test')
-  # - deploy_method - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0
-  # - chart_version - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)
-  # - owgw_version - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owsec_version - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owfms_version - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owprov_version - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owanalytics_version - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owsub_version - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owrrm_version - OpenWIFI radio resource management service version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owgwui_version - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owprovui_version - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  AWS_EKS_NAME: tip-wlan-main
+#  AWS_DEFAULT_OUTPUT: json
+#  AWS_DEFAULT_REGION: us-east-2
+#  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+#  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+#  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+#
+#  # DigiCert certs
+#  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
+#  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
+#
+#  # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
+#  # Required object fiels per environment:
+#  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'openwifi-test')
+#  # - deploy_method - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0
+#  # - chart_version - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)
+#  # - owgw_version - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owsec_version - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owfms_version - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owprov_version - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owanalytics_version - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owsub_version - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owrrm_version - OpenWIFI radio resource management service version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owgwui_version - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owprovui_version - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   testbeds: '[
     {
       "namespace": "dev01",
@@ -77,7 +77,9 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        echo '::set-output name=matrix::{"include":${{ env.testbeds }}}'
+        cat >> $GITHUB_OUTPUT << 'EOF'
+        matrix={"include":${{ env.testbeds }}}
+        EOF
 
   deploy:
     name: Update OpenWIFI Cloud SDK instances
@@ -91,7 +93,7 @@ jobs:
     steps:
 
     - name: Checkout repo with Helm values
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -117,7 +119,7 @@ jobs:
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE=${{ matrix.namespace }}
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.external-db.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}

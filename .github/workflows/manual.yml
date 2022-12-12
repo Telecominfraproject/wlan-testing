@@ -41,7 +41,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
@@ -55,7 +55,7 @@ jobs:
     timeout-minutes: 1440
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install JRE
         run: |
           sudo apt-get update
@@ -79,7 +79,15 @@ jobs:
       - name: save time for logs gathering
         id: logs_start_time
         run: |
-          echo ::set-output name=time::$(date --iso-8601=s)
+          echo "time=$(date --iso-8601=s)" >> $GITHUB_OUTPUT
+
+      - name: tests env info
+        run: |
+          export NAMESPACE=manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}
+          echo "Namespace name - $NAMESPACE"
+          echo "Link to related job in Kubernetes dashboard - https://k8s-dashboard.lab.wlan.tip.build/#/job/$NAMESPACE/testing?namespace=$NAMESPACE"
+          echo "In order to get logs, open the link above and press 'View logs' button in top right corner"
+          echo "If you want to get logs auto-updated, choose this option in dropdown menu hidden behind three dots in top right corner of logs viewer"
 
       - name: tests env info
         run: |
@@ -143,9 +151,9 @@ jobs:
     if: always()
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: allure-results
           path: allure-results
@@ -156,7 +164,7 @@ jobs:
           results_path: ./allure-results
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: allure-report
           path: allure-report
@@ -176,7 +184,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:

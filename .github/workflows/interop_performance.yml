@@ -42,22 +42,24 @@ jobs:
       - name: set variables
         id: vars
         run: |
-          echo "::set-output name=marker_overwrite::${{ github.event.inputs.marker_overwrite || '' }}"
+          echo "marker_overwrite=${{ github.event.inputs.marker_overwrite || '' }}" >> $GITHUB_OUTPUT
 
           DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12' }}"
           DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-          echo "::set-output name=devices::${DEVICES}"
-          echo "::set-output name=testbed::${{ github.event.inputs.testbed || '' }}"
+          cat >> $GITHUB_OUTPUT << 'EOF'
+          devices=${DEVICES}
+          EOF
+          echo "testbed=${{ github.event.inputs.testbed || '' }}" >> $GITHUB_OUTPUT
 
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
           registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
-          registry_user: wlan-testing-cicd
+          registry_user: ${{ secrets.DOCKER_USER_NAME }}
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   # interop-01
@@ -66,7 +68,7 @@ jobs:
     needs: [ vars, build ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -107,7 +109,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -147,7 +149,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -188,7 +190,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -229,7 +231,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -269,7 +271,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -310,7 +312,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -350,7 +352,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -391,7 +393,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -432,7 +434,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -472,7 +474,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -513,7 +515,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -554,7 +556,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -594,7 +596,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -635,7 +637,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -675,7 +677,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -716,7 +718,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -757,7 +759,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -797,7 +799,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -838,7 +840,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -879,7 +881,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -919,7 +921,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -960,7 +962,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1000,7 +1002,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1041,7 +1043,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1082,7 +1084,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1122,7 +1124,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1163,7 +1165,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1204,7 +1206,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1244,7 +1246,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1285,7 +1287,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1325,7 +1327,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1366,7 +1368,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1407,7 +1409,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1447,7 +1449,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1488,7 +1490,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1529,7 +1531,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1569,7 +1571,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1610,7 +1612,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1650,7 +1652,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1691,7 +1693,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1732,7 +1734,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1772,7 +1774,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1813,7 +1815,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1854,7 +1856,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1894,7 +1896,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1935,7 +1937,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1975,7 +1977,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2016,7 +2018,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2057,7 +2059,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2097,7 +2099,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2138,7 +2140,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2179,7 +2181,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2219,7 +2221,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2260,7 +2262,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2300,7 +2302,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2341,7 +2343,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2382,7 +2384,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2422,7 +2424,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2463,7 +2465,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2504,7 +2506,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2544,7 +2546,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2585,7 +2587,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2625,7 +2627,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2666,7 +2668,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2707,7 +2709,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2747,7 +2749,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2788,7 +2790,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2829,7 +2831,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2869,7 +2871,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2910,7 +2912,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2950,7 +2952,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -2996,9 +2998,9 @@ jobs:
 
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: allure-results-${{ matrix.device }}-performance
           path: allure-results
@@ -3018,7 +3020,7 @@ jobs:
             Device=${{ matrix.device }}
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: allure-report-${{ matrix.device }}-performance
           path: allure-report
@@ -3042,9 +3044,9 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:
-          registry_user: wlan-testing-cicd
+          registry_user: ${{ secrets.DOCKER_USER_NAME }}
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}

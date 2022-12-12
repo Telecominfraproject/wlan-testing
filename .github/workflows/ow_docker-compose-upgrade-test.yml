@@ -45,7 +45,7 @@ jobs:
       instance_name: ${{ steps.deploy-sdk-docker-compose.outputs.instance_name }}
       instance_public_ip: ${{ steps.deploy-sdk-docker-compose.outputs.instance_public_ip }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use deploy-sdk-docker-compose composite action
         id: deploy-sdk-docker-compose
@@ -71,7 +71,7 @@ jobs:
       serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
       instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use deploy-virtual-ap-instance composite action
         id: deploy-virtual-ap-instance
@@ -136,6 +136,7 @@ jobs:
             sudo -i;
             cd wlan-cloud-ucentral-deploy/docker-compose;
             docker-compose down;
+            docker image prune -af;
             git reset --hard;
             git checkout ${{ github.event.inputs.deployment_upgrade_version }};
             export DEFAULT_UCENTRALSEC_URL="https://${{ needs.deploy-controller.outputs.sec_url }}:16001";

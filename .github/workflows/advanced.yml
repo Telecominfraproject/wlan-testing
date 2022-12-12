@@ -19,12 +19,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: build and push Docker image
       uses: ./.github/actions/build-and-push-docker
       with:
         registry: tip-tip-wlan-cloud-docker-repo.jfrog.io
-        registry_user: wlan-testing-cicd
+        registry_user: ${{ secrets.DOCKER_USER_NAME }}
         registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
@@ -40,7 +40,7 @@ jobs:
         - advanced-02
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: install aws CLI tool
       run: |
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -60,7 +60,7 @@ jobs:
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
-        echo "::set-output name=name::${NAMESPACE}"
+        echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
     - name: run tests
       uses: ./.github/actions/run-tests
@@ -96,8 +96,8 @@ jobs:
         - advanced-01
         - advanced-02
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
       with:
         name: allure-results-${{ matrix.testbed }}
         path: allure-results
@@ -124,7 +124,7 @@ jobs:
           Testbed=${{ matrix.testbed }}
 
     - name: upload Allure report as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: allure-report-${{ matrix.testbed }}
         path: allure-report
@@ -148,9 +148,9 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: cleanup Docker image
       uses: ./.github/actions/cleanup-docker
       with:
-        registry_user: wlan-testing-cicd
+        registry_user: ${{ secrets.DOCKER_USER_NAME }}
         registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}

@@ -986,7 +986,7 @@ class RunTest:
                                   ssid=ssid,
                                   input=input_data,
                                   security=security,
-                                  upstream_resource=self.upstream_resource)
+                                  resource=int(self.upstream_resource))
         self.sta_url_map = None
         self.multi_obj.build()
         self.multi_obj.start()
@@ -1000,17 +1000,18 @@ class RunTest:
         result = self.multi_obj.compare_ip()
         print("checking for vlan ips")
         if result == "Pass":
-            print("Test pass")
+            print("VLAN check Passed")
         else:
-            print("Test Fail")
+            print("VLAN check Failed")
         print("now checking ip for non vlan port")
         self.multi_obj.monitor_non_vlan_ip()
         self.multi_obj.get_non_vlan_sta_ip()
         print("mode", mode)
+        result, result1 = "Pass", "Pass"
         if mode == "BRIDGE":
-            result1 = self.multi_obj.compare_nonvlan_ip_bridge()
+            result = self.multi_obj.compare_nonvlan_ip_bridge()
         elif mode == "NAT":
-            result1 = self.multi_obj.compare_nonvlan_ip_nat()
+            result = self.multi_obj.compare_nonvlan_ip_nat()
         # station_name =  ['sta100', 'sta200', 'sta00']
         cli_base = LFCliBase(_lfjson_host=self.lanforge_ip, _lfjson_port=self.lanforge_port)
         res_data = cli_base.json_get(_req_url='port?fields=alias,port+type,ip,mac',)['interfaces']
@@ -1037,6 +1038,7 @@ class RunTest:
                         pf = 'PASS'
                     else:
                         pf = 'FAIL'
+                        result1 = 'Fail'
                     table_data.append([i[item]['alias'], '100', f'{exp1[0]}.{exp1[1]}.X.X', i[item]['ip'], i[item]['mac'],
                                        f'{pf}'])
                 elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta200':
@@ -1046,6 +1048,7 @@ class RunTest:
                             pf = 'PASS'
                         else:
                             pf = 'FAIL'
+                            result1 = 'Fail'
                         table_data.append([i[item]['alias'], '200', f'{exp2[0]}.{exp2[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
                 elif i[item]['port type'] == 'WIFI-STA' and i[item]['alias'] == 'sta00':
                     exp3 = temp['sta00'].split('.')
@@ -1055,12 +1058,14 @@ class RunTest:
                             pf = 'PASS'
                         else:
                             pf = 'FAIL'
+                            result1 = 'Fail'
                         table_data.append([i[item]['alias'], 'WAN upstream', f'{exp3[0]}.{exp3[1]}.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
                     elif mode == "NAT":
                         if exp3[0] == '192' and exp3[1] == '168':
                             pf = 'PASS'
                         else:
                             pf = 'FAIL'
+                            result1 = 'Fail'
                         table_data.append([i[item]['alias'], 'LAN upstream', f'192.168.X.X', i[item]['ip'], i[item]['mac'], f'{pf}'])
         print(table_data)
         # attach test data in a table to allure
@@ -1074,7 +1079,7 @@ class RunTest:
             print("Test failed for non vlan ip")
         print("clean up")
         self.multi_obj.postcleanup()
-        if result == result1:
+        if result1 == "Pass":
             return True
         else:
             return False
@@ -1327,12 +1332,19 @@ class RunTest:
         json_response = cli_base.json_get(_req_url=_req_url)
         return json_response
 
+    def l3_cleanup(self):
+        local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
+        local_realm.remove_all_cxs(remove_all_endpoints=True)
+
     def create_layer3(self, side_a_min_rate, side_a_max_rate, side_b_min_rate, side_b_max_rate,
-                      traffic_type, sta_list,):
+                      traffic_type, sta_list, side_b=""):
         # checked
+        if side_b=="":
+            side_b=self.upstream
         print(sta_list)
         print(type(sta_list))
-        print(self.upstream)
+        print(side_b)
+        print(type(side_b))
         local_realm = realm.Realm(lfclient_host=self.lanforge_ip, lfclient_port=self.lanforge_port)
         cx_profile = local_realm.new_l3_cx_profile()
         cx_profile.host = self.lanforge_ip
@@ -1345,7 +1357,7 @@ class RunTest:
 
         # create
         cx_profile.create(endp_type=traffic_type, side_a=sta_list,
-                               side_b=self.upstream,
+                               side_b=side_b,
                                sleep_time=0)
         cx_profile.start_cx()
 

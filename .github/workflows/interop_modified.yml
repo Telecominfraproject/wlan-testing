@@ -1,4 +1,4 @@
-name: interop testing
+name: interop testing v2
 
 env:
   # AWS credentials
@@ -16,16 +16,11 @@ on:
         description: comma-separated list of devices to test
         default: galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12
         required: false
-      firmware:
-        default: "next-latest"
-        description: "target firmware version to be specified <branch>-<commit | latest>"
-        required: false
       marker_overwrite:
         description: overwrite the Pytest markers that will be selected, will disable report uploading
         required: false
   schedule:
-    - cron: "35 20 * * *"
-
+    - cron: "30 20 * * *"
 
 defaults:
   run:
@@ -37,9 +32,9 @@ jobs:
     outputs:
       devices: ${{ steps.vars.outputs.devices }}
       marker_overwrite: ${{ steps.vars.outputs.marker_overwrite }}
-      openwifi_revision: ${{ steps.vars.outputs.openwifi }}
-      ap_models: ${{ steps.vars.outputs.ap_models }}
-      firmware: ${{ steps.vars.outputs.firmware }}
+      openwifi_revision: ${{ steps.vars.outputs.openwifi}}
+      ap_models: ${{ steps.vars.outputs.ap_models}}
+      ap_version: ${{ steps.vars.outputs.ap_version}}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
       existing_controller: ${{ steps.vars.outputs.existing_controller }}
 
@@ -48,18 +43,16 @@ jobs:
         id: vars
         run: |
           echo "marker_overwrite=${{ github.event.inputs.marker_overwrite || '' }}" >> $GITHUB_OUTPUT
-
           DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12' }}"
           DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << 'EOF'
           devices=${DEVICES}
           EOF
           echo "openwifi=$(echo ${{ github.event.inputs.openwifi_revision || 'main' }})" >> $GITHUB_OUTPUT
-          echo "ap_models=$(echo ${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,liteon_wpx8324,hfcl_ion4' }})" >> $GITHUB_OUTPUT
-          echo "firmware=$(echo ${{ github.event.inputs.firmware || 'next-latest' }})" >> $GITHUB_OUTPUT
+          echo "ap_models=$(echo ${{ github.event.inputs.ap_models || 'edgecore_ecw5410,edgecore_eap101,tp-link_ec420-g1,edgecore_ecw5211,cig_wf188n,edgecore_eap102,cig_wf194c,hfcl_ion4' }})" >> $GITHUB_OUTPUT
+          echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'uc_sanity' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -72,9 +65,43 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   # interop-01
-  test-galaxy-s9:
+  quali_reservation:
     runs-on: ubuntu-latest
     needs: [vars, build]
+    if: "!cancelled()"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install dependencies
+        run: |
+          pip install -r .quali/requirements.txt
+      - name: start reservation
+        env:
+          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+        run: |
+          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"1,2,3,4,5,6,7,8","AP ID(s)":"1,2,3,4","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 1440 "InterOp Lab - Specific Selection"
+      - name: set reservation outputs
+        if: always()
+        id: quali_reservation
+        run: |
+          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
+          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
+#          echo "reservation_id=$(cat ./reservation_id.txt)" >> $GITHUB_ENV
+#          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_ENV
+#          echo "${{ env.reservation_id}}"
+#          echo "${{ env.namespace}}"
+    outputs:
+      identifier: ${{steps.quali_reservation.outputs.identifier}}
+      namespace: ${{steps.quali_reservation.outputs.namespace}}
+
+
+
+  test-galaxy-s9:
+
+    runs-on: ubuntu-latest
+    needs: [vars, quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
       - uses: actions/checkout@v3
@@ -82,25 +109,6 @@ jobs:
       - name: install dependencies
         run: |
           pip install -r .quali/requirements.txt
-#          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#          unzip awscliv2.zip
-#          sudo ./aws/install
-
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"1","AP ID(s)":"1","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
-
-      - name: set reservation outputs
-        if: always()
-        id: reservation
-        run: |
-          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
@@ -110,7 +118,6 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -120,19 +127,15 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-
+          DYN_CONFIG="$(python .quali/get_configuration.py --json "${{needs.quali_reservation.outputs.identifier}}")"
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."Galaxy S9".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-          
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -142,16 +145,8 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android and not wpa3_personal' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S9' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='Galaxy S9' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s9
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -166,9 +161,10 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-galaxy-s9
 
+
   test-iphone-11:
     runs-on: ubuntu-latest
-    needs: [vars, test-galaxy-s9]
+    needs: [vars, quali_reservation, test-galaxy-s9]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
       - uses: actions/checkout@v3
@@ -180,21 +176,6 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"6","AP ID(s)":"1","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' "InterOp Lab - Specific Selection"
-
-      - name: set reservation outputs
-        if: always()
-        id: reservation
-        run: |
-          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -204,7 +185,6 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -214,20 +194,14 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{needs.quali_reservation.outputs.identifier}})"
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           
-
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."iPhone-11".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-
-
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -236,16 +210,8 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-11' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='iPhone-11' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-11
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -260,10 +226,11 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait interop-${{ github.run_id }}-iphone-11
 
+
   # interop-02
   test-galaxy-s10:
     runs-on: ubuntu-latest
-    needs: [vars, build]
+    needs: [vars, quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
       - uses: actions/checkout@v3
@@ -275,22 +242,6 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"2","AP ID(s)":"2","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
-
-      - name: set reservation outputs
-        if: always()
-        id: reservation
-        run: |
-          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-
-
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
@@ -300,7 +251,6 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -310,19 +260,13 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ needs.quali_reservation.outputs.identifier }})"
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."Galaxy S10.*".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-          
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-
-
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -331,16 +275,8 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S10.*' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='Galaxy S10.*' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s10
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -357,7 +293,7 @@ jobs:
 
   test-iphone-7:
     runs-on: ubuntu-latest
-    needs: [vars, test-galaxy-s10]
+    needs: [vars, quali_reservation, test-galaxy-s10]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
       - uses: actions/checkout@v3
@@ -369,32 +305,14 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"5","AP ID(s)":"2","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
-
-      - name: set reservation outputs
-        if: always()
-        id: reservation
-        run: |
-          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-
-
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -404,21 +322,13 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ needs.quali_reservation.outputs.identifier }})"
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-          
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."iPhone-7".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-
-          
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-
-
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -427,16 +337,8 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-7' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='iPhone-7' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-7
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -454,7 +356,7 @@ jobs:
   # interop-03
   test-galaxy-s20:
     runs-on: ubuntu-latest
-    needs: [vars, build]
+    needs: [vars, quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
       - uses: actions/checkout@v3
@@ -466,22 +368,6 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"3","AP ID(s)":"4","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
-
-      - name: set reservation outputs
-        if: always()
-        id: reservation
-        run: |
-          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-
-
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
@@ -491,7 +377,6 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -501,18 +386,13 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ needs.quali_reservation.outputs.identifier }})"
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."Galaxy S20".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-          
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -521,16 +401,8 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Galaxy S20' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='Galaxy S20' --skip-lanforge"
           allure_results_artifact_name: allure-results-galaxy-s20
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -547,7 +419,7 @@ jobs:
 
   test-iphone-xr:
     runs-on: ubuntu-latest
-    needs: [vars, test-galaxy-s20]
+    needs: [vars, quali_reservation, test-galaxy-s20]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
       - uses: actions/checkout@v3
@@ -559,22 +431,6 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"8","AP ID(s)":"4","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
-
-      - name: set reservation outputs
-        if: always()
-        id: reservation
-        run: |
-          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-
-
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
@@ -583,7 +439,6 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -593,19 +448,13 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ needs.quali_reservation.outputs.identifier }})"
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-          
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."iPhone-XR".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-
-
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -614,16 +463,8 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-XR' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='iPhone-XR' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-xr
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -641,7 +482,7 @@ jobs:
   #interop-04
   test-pixel-4:
     runs-on: ubuntu-latest
-    needs: [vars, build]
+    needs: [vars,  quali_reservation]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
       - uses: actions/checkout@v3
@@ -653,21 +494,6 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"4","AP ID(s)":"3","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
-
-      - name: set reservation outputs
-        if: always()
-        id: reservation
-        run: |
-          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
@@ -676,7 +502,6 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -686,21 +511,13 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ needs.quali_reservation.outputs.identifier }})"
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."Pixel 4".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-
-          
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-
-
-
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -709,16 +526,8 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and android' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='Pixel 4' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='Pixel 4' --skip-lanforge"
           allure_results_artifact_name: allure-results-pixel-4
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -735,7 +544,7 @@ jobs:
 
   test-iphone-12:
     runs-on: ubuntu-latest
-    needs: [vars, test-pixel-4]
+    needs: [vars, quali_reservation, test-pixel-4]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
       - uses: actions/checkout@v3
@@ -747,21 +556,6 @@ jobs:
         #  unzip awscliv2.zip
         #  sudo ./aws/install
 
-      - name: start reservation
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-        run: |
-          python .quali/start_reservation.py --global-inputs '{"Phone ID(s)":"7","AP ID(s)":"3","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}","Include a LANForge?":"Yes","securityToken":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NzkzZGM0Ni1jZmU4LTQ4ODMtYjhiOS02ZWFlZGU2OTc2MDkifQ.eyJpYXQiOjE2MzI4Mzc2NDEsImp0aSI6IjAwZGRiYWY5LWQwYjMtNDRjNS1hYjVlLTkyNzFlNzc5ZGUzNiIsImlzcyI6Imh0dHBzOi8vYXV0aDIucGVyZmVjdG9tb2JpbGUuY29tL2F1dGgvcmVhbG1zL3RpcC1wZXJmZWN0b21vYmlsZS1jb20iLCJhdWQiOiJodHRwczovL2F1dGgyLnBlcmZlY3RvbW9iaWxlLmNvbS9hdXRoL3JlYWxtcy90aXAtcGVyZmVjdG9tb2JpbGUtY29tIiwic3ViIjoiODNkNjUxMWQtNTBmZS00ZWM5LThkNzAtYTA0ZjBkNTdiZDUyIiwidHlwIjoiT2ZmbGluZSIsImF6cCI6Im9mZmxpbmUtdG9rZW4tZ2VuZXJhdG9yIiwibm9uY2UiOiI2ZjE1YzYxNy01YTU5LTQyOWEtODc2Yi1jOTQxMTQ1ZDFkZTIiLCJzZXNzaW9uX3N0YXRlIjoiYmRjZTFmYTMtMjlkYi00MmFmLWI5YWMtYjZjZmJkMDEyOTFhIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyBlbWFpbCJ9.5R85_1R38ZFXv_wIjjCIsj8NJm1p66dCsLJI5DBEmks"}' --reservation-duration 480 "InterOp Lab - Specific Selection" 
-
-      - name: set reservation outputs
-        if: always()
-        id: reservation
-        run: |
-          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-          echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
@@ -770,7 +564,6 @@ jobs:
         run: |
           curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
       - name: prepare configuration
         env:
           CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
@@ -780,19 +573,13 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_CONFIGURATION_JSON }}
           EOF
-
-          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-
+          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ needs.quali_reservation.outputs.identifier }})"
           jq ".CONFIGURATION.interop=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-          
           jq --arg git_run "${{ github.run_number }}" '.PERFECTO_DETAILS."iPhone-12".jobNumber=$git_run' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-
           if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
           then
             jq '.CONFIGURATION.interop.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
-
-
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
@@ -801,16 +588,8 @@ jobs:
           marker_expression: "${{ needs.vars.outputs.marker_overwrite || 'ow_sanity_interop and ios' }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "--device='iPhone-12' --skip-lanforge -o firmware=${{ needs.vars.outputs.firmware }}"
+          additional_args: "--device='iPhone-12' --skip-lanforge"
           allure_results_artifact_name: allure-results-iphone-12
-
-      - name: stop reservation
-        if: always()
-        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-        env:
-          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -835,6 +614,8 @@ jobs:
         device: ${{ fromJson( needs.vars.outputs.devices ) }}
 
     steps:
+
+
       - name: checkout testing repo
         uses: actions/checkout@v3
 
@@ -848,7 +629,6 @@ jobs:
         run: |
           LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key interop/${{ matrix.device }}/latest/index.html | jq -r .Metadata.latest)
           aws s3 cp --recursive s3://openwifi-allure-reports/interop/${{ matrix.device }}/$LAST_RUN_ID/history history
-
       - name: generate Allure report
         uses: ./.github/actions/generate-allure-report
         with:
@@ -856,7 +636,6 @@ jobs:
           history_path: ./history
           additional_metadata: |
             Device=${{ matrix.device }}
-
       - name: upload Allure report as artifact
         uses: actions/upload-artifact@v3
         with:
@@ -878,7 +657,7 @@ jobs:
           s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
-    needs: [test-iphone-11, test-iphone-xr, test-iphone-12, test-iphone-7]
+    needs: [quali_reservation, test-iphone-11, test-iphone-xr, test-iphone-12, test-iphone-7]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -888,3 +667,24 @@ jobs:
         with:
           registry_user: ${{ secrets.DOCKER_USER_NAME }}
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
+
+
+      - name: install dependencies
+        run: |
+          pip install -r .quali/requirements.txt
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: stop reservation
+        if: always()
+        run: python .quali/stop_reservation.py ${{ needs.quali_reservation.outputs.identifier}}
+        env:
+          CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
+          CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
+          CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
+
