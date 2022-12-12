@@ -5,17 +5,17 @@ defaults:
     shell: bash
 
 env:
-#  AWS_EKS_NAME: tip-wlan-main
-#  AWS_DEFAULT_OUTPUT: json
-#  AWS_DEFAULT_REGION: us-east-2
-#  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-#  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
-#  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
-#
-#  # DigiCert certs
-#  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
-#  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
-#
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: us-east-2
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+  # DigiCert certs
+  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
+  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
+
 #  # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
 #  # Required object fiels per environment:
 #  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'openwifi-test')
