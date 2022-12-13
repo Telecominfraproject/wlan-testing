@@ -60,13 +60,13 @@ jobs:
 
           MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dataplane_throughput_test,single_station_dual_band_throughput,wifi_capacity_test' }}"
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-          cat >> $GITHUB_OUTPUT << 'EOF'
+          cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
 
           AP_MODELS="${{ github.event.inputs.ap_models || 'Wallys_DR6018,hfcl_ion4xe,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,liteon_wpx8324,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196' }}"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-          cat >> $GITHUB_OUTPUT << 'EOF'
+          cat >> $GITHUB_OUTPUT << EOF
           ap_models=${AP_MODELS}
           EOF
 

@@ -57,7 +57,7 @@ jobs:
         AP_MODELS="${{ needs.vars.outputs.ap_models }}"
         AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         AP_MODELS=$(echo "$AP_MODELS" | jq -c 'map({"ap_model":.})')
-        cat >> $GITHUB_OUTPUT << 'EOF'
+        cat >> $GITHUB_OUTPUT << EOF
         matrix={"include":${AP_MODELS}}
         EOF
 

@@ -25,7 +25,7 @@ jobs:
         TESTBEDS="${{ github.event.inputs.testbeds || 'basic-01,basic-02,basic-03,basic-04,basic-05,basic-06,basic-07,basic-08' }}"
         TESTBEDS=$(echo $TESTBEDS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         TESTBEDS=$(echo "$TESTBEDS" | jq -c 'map({"testbed":.})')
-        cat >> $GITHUB_OUTPUT << 'EOF'
+        cat >> $GITHUB_OUTPUT << EOF
         matrix=${TESTBEDS}
         EOF
 
