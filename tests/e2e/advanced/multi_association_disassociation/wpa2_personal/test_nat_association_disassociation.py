@@ -42,7 +42,7 @@ class TestMultiAssoDisassoNat(object):
         """
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and nat and twog and udp_upload_2g"
         """
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16, dut_data=setup_configuration,
                                                             mode = mode, vlan=vlan, instance_name="udp_upload_2g",
@@ -60,7 +60,7 @@ class TestMultiAssoDisassoNat(object):
         """
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and nat and twog and udp_download_2g"
         """
-        mode = "NAT"
+        mode = "NAT-WAN"
         vlan = 1
         result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16,
                                                                   dut_data=setup_configuration,
