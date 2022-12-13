@@ -157,7 +157,7 @@ jobs:
             export OWSUB_SYSTEM_URI_PUBLIC="https://${{ needs.deploy-controller.outputs.gateway_url }}:16006";
             export OWRRM_SERVICECONFIG_PRIVATEENDPOINT="http://owrrm.wlan.local:17007";
             export OWRRM_SERVICECONFIG_PUBLICENDPOINT="http://${{ needs.deploy-controller.outputs.gateway_url }}:16789";
-            export CERTIFICATES_ALLOWMISMATCH="false";
+            export CERTIFICATES_ALLOWMISMATCH="true";
             ./deploy.sh
           EOF
 
