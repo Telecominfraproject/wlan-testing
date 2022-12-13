@@ -45,7 +45,7 @@ jobs:
           echo "marker_overwrite=${{ github.event.inputs.marker_overwrite || '' }}" >> $GITHUB_OUTPUT
           DEVICES="${{ github.event.inputs.devices || 'galaxy-s9,galaxy-s10,galaxy-s20,pixel-4,iphone-7,iphone-11,iphone-xr,iphone-12' }}"
           DEVICES=$(echo $DEVICES | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-          cat >> $GITHUB_OUTPUT << 'EOF'
+          cat >> $GITHUB_OUTPUT << EOF
           devices=${DEVICES}
           EOF
           echo "openwifi=$(echo ${{ github.event.inputs.openwifi_revision || 'main' }})" >> $GITHUB_OUTPUT

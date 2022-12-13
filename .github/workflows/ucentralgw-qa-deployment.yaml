@@ -74,7 +74,7 @@ jobs:
     - name: generate-matrix
       id: set-matrix
       run: |
-        cat >> $GITHUB_OUTPUT << 'EOF'
+        cat >> $GITHUB_OUTPUT << EOF
         matrix={"include":${{ env.testbeds }}}
         EOF
 
