@@ -32,8 +32,9 @@ def main():
     services_in_reservation = reservation_details.Services
 
     config = {
+        'target': 'tip_2x',
         'controller': {},
-        'access_point': [],
+        'device_under_tests': [],
         'traffic_generator': {}
     }
 
@@ -54,14 +55,30 @@ def main():
 
             for attribute in details.ResourceAttributes:
                 key = attribute.Name.replace(f"{resource.ResourceModelName}.", '')
-                key = 'username' if key == 'uname' else key
-                key = 'password' if key == 'passkey' else key
+                key = 'host_username' if key == 'uname' else key
+                key = 'host_password' if key == 'passkey' else key
+                key = 'host_ip' if key == 'ip' else key
+                key = 'identifier' if key == 'serial' else key
+                key = 'serial_tty' if key == 'jumphost_tty' else key
+                key = 'host_ssh_port' if key == 'port' else key
+                key = 'firmware_version' if key == 'version' else key
+
 
                 if get_attribute_value(session, attribute) != "":
                     ap_config[key] = get_attribute_value(session, attribute)
                 #ap_config[key] = get_attribute_value(session, attribute)
 
-            config['access_point'].append(ap_config)
+            #Hard coded values
+            if ap_config["lan_port"]=="N/A":
+                ap_config["lan_port"]= None
+            if ap_config['mode']=="Wifi5":
+                ap_config["supported_bands"] = ["2G","5G"]
+            elif ap_config['mode']=="Wifi6":
+                ap_config["supported_bands"] = ["2G","5G","6G"]
+            ap_config["supported_modes"] = ["BRIDGE","NAT","VLAN"]
+            ap_config["ssid"] = {}
+            ap_config["method"]="serial"
+            config['device_under_tests'].append(ap_config)
 
         elif resource.ResourceModelName == 'Trafficgenerator':
             details = session.GetResourceDetails(resource.Name)
@@ -73,20 +90,35 @@ def main():
 
             config['traffic_generator'] = {
                 'name': 'lanforge',
+                'testbed': tf_config["Lab Type"].lower(),
+                'scenario': "dhcp-bridge",
                 'details': {
-                    'ip': tf_config['ip'],
-                    'port': tf_config['port'],
+                    'manager_ip': tf_config['ip'],
+                    'http_port': tf_config['port'],
                     'ssh_port': tf_config['ssh_port'],
-                    '2.4G-Radio': tf_config['lf_2dot4G_Radio'].replace(' ', '').split(','),
-                    '5G-Radio': tf_config['lf_5G_Radio'].replace(' ', '').split(','),
-                    'AX-Radio': tf_config['AX_Radio'].replace(' ', '').split(','),
-                    'upstream': tf_config['Upstream'],
-                    'upstream_subnet': tf_config['upstream_subnet'],
-                    'uplink': tf_config['uplink'],
-                    '2.4G-Station-Name': tf_config['lf_2dot4G_Station_Name'],
-                    '5G-Station-Name': tf_config['lf_5G_Station_Name'],
-                    'AX-Station-Name': tf_config['AX_Station_Name']
+                    'setup': {"method":"build","DB": "Test_Scenario_Automation"},
+                    'wan_ports': {
+                        tf_config["Upstream"]: {"addressing": "dhcp-server",
+                                                "subnet": "172.16.0.1/16",
+                                                "dhcp": {
+                                                    "lease-first": 10,
+                                                    "lease-count": 10000,
+                                                    "lease-time": "6h"
+                                                        }
+                                                }
+                    },
+                    'lan_ports':{},
+                    "uplink_nat_ports":{
+                        tf_config["uplink"]:{
+                            "addressing":"static",
+                            "ip":tf_config["eth3_ip"],
+                            "gateway_ip":tf_config['upstream_subnet'],
+                            "ip_mask": "255.255.255.0",
+                            "dns_servers": "BLANK"
+                        }
+                    }
                 }
+
             }
         else:
             continue
