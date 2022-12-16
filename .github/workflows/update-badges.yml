@@ -46,7 +46,7 @@ jobs:
 #        wget https://img.shields.io/badge/interop_performance_tests-$(pytest --collect-only -m "interop_uc_sanity and client_connectivity" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-interop-count.svg
         
     - name: commit changes
-      working-directory: badges
+      working-directory: wlan-testing/badges
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -58,6 +58,6 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        directory: badges
+        directory: wlan-testing/badges
         branch: badges
         force: true
