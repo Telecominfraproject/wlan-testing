@@ -14,8 +14,9 @@ setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
+            ]},
         "rf": {
             "2G": {"channel-width": 20},
             "5G": {"channel-width": 80},
@@ -76,20 +77,16 @@ class TestRxSensitivityBRIDGE2G(object):
                     radios_ax.append(port + " " + port_data[item][p]['alias'])
         for i in setup_configuration[dut_name]['ssid_data']:
             get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
-            dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' \
-                    '' + get_test_library.dut_idx_mapping[str(i)][4] + f' ({i+1})' \
-                    f'' if get_test_library.dut_idx_mapping[str(i)][3] == "5G" else "NA"
-
-            dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' \
-                   '' + get_test_library.dut_idx_mapping[str(i)][4] + f' ({i+1})' \
-                    f'' if get_test_library.dut_idx_mapping[str(i)][3] == "2G" else "NA"
+            if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
+                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' \
+                       '' + get_test_library.dut_idx_mapping[str(i)][4] + f' (1)'
 
         instance_name = "rx_sens_TR398"
         result, description = get_test_library.tr398(radios_2g=radios_2g, radios_5g=radios_5g, radios_ax=radios_ax,dut_name=dut_name,
                                            dut_5g=dut_5g, dut_2g=dut_2g, mode=mode, vlan_id=vlan, skip_2g=False,
                                            skip_5g=True, instance_name=instance_name, test="rxsens", ssid_name=ssid_name,
                                            security_key=security_key, security=security,
-                                           move_to_influx=False, dut_data=setup_configuration)
+                                           move_to_influx=False, dut_data=setup_configuration, tr398v2=True)
 
         if result:
             assert True
@@ -135,25 +132,19 @@ class TestRxSensitivityBRIDGE2G(object):
                     radios_ax.append(port + " " + port_data[item][p]['alias'])
         for i in setup_configuration[dut_name]['ssid_data']:
             get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
-            dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' \
-                                                                                    '' + \
-                     get_test_library.dut_idx_mapping[str(i)][4] + f' ({i + 1})' \
-                                                                   f'' if get_test_library.dut_idx_mapping[str(i)][
-                                                                              3] == "5G" else "NA"
+            if get_test_library.dut_idx_mapping[str(i)][3] == "5G":
+                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' \
+                                                                                        '' + \
+                         get_test_library.dut_idx_mapping[str(i)][4] + f' (1)'
 
-            dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' \
-                                                                                    '' + \
-                     get_test_library.dut_idx_mapping[str(i)][4] + f' ({i + 1})' \
-                                                                   f'' if get_test_library.dut_idx_mapping[str(i)][
-                                                                              3] == "2G" else "NA"
 
         instance_name = "rx_sens_TR398"
         result, description = get_test_library.tr398(radios_2g=radios_2g, radios_5g=radios_5g, radios_ax=radios_ax,
                                                      dut_name=dut_name, dut_5g=dut_5g, dut_2g=dut_2g, mode=mode,
                                                      vlan_id=vlan, skip_2g=True, skip_5g=False, instance_name=instance_name,
                                                      test="rxsens", ssid_name=ssid_name, security_key=security_key,
-                                                     security=security, move_to_influx=False, dut_data=setup_configuration)
-
+                                                     security=security, move_to_influx=False, dut_data=setup_configuration,
+                                                     tr398v2=True)
         if result:
             assert True
         else:
