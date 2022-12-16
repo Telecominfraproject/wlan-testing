@@ -9,7 +9,7 @@ import allure
 import logging
 import os
 
-pytestmark = [pytest.mark.advance, pytest.mark.spatial_consistency, pytest.mark.bridge]
+pytestmark = [pytest.mark.advance, pytest.mark.spatial_consistency, pytest.mark.vlan]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -46,7 +46,6 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.nss1
-    @pytest.mark.tarun1
     def test_udp_download_nss1_wpa2_personal_2g(self, setup_configuration, get_test_library, num_stations,
                                           get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
         logging.info("Cleanup existing clients and traffic")
@@ -59,24 +58,22 @@ class Test_SpatialConsistency_Bridge(object):
         mode = "VLAN"
         band = "twog"
         vlan = 1
-        station_names_twog = get_test_library.twog_prefix
         station = get_test_library.client_connect(ssid=ssid_name, security=security,passkey=security_key, mode=mode,
                                                   band=band,num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
+        sta_name = list(station.keys())
         ser_no = get_test_library.attenuator_serial()
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100 380 480'],['attenuations2: 100 380 480'],['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
-            rvr_o = get_test_library.rate_vs_range_test(station_name=station_names_twog, mode=mode, download_rate="100%",
+            rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode, download_rate="100%",
                                                         instance_name="SPATIAL_NSS1_RVR1_TWOG", duration="60000",vlan_id=vlan,
                                                         dut_name=dut_name, raw_lines=val)
-            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            # report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
-            get_test_library.attach_report_graphs(report_name=report_name,
-                                              pdf_name="Rate vs Range Test - UDP 2.4G")
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             logging.info("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
@@ -86,9 +83,9 @@ class Test_SpatialConsistency_Bridge(object):
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
                 if str(kpi_val) == "empty":
-                    logging.info("Throughput value from kpi.csv is empty, Test failed")
-                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, Test failed")
-                    assert False, "Throughput value from kpi.csv is empty, Test failed"
+                    logging.info("TEST FAILED, Throughput value from kpi.csv is empty.")
+                    allure.attach(name="CSV Data", body="TEST FAILED, Throughput value from kpi.csv is empty.")
+                    assert False, "TEST FAILED, Throughput value from kpi.csv is empty."
                 else:
                     allure.attach(name="CSV Data", body="Throughput value : " + str(kpi_val))
                     start, thrpt_val, pass_fail = 0, {}, []
@@ -104,18 +101,18 @@ class Test_SpatialConsistency_Bridge(object):
                         # start += 6
                     print(thrpt_val, "\n", pass_fail)
                     if "FAIL" in pass_fail:
-                        logging.info("Test failed due to lesser value")
-                        assert False, "Test failed due to lesser value"
+                        logging.info("TEST FAILED, Actual throughput is lesser than Expected.")
+                        assert False, "TEST FAILED, Actual throughput is lesser than Expected."
                     else:
-                        logging.info("Test passed successfully")
+                        logging.info("Test PASSED successfully")
                         assert True
             else:
                 logging.info("csv file does not exist, Test failed")
                 allure.attach(name="CSV Data", body="csv file does not exist")
                 assert False, "csv file does not exist"
         else:
-            logging.info("Test failed due to no station ip")
-            assert False, "Test failed due to no station ip"
+            logging.info("TEST FAILED,due to no station ip")
+            assert False, "TEST FAILED,due to no station ip"
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("Vlan Mode Spacial Consistency Test (NSS-2) UDP-Download 2.4 GHz Band")
@@ -135,24 +132,22 @@ class Test_SpatialConsistency_Bridge(object):
         mode = "VLAN"
         band = "twog"
         vlan = 1
-        station_names_twog = get_test_library.twog_prefix
         station = get_test_library.client_connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
                                                   band=band, num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
+        sta_name = list(station.keys())
         ser_no = get_test_library.attenuator_serial()
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100 380 480'], ['attenuations2: 100 380 480'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
-            rvr_o = get_test_library.rate_vs_range_test(station_name=station_names_twog, mode=mode, download_rate="100%",
+            rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode, download_rate="100%",
                                                         instance_name="SPATIAL_NSS2_RVR1_TWOG",duration="60000",vlan_id=vlan,
                                                         dut_name=dut_name,raw_lines=val)
-            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            # report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
-            get_test_library.attach_report_graphs(report_name=report_name,
-                                          pdf_name="Rate vs Range Test - UDP 2.4G")
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             logging.info("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
@@ -162,9 +157,9 @@ class Test_SpatialConsistency_Bridge(object):
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
                 if str(kpi_val) == "empty":
-                    logging.info("Throughput value from kpi.csv is empty, Test failed")
-                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, Test failed")
-                    assert False, "Throughput value from kpi.csv is empty, Test failed"
+                    logging.info("TEST FAILED, Throughput value from kpi.csv is empty.")
+                    allure.attach(name="CSV Data", body="TEST FAILED, Throughput value from kpi.csv is empty.")
+                    assert False, "TEST FAILED, Throughput value from kpi.csv is empty."
                 else:
                     allure.attach(name="CSV Data", body="Throughput value : " + str(kpi_val))
                     start, thrpt_val, pass_fail = 0, {}, []
@@ -180,18 +175,18 @@ class Test_SpatialConsistency_Bridge(object):
                         # start += 6
                     print(thrpt_val, "\n", pass_fail)
                     if "FAIL" in pass_fail:
-                        logging.info("Test failed due to lesser value")
-                        assert False, "Test failed due to lesser value"
+                        logging.info("TEST FAILED, Actual throughput is lesser than Expected.")
+                        assert False, "TEST FAILED, Actual throughput is lesser than Expected."
                     else:
-                        logging.info("Test passed successfully")
+                        logging.info("Test PASSED successfully")
                         assert True
             else:
                 logging.info("csv file does not exist, Test failed")
                 allure.attach(name="CSV Data", body="csv file does not exist")
                 assert False, "csv file does not exist"
         else:
-            logging.info("Test failed due to no station ip")
-            assert False, "Test failed due to no station ip"
+            logging.info("TEST FAILED,due to no station ip")
+            assert False, "TEST FAILED,due to no station ip"
 
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("Vlan Mode Spacial Consistency Test (NSS-1) UDP-Download 5 GHz Band")
@@ -199,7 +194,6 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.nss1
-    @pytest.mark.tarun1
     def test_udp_download_nss1_wpa2_personal_5g(self, setup_configuration, get_test_library, num_stations,
                                           get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
         logging.info("Cleanup existing clients and traffic")
@@ -212,25 +206,23 @@ class Test_SpatialConsistency_Bridge(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 1
-        station_names_fiveg = get_test_library.fiveg_prefix
         station = get_test_library.client_connect(ssid=ssid_name, security=security,passkey=security_key, mode=mode,
                                                   band=band,num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
 
+        sta_name = list(station.keys())
         ser_no = get_test_library.attenuator_serial()
         print(ser_no)
         val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:UDP'],
                ['bandw_options: AUTO'], ['spatial_streams: 1'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100 250 350'], ['attenuations2: 100 250 350'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
-            rvr_o = get_test_library.rate_vs_range_test(station_name=station_names_fiveg, mode=mode, download_rate="100%",
+            rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode, download_rate="100%",
                                                         instance_name="SPATIAL_NSS1_RVR1_FIVEG",duration="60000",vlan_id=vlan,
                                                         dut_name=dut_name, raw_lines=val)
-            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            # report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
-            get_test_library.attach_report_graphs(report_name=report_name,
-                                          pdf_name="Rate vs Range Test - UDP 5G")
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             logging.info("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
@@ -240,9 +232,9 @@ class Test_SpatialConsistency_Bridge(object):
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
                 if str(kpi_val) == "empty":
-                    logging.info("Throughput value from kpi.csv is empty, Test failed")
-                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, Test failed")
-                    assert False, "Throughput value from kpi.csv is empty, Test failed"
+                    logging.info("TEST FAILED, Throughput value from kpi.csv is empty.")
+                    allure.attach(name="CSV Data", body="TEST FAILED, Throughput value from kpi.csv is empty.")
+                    assert False, "TEST FAILED, Throughput value from kpi.csv is empty."
                 else:
                     allure.attach(name="CSV Data", body="Throughput value : " + str(kpi_val))
                     start, thrpt_val, pass_fail = 0, {}, []
@@ -258,18 +250,18 @@ class Test_SpatialConsistency_Bridge(object):
                         # start += 6
                     print(thrpt_val, "\n", pass_fail)
                     if "FAIL" in pass_fail:
-                        logging.info("Test failed due to lesser value")
-                        assert False, "Test failed due to lesser value"
+                        logging.info("TEST FAILED, Actual throughput is lesser than Expected.")
+                        assert False, "TEST FAILED, Actual throughput is lesser than Expected."
                     else:
-                        logging.info("Test passed successfully")
+                        logging.info("Test PASSED successfully")
                         assert True
             else:
                 logging.info("csv file does not exist, Test failed")
                 allure.attach(name="CSV Data", body="csv file does not exist")
                 assert False, "csv file does not exist"
         else:
-            logging.info("Test failed due to no station ip")
-            assert False, "Test failed due to no station ip"
+            logging.info("TEST FAILED,due to no station ip")
+            assert False, "TEST FAILED,due to no station ip"
 
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("Vlan Mode Spacial Consistency Test (NSS-2) UDP-Download 5 GHz Band")
@@ -289,7 +281,6 @@ class Test_SpatialConsistency_Bridge(object):
         mode = "VLAN"
         band = "fiveg"
         vlan = 1
-        station_names_fiveg = get_test_library.fiveg_prefix
         station = get_test_library.client_connect(ssid=ssid_name, security=security,passkey=security_key, mode=mode,
                                                   band=band,num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
         print("station", station)
@@ -300,15 +291,13 @@ class Test_SpatialConsistency_Bridge(object):
                ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 100 250 350'], ['attenuations2: 100 250 350'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+60..300']]
         if station:
-            rvr_o = get_test_library.rate_vs_range_test(station_name=station_names_fiveg, mode=mode, download_rate="100%",
+            rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=station[0], mode=mode, download_rate="100%",
                                                         instance_name="SPATIAL_NSS2_RVR1_FIVEG",duration="60000",vlan_id=vlan,
                                                         dut_name=dut_name, raw_lines=val)
-            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
+            # report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
-            get_test_library.attach_report_graphs(report_name=report_name,
-                                          pdf_name="Rate vs Range Test - UDP 2.4G")
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             logging.info("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
@@ -318,9 +307,9 @@ class Test_SpatialConsistency_Bridge(object):
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
                 if str(kpi_val) == "empty":
-                    logging.info("Throughput value from kpi.csv is empty, Test failed")
-                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, Test failed")
-                    assert False, "Throughput value from kpi.csv is empty, Test failed"
+                    logging.info("TEST FAILED, Throughput value from kpi.csv is empty.")
+                    allure.attach(name="CSV Data", body="TEST FAILED, Throughput value from kpi.csv is empty.")
+                    assert False, "TEST FAILED, Throughput value from kpi.csv is empty."
                 else:
                     allure.attach(name="CSV Data", body="Throughput value : " + str(kpi_val))
                     start, thrpt_val, pass_fail = 0, {}, []
@@ -336,16 +325,16 @@ class Test_SpatialConsistency_Bridge(object):
                         # start += 6
                     print(thrpt_val, "\n", pass_fail)
                     if "FAIL" in pass_fail:
-                        logging.info("Test failed due to lesser value")
-                        assert False, "Test failed due to lesser value"
+                        logging.info("TEST FAILED, Actual throughput is lesser than Expected.")
+                        assert False, "TEST FAILED, Actual throughput is lesser than Expected."
                     else:
-                        logging.info("Test passed successfully")
+                        logging.info("Test PASSED successfully")
                         assert True
             else:
                 logging.info("csv file does not exist, Test failed")
                 allure.attach(name="CSV Data", body="csv file does not exist")
                 assert False, "csv file does not exist"
         else:
-            logging.info("Test failed due to no station ip")
-            assert False, "Test failed due to no station ip"
+            logging.info("TEST FAILED,due to no station ip")
+            assert False, "TEST FAILED,due to no station ip"
 
