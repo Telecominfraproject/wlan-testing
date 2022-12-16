@@ -23,21 +23,15 @@ jobs:
         ref: badges
         path: badges
 
-    - name: add TIP pypi repo
-      run: |
-        mkdir -p ~/.pip
-        echo "[global]" > ~/.pip/pip.conf
-        echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
-        echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple" >> ~/.pip/pip.conf
-
     - name: Run setup_env.bash
+      working-directory: wlan-testing
       env:
         CLOUDSDK_LIBRARY: tip_2x
         TEST_DEVICE_NAME: all
         PYTHON: /usr/local/bin/python3
         PIP: /usr/local/bin/pip3
       run: |
-        ./wlan-testing/setup_env.bash -t $CLOUDSDK_LIBRARY -d $TEST_DEVICE_NAME -n "TIP Automation" -o TIP -e tip-automation@telecominfraproject.com -i "TIP OpenWIFI Library" && pip3 freeze
+        ./setup_env.bash -t $CLOUDSDK_LIBRARY -d $TEST_DEVICE_NAME -n "TIP Automation" -o TIP -e tip-automation@telecominfraproject.com -i "TIP OpenWIFI Library" && pip3 freeze
 
     - name: download badges
       working-directory: wlan-testing/tests
