@@ -73,7 +73,7 @@ def main():
                 ap_config["lan_port"]= None
             if ap_config['mode'] in ["Wifi5","Wifi6"]:
                 ap_config["supported_bands"] = ["2G","5G"]
-            elif ap_config['mode'] == "Wifi6E":
+            elif ap_config['mode']=="Wifi6E":
                 ap_config["supported_bands"] = ["2G","5G","6G"]
             ap_config["supported_modes"] = ["BRIDGE","NAT","VLAN"]
             ap_config["ssid"] = {}
