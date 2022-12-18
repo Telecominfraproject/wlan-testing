@@ -70,15 +70,13 @@ class Test_SpatialConsistency_Bridge(object):
             rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode, download_rate="100%",
                                                         instance_name="SPATIAL_NSS1_RVR1_TWOG", duration="60000",vlan_id=vlan,
                                                         dut_name=dut_name, raw_lines=val)
-            # report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             logging.info("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
             pass_value = {"strong": 45, "medium": 35, "weak": 17}
-            atn, deg = [10, 38, 48], [0, 60, 120, 180, 240, 300]  #
+            atn, deg = [10, 38, 48], [0, 60, 120, 180, 240, 300]
             if kpi in entries:
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
@@ -144,8 +142,6 @@ class Test_SpatialConsistency_Bridge(object):
             rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode, download_rate="100%",
                                                         instance_name="SPATIAL_NSS2_RVR1_TWOG",duration="60000",vlan_id=vlan,
                                                         dut_name=dut_name,raw_lines=val)
-            # report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
@@ -219,15 +215,13 @@ class Test_SpatialConsistency_Bridge(object):
             rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode, download_rate="100%",
                                                         instance_name="SPATIAL_NSS1_RVR1_FIVEG",duration="60000",vlan_id=vlan,
                                                         dut_name=dut_name, raw_lines=val)
-            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             logging.info("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
             pass_value = {"strong": 250, "medium": 150, "weak": 75}
-            atn, deg = [10, 25, 35], [0, 60, 120, 180, 240, 300]  #
+            atn, deg = [10, 25, 35], [0, 60, 120, 180, 240, 300]
             if kpi in entries:
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
@@ -295,15 +289,13 @@ class Test_SpatialConsistency_Bridge(object):
             rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode, download_rate="100%",
                                                         instance_name="SPATIAL_NSS2_RVR1_FIVEG",duration="60000",vlan_id=vlan,
                                                         dut_name=dut_name, raw_lines=val)
-            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             logging.info("Test Completed... Cleaning up Stations")
             kpi = "kpi.csv"
             pass_value = {"strong": 500, "medium": 300, "weak": 150}
-            atn, deg = [10, 25, 35], [0, 60, 120, 180, 240, 300]  #
+            atn, deg = [10, 25, 35], [0, 60, 120, 180, 240, 300]
             if kpi in entries:
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
