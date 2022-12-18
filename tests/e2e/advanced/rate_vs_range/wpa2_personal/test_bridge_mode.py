@@ -36,12 +36,10 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@pytest.mark.Mhz20
 class Test_RatevsRange_Bridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tarun2
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("Bridge Mode Rate vs Range Test 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2495", name="WIFI-2495")
@@ -57,40 +55,34 @@ class Test_RatevsRange_Bridge(object):
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
-        station_names_twog = get_test_library.twog_prefix
         station = get_test_library.client_connect(ssid=ssid_name, security=security,passkey=security_key, mode=mode,
                                                   band=band, num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
+        sta_name = list(station.keys())
         ser_no = get_test_library.attenuator_serial()
         print(ser_no)
         atn2 = ser_no[1].split(".")[2]
         print(f"antenuation-2 : {atn2}")
-        # for i in range(4):
-        #     lf_test.attenuator_modify(int(atn2), i, 955)
-        #     time.sleep(0.5)
-        val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:;TCP'],
+        val = [['modes: Auto'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: ' + str(ser_no[1])],
                ['attenuations: 0 100 210..+30..630'], ['attenuations2: 0 100 210..+30..630'], ['chamber: 0'], ['tt_deg: 0']]
         if station:
-            rvr_o = get_test_library.rate_vs_range_test(station_name=station_names_twog, mode=mode, download_rate="100%",
+            rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode, download_rate="100%",
                                                         duration='60000',instance_name="MODEBRIDGE_RVR_TWOG",vlan_id=vlan,
                                                         dut_name=dut_name, raw_lines=val)
-            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries",entries)
-            get_test_library.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
             print("Test Completed... Cleaning up Stations")
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             kpi = "kpi.csv"
             pass_value = {"strong": 100, "medium": 95, "weak": 14}
-            atn = [0, 10, 21, 24, 27,30,33,36,39,42,45,48,51,54,57,60,63]
+            atn = [0, 10, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63]
             if kpi in entries:
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
                 if str(kpi_val) == "empty":
-                    print("Throughput value from kpi.csv is empty, Test failed")
-                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, Test failed")
-                    assert False, "Throughput value from kpi.csv is empty, Test failed"
+                    logging.info("Throughput value from kpi.csv is empty, TEST FAILED, ")
+                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, TEST FAILED, ")
+                    assert False, "Throughput value from kpi.csv is empty, TEST FAILED, "
                 else:
                     allure.attach(name="CSV Data", body="Throughput value : " + str(kpi_val))
                     start, thrpt_val, pass_fail = 0, {}, []
@@ -108,23 +100,22 @@ class Test_RatevsRange_Bridge(object):
                         start += 7
                     print(pass_fail,"\nThroughput value-->",thrpt_val)
                     if "FAIL" in pass_fail:
-                        print("Test failed due to lesser value")
-                        assert False, "Test failed due to lesser value"
+                        logging.info("TEST FAILED, , Actual throughput is lesser than Expected")
+                        assert False, "TEST FAILED, , Actual throughput is lesser than Expected"
                     else:
-                        print("Test passed successfully")
+                        logging.info("TEST PASSED successfully")
                         assert True
             else:
-                print("csv file does not exist, Test failed")
+                logging.info("csv file does not exist, TEST FAILED, ")
                 allure.attach(name="CSV Data", body="csv file does not exist")
-                assert False, "csv file does not exist"
+                assert False, "TEST FAILED, , CSV file does not exist"
         else:
-            print("Test failed due to no station ip")
-            assert False, "Test failed due to no station ip"
+            logging.info("TEST FAILED,  due to no station ip")
+            assert False, "TEST FAILED, due to no station ip"
 
     @pytest.mark.performance_advanced
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tarun2
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("Bridge Mode Rate vs Range Test 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2499", name="WIFI-2499")
@@ -140,33 +131,25 @@ class Test_RatevsRange_Bridge(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        station_names_fiveg = get_test_library.fiveg_prefix
-        station = get_test_library.client_connect(ssid=ssid_name, security=security,
-                                         passkey=security_key, mode=mode, band=band,
-                                         station_name=station_names_fiveg, vlan_id=vlan)
-        print("station", station)
+        station = get_test_library.client_connect(ssid=ssid_name, security=security,passkey=security_key, mode=mode,
+                                                  band=band, num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
+        sta_name = list(station.keys())
         ser_no = get_test_library.attenuator_serial()
         print(ser_no)
         atn2 = ser_no[1].split(".")[2]
         print(f"antenuation-2 : {atn2}")
-        # for i in range(4):
-        #     lf_test.attenuator_modify(int(atn2), i, 955)
-        #     time.sleep(0.5)
         val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit;DUT Receive'], ['traffic_types:TCP'],
                ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])], ['attenuator2: '+ str(ser_no[1])],
                ['attenuations: 0 100 210..+30..540'],['attenuations2: 0 100 210..+30..540'],['chamber: 0'], ['tt_deg: 0']]
 
         if station:
             time.sleep(3)
-            rvr_o = get_test_library.rate_vs_range_test(station_name=station_names_fiveg, mode=mode,download_rate="100%",
+            rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=sta_name[0], mode=mode,download_rate="100%",
                                                         duration='60000',instance_name="MODEBRIDGE_RVR_FIVEG",vlan_id=vlan,
                                                         dut_name=dut_name, raw_lines=val)
-            report_name = rvr_o.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-            print("report name ", report_name)
             entries = os.listdir("../reports/" + report_name + '/')
             print("entries", entries)
-            get_test_library.attach_report_graphs(report_name=report_name, pdf_name="Rate vs Range Test")
-            print("Test Completed... Cleaning up Stations")
+            logging.info("Test Completed... Cleaning up Stations")
             get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
             kpi = "kpi.csv"
             pass_value = {"strong": 560, "medium": 220, "weak": 5}
@@ -175,9 +158,9 @@ class Test_RatevsRange_Bridge(object):
                 kpi_val = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
                 print(kpi_val)
                 if str(kpi_val) == "empty":
-                    print("Throughput value from kpi.csv is empty, Test failed")
-                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, Test failed")
-                    assert False, "Throughput value from kpi.csv is empty, Test failed"
+                    logging.info("Throughput value from kpi.csv is empty, TEST FAILED, ")
+                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, TEST FAILED, ")
+                    assert False, "Throughput value from kpi.csv is empty, TEST FAILED, "
                 else:
                     allure.attach(name="CSV Data", body="Throughput value : " + str(kpi_val))
                     start, thrpt_val, pass_fail = 0, {}, []
@@ -195,15 +178,15 @@ class Test_RatevsRange_Bridge(object):
                         start += 6
                     print(pass_fail,"\nThroughput value-->",thrpt_val)
                     if "FAIL" in pass_fail:
-                        print("Test failed due to lesser value")
-                        assert False, "Test failed due to lesser value"
+                        logging.info("TEST FAILED, , Actual throughput is lesser than Expected.")
+                        assert False, "TEST FAILED, , Actual throughput is lesser than Expected."
                     else:
-                        print("Test passed successfully")
+                        logging.info("Test passed successfully")
                         assert True
             else:
-                print("csv file does not exist, Test failed")
+                logging.info("csv file does not exist, TEST FAILED, ")
                 allure.attach(name="CSV Data", body="csv file does not exist")
-                assert False, "csv file does not exist"
+                assert False, "CSV file does not exist"
         else:
-            print("Test failed due to no station ip")
-            assert False, "Test failed due to no station ip"
+            logging.info("TEST FAILED,  due to no station ip")
+            assert False, "TEST FAILED,  due to no station ip"
