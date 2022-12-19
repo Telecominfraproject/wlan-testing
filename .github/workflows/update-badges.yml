@@ -13,28 +13,28 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3.8
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/checkout@v3
+    - name: Checkout testing repo
+      uses: actions/checkout@v3
       with:
-        repository: Telecominfraproject/wlan-lanforge-scripts
-        path: lanforge/lanforge-scripts
+        path: wlan-testing
+
     - uses: actions/checkout@v3
       with:
         ref: badges
-        path: badges
+        path: wlan-testing/badges
 
-    - name: add TIP pypi repo
+    - name: Run setup_env.bash
+      working-directory: wlan-testing
+      env:
+        CLOUDSDK_LIBRARY: tip_2x
+        TEST_DEVICE_NAME: all
+        PYTHON: /usr/local/bin/python3
+        PIP: /usr/local/bin/pip3
       run: |
-        mkdir -p ~/.pip
-        echo "[global]" > ~/.pip/pip.conf
-        echo "index-url = https://pypi.org/simple" >> ~/.pip/pip.conf
-        echo "extra-index-url = https://tip-read:tip-read@tip.jfrog.io/artifactory/api/pypi/tip-wlan-python-pypi-local/simple" >> ~/.pip/pip.conf
-
-    - name: install dependencies
-      run: pip install -r requirements.txt
+        ./setup_env.bash -t $CLOUDSDK_LIBRARY -d $TEST_DEVICE_NAME -n "TIP Automation" -o TIP -e tip-automation@telecominfraproject.com -i "TIP OpenWIFI Library" && pip3 freeze
 
     - name: download badges
-      working-directory: tests
+      working-directory: wlan-testing/tests
       run: |
         mkdir -p ../.img
         wget https://img.shields.io/badge/total_tests-$(pytest --collect-only -q | tail -1 | cut  -d ' ' -f 1)-green?style=flat-square -O ../badges/total-count.svg
@@ -43,10 +43,10 @@ jobs:
         wget https://img.shields.io/badge/performance_tests-$(pytest --collect-only -m "performance" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-count.svg
         wget https://img.shields.io/badge/advance_tests-$(pytest --collect-only -m "advance" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/advance-count.svg
         wget https://img.shields.io/badge/regression_tests-$(pytest --collect-only -m "regression and not interop" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/regression-count.svg
-        wget https://img.shields.io/badge/interop_performance_tests-$(pytest --collect-only -m "interop_uc_sanity and client_connectivity" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-interop-count.svg
+#        wget https://img.shields.io/badge/interop_performance_tests-$(pytest --collect-only -m "interop_uc_sanity and client_connectivity" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-interop-count.svg
         
     - name: commit changes
-      working-directory: badges
+      working-directory: wlan-testing/badges
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -58,6 +58,6 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        directory: badges
+        directory: wlan-testing/badges
         branch: badges
         force: true
