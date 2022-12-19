@@ -97,6 +97,14 @@ jobs:
           echo "In order to get logs, open the link above and press 'View logs' button in top right corner"
           echo "If you want to get logs auto-updated, choose this option in dropdown menu hidden behind three dots in top right corner of logs viewer"
 
+      - name: tests env info
+        run: |
+          export NAMESPACE=manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}
+          echo "Namespace name - $NAMESPACE"
+          echo "Link to related job in Kubernetes dashboard - https://k8s-dashboard.lab.wlan.tip.build/#/job/$NAMESPACE/testing?namespace=$NAMESPACE"
+          echo "In order to get logs, open the link above and press 'View logs' button in top right corner"
+          echo "If you want to get logs auto-updated, choose this option in dropdown menu hidden behind three dots in top right corner of logs viewer"
+
       - name: run tests
         uses: ./.github/actions/run-tests
         with:

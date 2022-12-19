@@ -123,7 +123,11 @@ class TestRateLimitingVlan(object):
         mode = "VLAN"
         band = "twog"
 
+<<<<<<< HEAD
         passes, result = get_test_library.rate_limiting_test(ssid_name=ssid_name, passkey=security_key, up_rate=up_rate,
+=======
+        passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
+>>>>>>> WIFI-10529
                                                              down_rate=down_rate)
         assert passes == "PASS", result
 
@@ -147,7 +151,11 @@ class TestRateLimitingVlan(object):
         mode = "VLAN"
         band = "fiveg"
 
+<<<<<<< HEAD
         passes, result = get_test_library.rate_limiting_test(ssid_name=ssid_name, passkey=security_key, up_rate=up_rate,
+=======
+        passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
+>>>>>>> WIFI-10529
                                                              down_rate=down_rate)
         assert passes == "PASS", result
 
@@ -172,7 +180,11 @@ class TestRateLimitingVlan(object):
         mode = "VLAN"
         band = "twog"
 
+<<<<<<< HEAD
         passes, result = get_test_library.rate_limiting_test(ssid_name=ssid_name, passkey=security_key, up_rate=up_rate,
+=======
+        passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
+>>>>>>> WIFI-10529
                                                              down_rate=down_rate)
         assert passes == "PASS", result
 
@@ -197,7 +209,11 @@ class TestRateLimitingVlan(object):
         mode = "VLAN"
         band = "fiveg"
 
+<<<<<<< HEAD
         passes, result = get_test_library.rate_limiting_test(ssid_name=ssid_name, passkey=security_key, up_rate=up_rate,
+=======
+        passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
+>>>>>>> WIFI-10529
                                                              down_rate=down_rate)
         assert passes == "PASS", result
 
@@ -221,7 +237,11 @@ class TestRateLimitingVlan(object):
         mode = "VLAN"
         band = "twog"
 
+<<<<<<< HEAD
         passes, result = get_test_library.rate_limiting_test(ssid_name=ssid_name, passkey=security_key, up_rate=up_rate,
+=======
+        passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
+>>>>>>> WIFI-10529
                                                              down_rate=down_rate)
         assert passes == "PASS", result
 
@@ -245,7 +265,11 @@ class TestRateLimitingVlan(object):
         mode = "VLAN"
         band = "fiveg"
 
+<<<<<<< HEAD
         passes, result = get_test_library.rate_limiting_test(ssid_name=ssid_name, passkey=security_key, up_rate=up_rate,
+=======
+        passes, result = get_test_library.rate_limiting_test(ssid=ssid_name, passkey=security_key, up_rate=up_rate,
+>>>>>>> WIFI-10529
                                                              down_rate=down_rate)
         assert passes == "PASS", result
 
