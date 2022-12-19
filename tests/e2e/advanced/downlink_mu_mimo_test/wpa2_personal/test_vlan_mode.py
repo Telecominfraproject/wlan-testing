@@ -41,8 +41,8 @@ class TestMuMimoNat(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
                      name="WIFI-6849")
-    @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @allure.title("Test for Downlink MU-MIMO")
     def test_mu_mimo_wpa2_personal_vlan_5g(self, get_test_library, setup_configuration, check_connectivity):
         """
             Downlink MU-MIMO Test: VLAN Mode
@@ -90,7 +90,7 @@ class TestMuMimoNat(object):
                                                      vlan_id=vlan,  skip_2g=True, skip_5g=False, test="mu_mimo",
                                                      ssid_name=ssid_name, security_key=security_key, security=security,
                                                      move_to_influx=False, dut_data=setup_configuration, sniff_packets=False,
-                                                     tr398=True)
+                                                     tr398v2=False, tr398=True)
         if result:
             assert True
         else:

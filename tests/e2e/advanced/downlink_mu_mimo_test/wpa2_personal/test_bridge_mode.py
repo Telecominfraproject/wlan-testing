@@ -1,7 +1,7 @@
 """
 
     Performance Test: Downlink MU-MIMO Test: Bridge Mode
-    pytest -m "downlink_mu_mimo and bridge and wpa2_personal"
+    pytest -m "mu_mimo_performance_tests and bridge and wpa2_personal"
 
 """
 import os
@@ -47,17 +47,17 @@ setup_params_general = {
 class TestMuMimoBridge(object):
     """
     Downlink MU-MIMO Test: Bridge Mode
-    pytest -m downlink_mu_mimo and bridge
+    pytest -m mu_mimo_performance_tests and bridge
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6849",
                      name="WIFI-6849")
-    @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @allure.title("Test for Downlink MU-MIMO")
     def test_mu_mimo_wpa2_personal_bridge_5g(self, get_test_library, setup_configuration, check_connectivity):
         """
             Downlink MU-MIMO Test: Bridge Mode
-            pytest -m downlink_mu_mimo and bridge and wpa2_personal and fiveg
+            pytest -m mu_mimo_performance_tests and bridge and wpa2_personal and fiveg
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -100,7 +100,8 @@ class TestMuMimoBridge(object):
                                                      dut_name=dut_name, dut_5g=dut_5g, dut_2g=dut_2g,  mode=mode,
                                                      vlan_id=vlan,  skip_2g=True, skip_5g=False, test="mu_mimo",
                                                      ssid_name=ssid_name, security_key=security_key, security=security,
-                                                     move_to_influx=False, dut_data=setup_configuration, sniff_packets=True)
+                                                     move_to_influx=False, dut_data=setup_configuration, sniff_packets=False,
+                                                     tr398v2=False, tr398=True)
         if result:
             assert True
         else:
