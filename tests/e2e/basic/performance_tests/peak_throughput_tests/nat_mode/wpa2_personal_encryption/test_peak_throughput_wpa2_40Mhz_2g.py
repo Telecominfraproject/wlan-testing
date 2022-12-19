@@ -1375,7 +1375,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
@@ -1394,7 +1394,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
@@ -1413,7 +1413,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -1432,7 +1432,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -1451,7 +1451,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -1470,7 +1470,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
