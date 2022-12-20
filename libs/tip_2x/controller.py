@@ -1988,7 +1988,7 @@ class UProfileUtility:
                                                     "Headers: " + str(self.sdk_client.make_headers()))
 
         resp = requests.post(uri, data=basic_cfg_str, headers=self.sdk_client.make_headers(),
-                             verify=False, timeout=100)
+                             verify=False, timeout=240)
         self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), basic_cfg_str, uri)
         resp.close()
         return resp
