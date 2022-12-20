@@ -7,6 +7,7 @@
 
 import allure
 import pytest
+import time
 
 pytestmark = [pytest.mark.peak_throughput_tests, pytest.mark.bridge, pytest.mark.twog, pytest.mark.channel_width_40,
               pytest.mark.wpa2_personal]
@@ -1395,6 +1396,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
+        time.sleep(600)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
