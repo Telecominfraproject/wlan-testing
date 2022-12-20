@@ -38,7 +38,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test_SpatialConsistency_Bridge(object):
+class Test_SpatialConsistency_Nat(object):
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("Nat Mode Spacial Consistency Test (NSS-1) UDP-Download 2.4 GHz Band")
