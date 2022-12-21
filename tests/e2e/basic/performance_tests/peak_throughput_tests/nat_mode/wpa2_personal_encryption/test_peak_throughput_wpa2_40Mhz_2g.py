@@ -1348,6 +1348,9 @@ setup_params_general_11 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Throughput Benchmark Test")
+@allure.suite("2.4 Ghz Band")
+@allure.sub_suite("NAT Mode")
 @pytest.mark.channel_11
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1364,6 +1367,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @pytest.mark.performance
+    @allure.title("Single client TCP Download wifi capacity 40Mhz Bw")
     def test_client_wpa2_personal_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test NAT mode
@@ -1371,7 +1375,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
@@ -1382,6 +1386,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     @pytest.mark.performance
+    @allure.title("Single client UDP Download wifi capacity 40Mhz Bw")
     def test_client_wpa2_personal_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test NAT mode
@@ -1389,7 +1394,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
@@ -1400,6 +1405,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     @pytest.mark.performance
+    @allure.title("Single client TCP Bidirectional wifi capacity 40Mhz Bw")
     def test_client_wpa2_personal_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test NAT mode
@@ -1407,7 +1413,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -1418,6 +1424,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     @pytest.mark.performance
+    @allure.title("Single client UDP Bidirectional wifi capacity 40Mhz Bw")
     def test_client_wpa2_personal_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test NAT mode
@@ -1425,7 +1432,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -1436,6 +1443,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     @pytest.mark.performance
+    @allure.title("Single client TCP Upload wifi capacity 40Mhz Bw")
     def test_client_wpa2_personal_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test NAT mode
@@ -1443,7 +1451,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -1454,6 +1462,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     @pytest.mark.performance
+    @allure.title("Single client UDP Upload wifi capacity 40Mhz Bw")
     def test_client_wpa2_personal_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Wifi Capacity Test NAT mode
@@ -1461,7 +1470,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa2_personal_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
