@@ -42,7 +42,7 @@ class TestRateVsOrientationBridge(object):
     """
     @pytest.mark.fiveg
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("Bridge Mode Rate vs Orientation Test 5 GHz Band")
+    @allure.title("Bridge Mode Rate vs Orientation Test (NSS-2) 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5431", name="WIFI-5431")
     def test_rvo_tcp_dl_nss2_wpa2_personal_5g(self, get_test_library, setup_configuration, check_connectivity):
         """
@@ -56,7 +56,7 @@ class TestRateVsOrientationBridge(object):
         mode = "BRIDGE"
         band = "fiveg"
         vlan = 1
-        chamber_view_obj, dut_name = get_test_library.chamber_view()
+        dut_name = list(setup_configuration.keys())[0]
         # station = {'1.1.ath10k_5g00': {'4way time (us)': 0, 'channel': '149', 'cx time (us)': 0, 'dhcp (ms)': 1540, 'ip': '172.16.230.16', 'signal': '-41 dBm'}}
         station = get_test_library.client_connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
                                                   band=band, num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
@@ -109,12 +109,13 @@ class TestRateVsOrientationBridge(object):
 
     @pytest.mark.twog
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("Bridge Mode Rate vs Orientation Test 2.4 GHz Band")
+    @allure.title("Bridge Mode Rate vs Orientation Test (NSS-2) 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5431", name="WIFI-5431")
     def test_client_tcp_dl_nss2_wpa2_personal_2g(self, get_test_library, setup_configuration, check_connectivity):
         """
                     pytest -m "rate_vs_orientation_tests and wpa2_personal and bridge and twog"
         """
+        get_test_library.client_disconnect(clean_l3_traffic=True)
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -122,7 +123,7 @@ class TestRateVsOrientationBridge(object):
         mode = "BRIDGE"
         band = "twog"
         vlan = 1
-        chamber_view_obj, dut_name = get_test_library.chamber_view()
+        dut_name = list(setup_configuration.keys())[0]
 
         station = get_test_library.client_connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
                                                   band=band, num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
