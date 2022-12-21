@@ -28,13 +28,10 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
-<<<<<<< HEAD
-=======
 @allure.parent_suite("Downlink MU_MIMO Tests")
 @allure.suite("WPA Personal Security")
 @allure.sub_suite("NAT Mode")
 @allure.feature("TR-398 Issue 2")
->>>>>>> WIFI-10529
 @pytest.mark.usefixtures("setup_configuration")
 class TestMuMimoNat(object):
     """
