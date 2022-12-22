@@ -36,7 +36,7 @@ setup_params_general = {
 @allure.sub_suite("Bridge Mode")
 @allure.feature("TR-398 Issue 2")
 @pytest.mark.usefixtures("setup_configuration")
-class TestRxSensitivityBRIDGE2G(object):
+class TestRxSensitivityBridge(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2446", name="WIFI-2446")
     @pytest.mark.twog
