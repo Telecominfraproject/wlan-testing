@@ -57,16 +57,18 @@ class TestRateVsOrientationBridge(object):
         band = "fiveg"
         vlan = 1
         dut_name = list(setup_configuration.keys())[0]
+        radios = get_test_library.wave2_5g_radios
         # station = {'1.1.ath10k_5g00': {'4way time (us)': 0, 'channel': '149', 'cx time (us)': 0, 'dhcp (ms)': 1540, 'ip': '172.16.230.16', 'signal': '-41 dBm'}}
         station = get_test_library.client_connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
                                                   band=band, num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
-        ser_no = get_test_library.attenuator_serial() # ['1.1.3022', '1.1.3025']
+        ser_no = get_test_library.attenuator_serial_radio(ssid=ssid_name, passkey=security_key, security=security,
+                                                          radio=radios[0], station_name=['sta0000'])
         # ser_no = ['1.1.3022', '1.1.3025']
         logging.info(f"Attenuators - {ser_no}")
         val = [['modes: 802.11an-AC'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
-               ['bandw_options: 80'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
-               ['attenuator2: ' + str(ser_no[1])], ['attenuations: 100'],
-               ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+30..359']] #210..+30..540 #0..+30..359
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
+               ['attenuator2: ' + '0'], ['attenuations: 100'],
+               ['chamber: DUT-Chamber'], ['tt_deg: 0..+30..359']] #210..+30..540 #0..+30..359
 
         if station:
             rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=list(station.keys())[0], mode=mode,
@@ -124,14 +126,18 @@ class TestRateVsOrientationBridge(object):
         band = "twog"
         vlan = 1
         dut_name = list(setup_configuration.keys())[0]
+        radios = get_test_library.wave2_2g_radios
 
         station = get_test_library.client_connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
                                                   band=band, num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
-        ser_no = get_test_library.attenuator_serial()
+        ser_no = get_test_library.attenuator_serial_radio(ssid=ssid_name, passkey=security_key, security=security,
+                                                          radio=radios[0], station_name=['sta0000'])
+        # ser_no = get_test_library.attenuator_serial()
+        logging.info(f"Attenuators - {ser_no}")
         val = [['modes: 802.11bgn-AC'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
-               ['bandw_options: 20'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
-               ['attenuator2: ' + str(ser_no[1])], ['attenuations: 100'],
-               ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+30..359']]  # 210..+30..540 #0..+30..359
+               ['bandw_options: AUTO'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
+               ['attenuator2: ' + '0'], ['attenuations: 100'],
+               ['chamber: DUT-Chamber'], ['tt_deg: 0..+30..359']]  # 210..+30..540 #0..+30..359
 
         if station:
             rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=list(station.keys())[0], mode=mode,
