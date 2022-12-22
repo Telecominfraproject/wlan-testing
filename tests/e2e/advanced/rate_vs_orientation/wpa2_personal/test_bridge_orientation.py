@@ -129,7 +129,7 @@ class TestRateVsOrientationBridge(object):
                                                   band=band, num_sta=1, vlan_id=vlan, dut_data=setup_configuration)
         ser_no = get_test_library.attenuator_serial()
         val = [['modes: 802.11bgn-AC'], ['pkts: MTU'], ['directions: DUT Transmit'], ['traffic_types:TCP'],
-               ['bandw_options: 80'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
+               ['bandw_options: 20'], ['spatial_streams: 2'], ['attenuator: ' + str(ser_no[0])],
                ['attenuator2: ' + str(ser_no[1])], ['attenuations: 100'],
                ['attenuations2: 100'], ['chamber: DUT-Chamber'], ['tt_deg: 0..+30..359']]  # 210..+30..540 #0..+30..359
 
@@ -148,8 +148,6 @@ class TestRateVsOrientationBridge(object):
                 logging.info(f"kpi-csv value- {kpi_val}")
                 # allure.attach.file(source="../reports/" + report_name + "/" + kpi, name="kpi.csv")
                 if str(kpi_val) == "empty":
-                    print("Throughput value from kpi.csv is empty, Test failed")
-                    allure.attach(name="CSV Data", body="Throughput value from kpi.csv is empty, Test failed")
                     assert False, "Throughput value from kpi.csv is empty, Test failed"
                 else:
                     start, thrpt_val, pass_fail = 0, {}, []
