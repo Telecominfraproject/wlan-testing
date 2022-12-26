@@ -23,6 +23,10 @@ on:
       marker_overwrite:
         description: overwrite the Pytest markers that will be selected, will disable report uploading
         required: false
+      tests_release:
+        required: false
+        default: ""
+        description: "Tests release branch to use (i.e. 'release/v2.8.0' or 'master'). If left empty, latest release branch is used"
   schedule:
     - cron: "35 20 * * *"
 
@@ -42,8 +46,13 @@ jobs:
       firmware: ${{ steps.vars.outputs.firmware }}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
       existing_controller: ${{ steps.vars.outputs.existing_controller }}
+      tests_release: ${{ steps.vars.outputs.tests_release }}
 
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: set variables
         id: vars
         run: |
@@ -59,11 +68,22 @@ jobs:
           echo "firmware=$(echo ${{ github.event.inputs.firmware || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'uc_sanity' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
+          LATEST_TESTS_RELEASE=$(git branch -r | grep 'release/v' | sed 's!\s*origin/!!' | tail -1)
+          if [[ -z "${{ github.event.inputs.tests_release }}" ]]; then
+            echo "Tests release was not passed, using branch $LATEST_TESTS_RELEASE"
+            echo "tests_release=$LATEST_TESTS_RELEASE" >> $GITHUB_OUTPUT
+          else
+            echo "Tests release was passed - ${{ github.event.inputs.tests_release }}"
+            echo "tests_release=${{ github.event.inputs.tests_release }}" >> $GITHUB_OUTPUT
+          fi
 
   build:
     runs-on: ubuntu-latest
+    needs: ["vars"]
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.vars.outputs.tests_release }}
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:

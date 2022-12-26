@@ -23,6 +23,10 @@ on:
         description: Testbed to run on
         default: interop-02
         required: false
+      tests_release:
+        required: false
+        default: ""
+        description: "Tests release branch to use (i.e. 'release/v2.8.0' or 'master'). If left empty, latest release branch is used"
 #  schedule:
 #    - cron: "0 2 ? * SAT"
 
@@ -37,8 +41,13 @@ jobs:
       devices: ${{ steps.vars.outputs.devices }}
       marker_overwrite: ${{ steps.vars.outputs.marker_overwrite }}
       testbed: ${{ steps.vars.output.devices }}
+      tests_release: ${{ steps.vars.outputs.tests_release }}
 
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: set variables
         id: vars
         run: |
@@ -50,11 +59,22 @@ jobs:
           devices=${DEVICES}
           EOF
           echo "testbed=${{ github.event.inputs.testbed || '' }}" >> $GITHUB_OUTPUT
+          LATEST_TESTS_RELEASE=$(git branch -r | grep 'release/v' | sed 's!\s*origin/!!' | tail -1)
+          if [[ -z "${{ github.event.inputs.tests_release }}" ]]; then
+            echo "Tests release was not passed, using branch $LATEST_TESTS_RELEASE"
+            echo "tests_release=$LATEST_TESTS_RELEASE" >> $GITHUB_OUTPUT
+          else
+            echo "Tests release was passed - ${{ github.event.inputs.tests_release }}"
+            echo "tests_release=${{ github.event.inputs.tests_release }}" >> $GITHUB_OUTPUT
+          fi
 
   build:
     runs-on: ubuntu-latest
+    needs: ["vars"]
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.vars.outputs.tests_release }}
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
