@@ -89,6 +89,8 @@ jobs:
       id: namespace
       run: |
         NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+        echo "$NAMESPACE"
+        echo "$GITHUB_OUTPUT"
         echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
     - name: run tests
