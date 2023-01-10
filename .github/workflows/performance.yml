@@ -30,7 +30,7 @@ on:
         description: "revision of firmware to flash on AP, <branch>-<commit>"
       marker_expressions:
         required: true
-        default: "dataplane_throughput_test,single_station_dual_band_throughput,wifi_capacity_test"
+        default: "client_scale_tests,dataplane_tests,peak_throughput_tests"
         description: "Marker expressions to select tests to execute"
       existing_controller:
         required: false
@@ -67,7 +67,7 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01'}})" >> $GITHUB_OUTPUT
 
-          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dataplane_throughput_test,single_station_dual_band_throughput,wifi_capacity_test' }}"
+          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'client_scale_tests,dataplane_tests,peak_throughput_tests' }}"
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
@@ -185,17 +185,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -211,17 +211,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -237,17 +237,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -373,17 +373,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -399,17 +399,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -425,17 +425,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -561,17 +561,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -587,17 +587,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -613,17 +613,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -749,17 +749,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -775,17 +775,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -801,17 +801,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -937,17 +937,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -963,17 +963,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -989,17 +989,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1125,17 +1125,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1151,17 +1151,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1177,17 +1177,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1313,17 +1313,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1339,17 +1339,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1365,17 +1365,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1501,17 +1501,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1527,17 +1527,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1553,17 +1553,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1689,17 +1689,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1715,17 +1715,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1741,17 +1741,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1877,17 +1877,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1903,17 +1903,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1929,17 +1929,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2065,17 +2065,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2091,17 +2091,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2117,17 +2117,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2253,17 +2253,17 @@ jobs:
             jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
           fi
 
-      - name: run tests dataplane_throughput_test
+      - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_throughput_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
           testbed: basic
-          marker_expression: "performance and dataplane_throughput_test"
+          marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_throughput_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2279,17 +2279,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
 
-      - name: run tests single_station_dual_band_throughput
+      - name: run tests peak_throughput_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'single_station_dual_band_throughput')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
           testbed: basic
-          marker_expression: "performance and single_station_dual_band_throughput"
+          marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-single_station_dual_band_throughput"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2305,17 +2305,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
 
-      - name: run tests wifi_capacity_test
+      - name: run tests client_scale_tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_test')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
           testbed: basic
-          marker_expression: "performance and wifi_capacity_test"
+          marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-wifi_capacity_test"
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2375,25 +2375,25 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: allure-results-${{ matrix.model }}-dataplane_throughput_test
-          path: allure-results-dataplane_throughput_test
+          name: allure-results-${{ matrix.model }}-dataplane_tests
+          path: allure-results-dataplane_tests
 
       - uses: actions/download-artifact@v3
         with:
-          name: allure-results-${{ matrix.model }}-single_station_dual_band_throughput
-          path: allure-results-single_station_dual_band_throughput
+          name: allure-results-${{ matrix.model }}-peak_throughput_tests
+          path: allure-results-peak_throughput_tests
 
       - uses: actions/download-artifact@v3
         with:
-          name: allure-results-${{ matrix.model }}-wifi_capacity_test
-          path: allure-results-wifi_capacity_test
+          name: allure-results-${{ matrix.model }}-client_scale_tests
+          path: allure-results-client_scale_tests
 
       - name: merge results
         run: |
           mkdir allure-results
-          cp -r allure-results-dataplane_throughput_test/* allure-results/
-          cp -r allure-results-single_station_dual_band_throughput/* allure-results/
-          cp -r allure-results-wifi_capacity_test/* allure-results/
+          cp -r allure-results-dataplane_tests/* allure-results/
+          cp -r allure-results-peak_throughput_tests/* allure-results/
+          cp -r allure-results-client_scale_tests/* allure-results/
 
       - name: download history of previous run
         continue-on-error: true
