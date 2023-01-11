@@ -50,6 +50,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.upload
     @pytest.mark.batch_size_125
     @pytest.mark.rate_limiting_tests
+    @pytest.mark.ow_regression_lf
     @allure.title("Test for Upload batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                      get_test_device_logs, num_stations, setup_configuration):
@@ -85,6 +86,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.download
     @pytest.mark.batch_size_125
     @pytest.mark.rate_limiting_tests
+    @pytest.mark.ow_regression_lf
     @allure.title("Test for Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                      get_test_device_logs, num_stations, setup_configuration):
@@ -122,6 +124,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.batch_size_125
     @pytest.mark.rate_limiting_tests
     @pytest.mark.bridge
+    @pytest.mark.ow_regression_lf
     @allure.testcase(name="WIFI-3385",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3385")
     @allure.title("Test for Upload and Download batch size 1,2,5 2.4 GHz")
@@ -160,6 +163,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.twog
     @pytest.mark.disable_up_dw
     @pytest.mark.rate_limiting_tests
+    @pytest.mark.ow_regression_lf
     @allure.title("Test for ssid disable Upload and Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_disable_up_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                                 get_test_device_logs, num_stations,
@@ -197,6 +201,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.twog
     @pytest.mark.up_dw_per_client
     @pytest.mark.rate_limiting_tests
+    @pytest.mark.ow_regression_lf
     @allure.title("Test for Upload and Download per client batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_per_client_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                                    get_test_device_logs, num_stations,
@@ -232,6 +237,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.twog
     @pytest.mark.up_per_client
     @pytest.mark.rate_limiting_tests
+    @pytest.mark.ow_regression_lf
     @allure.title("Test for Upload per client batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_per_client_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                                 get_test_device_logs, num_stations,
@@ -268,6 +274,7 @@ class TestRateLimitingBridge(object):
     @pytest.mark.twog
     @pytest.mark.dw_per_client
     @pytest.mark.rate_limiting_tests
+    @pytest.mark.ow_regression_lf
     @allure.title("Test for Download per client batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_dw_per_client_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                                 get_test_device_logs, num_stations,
