@@ -11,7 +11,8 @@ pytestmark = [pytest.mark.multi_psk_tests,
               pytest.mark.bridge,
               pytest.mark.wpa,
               pytest.mark.ow_sanity_lf,
-              pytest.mark.twog]
+              pytest.mark.twog,
+              pytest.mark.ow_regression_lf]
 
 setup_params_general = {
     "mode": "BRIDGE",

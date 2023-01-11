@@ -11,7 +11,7 @@ RATE_LIMITING_RADIUS_SERVER_DATA = lf_library.RATE_LIMITING_RADIUS_SERVER_DATA
 RATE_LIMITING_RADIUS_ACCOUNTING_DATA = lf_library.RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
 pytestmark = [pytest.mark.rate_limiting_with_radius_tests,
-              pytest.mark.bridge]
+              pytest.mark.bridge, pytest.mark.ow_regression_lf]
 
 setup_params_general = {
     "mode": "BRIDGE",
