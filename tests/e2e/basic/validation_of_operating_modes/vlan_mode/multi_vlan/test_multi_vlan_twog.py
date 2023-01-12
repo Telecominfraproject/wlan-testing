@@ -176,3 +176,4 @@ class TestMultiVlan(object):
                                                                    passkey=security_key, mode=mode, band=band,
                                                                    num_sta=1, vlan_id=vlan)
         assert passes == "FAIL", result
+

@@ -37,8 +37,8 @@ class TestMultiAssoDisassoVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5873", name="WIFI-5873")
     @pytest.mark.twog
     @pytest.mark.udp_upload_2g
-    @allure.title("Test for Multi Association and Disassociation for UDP upload 2.4G")
-    def test_multi_asso_disasso_VLAN_udp_upload_2g(self, get_test_library, setup_configuration, check_connectivity):
+    @allure.title("Test for Multi Association and Disassociation for UDP (NSS-2) upload 2.4G")
+    def test_multi_asso_disasso_VLAN_udp_upload_nss2_2g(self, get_test_library, setup_configuration, check_connectivity):
         """
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and twog and udp_upload_2g"
         """
@@ -55,7 +55,7 @@ class TestMultiAssoDisassoVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5874", name="WIFI-5874")
     @pytest.mark.twog
     @pytest.mark.udp_download_2g
-    @allure.title("Test for Multi Association and Disassociation for UDP download 2.4G")
+    @allure.title("Test for Multi Association and Disassociation for UDP (NSS-2) download 2.4G")
     def test_multi_asso_disasso_VLAN_udp_download_nss2_2g(self, get_test_library, setup_configuration, check_connectivity):
         """
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and twog and udp_download_2g"
@@ -74,7 +74,7 @@ class TestMultiAssoDisassoVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5875", name="WIFI-5875")
     @pytest.mark.fiveg
     @pytest.mark.udp_upload_5g
-    @allure.title("Test for Multi Association and Disassociation for UDP upload 5G")
+    @allure.title("Test for Multi Association and Disassociation for UDP (NSS-2) upload 5G")
     def test_multi_asso_disasso_VLAN_udp_upload_nss2_5g(self, get_test_library, setup_configuration, check_connectivity):
         """
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and fiveg and udp_upload_5g"
@@ -93,7 +93,7 @@ class TestMultiAssoDisassoVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5876", name="WIFI-5876")
     @pytest.mark.fiveg
     @pytest.mark.udp_download_5g
-    @allure.title("Test for Multi Association and Disassociation for UDP download 5G")
+    @allure.title("Test for Multi Association and Disassociation for UDP (NSS-2) download 5G")
     def test_multi_asso_disasso_VLAN_udp_download_nss2_5g(self, get_test_library, setup_configuration, check_connectivity):
         """
                 pytest -m "multi_assoc_disassoc_tests and wpa2_personal and vlan and fiveg and udp_download_5g"

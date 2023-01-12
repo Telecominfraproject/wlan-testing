@@ -36,7 +36,8 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestRatevsRangeNat(object):
+@pytest.mark.Mhz20
+class Test_RatevsRange_Bridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog

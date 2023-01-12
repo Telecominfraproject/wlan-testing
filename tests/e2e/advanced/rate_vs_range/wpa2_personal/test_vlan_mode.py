@@ -46,7 +46,6 @@ class Test_RatevsRange_Bridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.tarun2
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("Vlan Mode Rate vs Range Test 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2495", name="WIFI-2495")
@@ -129,7 +128,6 @@ class Test_RatevsRange_Bridge(object):
     @pytest.mark.performance_advanced
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.tarun2
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("Vlan Mode Rate vs Range Test 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2499", name="WIFI-2499")
