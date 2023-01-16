@@ -72,7 +72,7 @@ class TestRateVsOrientationBridge(object):
 
         if station:
             rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=list(station.keys())[0], mode=mode,
-                                        instance_name="ORIENTATION_RVR_BRIDGE_11_AC",
+                                        instance_name="ORIENTATION_RVR_BRIDGE_11_AC", download_rate="100%",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             # report_name = rvr_o[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
@@ -117,7 +117,7 @@ class TestRateVsOrientationBridge(object):
         """
                     pytest -m "rate_vs_orientation_tests and wpa2_personal and bridge and twog"
         """
-        get_test_library.client_disconnect(clean_l3_traffic=True)
+        get_test_library.client_disconnect(clean_l3_traffic=True, clear_all_sta=True)
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -141,7 +141,7 @@ class TestRateVsOrientationBridge(object):
 
         if station:
             rvr_o, report_name = get_test_library.rate_vs_range_test(station_name=list(station.keys())[0], mode=mode,
-                                        instance_name="ORIENTATION_RVR_BRIDGE_11_AC",
+                                        instance_name="ORIENTATION_RVR_BRIDGE_11_AC", download_rate="100%",
                                         vlan_id=vlan, dut_name=dut_name, raw_lines=val)
             # report_name = rvr_o[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
             entries = os.listdir("../reports/" + report_name + '/')
