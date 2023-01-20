@@ -10,7 +10,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.performance, pytest.mark.dual_band_test, pytest.mark.bridge,
-              pytest.mark.single_station_dual_band_throughput]# pytest.mark.usefixtures("setup_test_run")]
+              pytest.mark.single_station_dual_band_throughput]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -41,30 +41,27 @@ class TestDualbandPerformanceBRIDGE(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_wpa2_personal_bridge(self, lf_tools,
-                                  create_lanforge_chamberview_dut, lf_test, get_configuration):
+    def test_client_wpa2_personal_bridge(self, get_test_library, setup_configuration, check_connectivity):
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
-        ssid_2G = profile_data[0]["ssid_name"]
-        ssid_5G = profile_data[0]["ssid_name"]
-        dut_name = create_lanforge_chamberview_dut
+        ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
+        dut_name = list(setup_configuration.keys())[0]
         mode = "BRIDGE"
         vlan = 1
-        print(lf_tools.dut_idx_mapping)
-        dut_5g = ""
-        dut_2g = ""
+        dut_5g, dut_2g = "", ""
         influx_tags = "dual-band-bridge-wpa2"
-        for i in lf_tools.dut_idx_mapping:
-            if lf_tools.dut_idx_mapping[i][3] == "5G":
-                dut_5g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
+        for i in setup_configuration[dut_name]['ssid_data']:
+            get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
+            if get_test_library.dut_idx_mapping[str(i)][3] == "5G":
+                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
                 print(dut_5g)
-            if lf_tools.dut_idx_mapping[i][3] == "2G":
-                dut_2g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
+            if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
+                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
                 print(dut_2g)
 
-        dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                                   instance_name="dbp_instance_wpa2p_BRIDGE_p",
-                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags, move_to_influx=False)
+        dbpt_obj = get_test_library.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
+                                                            dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
+                                                            move_to_influx=False, dut_data=setup_configuration)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa2 Bridge")
-        lf_tools.attach_report_kpi(report_name=report_name)
+        get_test_library.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa2 Bridge")
+        get_test_library.attach_report_kpi(report_name=report_name)
         assert True
