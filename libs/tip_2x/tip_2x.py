@@ -168,10 +168,16 @@ class tip_2x:
         for i in base_dict:
             base_dict[i] = []
         for i in requested_combination:
-            if i[0] in self.supported_bands:
-                base_dict[i[0]].append(self.tip_2x_specific_encryption_translation[i[1]])
-            if i[1] in self.supported_bands:
-                base_dict[i[1]].append((self.tip_2x_specific_encryption_translation[i[0]]))
+            sec_mode = list(set(i) & set(self.tip_2x_specific_encryption_translation))
+            bands = i.copy()
+            bands.remove(sec_mode[0])
+            [base_dict[j].append(self.tip_2x_specific_encryption_translation[sec_mode[0]]) for j in bands]
+
+        # for i in requested_combination:
+        #     if i[0] in self.supported_bands:
+        #         base_dict[i[0]].append(self.tip_2x_specific_encryption_translation[i[1]])
+        #     if i[1] in self.supported_bands:
+        #         base_dict[i[1]].append((self.tip_2x_specific_encryption_translation[i[0]]))
         temp = []
         for i in list(base_dict.values()):
             for j in i:
