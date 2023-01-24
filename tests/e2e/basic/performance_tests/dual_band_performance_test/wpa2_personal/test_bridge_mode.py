@@ -1,11 +1,10 @@
 """
        Dual Band Performance Test : BRIDGE Mode
-       pytest -m "performance and dual_band_test and BRIDGE"
+       pytest -m "performance and dual_band_test and bridge"
 
 
 """
 
-import os
 import allure
 import pytest
 
@@ -33,9 +32,9 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestDualbandPerformanceBRIDGE(object):
+class TestWpa2DualbandPerformanceBridge(object):
     """
-         pytest -m "performance and dual_band_test and BRIDGE and wpa2_personal and twog  and fiveg"
+         pytest -m "performance and dual_band_test and bridge and wpa2_personal and twog  and fiveg"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3918", name="WIFI-3918")
     @pytest.mark.wpa2_personal
@@ -53,15 +52,13 @@ class TestDualbandPerformanceBRIDGE(object):
             get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
             if get_test_library.dut_idx_mapping[str(i)][3] == "5G":
                 dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
-                print(dut_5g)
             if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
                 dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
-                print(dut_2g)
 
         dbpt_obj = get_test_library.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
                                                             dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
                                                             move_to_influx=False, dut_data=setup_configuration)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        get_test_library.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa2 Bridge")
+        get_test_library.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test")
         get_test_library.attach_report_kpi(report_name=report_name)
         assert True
