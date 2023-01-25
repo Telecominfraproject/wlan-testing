@@ -8,6 +8,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.multi_psk_tests,
+              pytest.mark.ow_regression_lf,
               pytest.mark.bridge,
               pytest.mark.wpa2_personal,
               pytest.mark.ow_sanity_lf,
