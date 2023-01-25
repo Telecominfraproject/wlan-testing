@@ -199,6 +199,7 @@ def client_type(request):
     yield client_type
 
 
+
 @pytest.fixture(scope="session")
 def get_security_flags():
     """used to get the essential markers on security and band"""
@@ -384,6 +385,18 @@ def execution_number(request):
 def radius_info():
     """yields the radius server information from lab info file"""
     yield configuration.RADIUS_SERVER_DATA
+
+
+@pytest.fixture(scope="session")
+def rate_radius_info():
+    """yields the radius server information from lab info file"""
+    yield configuration.RATE_LIMITING_RADIUS_SERVER_DATA
+
+
+@pytest.fixture(scope="session")
+def rate_radius_accounting_info():
+    """yields the radius accounting information from lab info file"""
+    yield configuration.RATE_LIMITING_RADIUS_ACCOUNTING_DATA
 
 
 @pytest.fixture(scope="session")

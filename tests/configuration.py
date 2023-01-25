@@ -57,6 +57,8 @@ PASSPOINT_RADIUS_ACCOUNTING_SERVER_DATA = data["PASSPOINT_RADIUS_ACCOUNTING_SERV
 
 PASSPOINT = data["PASSPOINT"]
 
+PASSPOINT = data["PASSPOINT"]
+
 open_flow = data["open_flow"]
 
 influx_params = data["influx_params"]

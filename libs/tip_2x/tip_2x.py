@@ -124,6 +124,9 @@ class tip_2x:
     def teardown_objects(self):
         self.controller_library_object.logout()
 
+    def teardown_objects(self):
+        self.controller_library_object.logout()
+
     """ Standard getter methods. Should be available for all type of libraries. Commonly used by wlan-testing"""
 
     def get_dut_library_object(self):
@@ -429,7 +432,6 @@ class tip_2x:
                     a["frequency"] = temp[j][2]
                 ret_val[dut]["radio_data"][j] = a
         return ret_val
-
     """
         setup_special_configuration - Method to configure APs in mesh operating modes with multiple SSID's and multiple AP's
                                     This covers, mesh and other roaming scenarios which includes any special type of modes

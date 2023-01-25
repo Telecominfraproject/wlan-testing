@@ -20,5 +20,3 @@ def setup_configuration(request, get_markers, get_target_object, run_lf):
                                                            requested_combination=requested_combination)
     logging.info("dut_data after config applied: " + str(data))
     yield data
-
-

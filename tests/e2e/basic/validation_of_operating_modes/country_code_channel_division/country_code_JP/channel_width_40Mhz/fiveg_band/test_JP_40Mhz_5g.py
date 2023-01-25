@@ -818,4 +818,3 @@ class TestCountryJP40Mhz5GChannel157(object):
             assert True
         else:
             assert False
-

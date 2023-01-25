@@ -446,4 +446,3 @@ class TestWifiCapacityBRIDGEMode6G(object):
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": max_stations})
         assert True
-
