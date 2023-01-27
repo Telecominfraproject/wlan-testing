@@ -15,7 +15,7 @@ setup_params_general = {
     "mode": "VLAN",
     "ssid_modes": {
         "open": [
-            {"ssid_name": "ssid_openp_2g", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+            {"ssid_name": "ssid_openp_2g", "appliedRadios": ["2G", "5G"], "security_key": "something", "vlan": 100}
             ]},
     "rf": {},
     "radius": False
@@ -45,7 +45,7 @@ class TestOpenDualbandPerformanceVLAN(object):
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
         dut_name = list(setup_configuration.keys())[0]
         mode = "VLAN"
-        vlan = 1
+        vlan = [100]
         dut_5g, dut_2g = "", ""
         influx_tags = "dual-band-bridge-open"
         for i in setup_configuration[dut_name]['ssid_data']:

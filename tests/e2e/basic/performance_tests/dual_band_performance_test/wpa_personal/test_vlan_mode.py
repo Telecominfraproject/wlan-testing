@@ -9,9 +9,7 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.vlan, pytest.mark.dual_band_test]#,
-#              pytest.mark.usefixtures("setup_test_run")]
-
+pytestmark = [pytest.mark.vlan, pytest.mark.dual_band_test]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -34,7 +32,7 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestDualbandPerformanceVLAN(object):
+class TestWpaDualbandPerformanceVLAN(object):
     """
          pytest -m "performance and dual_band_test and vlan and wpa_personal and twog  and fiveg"
     """
@@ -43,31 +41,25 @@ class TestDualbandPerformanceVLAN(object):
     @pytest.mark.wpa
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_wpa_personal_vlan(self,  lf_tools,
-                                  create_lanforge_chamberview_dut, lf_test, get_configuration):
+    def test_client_wpa_personal_vlan(self, get_test_library, setup_configuration, check_connectivity):
         profile_data = setup_params_general["ssid_modes"]["wpa"]
-        ssid_2G = profile_data[0]["ssid_name"]
-        ssid_5G = profile_data[0]["ssid_name"]
-        dut_name = create_lanforge_chamberview_dut
-        mode = "VLAN"
-        vlan = 100
-        print(lf_tools.dut_idx_mapping)
-        dut_5g = ""
-        dut_2g = ""
-        for i in lf_tools.dut_idx_mapping:
-            if lf_tools.dut_idx_mapping[i][3] == "5G":
-                dut_5g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
-                print(dut_5g)
-            if lf_tools.dut_idx_mapping[i][3] == "2G":
-                dut_2g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
-                print(dut_2g)
-        if ssid_2G and ssid_5G not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
+        ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
+        dut_name = list(setup_configuration.keys())[0]
+        mode = "BRIDGE"
+        vlan = [100]
+        dut_5g, dut_2g = "", ""
+        influx_tags = "dual-band-bridge-wpa"
+        for i in setup_configuration[dut_name]['ssid_data']:
+            get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
+            if get_test_library.dut_idx_mapping[str(i)][3] == "5G":
+                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
+            if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
+                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
 
-        dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                                   instance_name="dbp_instance_wpap_VLAN_p",
-                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
+        dbpt_obj = get_test_library.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
+                                                            dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
+                                                            move_to_influx=False, dut_data=setup_configuration)
         report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Wpa Vlan")
+        get_test_library.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test")
+        get_test_library.attach_report_kpi(report_name=report_name)
         assert True
