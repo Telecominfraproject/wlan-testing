@@ -662,7 +662,7 @@ class TestMultiStaPerfBridge(object):
     @allure.title("BRIDGE Mode Multi Station Performance Test with 10dB,25dB(NSS-2) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5891", name="WIFI-5891")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg12
+    @pytest.mark.fiveg
     @pytest.mark.tpsm
     @pytest.mark.udp_download_10dB_25dB_dis_nss2_5g
     def test_multi_station_udp_download_10dB_25dB_dis_nss2_5g(self, setup_configuration, get_test_library, num_stations,
