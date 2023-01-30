@@ -47,8 +47,8 @@ class TestWpa2DualbandPerformanceBridge(object):
     @allure.title("Test Dual Band with ApAuto test of bridge mode")
     def test_client_wpa2_personal_bridge(self, get_test_library, setup_configuration, check_connectivity):
         """
-                                    Dual Band Test with wpa2_personal encryption
-                                    pytest -m "dual_band_test and wpa2_personal"
+                Dual Band Test with wpa2_personal encryption
+                pytest -m "dual_band_test and wpa2_personal"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
@@ -64,10 +64,10 @@ class TestWpa2DualbandPerformanceBridge(object):
             if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
                 dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
 
-        dbpt_obj = get_test_library.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
+        result, description = get_test_library.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
                                                             dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
                                                             move_to_influx=False, dut_data=setup_configuration)
-        report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        get_test_library.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test")
-        get_test_library.attach_report_kpi(report_name=report_name)
-        assert True
+        if result:
+            assert True
+        else:
+            assert False, description
