@@ -64,7 +64,7 @@ class TestWpa2DualbandPerformanceBridge(object):
             if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
                 dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
 
-        result, description = get_test_library.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
+        result, description = get_test_library.dual_band_performance_test(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
                                                             dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
                                                             move_to_influx=False, dut_data=setup_configuration)
         if result:
