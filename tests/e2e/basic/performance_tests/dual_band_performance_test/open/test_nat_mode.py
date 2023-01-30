@@ -9,7 +9,6 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.dual_band_test, pytest.mark.nat, pytest.mark.performance_release]#,
-#              pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "NAT",
@@ -31,6 +30,10 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
+@allure.parent_suite("Dual Band Tests")
+@allure.suite("Dual Band Tests: NAT mode")
+@allure.sub_suite("Open security")
+@allure.feature("Dual band performance test")
 @pytest.mark.usefixtures("setup_configuration")
 class TestOpenDualbandPerformanceNat(object):
     """
@@ -40,7 +43,12 @@ class TestOpenDualbandPerformanceNat(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.fiveg
+    @allure.title("Test Dual Band with ApAuto test of NAT mode")
     def test_client_open_bridge(self,  get_test_library, setup_configuration, check_connectivity):
+        """
+                    Dual Band Test with open encryption
+                    pytest -m "dual_band_test and open"
+        """
         profile_data = setup_params_general["ssid_modes"]["open"]
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
         dut_name = list(setup_configuration.keys())[0]

@@ -31,6 +31,10 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
+@allure.parent_suite("Dual Band Tests")
+@allure.suite("Dual Band Tests: NAT mode")
+@allure.sub_suite("wpa3_personal security")
+@allure.feature("Dual band performance test")
 @pytest.mark.usefixtures("setup_configuration")
 class TestWpa3DualbandPerformanceNat(object):
     """
@@ -41,7 +45,12 @@ class TestWpa3DualbandPerformanceNat(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
+    @allure.title("Test Dual Band with ApAuto test of NAT mode")
     def test_client_wpa3_personal_nat(self, get_test_library, setup_configuration, check_connectivity):
+        """
+                            Dual Band Test with wpa3_personal encryption
+                            pytest -m "dual_band_test and wpa3_personal"
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"]
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
         dut_name = list(setup_configuration.keys())[0]
