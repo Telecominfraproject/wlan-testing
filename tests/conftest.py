@@ -495,3 +495,17 @@ def check_connectivity(request, get_testbed_details, get_target_object, run_lf):
 
     if not run_lf:
         request.addfinalizer(collect_logs)
+
+@pytest.fixture(scope="session")
+def get_dut_max_clients(get_testbed_details, get_target_object):
+    # Get maximum no.of clients where the AP's radio can support
+    all_logs = []
+    for i in range(len(get_testbed_details['device_under_tests'])):
+        get_target_object.get_dut_library_object().run_generic_command(
+            cmd="chmod +x /usr/share/ucentral/wifi_max_user.uc", idx=i)
+        a = get_target_object.get_dut_library_object().run_generic_command(cmd="/usr/share/ucentral/wifi_max_user.uc")
+        try:
+            all_logs.append(a)
+        except Exception as e:
+            logging.error(e)
+    yield all_logs
