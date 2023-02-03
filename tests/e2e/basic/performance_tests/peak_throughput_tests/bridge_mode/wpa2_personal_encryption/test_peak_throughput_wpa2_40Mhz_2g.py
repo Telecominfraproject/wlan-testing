@@ -1411,7 +1411,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
