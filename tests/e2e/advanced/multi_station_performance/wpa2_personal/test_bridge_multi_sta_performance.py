@@ -57,7 +57,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps",batch_size="3",
                                                                          protocol="UDP-IPv4",duration="120000",
-                                                                         expected_throughput=35,traffic_type="udp_upload")
+                                                                         expected_throughput=35,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -85,7 +86,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,38db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=30,traffic_type="udp_upload")
+                                                                         expected_throughput=30,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -112,7 +114,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,38db,48db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=25,traffic_type="udp_upload")
+                                                                         expected_throughput=25,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -140,7 +143,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db", download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=35, traffic_type="udp_download")
+                                                                         expected_throughput=35, traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -168,7 +172,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,38db", download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=30,traffic_type="udp_download")
+                                                                         expected_throughput=30,traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -197,7 +202,8 @@ class TestMultiStaPerfBridge(object):
                                                                          download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=25,traffic_type="udp_download")
+                                                                         expected_throughput=25,traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -226,7 +232,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=250,traffic_type="udp_upload")
+                                                                         expected_throughput=250,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -254,7 +261,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,25db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=250,traffic_type="udp_upload")
+                                                                         expected_throughput=250,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -283,7 +291,8 @@ class TestMultiStaPerfBridge(object):
                                                                          download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=200,traffic_type="udp_upload")
+                                                                         expected_throughput=200,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -311,7 +320,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db", download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=250,traffic_type="udp_download")
+                                                                         expected_throughput=250,traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -339,7 +349,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,25db", download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=250,traffic_type="udp_download")
+                                                                         expected_throughput=250,traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -368,7 +379,8 @@ class TestMultiStaPerfBridge(object):
                                                                          download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=200, traffic_type="udp_download")
+                                                                         expected_throughput=200, traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -396,7 +408,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=70, traffic_type="udp_upload")
+                                                                         expected_throughput=70, traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -424,7 +437,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,38db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=60,traffic_type="udp_upload")
+                                                                         expected_throughput=60,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -453,7 +467,8 @@ class TestMultiStaPerfBridge(object):
                                                                          download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=50,traffic_type="udp_upload")
+                                                                         expected_throughput=50,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -481,7 +496,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db", download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=70, traffic_type="udp_download")
+                                                                         expected_throughput=70, traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -509,7 +525,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,38db", download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=60,traffic_type="udp_download")
+                                                                         expected_throughput=60,traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -538,7 +555,8 @@ class TestMultiStaPerfBridge(object):
                                                                          download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=50,traffic_type="udp_download")
+                                                                         expected_throughput=50,traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -566,7 +584,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=500,traffic_type="udp_upload")
+                                                                         expected_throughput=500,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -594,7 +613,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,25db", download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=500,traffic_type="udp_upload")
+                                                                         expected_throughput=500,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -623,7 +643,8 @@ class TestMultiStaPerfBridge(object):
                                                                          download_rate="0Gbps",
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=400,traffic_type="udp_upload")
+                                                                         expected_throughput=400,traffic_type="udp_upload"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -651,7 +672,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db", download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=500,traffic_type="udp_download")
+                                                                         expected_throughput=500,traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -679,7 +701,8 @@ class TestMultiStaPerfBridge(object):
                                                                          set_att_db="10db,25db", download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=500,traffic_type="udp_download")
+                                                                         expected_throughput=500,traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:
@@ -708,7 +731,8 @@ class TestMultiStaPerfBridge(object):
                                                                          download_rate="1Gbps",
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
-                                                                         expected_throughput=400, traffic_type="udp_download")
+                                                                         expected_throughput=400, traffic_type="udp_download"
+                                                                         ,dut_data=setup_configuration,sniff_radio=True)
         if result:
             assert True
         else:

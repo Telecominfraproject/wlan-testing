@@ -40,7 +40,6 @@ class TestMultiStaPerfVlan(object):
     @allure.story('wpa2_personal 2.4 GHZ Band')
     @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-upload 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5942", name="WIFI-5942")
-    @pytest.mark.vlan_tsm
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.udp_upload_10dB_dis_nss1_2g
@@ -58,7 +57,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps",batch_size="3",
                                                                          protocol="UDP-IPv4",duration="120000",
                                                                          expected_throughput=35,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -86,7 +86,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=30,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -113,7 +114,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=25,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -142,7 +144,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=35, traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -170,7 +173,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=30,traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -199,7 +203,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=25,traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -209,7 +214,6 @@ class TestMultiStaPerfVlan(object):
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6092", name="WIFI-6092")
-    @pytest.mark.vlan_tsm
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.udp_upload_10dB_dis_nss1_5g
@@ -228,7 +232,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=250,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -256,7 +261,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=250,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -285,7 +291,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=200,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -313,7 +320,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=250,traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -341,7 +349,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=250,traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -370,7 +379,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=200, traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -398,7 +408,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=70, traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -426,7 +437,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=60,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -455,7 +467,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=50,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -483,7 +496,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=70, traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -511,7 +525,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=60,traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -540,7 +555,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=50,traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -568,7 +584,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=500,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -596,7 +613,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=500,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -625,7 +643,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=400,traffic_type="udp_upload"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -653,7 +672,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=500,traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -681,7 +701,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=500,traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:
@@ -710,7 +731,8 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=400, traffic_type="udp_download"
-                                                                         ,create_vlan=False)
+                                                                         ,create_vlan=False,dut_data=setup_configuration
+                                                                         ,sniff_radio=True)
         if result:
             assert True
         else:

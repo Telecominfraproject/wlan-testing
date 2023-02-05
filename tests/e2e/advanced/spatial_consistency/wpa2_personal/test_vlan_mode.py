@@ -59,7 +59,7 @@ class Test_SpatialConsistency_Vlan(object):
                                                                    spatial_streams=1,
                                                                    instance_name="SPATIAL_NSS1_TWOG",
                                                                    pass_value={"strong": 45, "medium": 35, "weak": 17},
-                                                                   attenuations=[10, 38, 48])
+                                                                   attenuations=[10, 38, 48],create_vlan=False)
         if result:
             assert True
         else:
@@ -87,7 +87,7 @@ class Test_SpatialConsistency_Vlan(object):
                                                                    spatial_streams=2,
                                                                    instance_name="SPATIAL_NSS2_TWOG",
                                                                    pass_value={"strong": 90, "medium": 70, "weak": 35},
-                                                                   attenuations=[10, 38, 48])
+                                                                   attenuations=[10, 38, 48],create_vlan=False)
         if result:
             assert True
         else:
@@ -114,7 +114,7 @@ class Test_SpatialConsistency_Vlan(object):
                                                                    spatial_streams=1,
                                                                    instance_name="SPATIAL_NSS1_FIVEG",
                                                                    pass_value={"strong": 250, "medium": 150,"weak": 75},
-                                                                   attenuations=[10, 25, 35])
+                                                                   attenuations=[10, 25, 35],create_vlan=False)
         if result:
             assert True
         else:
@@ -141,7 +141,7 @@ class Test_SpatialConsistency_Vlan(object):
                                                                    spatial_streams=2,
                                                                    instance_name="SPATIAL_NSS2_FIVEG",
                                                                    pass_value={"strong": 500, "medium": 300,"weak": 150},
-                                                                   attenuations=[10, 25, 35])
+                                                                   attenuations=[10, 25, 35],create_vlan=False)
         if result:
             assert True
         else:

@@ -55,7 +55,7 @@ class Test_RatevsRange_Vlan(object):
                                                                   instance_name="VLAN_RVR_TWOG_DL",
                                                                   pass_value={"strong": 100, "medium": 95, "weak": 14},
                                                                   attenuations=[0, 10, 21, 24, 27, 30, 33, 36, 39, 42,
-                                                                                45, 48, 51, 54, 57, 60, 63])
+                                                                                45, 48, 51, 54, 57, 60, 63],create_vlan=False)
         if result:
             assert True
         else:
@@ -83,7 +83,7 @@ class Test_RatevsRange_Vlan(object):
                                                                   instance_name="VLAN_RVR_TWOG_DL",
                                                                   pass_value={"strong": 100, "medium": 95, "weak": 14},
                                                                   attenuations=[0, 10, 21, 24, 27, 30, 33, 36, 39, 42,
-                                                                                45, 48, 51, 54, 57, 60, 63])
+                                                                                45, 48, 51, 54, 57, 60, 63],create_vlan=False)
         if result:
             assert True
         else:
@@ -112,7 +112,7 @@ class Test_RatevsRange_Vlan(object):
                                                                   instance_name="VLAN_RVR_FIVEG_DL",
                                                                   pass_value={"strong": 560, "medium": 220, "weak": 5},
                                                                   attenuations=[0, 10, 21, 24, 27, 30, 33, 36, 39, 42,
-                                                                                45, 48, 51, 54])
+                                                                                45, 48, 51, 54],create_vlan=False)
         if result:
             assert True
         else:
@@ -140,7 +140,7 @@ class Test_RatevsRange_Vlan(object):
                                                                   instance_name="VLAN_RVR_FIVEG_UL",
                                                                   pass_value={"strong": 560, "medium": 220, "weak": 5},
                                                                   attenuations=[0, 10, 21, 24, 27, 30, 33, 36, 39, 42,
-                                                                                45, 48, 51, 54])
+                                                                                45, 48, 51, 54],create_vlan=False)
         if result:
             assert True
         else:
