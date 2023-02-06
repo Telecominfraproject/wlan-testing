@@ -416,14 +416,13 @@ class APLIBS:
                                               print_log=print_log,
                                               attach_allure=attach_allure,
                                               expected_attachment_type=allure.attachment_type.JSON)
-
             ret = output.split("\n")
             status_count = int(ret.count("True"))
             logging.info("Status count: " + str(status_count))
             if status_count == 1:
-                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
-            else:
                 cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd qcn6122_2 && cd mac0 && ls && echo 1 > dfs_simulate_radar'
+            else:
+                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
         output = self.run_generic_command(cmd=cmd, idx=idx,
                                           print_log=print_log,
                                           attach_allure=attach_allure,
@@ -456,9 +455,9 @@ class APLIBS:
             status_count = int(ret.count("True"))
             logging.info("Status count: " + str(status_count))
             if status_count == 1:
-                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
-            else:
                 cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd qcn6122_2 && cd mac0 && logread | grep DFS'
+            else:
+                cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
         try:
             output = self.run_generic_command(cmd=cmd, idx=idx,
                                               print_log=print_log,
