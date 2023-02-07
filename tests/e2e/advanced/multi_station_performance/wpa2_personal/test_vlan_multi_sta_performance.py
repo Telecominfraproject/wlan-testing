@@ -60,8 +60,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=35,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -74,6 +73,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5944", name="WIFI-5944")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss123
     @pytest.mark.udp_upload_10dB_38dB_dis_nss1_2g
     def test_multi_station_VLAN_udp_upload_10dB_38dB_dis_nss1_2g(self, setup_configuration, get_test_library,
                                                                  num_stations,
@@ -92,8 +92,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=30,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -107,6 +106,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5945", name="WIFI-5945")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss12
     @pytest.mark.udp_upload_10dB_38dB_48dB_dis_nss1_2g
     def test_multi_station_VLAN_udp_upload_10dB_38dB_48dB_dis_nss1_2g(self, setup_configuration, get_test_library,
                                                                       num_stations,
@@ -126,8 +126,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=25,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -141,6 +140,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5949", name="WIFI-5949")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss123
     @pytest.mark.udp_download_10dB_dis_nss1_2g
     def test_multi_station_VLAN_udp_download_10dB_dis_nss1_2g(self, setup_configuration, get_test_library, num_stations,
                                                               get_test_device_logs, get_dut_logs_per_test_case,
@@ -158,8 +158,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=35,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -172,6 +171,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5950", name="WIFI-5950")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss123
     @pytest.mark.udp_download_10dB_38dB_dis_nss1_2g
     def test_multi_station_VLAN_udp_download_10dB_38dB_dis_nss1_2g(self, setup_configuration, get_test_library,
                                                                    num_stations,
@@ -190,8 +190,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=30,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -205,6 +204,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6085", name="WIFI-6085")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss12
     @pytest.mark.udp_download_10dB_38dB_48dB_dis_nss1_2g
     def test_multi_station_VLAN_udp_download_10dB_38dB_48dB_dis_nss1_2g(self, setup_configuration, get_test_library,
                                                                         num_stations,
@@ -224,8 +224,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=25,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -234,7 +233,7 @@ class TestMultiStaPerfVlan(object):
             assert False, description
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB(NSS-1) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6092", name="WIFI-6092")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -255,8 +254,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=250,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -265,10 +263,11 @@ class TestMultiStaPerfVlan(object):
             assert False, description
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-download 5 GHz Band")
+    @allure.title("VLAN Mode Multi Station Performance Test with 10dB,25dB(NSS-1) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6093", name="WIFI-6093")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.nss123
     @pytest.mark.udp_upload_10dB_25dB_dis_nss1_5g
     def test_multi_station_VLAN_udp_upload_10dB_25dB_dis_nss1_5g(self, setup_configuration, get_test_library,
                                                                  num_stations,
@@ -287,8 +286,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=250,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -298,10 +296,11 @@ class TestMultiStaPerfVlan(object):
 
     @allure.story('wpa2_personal 5 GHZ Band')
     @allure.title(
-        "VLAN Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-download 5 GHz Band")
+        "VLAN Mode Multi Station Performance Test with 10dB,25dB,35dB(NSS-1) distance UDP-upload 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6094", name="WIFI-6094")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.nss12
     @pytest.mark.udp_upload_10dB_25dB_35dB_dis_nss1_5g
     def test_multi_station_VLAN_udp_upload_10dB_25dB_35dB_dis_nss1_5g(self, setup_configuration, get_test_library,
                                                                       num_stations,
@@ -321,8 +320,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=200,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -352,8 +350,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=250,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -366,6 +363,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5947", name="WIFI-5947")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.nss123
     @pytest.mark.udp_download_10dB_25dB_dis_nss1_5g
     def test_multi_station_VLAN_udp_download_10dB_25dB_dis_nss1_5g(self, setup_configuration, get_test_library,
                                                                    num_stations,
@@ -384,8 +382,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=250,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -399,6 +396,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5948", name="WIFI-5948")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.nss12
     @pytest.mark.udp_download_10dB_25dB_35dB_dis_nss1_5g
     def test_multi_station_VLAN_udp_download_10dB_25dB_35dB_dis_nss1_5g(self, setup_configuration, get_test_library,
                                                                         num_stations,
@@ -418,8 +416,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=200,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -449,8 +446,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=70,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -463,6 +459,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5966", name="WIFI-5966")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss123
     @pytest.mark.udp_upload_10dB_38dB_dis_nss2_2g
     def test_multi_station_VLAN_udp_upload_10dB_38dB_dis_nss2_2g(self, setup_configuration, get_test_library,
                                                                  num_stations,
@@ -481,8 +478,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=60,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -496,6 +492,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5954", name="WIFI-5954")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss12
     @pytest.mark.udp_upload_10dB_38dB_48dB_dis_nss2_2g
     def test_multi_station_VLAN_udp_upload_10dB_38dB_48dB_dis_nss2_2g(self, setup_configuration, get_test_library,
                                                                       num_stations,
@@ -515,8 +512,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=50,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -546,8 +542,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=70,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -560,6 +555,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5968", name="WIFI-5968")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss123
     @pytest.mark.udp_download_10dB_38dB_dis_nss2_2g
     def test_multi_station_VLAN_udp_download_10dB_38dB_dis_nss2_2g(self, setup_configuration, get_test_library,
                                                                    num_stations,
@@ -578,8 +574,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=60,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -593,6 +588,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5967", name="WIFI-5967")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
+    @pytest.mark.nss12
     @pytest.mark.udp_download_10dB_38dB_48dB_dis_nss2_2g
     def test_multi_station_VLAN_udp_download_10dB_38dB_48dB_dis_nss2_2g(self, setup_configuration, get_test_library,
                                                                         num_stations,
@@ -612,8 +608,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=50,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -643,8 +638,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=500,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -657,6 +651,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5953", name="WIFI-5953")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.nss123
     @pytest.mark.udp_upload_10dB_25dB_dis_nss2_5g
     def test_multi_station_VLAN_udp_upload_10dB_25dB_dis_nss2_5g(self, setup_configuration, get_test_library,
                                                                  num_stations,
@@ -675,8 +670,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=500,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -689,6 +683,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5973", name="WIFI-5973")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.nss12
     @pytest.mark.udp_upload_10dB_25dB_35dB_dis_nss2_5g
     def test_multi_station_VLAN_udp_upload_10dB_40dB_50dB_dis_nss2_5g(self, setup_configuration, get_test_library,
                                                                       num_stations,
@@ -708,8 +703,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="1Gbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=400,
-                                                                         traffic_type="udp_upload"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_upload",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -739,8 +733,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=500,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -753,6 +746,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5970", name="WIFI-5970")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.nss123
     @pytest.mark.udp_download_10dB_25dB_dis_nss2_5g
     def test_multi_station_VLAN_udp_download_10dB_25dB_dis_nss2_5g(self, setup_configuration, get_test_library,
                                                                    num_stations,
@@ -771,8 +765,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=500,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
@@ -786,6 +779,7 @@ class TestMultiStaPerfVlan(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5972", name="WIFI-5972")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
+    @pytest.mark.nss12
     @pytest.mark.udp_download_10dB_40dB_50dB_dis_nss2_5g
     def test_multi_station_VLAN_udp_download_10dB_40dB_50dB_dis_nss2_5g(self, setup_configuration, get_test_library,
                                                                         num_stations,
@@ -805,8 +799,7 @@ class TestMultiStaPerfVlan(object):
                                                                          upload_rate="9.6Kbps", batch_size="3,6,9",
                                                                          protocol="UDP-IPv4", duration="120000",
                                                                          expected_throughput=400,
-                                                                         traffic_type="udp_download"
-                                                                         , create_vlan=False,
+                                                                         traffic_type="udp_download",
                                                                          dut_data=setup_configuration
                                                                          , sniff_radio=True)
         if result:
