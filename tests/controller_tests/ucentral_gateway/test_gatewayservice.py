@@ -5,7 +5,9 @@
 """
 
 import json
+import logging
 import random
+from time import sleep
 
 import allure
 import pytest
@@ -278,6 +280,7 @@ class TestUcentralGatewayService(object):
         # print(resp.json())
         # allure.attach(name="Device capabilities", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
         assert resp.status_code == 200
+        return resp
 
     @pytest.mark.gw_device_statistics
     @allure.title("Get Statistics")
@@ -474,17 +477,87 @@ class TestUcentralGatewayService(object):
         # attachment_type=#allure.#attachment_type.JSON)
         assert resp.status_code == 200
 
+    @pytest.mark.gw_rtty
+    @pytest.mark.ow_sdk_load_tests
+    @pytest.mark.owgw_api_tests
+    @allure.title("RTTY API")
+    def test_gw_service_get_rtty(self, get_target_object, get_testbed_details):
+        """
+            Test the device rtty parameters in Gateway UI
+        """
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp = get_target_object.controller_library_object.get_rtty_params(device_name)
+        # print(resp.json())
+        # allure.attach(name="Device RTTY parameters", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
+        assert resp.status_code == 200
 
-@pytest.mark.gw_rtty
-@pytest.mark.ow_sdk_load_tests
-@pytest.mark.owgw_api_tests
-@allure.title("RTTY API")
-def test_gw_service_get_rtty(self, get_target_object, get_testbed_details):
-    """
-        Test the device rtty parameters in Gateway UI
-    """
-    device_name = get_testbed_details['device_under_tests'][0]['identifier']
-    resp = get_target_object.controller_library_object.get_rtty_params(device_name)
-    # print(resp.json())
-    # allure.attach(name="Device RTTY parameters", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
-    assert resp.status_code == 200
+    def test_gw_service_asb_script(self, get_target_object, get_testbed_details):
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        payload = {
+            "serialNumber": device_name,
+            "timeout": 30,
+            "type": "diagnostic",
+            "script": "",
+            "scriptId": "",
+            "when": 0,
+            "signature": "",
+            "deferred": True,
+            "uri": ""
+        }
+        resp = get_target_object.controller_library_object.asb_script(device_name, payload)
+        return resp
+
+    @pytest.mark.gw_asb_non_restricted
+    @allure.title("ASB SCRIPT NON RESTRICTED AP")
+    @allure.testcase(name="WIFI-12235", url="https://telecominfraproject.atlassian.net/browse/WIFI-12235")
+    def test_asb_on_non_restricted_ap(self, get_target_object, get_testbed_details):
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        if not resp:
+            logging.info("Initial the ap is non restricted")
+            uuid = self.test_gw_service_asb_script(get_target_object, get_testbed_details)
+            resp = get_target_object.controller_library_object.get_file(device_name, uuid)
+            assert resp.status_code == 200
+        else:
+            logging.info("AP is restricted, Removing Restrictions")
+            output = get_target_object.get_dut_library_object().remove_restrictions()
+            resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+            if not resp:
+                logging.info("Removed Restrictions")
+                uuid = self.test_gw_service_asb_script(get_target_object, get_testbed_details)
+                resp = get_target_object.controller_library_object.get_file(device_name, uuid)
+                assert resp.status_code == 200
+            else:
+                logging.info("Unable to remove restrictions")
+                assert False
+
+    @pytest.mark.gw_asb_restricted
+    @allure.title("ASB SCRIPT RESTRICTED AP")
+    @allure.testcase(name="WIFI-12236", url="https://telecominfraproject.atlassian.net/browse/WIFI-12236")
+    def test_asb_on_restricted_ap(self, get_target_object, get_testbed_details):
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+
+        restrictions_file = 'echo \"{\\"country\\":[\\"US\\", \\"CA\\"],\\"dfs\\": true,\\"rtty\\": true,\\"tty\\": ' \
+                            'true,\\"developer\\": true,\\"sysupgrade\\": true,\\"commands\\": true,\\"key_info\\": {' \
+                            '\\"vendor\\": \\"dummy\\",\\"algo\\": \\"static\\"}}\" > /certificates/restrictions.json ' \
+                            '&& echo \"True\"'
+        developer_mode = 'fw_setenv developer 0'
+        output = get_target_object.get_dut_library_object().add_restrictions(restrictions_file=restrictions_file,
+                                                                             developer_mode=developer_mode)
+        resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        if resp:
+            logging.info("From GW it's confirmed that AP is restricted now")
+            uuid = self.test_gw_service_asb_script(get_target_object, get_testbed_details)
+            resp = get_target_object.controller_library_object.get_file(device_name, uuid)
+            assert resp.status_code == 200
+        else:
+            assert False
+        output = get_target_object.get_dut_library_object().remove_restrictions()
+        resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        if resp:
+            logging.info("Unable to remove restrictions in the AP")
+        else:
+            logging.info("Removed Restrictions")
+
+
+
