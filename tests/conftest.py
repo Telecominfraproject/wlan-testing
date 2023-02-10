@@ -199,7 +199,6 @@ def client_type(request):
     yield client_type
 
 
-
 @pytest.fixture(scope="session")
 def get_security_flags():
     """used to get the essential markers on security and band"""
@@ -290,7 +289,7 @@ def get_testbed_details(selected_testbed, request):
         version = request.config.getini("firmware")
         version_list = version.split(",")
         for i in range(len(TESTBED["device_under_tests"])):
-            TESTBED["device_under_tests"][i]["version"] = version_list[0]
+            TESTBED["device_under_tests"][i]["firmware_version"] = version_list[0]
     allure.attach(name="Testbed Details", body=str(json.dumps(TESTBED, indent=2)),
                   attachment_type=allure.attachment_type.JSON)
     yield TESTBED
@@ -477,6 +476,15 @@ def get_test_device_logs(request, get_testbed_details, get_target_object, skip_l
                                name="lanforge_log_1")
 
         request.addfinalizer(collect_logs_tg)
+
+
+@pytest.fixture(scope="session")
+def add_firmware_property_after_upgrade(add_allure_environment_property, get_testbed_details, get_target_object):
+    dut_versions = get_target_object.get_dut_version()
+    for i in range(len(get_testbed_details["device_under_tests"])):
+        add_allure_environment_property(
+            "Firmware-Version_" + get_testbed_details["device_under_tests"][i]["identifier"],
+            str(dut_versions[i]))
 
 
 @pytest.fixture(scope="function")
