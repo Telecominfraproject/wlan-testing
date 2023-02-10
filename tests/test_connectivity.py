@@ -371,7 +371,7 @@ class TestFirmwareUpgrade(object):
         assert True
 
     @pytest.mark.test_firmware_gw
-    def test_firmware_upgrade_status_gateway(self, get_testbed_details, get_target_object):
+    def test_firmware_upgrade_status_gateway(self, get_testbed_details, get_target_object, add_firmware_property_after_upgrade):
         status = []
         for ap in range(len(get_target_object.device_under_tests_info)):
             ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
