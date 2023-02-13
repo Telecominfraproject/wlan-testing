@@ -1,6 +1,6 @@
 """
 
-    Test Spacial Consistency: Vlan Mode
+    Test Spatial Consistency: Vlan Mode
     pytest -m spatial_consistency
 """
 
@@ -25,10 +25,10 @@ setup_params_general = {
     },
     "radius": False
 }
-@allure.feature("VLAN MODE SPACIAL CONSISTENCY")
-@allure.parent_suite("SPACIAL CONSISTENCY")
-@allure.suite(suite_name="VLAN MODE")
-@allure.sub_suite(sub_suite_name="WPA2_personal SPACIAL CONSISTENCY")
+@allure.feature("SPATIAL CONSISTENCY")
+@allure.parent_suite("Spatial Consistency Test")
+@allure.suite(suite_name="VLAN Mode")
+@allure.sub_suite(sub_suite_name="WPA2 Personal")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -39,7 +39,7 @@ setup_params_general = {
 class Test_SpatialConsistency_Vlan(object):
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("Vlan Mode Spacial Consistency Test (NSS-1) UDP-Download 2.4 GHz Band")
+    @allure.title("Vlan Mode Spatial Consistency Test (NSS-1) UDP-Download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5052", name="WIFI-5052")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -53,7 +53,7 @@ class Test_SpatialConsistency_Vlan(object):
         band = "twog"
         vlan = 100
 
-        result, description = get_test_library.spacial_consistency(ssid_name=ssid_name, security_key=security_key,
+        result, description = get_test_library.spatial_consistency(ssid_name=ssid_name, security_key=security_key,
                                                                    security=security, mode=mode, band=band, vlan=vlan,
                                                                    dut_data=setup_configuration, num_sta=1,
                                                                    spatial_streams=1,
@@ -67,7 +67,7 @@ class Test_SpatialConsistency_Vlan(object):
 
 
     @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("Vlan Mode Spacial Consistency Test (NSS-2) UDP-Download 2.4 GHz Band")
+    @allure.title("Vlan Mode Spatial Consistency Test (NSS-2) UDP-Download 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5068", name="WIFI-5068")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -81,7 +81,7 @@ class Test_SpatialConsistency_Vlan(object):
         band = "twog"
         vlan = 100
 
-        result, description = get_test_library.spacial_consistency(ssid_name=ssid_name, security_key=security_key,
+        result, description = get_test_library.spatial_consistency(ssid_name=ssid_name, security_key=security_key,
                                                                    security=security, mode=mode, band=band, vlan=vlan,
                                                                    dut_data=setup_configuration, num_sta=1,
                                                                    spatial_streams=2,
@@ -94,7 +94,7 @@ class Test_SpatialConsistency_Vlan(object):
             assert False, description
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("Vlan Mode Spacial Consistency Test (NSS-1) UDP-Download 5 GHz Band")
+    @allure.title("Vlan Mode Spatial Consistency Test (NSS-1) UDP-Download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5067", name="WIFI-5067")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -108,7 +108,7 @@ class Test_SpatialConsistency_Vlan(object):
         band = "fiveg"
         vlan = 100
 
-        result, description = get_test_library.spacial_consistency(ssid_name=ssid_name, security_key=security_key,
+        result, description = get_test_library.spatial_consistency(ssid_name=ssid_name, security_key=security_key,
                                                                    security=security, mode=mode, band=band, vlan=vlan,
                                                                    dut_data=setup_configuration, num_sta=1,
                                                                    spatial_streams=1,
@@ -121,7 +121,7 @@ class Test_SpatialConsistency_Vlan(object):
             assert False, description
 
     @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("Vlan Mode Spacial Consistency Test (NSS-2) UDP-Download 5 GHz Band")
+    @allure.title("Vlan Mode Spatial Consistency Test (NSS-2) UDP-Download 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5066", name="WIFI-5066")
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
@@ -135,7 +135,7 @@ class Test_SpatialConsistency_Vlan(object):
         band = "fiveg"
         vlan = 100
 
-        result, description = get_test_library.spacial_consistency(ssid_name=ssid_name, security_key=security_key,
+        result, description = get_test_library.spatial_consistency(ssid_name=ssid_name, security_key=security_key,
                                                                    security=security, mode=mode, band=band, vlan=vlan,
                                                                    dut_data=setup_configuration, num_sta=1,
                                                                    spatial_streams=2,

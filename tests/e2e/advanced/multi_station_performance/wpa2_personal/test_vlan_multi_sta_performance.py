@@ -25,10 +25,10 @@ setup_params_general = {
 }
 
 
-@allure.feature("VLAN MODE MULTI-STATION PERFORMANCE")
-@allure.parent_suite("MULTI STATION PERFORMANCE")
-@allure.suite(suite_name="VLAN MODE")
-@allure.sub_suite(sub_suite_name="WPA2_personal MULTI STATION PERFORMANCE")
+@allure.feature("MULTI-STATION PERFORMANCE")
+@allure.parent_suite("Multi Station Performance Test")
+@allure.suite(suite_name="VLAN Mode")
+@allure.sub_suite(sub_suite_name="WPA2 Personal")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

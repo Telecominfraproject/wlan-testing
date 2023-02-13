@@ -21,10 +21,10 @@ setup_params_general = {
     "radius": False
 }
 
-@allure.feature("VLAN MODE RATE VS RANGE")
-@allure.parent_suite("RATE VS RANGE")
-@allure.suite(suite_name="VLAN MODE")
-@allure.sub_suite(sub_suite_name="WPA2_personal RATE VS RANGE")
+@allure.feature("RATE VS RANGE")
+@allure.parent_suite("Rate vs Range Test")
+@allure.suite(suite_name="VLAN Mode")
+@allure.sub_suite(sub_suite_name="WPA2 Personal")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
