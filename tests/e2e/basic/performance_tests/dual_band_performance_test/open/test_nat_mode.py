@@ -5,12 +5,10 @@
 
 """
 
-import os
 import allure
 import pytest
 
 pytestmark = [pytest.mark.dual_band_test, pytest.mark.nat, pytest.mark.performance_release]#,
-#              pytest.mark.usefixtures("setup_test_run")]
 
 setup_params_general = {
     "mode": "NAT",
@@ -32,8 +30,12 @@ setup_params_general = {
     indirect=True,
     scope="class"
 )
+@allure.parent_suite("Dual Band Tests")
+@allure.suite("Dual Band Tests: NAT mode")
+@allure.sub_suite("Open security")
+@allure.feature("Dual band performance test")
 @pytest.mark.usefixtures("setup_configuration")
-class TestDualbandPerformanceNat(object):
+class TestOpenDualbandPerformanceNat(object):
     """
          pytest -m "performance and dual_band_test and nat and open and twog  and fiveg"
     """
@@ -41,31 +43,30 @@ class TestDualbandPerformanceNat(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.fiveg
-    def test_client_open_nat(self,  lf_tools,
-                                  create_lanforge_chamberview_dut, lf_test, get_configuration):
+    @allure.title("Test Dual Band with ApAuto test of NAT mode")
+    def test_client_open_bridge(self,  get_test_library, setup_configuration, check_connectivity):
+        """
+                    Dual Band Test with open encryption
+                    pytest -m "dual_band_test and open"
+        """
         profile_data = setup_params_general["ssid_modes"]["open"]
-        ssid_2G = profile_data[0]["ssid_name"]
-        ssid_5G = profile_data[0]["ssid_name"]
-        dut_name = create_lanforge_chamberview_dut
-        mode = "NAT"
+        ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
+        dut_name = list(setup_configuration.keys())[0]
+        mode = "NAT-WAN"
         vlan = 1
-        print(lf_tools.dut_idx_mapping)
-        dut_5g = ""
-        dut_2g = ""
-        for i in lf_tools.dut_idx_mapping:
-            if lf_tools.dut_idx_mapping[i][3] == "5G":
-                dut_5g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
-                print(dut_5g)
-            if lf_tools.dut_idx_mapping[i][3] == "2G":
-                dut_2g = dut_name + ' ' + lf_tools.dut_idx_mapping[i][0] + ' ' + lf_tools.dut_idx_mapping[i][4]
-                print(dut_2g)
-        if ssid_2G and ssid_5G not in get_vif_state:
-            allure.attach(name="retest,vif state ssid not available:", body=str(get_vif_state))
-            pytest.xfail("SSID's NOT AVAILABLE IN VIF STATE")
+        dut_5g, dut_2g = "", ""
+        influx_tags = "dual-band-bridge-open"
+        for i in setup_configuration[dut_name]['ssid_data']:
+            get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
+            if get_test_library.dut_idx_mapping[str(i)][3] == "5G":
+                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
+            if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
+                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
 
-        dbpt_obj = lf_test.dualbandperformancetest(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G,
-                                                   instance_name="dbp_instance_openp_nat_p",
-                                                   vlan_id=vlan, dut_5g=dut_5g, dut_2g=dut_2g)
-        report_name = dbpt_obj.report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1]
-        lf_tools.attach_report_graphs(report_name=report_name, pdf_name="Dual Band Performance Test Open Security Bridge")
-        assert True
+        result, description = get_test_library.dual_band_performance_test(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
+                                                            dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
+                                                            move_to_influx=False, dut_data=setup_configuration)
+        if result:
+            assert True
+        else:
+            assert False, description
