@@ -781,6 +781,8 @@ class Controller(ConfigureController):
             file = resp.content
             with open("gopi.tar.gz", "wb") as f:
                 f.write(file)
+        time.sleep(100)
+        logging.info("Sleeping 100")
         allure.attach.file(name="file", source="gopi.tar.gz", extension=".tar")
         return resp
 
