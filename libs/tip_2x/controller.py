@@ -190,6 +190,7 @@ class ConfigureController:
                    "Connection": "keep-alive",
                    "Content-Type": "application/json",
                    "Keep-Alive": "timeout=10, max=1000"
+                   "conte"
                    }
         return headers
 
@@ -772,9 +773,14 @@ class Controller(ConfigureController):
                                                     "Headers: " + str(self.make_headers()))
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
         self.check_response("PUT", resp, self.make_headers(), "", uri)
-        file = resp.content
-        with open("gopi.tar.gz", "wb") as f:
-            f.write(file)
+        if resp.headers.get("Transfer-Encoding") == "chunked":
+            with open("gopi.tar.gz", "wb") as f:
+                for chunk in resp.iter_content(chunk_size=1024):
+                    f.write(chunk)
+        else:
+            file = resp.content
+            with open("gopi.tar.gz", "wb") as f:
+                f.write(file)
         allure.attach.file(name="file", source="gopi.tar.gz", extension=".tar")
         return resp
 
