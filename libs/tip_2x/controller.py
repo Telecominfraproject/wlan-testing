@@ -6,6 +6,7 @@
 import datetime
 import json
 import logging
+import os
 import sys
 import time
 from operator import itemgetter
@@ -779,6 +780,7 @@ class Controller(ConfigureController):
                     f.write(chunk)
         else:
             file = resp.content
+            logging.info(os.getcwd())
             with open("gopi.tar.gz", "wb") as f:
                 f.write(file)
         time.sleep(100)
