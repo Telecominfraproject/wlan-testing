@@ -783,6 +783,8 @@ class Controller(ConfigureController):
             with open("gopi.tar.gz", "wb") as f:
                 f.write(file)
         allure.attach.file(name="file", source="/wlan-testing/tests/gopi.tar.gz", extension=".tar")
+        allure.attach.file(name="file2", source="/wlan-testing/NOTES.txt", extension=".txt")
+        time.sleep(500)
         return resp
 
 
