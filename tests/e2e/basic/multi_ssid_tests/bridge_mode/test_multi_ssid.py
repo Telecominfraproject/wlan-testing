@@ -40,10 +40,14 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
+@allure.feature("Multi SSID Test")
+@allure.parent_suite("MULTI SSID")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Data Path for 1 SSID on each Band")
 class TestMultiSsidDataPath1(object):
     """
         Multiple number of SSIDs Test: Bridge Mode
-        pytest -m multi_ssid
+        pytest -m multi_ssid and one_ssid
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12227")
@@ -60,25 +64,32 @@ class TestMultiSsidDataPath1(object):
         mode = "BRIDGE"
         security_key = "something"
         security = "wpa2"
-        sta_list1 = ["sta0000", "sta0001"]
-        sta_list2 = ["sta1000", "sta1001"]
-        pass_fail = {}
+        sta_list1 = ["station1", "station2"]
+        sta_list2 = ["station3", "station4"]
+        stations_list = sta_list1 + sta_list2
         for i in range(len(setup_params_general1["ssid_modes"]["wpa2_personal"])):
             profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][i]
             ssid_name = profile_data["ssid_name"]
             if str(profile_data["appliedRadios"][0]) == "2G":
-                passes = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security, passkey=security_key,
+                passes1 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security, passkey=security_key,
                                                          mode=mode, radio=get_test_library.wave2_2g_radios[0], station_name=sta_list1)
             elif str(profile_data["appliedRadios"][0]) == "5G":
-                passes = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security, passkey=security_key,
+                passes2 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security, passkey=security_key,
                                                          mode=mode, radio=get_test_library.wave2_5g_radios[0], station_name=sta_list2)
 
-        cx_data = get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                                         side_b_min_rate=6291456, side_b_max_rate=0,
-                                                         traffic_type="lf_tcp", sta_list=sta_list1,
-                                                         side_b=sta_list2)
+        if not (passes1 and passes2):
+            assert False, "Test Failed, Station's didn't get IP address"
+
+        for i in range(len(stations_list)):
+            for j in range(i+1, len(stations_list)):
+                print("cx {} <--> {}".format(i, j))
+                get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                                     side_b_min_rate=6291456, side_b_max_rate=0,
+                                                     traffic_type="lf_tcp", sta_list=[stations_list[i]],
+                                                     side_b=stations_list[j], start_cx=False)
+                time.sleep(5)
+                print("cx created between side a {} and side b {}".format(stations_list[i], stations_list[j]))
         print("waiting 30 sec for getting layer3 cx data...")
-        time.sleep(30)
-        allure.attach(cx_data)
-        # fail_list = list(filter(lambda x : x == False, pass_fail))
+        # start layer3
+        get_test_library.start_cx()
         assert True
