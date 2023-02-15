@@ -782,7 +782,7 @@ class Controller(ConfigureController):
             file = resp.content
             with open("gopi.tar.gz", "wb") as f:
                 f.write(file)
-        allure.attach.file(name="file", source="/home/devraga/Documents/tip-project/wlan-testing/tests/gopi.tar.gz", extension=".tar")
+        allure.attach.file(name="file", source="/wlan-testing/tests/gopi.tar.gz", extension=".tar")
         return resp
 
 
