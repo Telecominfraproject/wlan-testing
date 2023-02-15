@@ -163,14 +163,27 @@ def num_stations(request):
 
 
 @pytest.fixture(scope="session")
-def max_stations(request):
+def max_stations(request, run_lf, get_testbed_details, get_target_object):
     """yields the max stations supported by AP"""
     if run_lf:
         """User will give max stations for run_lf"""
         max_stations = request.config.getoption("--max_stations")
     else:
         """Fetch max stations from AP"""
-        max_stations = 64
+        max_stations = None
+        all_logs = []
+        for i in range(len(get_testbed_details['device_under_tests'])):
+            get_target_object.get_dut_library_object().run_generic_command(
+                cmd="chmod +x /usr/share/ucentral/wifi_max_user.uc", idx=i)
+            a = get_target_object.get_dut_library_object().run_generic_command(
+                cmd="/usr/share/ucentral/wifi_max_user.uc")
+            try:
+                all_logs.append(a)
+            except Exception as e:
+                logging.error(e)
+        logging.info("All logs: " + str(all_logs))
+        max_stations = int(all_logs[0])
+    logging.info("Max stations: " + str(max_stations))
     yield int(max_stations)
 
 
@@ -496,16 +509,3 @@ def check_connectivity(request, get_testbed_details, get_target_object, run_lf):
     if not run_lf:
         request.addfinalizer(collect_logs)
 
-@pytest.fixture(scope="session")
-def get_dut_max_clients(get_testbed_details, get_target_object):
-    # Get maximum no.of clients where the AP's radio can support
-    all_logs = []
-    for i in range(len(get_testbed_details['device_under_tests'])):
-        get_target_object.get_dut_library_object().run_generic_command(
-            cmd="chmod +x /usr/share/ucentral/wifi_max_user.uc", idx=i)
-        a = get_target_object.get_dut_library_object().run_generic_command(cmd="/usr/share/ucentral/wifi_max_user.uc")
-        try:
-            all_logs.append(a)
-        except Exception as e:
-            logging.error(e)
-    yield all_logs
