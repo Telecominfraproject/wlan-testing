@@ -775,21 +775,14 @@ class Controller(ConfigureController):
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
         self.check_response("PUT", resp, self.make_headers(), "", uri)
         if resp.headers.get("Transfer-Encoding") == "chunked":
-            logging.info(os.getcwd())
             with open("gopi.tar.gz", "wb") as f:
                 for chunk in resp.iter_content(chunk_size=1024):
                     f.write(chunk)
-            logging.info(os.getcwd())
         else:
             file = resp.content
-            logging.info(os.getcwd())
             with open("gopi.tar.gz", "wb") as f:
                 f.write(file)
-            logging.info(os.getcwd())
-        time.sleep(100)
-        logging.info("Sleeping 100")
-        logging.info(os.getcwd())
-        allure.attach.file(name="file", source="gopi.tar.gz", extension=".tar")
+        allure.attach.file(name="file", source="/home/devraga/Documents/tip-project/wlan-testing/tests/gopi.tar.gz", extension=".tar")
         return resp
 
 
