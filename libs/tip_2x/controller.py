@@ -772,19 +772,29 @@ class Controller(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
+        time.sleep(100)
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
-        self.check_response("PUT", resp, self.make_headers(), "", uri)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+
         if resp.headers.get("Transfer-Encoding") == "chunked":
+            file = resp.content
+            logging.info("Yes it's chunked")
+            logging.info("---------------------------------------")
+            logging.info(file)
+            logging.info("---------------------------------------")
+            logging.info(resp)
+            logging.info("--------------------------------------------------")
             with open("gopi.tar.gz", "wb") as f:
                 for chunk in resp.iter_content(chunk_size=1024):
                     f.write(chunk)
         else:
+            logging.info("It's not chunked")
             file = resp.content
+            logging.info(file)
+            logging.info("-------------------------------------")
             with open("gopi.tar.gz", "wb") as f:
                 f.write(file)
-        allure.attach.file(name="file", source="/wlan-testing/tests/gopi.tar.gz", extension=".tar")
-        allure.attach.file(name="file2", source="/wlan-testing/tests/test_connectivity.py", extension=".py")
-        time.sleep(1000)
+        allure.attach.file(name="file", source="gopi.tar.gz", extension=".tar")
         return resp
 
 
