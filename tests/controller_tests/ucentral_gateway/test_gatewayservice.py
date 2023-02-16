@@ -514,7 +514,7 @@ class TestUcentralGatewayService(object):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
         if not resp:
-            logging.info("Initial the ap is non restricted")
+            logging.info("AP is in not restricted and we can trigger script")
             uuid = self.test_gw_service_asb_script(get_target_object, get_testbed_details)
             resp = get_target_object.controller_library_object.get_file(device_name, uuid)
             assert resp.status_code == 200
@@ -556,6 +556,7 @@ class TestUcentralGatewayService(object):
         resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
         if resp:
             logging.info("Unable to remove restrictions in the AP")
+            assert False
         else:
             logging.info("Removed Restrictions")
 
