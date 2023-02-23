@@ -1536,7 +1536,7 @@ jobs:
 #      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
 #      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
 #      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-#      AP_MODEL: cig_wf196
+       AP_MODEL: cig_wf196
     steps:
       - name: Set AP model output
         id: ap_model
