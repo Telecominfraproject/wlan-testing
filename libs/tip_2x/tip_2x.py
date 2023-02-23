@@ -167,11 +167,14 @@ class tip_2x:
         base_dict = dict.fromkeys(self.supported_bands)
         for i in base_dict:
             base_dict[i] = []
+        logging.info("requested_combination: " + str(requested_combination))
         for i in requested_combination:
             sec_mode = list(set(i) & set(self.tip_2x_specific_encryption_translation))
             bands = i.copy()
+            bands = list(set(bands))
             bands.remove(sec_mode[0])
             [base_dict[j].append(self.tip_2x_specific_encryption_translation[sec_mode[0]]) for j in bands]
+        logging.info("Base dict: " + str(base_dict))
 
         # for i in requested_combination:
         #     if i[0] in self.supported_bands:
