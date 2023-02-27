@@ -1,6 +1,6 @@
 """
        Dual Band Performance Test : VLAN Mode
-       pytest -m "performance and dual_band_test and vlan"
+       pytest -m "performance and dual_band_tests and vlan"
 
 
 """
@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.vlan, pytest.mark.dual_band_test]
+pytestmark = [pytest.mark.vlan, pytest.mark.dual_band_tests]
 
 
 setup_params_general = {
@@ -22,7 +22,7 @@ setup_params_general = {
 }
 
 
-@pytest.mark.dual_band_test
+@pytest.mark.dual_band_tests
 @pytest.mark.wifi5
 @pytest.mark.wifi6
 @pytest.mark.parametrize(
@@ -38,7 +38,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestWpa3DualbandPerformanceVlan(object):
     """
-         pytest -m "performance and dual_band_test and vlan and wpa3_personal and twog  and fiveg"
+         pytest -m "performance and dual_band_tests and vlan and wpa3_personal and twog  and fiveg"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3728", name="WIFI-3728")
@@ -49,7 +49,7 @@ class TestWpa3DualbandPerformanceVlan(object):
     def test_client_wpa3_personal_vlan(self, get_test_library, setup_configuration, check_connectivity):
         """
                                     Dual Band Test with wpa3_personal encryption
-                                    pytest -m "dual_band_test and wpa3_personal"
+                                    pytest -m "dual_band_tests and wpa3_personal"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa3_personal"]
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]

@@ -1,6 +1,6 @@
 """
        Dual Band Performance Test : BRIDGE Mode
-       pytest -m "performance and dual_band_test and bridge"
+       pytest -m "performance and dual_band_tests and bridge"
 
 
 """
@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.dual_band_test, pytest.mark.bridge,
+pytestmark = [pytest.mark.performance, pytest.mark.dual_band_tests, pytest.mark.bridge,
               pytest.mark.single_station_dual_band_throughput]
 
 setup_params_general = {
@@ -22,7 +22,7 @@ setup_params_general = {
 }
 
 
-@pytest.mark.dual_band_test
+@pytest.mark.dual_band_tests
 @pytest.mark.wifi5
 @pytest.mark.wifi6
 @pytest.mark.parametrize(
@@ -38,7 +38,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestWpa2DualbandPerformanceBridge(object):
     """
-         pytest -m "performance and dual_band_test and bridge and wpa2_personal and twog  and fiveg"
+         pytest -m "performance and dual_band_tests and bridge and wpa2_personal and twog  and fiveg"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3918", name="WIFI-3918")
     @pytest.mark.wpa2_personal
@@ -48,7 +48,7 @@ class TestWpa2DualbandPerformanceBridge(object):
     def test_client_wpa2_personal_bridge(self, get_test_library, setup_configuration, check_connectivity):
         """
                 Dual Band Test with wpa2_personal encryption
-                pytest -m "dual_band_test and wpa2_personal"
+                pytest -m "dual_band_tests and wpa2_personal"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]

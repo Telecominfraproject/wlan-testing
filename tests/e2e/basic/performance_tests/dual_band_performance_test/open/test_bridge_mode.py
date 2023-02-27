@@ -1,6 +1,6 @@
 """
        Dual Band Performance Test : BRIDGE Mode
-       pytest -m "performance and dual_band_test and bridge"
+       pytest -m "performance and dual_band_tests and bridge"
 
 
 """
@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.dual_band_test, pytest.mark.bridge, pytest.mark.performance_release]
+pytestmark = [pytest.mark.dual_band_tests, pytest.mark.bridge, pytest.mark.performance_release]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -21,7 +21,7 @@ setup_params_general = {
 }
 
 
-@pytest.mark.dual_band_test
+@pytest.mark.dual_band_tests
 @pytest.mark.wifi5
 @pytest.mark.wifi6
 @pytest.mark.parametrize(
@@ -37,7 +37,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestOpenDualbandPerformanceBridge(object):
     """
-         pytest -m "performance and dual_band_test and bridge and open and twog  and fiveg"
+         pytest -m "performance and dual_band_tests and bridge and open and twog  and fiveg"
     """
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3724", name="WIFI-3724")
     @pytest.mark.open
@@ -47,7 +47,7 @@ class TestOpenDualbandPerformanceBridge(object):
     def test_client_open_bridge(self,  get_test_library, setup_configuration, check_connectivity):
         """
                     Dual Band Test with open encryption
-                    pytest -m "dual_band_test and open"
+                    pytest -m "dual_band_tests and open"
         """
         profile_data = setup_params_general["ssid_modes"]["open"]
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
