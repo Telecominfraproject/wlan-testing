@@ -193,7 +193,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-01
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -326,7 +326,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-06a
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -582,7 +582,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-04
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -710,7 +710,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-05
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -838,7 +838,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-06
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -966,7 +966,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-08
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -1094,7 +1094,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-02
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -1222,7 +1222,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-03
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -1351,7 +1351,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-04a
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -1480,7 +1480,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: basic-08a
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
@@ -1609,7 +1609,7 @@ jobs:
           namespace: ${{ steps.namespace.outputs.name }}
           testbed: advance-03
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
-          configuration_file: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
