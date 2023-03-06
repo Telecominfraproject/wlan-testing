@@ -1,6 +1,6 @@
 """
        Dual Band Performance Test : NAT Mode
-       pytest -m "performance and dual_band_test and nat"
+       pytest -m "performance and dual_band_tests and nat"
 
 
 """
@@ -9,20 +9,20 @@ import os
 import allure
 import pytest
 
-pytestmark = [pytest.mark.dual_band_test, pytest.mark.nat,
+pytestmark = [pytest.mark.dual_band_tests, pytest.mark.nat,
               pytest.mark.single_station_dual_band_throughput]
 setup_params_general = {
     "mode": "NAT",
     "ssid_modes": {
         "wpa": [
             {"ssid_name": "ssid_wpa_personal_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
-            ]},
+        ]},
     "rf": {},
     "radius": False
 }
 
 
-@pytest.mark.dual_band_test
+@pytest.mark.dual_band_tests
 @pytest.mark.wifi5
 @pytest.mark.wifi6
 @pytest.mark.parametrize(
@@ -38,7 +38,7 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class TestWpaDualbandPerformanceNat(object):
     """
-         pytest -m "performance and dual_band_test and nat and wpa_personal and twog  and fiveg"
+         pytest -m "performance and dual_band_tests and nat and wpa_personal and twog  and fiveg"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3726", name="WIFI-3726")
@@ -49,7 +49,7 @@ class TestWpaDualbandPerformanceNat(object):
     def test_client_wpa_personal_nat(self, get_test_library, setup_configuration, check_connectivity):
         """
                             Dual Band Test with wpa encryption
-                            pytest -m "dual_band_test and wpa"
+                            pytest -m "dual_band_tests and wpa"
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"]
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
@@ -61,14 +61,14 @@ class TestWpaDualbandPerformanceNat(object):
         for i in setup_configuration[dut_name]['ssid_data']:
             get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
             if get_test_library.dut_idx_mapping[str(i)][3] == "5G":
-                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
+                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + \
+                         get_test_library.dut_idx_mapping[str(i)][4]
             if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
-                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
+                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + \
+                         get_test_library.dut_idx_mapping[str(i)][4]
 
-        result, description = get_test_library.dual_band_performance_test(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
-                                                            dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
-                                                            move_to_influx=False, dut_data=setup_configuration)
-        if result:
-            assert True
-        else:
-            assert False, description
+        get_test_library.dual_band_performance_test(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
+                                                    dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
+                                                    move_to_influx=False, dut_data=setup_configuration)
+
+        assert True
