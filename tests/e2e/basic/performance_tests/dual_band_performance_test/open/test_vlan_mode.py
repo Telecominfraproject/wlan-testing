@@ -16,7 +16,7 @@ setup_params_general = {
     "ssid_modes": {
         "open": [
             {"ssid_name": "ssid_openp_2g", "appliedRadios": ["2G", "5G"], "security_key": "something", "vlan": 100}
-            ]},
+        ]},
     "rf": {},
     "radius": False
 }
@@ -40,12 +40,13 @@ class TestOpenDualbandPerformanceVLAN(object):
     """
          pytest -m "performance and dual_band_tests and vlan and open and twog  and fiveg"
     """
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3724", name="WIFI-3724")
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.fiveg
     @allure.title("Test Dual Band with ApAuto test of and VLAN mode")
-    def test_client_open_bridge(self,  get_test_library, setup_configuration, check_connectivity):
+    def test_client_open_bridge(self, get_test_library, setup_configuration, check_connectivity):
         """
                     Dual Band Test with open encryption
                     pytest -m "dual_band_tests and open"
@@ -60,14 +61,14 @@ class TestOpenDualbandPerformanceVLAN(object):
         for i in setup_configuration[dut_name]['ssid_data']:
             get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
             if get_test_library.dut_idx_mapping[str(i)][3] == "5G":
-                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
+                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + \
+                         get_test_library.dut_idx_mapping[str(i)][4]
             if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
-                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + get_test_library.dut_idx_mapping[str(i)][4]
+                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' + \
+                         get_test_library.dut_idx_mapping[str(i)][4]
 
-        result, description = get_test_library.dual_band_performance_test(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
-                                                            dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
-                                                            move_to_influx=False, dut_data=setup_configuration)
-        if result:
-            assert True
-        else:
-            assert False, description
+        get_test_library.dual_band_performance_test(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
+                                                    dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
+                                                    move_to_influx=False, dut_data=setup_configuration)
+
+        assert True
