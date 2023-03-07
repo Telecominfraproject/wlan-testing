@@ -319,7 +319,7 @@ class TestNatModeConnectivitySuiteTwo(object):
     @pytest.mark.sixg
     @allure.story('wpa3_personal 6 GHZ Band')
     @pytest.mark.parametrize('execution_number', range(2))
-    @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 5 GHz Band")
+    @allure.title("NAT Mode Client Connectivity Test with wpa3_personal encryption 6 GHz Band")
     def test_nat_wpa3_personal_6g_client_connectivity(self, get_test_library, execution_number, num_stations,
                                                       get_dut_logs_per_test_case, get_test_device_logs,
                                                       check_connectivity, setup_configuration):
