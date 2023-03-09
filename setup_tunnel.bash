@@ -1184,16 +1184,16 @@ Create_lab_info_json()
     }
 },
 "RADIUS_SERVER_DATA" : {
-    "ip": "10.28.3.100",
+    "ip": "18.189.85.200",
     "port": 1812,
     "secret": "testing123",
-    "user": "nolaradius",
-    "password": "nolastart",
+    "user": "user",
+    "password": "password",
     "pk_password": "whatever"
 },
 
 "RADIUS_ACCOUNTING_DATA" : {
-    "ip": "10.10.1.221",
+    "ip": "18.189.85.200",
     "port": 1813,
     "secret": "testing123",
     "user": "user",
@@ -1220,7 +1220,7 @@ Create_lab_info_json()
 },
 
 "RATE_LIMITING_RADIUS_SERVER_DATA" : {
-    "ip": "10.28.3.100",
+    "ip": "18.189.85.200",
     "port": 1812,
     "secret": "testing123",
     "user": "user",
@@ -1229,7 +1229,7 @@ Create_lab_info_json()
 },
 
 "RATE_LIMITING_RADIUS_ACCOUNTING_DATA" : {
-    "ip": "10.28.3.100",
+    "ip": "18.189.85.200",
     "port": 1813,
     "secret": "testing123",
     "user": "user",
