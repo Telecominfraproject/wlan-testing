@@ -26,7 +26,7 @@ sdk_expected = True
 
 @allure.feature("Test Connectivity")
 @allure.parent_suite("Test Connectivity")
-#@allure.suite("Test Resources")
+# @allure.suite("Test Resources")
 class TestResources(object):
     """Test Case Class: Test cases to cover resource Connectivity"""
 
@@ -34,7 +34,6 @@ class TestResources(object):
     @allure.testcase(name="Test Cloud Controller", url="")
     @allure.title("Cloud Controller Connectivity")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11615", name="11615")
-
     def test_controller_connectivity(self, get_target_object, get_testbed_details):
         """Test case to verify cloud Controller Connectivity
            Unique marker: pytest -m "test_cloud_controller"
@@ -191,7 +190,6 @@ class TestResources(object):
             if gw_host not in j:
                 expected_host = False
 
-
         # If Connected but not with expected host
         if connected:
             if expected_host:
@@ -250,6 +248,27 @@ class TestResources(object):
     #     if sdk_expected == False:
     #         pytest.exit("AP has invalid Redirector")
     #     assert True
+
+    @pytest.mark.test_ap_restrictions
+    @allure.testcase(name="Check AP is restricted", url="")
+    @allure.title("Check AP is restricted")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12318", name="12318")
+    def test_check_restrictions(self, get_target_object, get_testbed_details):
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        if not resp:
+            logging.info("AP is not restricted")
+            assert True, "AP is not in restricted mode we can continue testing"
+        else:
+            logging.info("AP is restricted, Removing Restrictions")
+            output = get_target_object.get_dut_library_object().remove_restrictions()
+            resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+            if not resp:
+                logging.info("Removed Restrictions")
+                assert True, "Remove restrictions, Can continue testing"
+            else:
+                logging.error("Unable to remove restrictions")
+                assert False, "Unable to remove restrictions"
 
 
 @allure.testcase(name="Firmware Management", url="")
@@ -371,7 +390,8 @@ class TestFirmwareUpgrade(object):
         assert True
 
     @pytest.mark.test_firmware_gw
-    def test_firmware_upgrade_status_gateway(self, get_testbed_details, get_target_object, add_firmware_property_after_upgrade):
+    def test_firmware_upgrade_status_gateway(self, get_testbed_details, get_target_object,
+                                             add_firmware_property_after_upgrade):
         status = []
         for ap in range(len(get_target_object.device_under_tests_info)):
             ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
@@ -382,4 +402,3 @@ class TestFirmwareUpgrade(object):
             allure.attach(name=str(data['firmware']) + str(current_version_ap), body="")
             status.append(current_version_ap == data['firmware'].split())
         assert False not in status
-

@@ -135,8 +135,8 @@ class APLIBS:
                 logging.error("error in converting the ubus call ucentral status output to json" + output)
                 data = {}
             if (data.keys().__contains__("connected") or data.keys().__contains__("disconnected")) and \
-                data.keys().__contains__("latest") and \
-                data.keys().__contains__("active"):
+                    data.keys().__contains__("latest") and \
+                    data.keys().__contains__("active"):
                 break
             else:
                 logging.error("Error in ubus call ucentral status: " + str(output))
@@ -263,7 +263,7 @@ class APLIBS:
                                                     "Please add valid certificates on AP")
 
     def run_generic_command(self, cmd="", idx=0, print_log=True, attach_allure=False,
-                            expected_attachment_type=allure.attachment_type.TEXT):
+                            expected_attachment_type=allure.attachment_type.TEXT, restrictions=False):
         input_command = cmd
         logging.info("Executing Command on AP: " + cmd)
         try:
@@ -279,8 +279,12 @@ class APLIBS:
             if self.device_under_tests_data[idx]["method"] == "serial":
                 owrt_args = "--prompt root@" + self.device_under_tests_data[idx][
                     "identifier"] + " -s serial --log stdout --user root --passwd openwifi"
-                cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {owrt_args} -t {self.device_under_tests_data[idx]['serial_tty']} --action " \
-                      f"cmd --value \"{cmd}\" "
+                if not restrictions:
+                    cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {owrt_args} -t {self.device_under_tests_data[idx]['serial_tty']} --action " \
+                          f"cmd --value \"{cmd}\" "
+                if restrictions:
+                    cmd = f"cd ~/cicd-git/ && ./openwrt_ctl.py {owrt_args} -t {self.device_under_tests_data[idx]['serial_tty']} --action " \
+                          f"cmd --value \'{cmd}\' "
                 if print_log:
                     logging.info(cmd)
             stdin, stdout, stderr = client.exec_command(cmd)
@@ -474,9 +478,51 @@ class APLIBS:
         logging.info("Simulate radar logs: " + str(logs))
         return logs
 
+    def factory_reset(self, idx=0, print_log=True, attach_allure=False):
+        logging.info("started factory reset")
+        output = self.run_generic_command(cmd="jffs2reset -y -r",
+                                          idx=idx,
+                                          print_log=print_log,
+                                          attach_allure=attach_allure)
+        logging.info("Done Factory reset")
+        # Please wait 1min after doing factory reset
+        return output
+
+    def remove_restrictions(self):
+        self.run_generic_command(cmd="rm /certificates/restrictions.json",
+                                 idx=0, print_log=True,
+                                 attach_allure=False)
+        self.run_generic_command(cmd="rm /etc/ucentral/restrictions.json",
+                                 idx=0, print_log=True,
+                                 attach_allure=False)
+        self.factory_reset(print_log=False)
+        time.sleep(120)
+        output = self.run_generic_command(cmd='[ -f /etc/ucentral/restrictions.json ] && echo "True" || echo "False"',
+                                          idx=0,
+                                          print_log=True,
+                                          attach_allure=False,
+                                          expected_attachment_type=allure.attachment_type.TEXT)
+        return output
+
+    def add_restrictions(self, restrictions_file, developer_mode):
+        output = self.run_generic_command(cmd=developer_mode,
+                                          idx=0,
+                                          print_log=True,
+                                          attach_allure=False,
+                                          expected_attachment_type=allure.attachment_type.TEXT)
+        output = self.run_generic_command(cmd=restrictions_file,
+                                          idx=0,
+                                          print_log=True,
+                                          attach_allure=False,
+                                          expected_attachment_type=allure.attachment_type.TEXT,
+                                          restrictions=True)
+        self.factory_reset(print_log=False)
+        time.sleep(120)
+        return output
+
 
 if __name__ == '__main__':
-    basic= {
+    basic = {
         "target": "tip_2x",
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",

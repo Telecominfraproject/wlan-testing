@@ -6,6 +6,7 @@
 import datetime
 import json
 import logging
+import os
 import sys
 import time
 from operator import itemgetter
@@ -33,13 +34,13 @@ class ConfigureController:
         # self.session = requests.Session()
         self.login_resp = self.login()
         self.gw_host, self.fms_host, \
-        self.prov_host, self.owrrm_host, \
-        self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
+            self.prov_host, self.owrrm_host, \
+            self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
         if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
             time.sleep(60)
             self.gw_host, self.fms_host, \
-            self.prov_host, self.owrrm_host, \
-            self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
+                self.prov_host, self.owrrm_host, \
+                self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
             if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
                 self.logout()
                 logging.info(self.gw_host, self.fms_host + self.prov_host)
@@ -190,6 +191,7 @@ class ConfigureController:
                    "Connection": "keep-alive",
                    "Content-Type": "application/json",
                    "Keep-Alive": "timeout=10, max=1000"
+                   "conte"
                    }
         return headers
 
@@ -741,6 +743,49 @@ class Controller(ConfigureController):
         resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
 
         self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def check_restrictions(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/capabilities")
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        resp = resp.json()
+        if 'restrictions' in resp['capabilities'].keys():
+            return True
+        else:
+            return False
+
+    def asb_script(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/script")
+        payload = json.dumps(payload)
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+        resp = resp.json()
+        resp = resp['UUID']
+        return resp
+
+    def get_file(self, serial_number, uuid):
+        uri = self.build_uri("file/" + uuid + "?serialNumber=" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        time.sleep(10)
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        if resp.headers.get("Transfer-Encoding") == "chunked":
+            file = resp.content
+            with open("gopi.tar.gz", "wb") as f:
+                for chunk in resp.iter_content(chunk_size=1024):
+                    f.write(chunk)
+        else:
+            file = resp.content
+            logging.info(file)
+            with open("gopi.tar.gz", "wb") as f:
+                f.write(file)
+        allure.attach.file(name="file", source="gopi.tar.gz", extension=".tar")
         return resp
 
 
@@ -2035,18 +2080,18 @@ class UProfileUtility:
     def set_radio_config(self, radio_config={}, open_roaming=False):
         if open_roaming:
             base_radio_config_2g = {
-              "band": "2G",
-              "country": "CA",
-              "channel-mode": "HT",
-              "channel-width": 20,
-              "channel": "auto"
+                "band": "2G",
+                "country": "CA",
+                "channel-mode": "HT",
+                "channel-width": 20,
+                "channel": "auto"
             }
             base_radio_config_5g = {
-              "band": "5G",
-              "country": "CA",
-              "channel-mode": "VHT",
-              "channel-width": 80,
-              "channel": "auto"
+                "band": "5G",
+                "country": "CA",
+                "channel-mode": "VHT",
+                "channel-width": 80,
+                "channel": "auto"
             }
 
             for band in radio_config:
@@ -2201,7 +2246,8 @@ class UProfileUtility:
                 ssid_info["pass-point"] = pass_point_data
 
         else:
-            ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [], "services": ["wifi-frames"]}
+            ssid_info = {'name': ssid_data["ssid_name"], "bss-mode": "ap", "wifi-bands": [],
+                         "services": ["wifi-frames"]}
             for options in ssid_data:
                 if options == "multi-psk":
                     ssid_info[options] = ssid_data[options]
