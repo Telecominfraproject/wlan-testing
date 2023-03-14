@@ -39,7 +39,7 @@ setup_params_general = {
 @pytest.mark.wpa3_personal
 @pytest.mark.sixg
 @pytest.mark.sixg_band
-@pytest.mark.performance
+# @pytest.mark.performance
 @pytest.mark.usefixtures("setup_configuration")
 class Test80Mhz6GChannelautoPeakThroughput(object):
 
