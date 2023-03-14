@@ -49,7 +49,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     def test_client_wpa3_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
         """ Single client Wifi Capacity Test nat mode
-            pytest -m "peak_throughput_tests and sixg and tcp_download"
+            pytest -m "peak_throughput_tests and sixg and tcp_download and nat and channel_width_160"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -67,7 +67,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     def test_client_wpa3_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
         """ Single client Wifi Capacity Test nat mode
-            pytest -m "peak_throughput_tests and sixg and udp_download"
+            pytest -m "peak_throughput_tests and sixg and udp_download and nat and channel_width_160"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -85,7 +85,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     def test_client_wpa3_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration):
         """ Single client Wifi Capacity Test nat mode
-            pytest -m "peak_throughput_tests and sixg and udp_download"
+            pytest -m "peak_throughput_tests and sixg and udp_download and nat and channel_width_160"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -103,7 +103,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     def test_client_wpa3_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration):
         """ Single client Wifi Capacity Test nat mode
-            pytest -m "peak_throughput_tests and sixg and udp_bidirectional"
+            pytest -m "peak_throughput_tests and sixg and udp_bidirectional and nat and channel_width_160"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -121,7 +121,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     def test_client_wpa3_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
         """ Single client Wifi Capacity Test nat mode
-            pytest -m "peak_throughput_tests and sixg and tcp_upload"
+            pytest -m "peak_throughput_tests and sixg and tcp_upload and nat and channel_width_160"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -139,7 +139,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     def test_client_wpa3_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
         """ Single client Wifi Capacity Test nat mode
-            pytest -m "peak_throughput_tests and sixg and udp_upload"
+            pytest -m "peak_throughput_tests and sixg and udp_upload and nat and channel_width_160"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
