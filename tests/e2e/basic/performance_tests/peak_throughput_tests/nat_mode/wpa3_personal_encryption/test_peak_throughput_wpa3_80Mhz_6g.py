@@ -54,7 +54,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_download", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
@@ -90,7 +90,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -126,7 +126,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -144,7 +144,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
