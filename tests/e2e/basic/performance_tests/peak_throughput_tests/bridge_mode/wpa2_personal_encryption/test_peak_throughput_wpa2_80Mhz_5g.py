@@ -29,7 +29,7 @@ setup_params_general1 = {
 
 @allure.feature("PEAK THROUGHPUT TESTS")
 @allure.parent_suite("Throughput Benchmark Test")
-@allure.suite("5 Ghz Band")
+@allure.suite("5 GHz Band")
 @allure.sub_suite("BRIDGE Mode")
 @pytest.mark.channel_36
 @pytest.mark.parametrize(
