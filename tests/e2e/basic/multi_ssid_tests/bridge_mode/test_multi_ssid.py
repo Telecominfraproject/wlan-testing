@@ -2,10 +2,11 @@
     Multiple number of SSIDs Test: Bridge Mode
     pytest -m multi_ssid
 """
-
+import logging
 import time
 import allure
 import pytest
+import tabulate
 
 pytestmark = [pytest.mark.multi_ssid, pytest.mark.bridge]
 
@@ -59,6 +60,8 @@ class TestMultiSsidDataPath1(object):
         sta_list2 = ["sta0003", "sta0004"]
         stations_list = sta_list1 + sta_list2
         pass_fail, l3_data = [], {}
+        pass_fail_data = []
+        allure.attach(name="ssid info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"]))
         for i in range(len(setup_params_general1["ssid_modes"]["wpa2_personal"])):
             profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][i]
             ssid_name = profile_data["ssid_name"]
@@ -91,23 +94,50 @@ class TestMultiSsidDataPath1(object):
                                                side_b_min_rate=6291456, side_b_max_rate=0,
                                                traffic_type="lf_tcp", sta_list=[stations_list[i]],
                                                side_b=stations_list[j], start_cx=True,
-                                               prefix="mssid-{}-{}-".format(i, j))
+                                               prefix="cx-{}{}-".format(i, j))
                 time.sleep(5)
-                print("cx created between side a {} and side b {}".format(stations_list[i], stations_list[j]))
+                logging.info(
+                    "cx created between endpint a {} and endpoint b {}".format(stations_list[i], stations_list[j]))
 
         # start layer3
-        print("Run Layer 3 traffic for 30 sec ...")
+        logging.info("Run Layer 3 traffic for 30 sec ...")
         time.sleep(30)
         cx_list = get_test_library.get_cx_list()
         for i in range(len(cx_list)):
             cx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[i]}")
             get_test_library.allure_report_table_format(dict_data=cx_data[f"{cx_list[i]}"], key="L3 CX Column",
-                                                    value="L3 CX values", name="cx_data")
-            l3_data.update({"i": cx_data[f"{cx_list[i]}"]})
+                                                        value="L3 CX values", name=f"cx {cx_list[i]} info")
+            l3_data.update({f"{cx_list[i]}": cx_data[f"{cx_list[i]}"]})
+            if cx_data[cx_list[i]]['bps rx a'] != 0 and cx_data[cx_list[i]]['bps rx a'] != 0:
+                pass_fail_data.append(
+                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
+                     f"{cx_data[cx_list[i]]['bps rx a']}",
+                     f"{cx_data[cx_list[i]]['bps rx b']}", True])
+            else:
+                pass_fail_data.append(
+                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
+                     cx_data[cx_list[i]]['bps rx a'],
+                     f"{cx_data[cx_list[i]]['bps rx b']}", False])
+
         print("L3 Data \n", l3_data)
+        print("Pass Fail Data: \n", pass_fail_data)
+
+        # attach pass fail data to allure
+        result_table = tabulate.tabulate(pass_fail_data,
+                                         headers=["Data Path", "Tx Rate (bps)", "Rx Rate (bps)", "Pass/Fail"],
+                                         tablefmt='fancy_grid')
+        allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
         get_test_library.l3_cleanup()
-        assert True
+        test_result = True
+        for pf in pass_fail_data:
+            if pf[3] is False:
+                test_result = False
+
+        if test_result:
+            assert True
+        else:
+            assert False, "DataPath check failed, Traffic didn't reported on some endpoints"
 
 
 setup_params_general2 = {
