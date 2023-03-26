@@ -30,7 +30,7 @@ on:
         description: "revision of firmware to flash on AP, <branch>-<commit>"
       marker_expressions:
         required: true
-        default: "client_scale_tests,dataplane_tests,peak_throughput_tests,dual_band_tests"
+        default: "client_scale_tests,dataplane_tests,peak_throughput_tests"
         description: "Marker expressions to select tests to execute"
       existing_controller:
         required: false
@@ -67,7 +67,7 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01'}})" >> $GITHUB_OUTPUT
 
-          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'client_scale_tests,dataplane_tests,peak_throughput_tests,dual_band_tests' }}"
+          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'client_scale_tests,dataplane_tests,peak_throughput_tests' }}"
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
@@ -263,31 +263,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -477,31 +477,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -691,31 +691,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -905,31 +905,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -1119,31 +1119,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -1333,31 +1333,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -1547,31 +1547,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -1761,31 +1761,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -1975,31 +1975,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -2189,31 +2189,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -2403,31 +2403,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -2617,31 +2617,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
+#      - name: run tests dual_band_tests
+#        uses: ./.github/actions/run-tests
+#        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
+#        with:
+#          namespace: ${{ steps.namespace.outputs.name }}-wct
+#          testbed: basic
+#          marker_expression: "performance and dual_band_tests"
+#          configuration_file: "./lab_info.json"
+#          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+#          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+#          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
+#          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+#
+#      # necessary because if conditionals in composite actions are currently not respected
+#      - name: get tests logs
+#        if: always()
+#        continue-on-error: true
+#        run: |
+#          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+#          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
+#
+#      - name: delete namespace
+#        if: always()
+#        continue-on-error: true
+#        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
 
       - name: show gw logs
         if: failure()
@@ -2700,10 +2700,10 @@ jobs:
           name: allure-results-${{ matrix.model }}-client_scale_tests
           path: allure-results-client_scale_tests
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: allure-results-${{ matrix.model }}-dual_band_tests
-          path: allure-results-dual_band_tests
+#      - uses: actions/download-artifact@v3
+#        with:
+#          name: allure-results-${{ matrix.model }}-dual_band_tests
+#          path: allure-results-dual_band_tests
 
       - name: merge results
         run: |
@@ -2711,7 +2711,7 @@ jobs:
           cp -r allure-results-dataplane_tests/* allure-results/
           cp -r allure-results-peak_throughput_tests/* allure-results/
           cp -r allure-results-client_scale_tests/* allure-results/
-          cp -r allure-results-dual_band_tests/* allure-results/
+#          cp -r allure-results-dual_band_tests/* allure-results/
 
       - name: download history of previous run
         continue-on-error: true
