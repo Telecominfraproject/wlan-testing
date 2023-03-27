@@ -15,6 +15,6 @@
 
     "performance": {
         "OVERVIEW_TITLE": "'OpenWifi performance results'",
-        "OVERVIEW_TESTBEDS": ["wallys_dr40x9","hfcl_ion4","hfcl_ion4xe","edgecore_ecw5211","edgecore_eap101","edgecore_eap102","liteon_wpx8324","cig_wf188n","indio_um-305ac","udaya_a5-id2"]
+        "OVERVIEW_TESTBEDS": ["Wallys_DR6018","hfcl_ion4","hfcl_ion4xe","edgecore_ecw5211","edgecore_eap101","edgecore_eap102","liteon_wpx8324","cig_wf188n","indio_um-305ac","udaya_a5-id2"]
     }
 }
