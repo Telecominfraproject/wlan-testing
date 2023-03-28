@@ -34,7 +34,7 @@ on:
         description: "Marker expressions to select tests to execute"
       existing_controller:
         required: false
-        default: ""
+        default: "qa01"
         description: "Use an existing cloud controller, e.g. like qa01 instead of dynamic one"
       tests_release:
         required: false
@@ -196,7 +196,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -222,7 +222,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -248,7 +248,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -268,13 +268,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-01
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -291,27 +291,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -410,7 +410,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -436,7 +436,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -462,7 +462,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -482,13 +482,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-06a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -505,27 +505,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -624,7 +624,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -650,7 +650,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -676,7 +676,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -696,13 +696,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-07
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -719,27 +719,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -838,7 +838,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -864,7 +864,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -890,7 +890,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -910,13 +910,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-04
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -933,27 +933,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1052,7 +1052,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1078,7 +1078,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1104,7 +1104,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1124,13 +1124,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-05
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1147,27 +1147,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1266,7 +1266,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1292,7 +1292,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1318,7 +1318,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1338,13 +1338,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-06
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1361,27 +1361,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1480,7 +1480,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1506,7 +1506,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1532,7 +1532,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1552,13 +1552,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-08
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1575,27 +1575,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1694,7 +1694,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1720,7 +1720,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1746,7 +1746,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1766,13 +1766,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-02
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1789,27 +1789,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1908,7 +1908,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1934,7 +1934,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1960,7 +1960,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1980,13 +1980,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-03
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2003,27 +2003,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -2122,7 +2122,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2148,7 +2148,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2174,7 +2174,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2194,13 +2194,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-04a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2217,27 +2217,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -2336,7 +2336,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2362,7 +2362,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2388,7 +2388,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2408,13 +2408,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: basic-08a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2431,27 +2431,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -2550,7 +2550,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2576,7 +2576,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2602,7 +2602,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2622,13 +2622,13 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic
+          testbed: advance-03
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ steps.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2645,27 +2645,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ steps.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
