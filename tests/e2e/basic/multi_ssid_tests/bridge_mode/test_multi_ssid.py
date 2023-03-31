@@ -34,7 +34,7 @@ setup_params_general1 = {
 @allure.feature("Multi SSID Test")
 @allure.parent_suite("MULTI SSID")
 @allure.suite(suite_name="BRIDGE MODE")
-@allure.sub_suite(sub_suite_name="Test Data Path for 1 SSID on each Band")
+@allure.sub_suite(sub_suite_name="Test Data Path for 1 SSID")
 class TestMultiSsidDataPath1(object):
     """
         Multiple number of SSIDs Test: Bridge Mode
@@ -128,7 +128,7 @@ class TestMultiSsidDataPath1(object):
                                          tablefmt='fancy_grid')
         allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
-        get_test_library.l3_cleanup()
+        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
         test_result = True
         for pf in pass_fail_data:
             if pf[3] is False:
@@ -161,6 +161,10 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
+@allure.feature("Multi SSID Test")
+@allure.parent_suite("MULTI SSID")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Data Path for 2 SSID's")
 class TestMultiSsidDataPath2(object):
     """
         Multiple number of SSIDs Test: Bridge Mode
@@ -252,7 +256,7 @@ class TestMultiSsidDataPath2(object):
                                          tablefmt='fancy_grid')
         allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
-        get_test_library.l3_cleanup()
+        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
         test_result = True
         for pf in pass_fail_data:
             if pf[3] is False:
@@ -284,6 +288,10 @@ setup_params_general3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
+@allure.feature("Multi SSID Test")
+@allure.parent_suite("MULTI SSID")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Data Path for 3 SSID's")
 class TestMultiSsidDataPath3(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
@@ -371,7 +379,7 @@ class TestMultiSsidDataPath3(object):
                                          tablefmt='fancy_grid')
         allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
-        get_test_library.l3_cleanup()
+        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
         test_result = True
         for pf in pass_fail_data:
             if pf[3] is False:
@@ -404,6 +412,10 @@ setup_params_general4 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
+@allure.feature("Multi SSID Test")
+@allure.parent_suite("MULTI SSID")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Data Path for 4 SSID's")
 class TestMultiSsidDataPath4(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
@@ -491,7 +503,7 @@ class TestMultiSsidDataPath4(object):
                                          tablefmt='fancy_grid')
         allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
-        get_test_library.l3_cleanup()
+        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
         test_result = True
         for pf in pass_fail_data:
             if pf[3] is False:
@@ -501,6 +513,7 @@ class TestMultiSsidDataPath4(object):
             assert True
         else:
             assert False, "DataPath check failed, Traffic didn't reported on some endpoints"
+
 
 setup_params_general5 = {
     "mode": "BRIDGE",
@@ -524,6 +537,10 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
+@allure.feature("Multi SSID Test")
+@allure.parent_suite("MULTI SSID")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Data Path for 5 SSID's")
 class TestMultiSsidDataPath5(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
@@ -610,7 +627,7 @@ class TestMultiSsidDataPath5(object):
                                          tablefmt='fancy_grid')
         allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
-        get_test_library.l3_cleanup()
+        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
         test_result = True
         for pf in pass_fail_data:
             if pf[3] is False:
@@ -645,6 +662,10 @@ setup_params_general6 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
+@allure.feature("Multi SSID Test")
+@allure.parent_suite("MULTI SSID")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Data Path for 6 SSID's")
 class TestMultiSsidDataPath6(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
@@ -731,7 +752,7 @@ class TestMultiSsidDataPath6(object):
                                          tablefmt='fancy_grid')
         allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
-        get_test_library.l3_cleanup()
+        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
         test_result = True
         for pf in pass_fail_data:
             if pf[3] is False:
@@ -767,6 +788,10 @@ setup_params_general7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
+@allure.feature("Multi SSID Test")
+@allure.parent_suite("MULTI SSID")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Data Path for 7 SSID's")
 class TestMultiSsidDataPath7(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
@@ -853,7 +878,7 @@ class TestMultiSsidDataPath7(object):
                                          tablefmt='fancy_grid')
         allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
-        get_test_library.l3_cleanup()
+        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
         test_result = True
         for pf in pass_fail_data:
             if pf[3] is False:
@@ -890,6 +915,10 @@ setup_params_general8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
+@allure.feature("Multi SSID Test")
+@allure.parent_suite("MULTI SSID")
+@allure.suite(suite_name="BRIDGE MODE")
+@allure.sub_suite(sub_suite_name="Test Data Path for 8 SSID's")
 class TestMultiSsidDataPath8(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
@@ -976,7 +1005,7 @@ class TestMultiSsidDataPath8(object):
                                          tablefmt='fancy_grid')
         allure.attach(name="Test Result Table", body=str(result_table))
         # cleanup Layer3 data
-        get_test_library.l3_cleanup()
+        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
         test_result = True
         for pf in pass_fail_data:
             if pf[3] is False:
