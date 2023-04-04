@@ -204,9 +204,8 @@ class TestResources(object):
         else:
             ap_logs = get_target_object.get_dut_library_object().get_dut_logs(idx=i, print_log=False, attach_allure=False)
             allure.attach(body=ap_logs, name="Disconnected ap logs")
-            # pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
             logging.error("AP is in disconnected state from Ucentral gateway!!!")
-            pytest.exit("AP is in disconnected state from Ucentral gateway!!!")
+            pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
 
     # @pytest.mark.traffic_generator_connectivity
     # @allure.testcase(name="test_traffic_generator_connectivity", url="")
