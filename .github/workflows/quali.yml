@@ -33,8 +33,8 @@ on:
         default: "ow_sanity_lf"
         description: "Marker expression to select tests to execute"
       existing_controller:
-        required: false
-        default: ""
+        required: true
+        default: "qa01"
         description: "Use an existing cloud controller, e.g. like qa01 instead of dynamic one"
       tests_release:
         required: false
@@ -49,9 +49,9 @@ jobs:
   vars:
     runs-on: ubuntu-latest
     outputs:
-      openwifi_revision: ${{ steps.vars.outputs.openwifi}}
-      ap_models: ${{ steps.vars.outputs.ap_models}}
-      ap_version: ${{ steps.vars.outputs.ap_version}}
+      openwifi_revision: ${{ steps.vars.outputs.openwifi }}
+      ap_models: ${{ steps.vars.outputs.ap_models }}
+      ap_version: ${{ steps.vars.outputs.ap_version }}
       marker_expression: ${{ steps.vars.outputs.marker_expression }}
       existing_controller: ${{ steps.vars.outputs.existing_controller }}
       tests_release: ${{ steps.vars.outputs.tests_release }}
@@ -197,7 +197,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -330,7 +330,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -458,7 +458,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -586,7 +586,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -714,7 +714,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -842,7 +842,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -970,7 +970,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1098,7 +1098,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1226,7 +1226,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1355,7 +1355,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1484,7 +1484,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1613,7 +1613,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-qa01.cicd.lab.wlan.tip.build gw-qa01.cicd.lab.wlan.tip.build fms-qa01.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
