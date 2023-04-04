@@ -291,27 +291,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -505,27 +505,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -719,27 +719,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -933,27 +933,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1147,27 +1147,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1361,27 +1361,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1575,27 +1575,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -1789,27 +1789,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -2003,27 +2003,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -2217,27 +2217,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -2431,27 +2431,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
@@ -2645,27 +2645,27 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 #      - name: stop reservation
 #        if: always()
