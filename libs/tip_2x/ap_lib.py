@@ -102,6 +102,8 @@ class APLIBS:
 
         if output.__contains__("INCOMPLETE") or output.__contains__("FAILED"):
             logging.error(output)
+            ap_logs = self.get_dut_logs(idx=idx, print_log=False, attach_allure=False)
+            allure.attach(body=ap_logs, name="AP logs")
             pytest.fail("up0v0 interface is failed to have connectivity!!!")
 
     def get_uci_show(self, param="ucentral", idx=0, print_log=True, attach_allure=True):

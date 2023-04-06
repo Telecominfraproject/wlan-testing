@@ -638,6 +638,8 @@ class tip_2x:
             ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False, retry=10)
             if not ret_val["connected"] or ret_val["connected"] is None:
                 self.dut_library_object.check_connectivity(idx=idx)
+                ap_logs = self.dut_library_object.get_dut_logs(idx=idx, print_log=False, attach_allure=False)
+                allure.attach(body=ap_logs, name="AP Log pre_apply_check: ")
                 pytest.fail("AP is in disconnected state from Ucentral gateway!!!")
             else:
                 allure.step("Connected to Gateway after Restarting the ucentral Process!!!")
