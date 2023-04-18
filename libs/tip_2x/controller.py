@@ -1895,6 +1895,30 @@ class ProvUtils:
         self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
+class AnalyticsUtility(ConfigureController):
+    def __init__(self, sdk_client=None, controller_data=None):
+        if sdk_client is None:
+            self.sdk_client = Controller(controller_data=controller_data)
+            super().__init__(controller_data=controller_data)
+        self.sdk_client = sdk_client
+
+    def add_board(self, id, payload):
+        uri = self.build_url_owanalytics("board/" + id)
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
 
 class UProfileUtility:
 
