@@ -17,6 +17,9 @@ class TestKafkaEvents(object):
         for message in kafka_consumer_healthcheck:
             # Apply validation logic on message value
             print(message)
+            print("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+                                                 message.offset, message.key,
+                                                 message.value))
             if message.value is not None:
                 allure.attach(name="Kafka Health Check Message Info", body=str(message.value))
                 break

@@ -526,7 +526,9 @@ def kafka_consumer_deq():
     # Create a Kafka consumer
     consumer = KafkaConsumer(
         'device_event_queue',
-        bootstrap_servers=['kafka-headless:9092'])
+        bootstrap_servers=['kafka-headless.openwifi-qa01.svc.cluster.local:9092'],
+        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    )
     yield consumer
     consumer.close()
 
@@ -536,6 +538,8 @@ def kafka_consumer_healthcheck():
     # Create a Kafka consumer
     consumer = KafkaConsumer(
         'healthcheck',
-        bootstrap_servers=['kafka-headless:9092'])
+        bootstrap_servers=['kafka-headless.openwifi-qa01.svc.cluster.local:9092'],
+        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    )
     yield consumer
     consumer.close()
