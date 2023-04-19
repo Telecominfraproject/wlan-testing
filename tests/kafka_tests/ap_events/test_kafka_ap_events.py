@@ -18,6 +18,7 @@ class TestKafkaEvents(object):
             # Apply validation logic on message value
             print(message)
             if message.value is not None:
+                allure.attach(name="Kafka Health Check Message Info", body=str(message.value))
                 break
 
             # Assert that the message is valid
