@@ -4,15 +4,14 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.kafka_tests]
-
 
 @allure.feature("Test Kafka Messages")
 @allure.title("Real Time AP Events")
-class KafkaEvents(object):
+@pytest.mark.ap_events
+class TestKafkaEvents(object):
     # Pytest unit test for validating Kafka healthcheck messages
-    @pytest.mark.health_check
     @allure.title("Test HealthCheck Messages")
+    @pytest.mark.health_check
     def test_kafka_healthcheck(self, kafka_consumer_healthcheck):
         # Consume messages and validate them
         for message in kafka_consumer_healthcheck:
