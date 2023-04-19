@@ -100,7 +100,7 @@ jobs:
           chmod +x docker.sh;
           bash docker.sh;
           apt install -y python3-pip jq git;
-          pip3 list;
+          pip3 install --upgrade requests;
           pip3 install docker-compose;
         EOF
         scp -i ssh_key.pem cert.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-cert.pem
