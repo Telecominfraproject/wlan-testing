@@ -565,5 +565,79 @@ class TestUcentralGatewayService(object):
         else:
             logging.info("Removed Restrictions")
 
+    @pytest.mark.gw_lists_of_all_default_configurations
+    @allure.title("Get lists of all default configurations")
+    @allure.testcase(name="WIFI-12553",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12553")
+    def test_gw_service_get_lists_of_all_default_configurations(self, get_target_object, get_testbed_details):
+        """
+            Retrieve the lists of all default configurations
+            Unique marker:pytest -m "gw_lists_of_all_default_configurations"
+        """
+        resp = get_target_object.controller_library_object.get_lists_of_all_default_configurations()
+        assert resp.status_code == 200
 
+    @pytest.mark.gw_list_of_OUIs
+    @allure.title("Get a list of OUIs")
+    @allure.testcase(name="WIFI-12554",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12554")
+    def test_gw_service_get_list_of_OUIs(self, get_target_object, get_testbed_details):
+        """
+            Get a list of OUIs
+            Unique marker:pytest -m "gw_list_of_OUIs"
+        """
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        mac_list = ':'.join(device_name[i:i+2] for i in range(0, len(device_name), 2))
+        print("MAclist", mac_list)
+        resp = get_target_object.controller_library_object.get_list_of_OUIs(maclist=mac_list)
+        assert resp.status_code == 200
 
+    @pytest.mark.gw_list_of_scripts
+    @allure.title("Get a list scripts")
+    @allure.testcase(name="WIFI-12555",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12555")
+    def test_gw_service_get_list_of_scripts(self, get_target_object, get_testbed_details):
+        """
+            Get a list scripts
+            Unique marker:pytest -m "gw_list_of_scripts"
+        """
+        resp = get_target_object.controller_library_object.get_list_of_scripts()
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_list_of_blacklisted_devices
+    @allure.title("Get list blacklisted devices")
+    @allure.testcase(name="WIFI-12556",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12556")
+    def test_gw_service_get_list_of_blacklisted_devices(self, get_target_object, get_testbed_details):
+        """
+            Get a list blacklisted devices
+            Unique marker:pytest -m "gw_list_of_blacklisted_devices"
+        """
+        resp = get_target_object.controller_library_object.get_list_of_blacklisted_devices()
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_radius_proxy_configuration
+    @allure.title("Get RADIUS Proxy configuration")
+    @allure.testcase(name="WIFI-12557",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12557")
+    def test_gw_service_get_radius_proxy_configuration(self, get_target_object, get_testbed_details):
+        """
+            Get RADIUS Proxy configuration
+            Unique marker:pytest -m "gw_radius_proxy_configuration"
+        """
+        resp = get_target_object.controller_library_object.get_radius_proxy_configuration()
+        assert resp.status_code == 200
+
+    @pytest.mark.gw_country_code_for_ip_address
+    @allure.title("Get the country code for an IP address")
+    @allure.testcase(name="WIFI-12558",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12558")
+    def test_gw_service_get_country_code_for_ip_address(self, get_target_object, get_testbed_details):
+        """
+            Get the country code for an IP address
+            Unique marker:pytest -m "gw_country_code_for_ip_address"
+        """
+        iplist = get_testbed_details['device_under_tests'][0]['host_ip']
+        print("iplist", iplist)
+        resp = get_target_object.controller_library_object.get_country_code_for_ip_address(iplist=iplist)
+        assert resp.status_code == 200
