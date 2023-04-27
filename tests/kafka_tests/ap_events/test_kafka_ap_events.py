@@ -1,29 +1,92 @@
 """
     Test Case Module:  Testing Kafka messages for AP events
 """
+import random
+import time
 import allure
 import pytest
+import requests
+import logging
+import datetime
 
 
-@allure.feature("Test Kafka Messages")
+@allure.feature("Test Real TIme AP Events using Kafka")
 @allure.title("Real Time AP Events")
 @pytest.mark.ap_events
 class TestKafkaApEvents(object):
     # Pytest unit test for validating Kafka healthcheck messages
-    @allure.title("Test AP events")
+    @allure.title("Test Firmware Upgrade from Version x to Version y")
     @pytest.mark.ap_events
-    def test_kafka_ap_event(self, kafka_consumer_deq):
+    @pytest.mark.fw_upgrade_xy
+    def test_kafka_fw_upgrade_xy(self, get_target_object, kafka_consumer_deq):
         # Consume messages and validate them
-        for event in kafka_consumer_deq:
-            # Apply validation logic on message value
-            print(event)
-            print("%s:%d:%d: key=%s value=%s" % (event.topic, event.partition,
-                                                 event.offset, event.key,
-                                                 event.value))
-            if event.value is not None:
-                allure.attach(name="Kafka AP Event Info", body=str(event.value))
-                break
+        url = get_target_object.firmware_library_object.sdk_client.build_url_fms(path="firmwares")
+        firmware_list = {}
+        devices = []
+        is_valid = None
+        for ap in range(len(get_target_object.device_under_tests_info)):
+            ap_model = get_target_object.firmware_library_object.ap_model_lookup(
+                model=get_target_object.device_under_tests_info[ap]['model'])
+            devices.append(ap_model)
+            params = "limit=500" + \
+                     "&deviceType=" + ap_model + \
+                     "&offset=0"
+            response = requests.get(url, params=params, verify=False, timeout=120,
+                                    headers=get_target_object.firmware_library_object.sdk_client.make_headers())
 
-            # Assert that the message is valid
-        assert True
-        # assert is_valid is str, f'Message validation failed: {message.value}'
+            firmwares = response.json()
+            if response.status_code == 200:
+                firmware_list[f"{ap_model}"] = firmwares['firmwares']
+            else:
+                pytest.fail("Test failed - " + response.status_code + f"{response.reason}")
+            firmware_uri = firmware_list[ap_model][random.randint(0, len(firmware_list[ap_model]))]['uri']
+            payload = "{ \"serialNumber\" : " + "\"" + \
+                      get_target_object.device_under_tests_info[ap]["identifier"] + "\"" + " , \"uri\" : " \
+                      + "\"" + firmware_uri \
+                      + "\"" + ", \"when\" : 0" \
+                      + " }"
+            command = "device/" + get_target_object.device_under_tests_info[ap]["identifier"] + "/upgrade"
+            url = get_target_object.firmware_library_object.sdk_client.build_uri(path=command)
+            upgrade_response = requests.post(url, data=payload,
+                                             headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                             verify=False, timeout=120)
+            if upgrade_response.status_code == 200:
+                logging.info("Firmware Upgrade request Applied")
+            logging.info("wait for 300 sec to finish Firmware Upgrade")
+            logging.info("POST : {}".format(url) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "URI: " + str(url) + "\n" +
+                         "Data: " + str(payload) + "\n" +
+                         "Headers: " + str(self.sdk_client.make_headers()))
+            allure.attach(name="firmware upgrade: \n", body="Sending Command: POST " + str(command) + "\n" +
+                                                            "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                            "Payload: " + str(payload) + "\n" +
+                                                            "Data: " + str(payload) + "\n" +
+                                                            "Headers: " + str(self.sdk_client.make_headers()))
+
+            timeout = 300  # Timeout in seconds
+            start_time = time.time()
+
+            while time.time() - start_time < timeout:
+                # Poll for new messages
+                messages = kafka_consumer_deq.poll(timeout_ms=120000)
+
+                # Check if any messages were returned
+                if messages:
+                    for message in messages.values():
+                        # Process the message
+                        print(message)
+                        print("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+                                                             message.offset, message.key,
+                                                             message.value))
+                        if message.value is not None:
+                            is_valid = True
+                            allure.attach(name="Check Kafka Message for Firmware Upgrade from Version X to Version Y",
+                                          body=str(message.value))
+                            break
+                else:
+                    # No messages received, sleep for a bit
+                    time.sleep(1)
+
+        # Assert that the message is valid
+        assert is_valid is not None, f'Message not found'
