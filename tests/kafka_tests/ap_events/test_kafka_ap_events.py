@@ -57,12 +57,12 @@ class TestKafkaApEvents(object):
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "URI: " + str(url) + "\n" +
                          "Data: " + str(payload) + "\n" +
-                         "Headers: " + str(self.sdk_client.make_headers()))
+                         "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
             allure.attach(name="firmware upgrade: \n", body="Sending Command: POST " + str(command) + "\n" +
                                                             "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                             "Payload: " + str(payload) + "\n" +
                                                             "Data: " + str(payload) + "\n" +
-                                                            "Headers: " + str(self.sdk_client.make_headers()))
+                                                            "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
 
             timeout = 300  # Timeout in seconds
             start_time = time.time()
