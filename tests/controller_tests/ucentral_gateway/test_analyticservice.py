@@ -106,8 +106,8 @@ class TestUcentralAnalyticService(object):
 
     @pytest.mark.retireve_board_timepoints
     @allure.title("Retrieve a Board within a time period")
-    def test_analytics_get_board_timepoints(self, get_target_object):
-        response = get_target_object.controller_library_object.retireve_board_timepoints()
+    def test_analytics_get_board_data(self, get_target_object):
+        response = get_target_object.controller_library_object.get_board_data()
         print(response.json())
         allure.attach(name="GET - Retrieve a Board Data within a specific period:\n", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
@@ -115,8 +115,8 @@ class TestUcentralAnalyticService(object):
 
     @pytest.mark.remove_board_timepoints
     @allure.title("Retrieve a Board within a time period")
-    def test_analytics_remove_board_timepoints(self, get_target_object):
-        response = get_target_object.controller_library_object.remove_board_timepoints()
+    def test_analytics_remove_board_data(self, get_target_object):
+        response = get_target_object.controller_library_object.remove_board_data()
         print(response.json())
         allure.attach(name="DEL - Retrieve a Board Data within a specific period:\n", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
