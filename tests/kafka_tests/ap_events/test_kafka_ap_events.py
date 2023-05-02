@@ -59,7 +59,6 @@ class TestKafkaApEvents(object):
                          "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
             allure.attach(name="firmware upgrade: \n", body="Sending Command: POST " + str(command) + "\n" +
                                                             "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-                                                            "Payload: " + str(payload) + "\n" +
                                                             "Data: " + str(payload) + "\n" +
                                                             "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
 
@@ -72,13 +71,11 @@ class TestKafkaApEvents(object):
 
                 # Check if any messages were returned
                 if messages:
-                    logging.info("messages type: %s " % type(messages))
+                    logging.info("Polled messages: %s " % messages)
                     for message in messages.values():
-                        # Process the message
-                        logging.info(message)
-                        logging.info("Message value: %s" % message.value)
-                        if message.value is not None:
-                            msg = message.value.decode('utf-8')
+                        logging.info("Message value: \n" % message)
+                        if message is not None:
+                            msg = message.decode('utf-8')
                             is_valid = True
                             allure.attach(name="Check Kafka Message for Firmware Upgrade from Version X to Version Y",
                                           body=str(msg))
