@@ -1,6 +1,7 @@
 """
     Test Case Module:  Testing Kafka messages for AP events
 """
+import json
 import random
 import time
 import allure
@@ -60,26 +61,33 @@ class TestKafkaApEvents(object):
             allure.attach(name="firmware upgrade: \n", body="Sending Command: POST " + str(command) + "\n" +
                                                             "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                             "Data: " + str(payload) + "\n" +
-                                                            "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+                                                            "Headers: " + str(
+                get_target_object.firmware_library_object.sdk_client.make_headers()))
 
             timeout = 300  # Timeout in seconds
             start_time = time.time()
 
             while time.time() - start_time < timeout:
                 # Poll for new messages
-                messages = kafka_consumer_deq.poll(timeout_ms=120000)
+                records = kafka_consumer_deq.poll(timeout_ms=120000)
 
                 # Check if any messages were returned
-                if messages:
-                    logging.info("Polled messages: %s " % messages)
-                    for message in messages.values():
-                        logging.info("Message value: \n" % message)
-                        if message is not None:
-                            msg = message.decode('utf-8')
-                            is_valid = True
-                            allure.attach(name="Check Kafka Message for Firmware Upgrade from Version X to Version Y",
-                                          body=str(msg))
-                            break
+                if records:
+                    logging.info("Polled messages: %s " % records)
+                    for topic, messages in records.items():
+                        for msg in messages:
+                            value = msg.value
+                            str_value = value.decode('utf-8')
+                            logging.info("Message value: %s \n" % str_value)
+                            msg_dict = json.loads(str_value)
+                            logging.info("Message Dict : %s \n" % msg_dict)
+                            if 'unit.firmware_change' in msg_dict.values():
+                                logging.info(f"unit.firmware_change has found in the Message")
+                                is_valid = True
+                                allure.attach(
+                                    name="Check Kafka Message for Firmware Upgrade from Version X to Version Y",
+                                    body=str(msg_dict))
+                                break
                 else:
                     # No messages received, sleep for a bit
                     time.sleep(1)
