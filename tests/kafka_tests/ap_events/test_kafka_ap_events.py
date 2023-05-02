@@ -16,7 +16,6 @@ import datetime
 class TestKafkaApEvents(object):
     # Pytest unit test for validating Kafka healthcheck messages
     @allure.title("Test Firmware Upgrade from Version x to Version y")
-    @pytest.mark.ap_events
     @pytest.mark.fw_upgrade_xy
     def test_kafka_fw_upgrade_xy(self, get_target_object, kafka_consumer_deq):
         # Consume messages and validate them
@@ -38,7 +37,7 @@ class TestKafkaApEvents(object):
             if response.status_code == 200:
                 firmware_list[f"{ap_model}"] = firmwares['firmwares']
             else:
-                pytest.fail("Test failed - " + response.status_code + f"{response.reason}")
+                pytest.fail("Test failed - Error Code: " + response.status_code + f" - {response.reason}")
             firmware_uri = firmware_list[ap_model][random.randint(0, len(firmware_list[ap_model]))]['uri']
             payload = "{ \"serialNumber\" : " + "\"" + \
                       get_target_object.device_under_tests_info[ap]["identifier"] + "\"" + " , \"uri\" : " \
@@ -53,7 +52,7 @@ class TestKafkaApEvents(object):
             if upgrade_response.status_code == 200:
                 logging.info("Firmware Upgrade request Applied")
             logging.info("wait for 300 sec to finish Firmware Upgrade")
-            logging.info("POST : {}".format(url) + "\n" +
+            logging.info("Request : POST {}".format(url) + "\n" +
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "URI: " + str(url) + "\n" +
                          "Data: " + str(payload) + "\n" +
@@ -73,16 +72,16 @@ class TestKafkaApEvents(object):
 
                 # Check if any messages were returned
                 if messages:
+                    logging.info("messages type: %s " % type(messages))
                     for message in messages.values():
                         # Process the message
-                        print(message)
-                        print("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
-                                                             message.offset, message.key,
-                                                             message.value))
+                        logging.info(message)
+                        logging.info("Message value: %s" % message.value)
                         if message.value is not None:
+                            msg = message.value.decode('utf-8')
                             is_valid = True
                             allure.attach(name="Check Kafka Message for Firmware Upgrade from Version X to Version Y",
-                                          body=str(message.value))
+                                          body=str(msg))
                             break
                 else:
                     # No messages received, sleep for a bit
