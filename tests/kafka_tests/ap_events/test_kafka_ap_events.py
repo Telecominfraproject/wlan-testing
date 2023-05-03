@@ -75,9 +75,11 @@ class TestKafkaApEvents(object):
                 if records:
                     logging.info("Polled messages: %s " % records)
                     for topic, messages in records.items():
+                        logging.info("Kafka Topic %s " % topic)
+                        logging.info("Messages in Record: %s " % messages)
                         for msg in messages:
                             value = msg.value
-                            str_value = value.decode('utf-8')
+                            str_value = value
                             logging.info("Message value: %s \n" % str_value)
                             msg_dict = json.loads(str_value)
                             logging.info("Message Dict : %s \n" % msg_dict)
