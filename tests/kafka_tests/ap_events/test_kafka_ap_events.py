@@ -23,7 +23,8 @@ class TestKafkaApEvents(object):
         url = get_target_object.firmware_library_object.sdk_client.build_url_fms(path="firmwares")
         firmware_list = {}
         devices = []
-        is_valid = None
+        is_valid = False
+        msg_found = False
         for ap in range(len(get_target_object.device_under_tests_info)):
             ap_model = get_target_object.firmware_library_object.ap_model_lookup(
                 model=get_target_object.device_under_tests_info[ap]['model'])
@@ -72,26 +73,34 @@ class TestKafkaApEvents(object):
                 messages = kafka_consumer_deq.poll(timeout_ms=120000)
 
                 # Check if any messages were returned
-                if messages:
+                if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
                     for topic, records in messages.items():
                         logging.info(f"Kafka Topic {topic}")
                         logging.info(f"Messages in Record: {records}")
                         for record in records:
                             logging.info(f"Record : {record}")
-                            message_value = json.loads(record.value.decode('utf-8'))
-                            logging.info("Message value: %s \n" % str(message_value))
-                            # Validate the message value here
-                            if 'unit.firmware_change' in str(message_value):
-                                logging.info(f"unit.firmware_change has found in the Message")
-                                is_valid = True
-                                allure.attach(
-                                    name="Check Kafka Message for Firmware Upgrade from Version X to Version Y",
-                                    body=str(message_value))
-                                break
+                            if 'payload' in record.value['payload']:
+                                payload = record.value['payload']['payload']
+                                event_type = payload.get['type']
+                                # Validate the message value here
+                                if event_type == 'unit.firmware_change':
+                                    logging.info(f"unit.firmware_change has found in the Message")
+                                    old_firmware = payload.get('oldFirmware')
+                                    new_firmware = payload.get('newFirmware')
+                                    is_valid = True
+                                    allure.attach(
+                                        name="Check Kafka Message for Firmware Upgrade from Version X to Version Y",
+                                        body=str(record))
+                                    allure.attach(name='old firmware', body=str(old_firmware))
+                                    allure.attach(name='new firmware', body=str(new_firmware))
+                                    msg_found = True
+                                    break
+                elif msg_found:
+                    break
                 else:
                     # No messages received, sleep for a bit
                     time.sleep(1)
 
         # Assert that the message is valid
-        assert is_valid is not None, f'Message not found'
+        assert is_valid, f'Message not found'
