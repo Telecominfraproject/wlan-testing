@@ -25,6 +25,7 @@ class TestKafkaApEvents(object):
         devices = []
         is_valid = False
         msg_found = False
+        payload_msg = ""
         for ap in range(len(get_target_object.device_under_tests_info)):
             ap_model = get_target_object.firmware_library_object.ap_model_lookup(
                 model=get_target_object.device_under_tests_info[ap]['model'])
@@ -81,13 +82,14 @@ class TestKafkaApEvents(object):
                         for record in records:
                             logging.info(f"Record : {record}")
                             if 'payload' in record.value['payload']:
-                                payload = record.value['payload']['payload']
-                                event_type = payload.get['type']
+                                payload_msg = record.value['payload']['payload']
+                            if 'type' in record.value['payload']:
+                                event_type = record.value['payload']['type']
                                 # Validate the message value here
                                 if event_type == 'unit.firmware_change':
                                     logging.info(f"unit.firmware_change has found in the Message")
-                                    old_firmware = payload.get('oldFirmware')
-                                    new_firmware = payload.get('newFirmware')
+                                    old_firmware = payload_msg['oldFirmware']
+                                    new_firmware = payload_msg['newFirmware']
                                     is_valid = True
                                     allure.attach(
                                         name="Check Kafka Message for Firmware Upgrade from Version X to Version Y",
@@ -96,6 +98,8 @@ class TestKafkaApEvents(object):
                                     allure.attach(name='new firmware', body=str(new_firmware))
                                     msg_found = True
                                     break
+                                else:
+                                    continue
                 elif msg_found:
                     break
                 else:
