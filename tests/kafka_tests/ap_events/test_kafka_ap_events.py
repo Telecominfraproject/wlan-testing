@@ -75,8 +75,8 @@ class TestKafkaApEvents(object):
                 if messages:
                     logging.info("Polled messages: %s " % messages)
                     for topic, records in messages.items():
-                        logging.info("Kafka Topic %s " % topic)
-                        logging.info("Messages in Record: %s " % records)
+                        print("Kafka Topic \n", topic)
+                        print("Messages in Record: \n", records)
                         for record in records:
                             try:
                                 logging.info("Record : %s " % record)
