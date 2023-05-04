@@ -26,6 +26,7 @@ class TestKafkaApEvents(object):
         is_valid = False
         msg_found = False
         payload_msg = ""
+        record_messages = []
         for ap in range(len(get_target_object.device_under_tests_info)):
             ap_model = get_target_object.firmware_library_object.ap_model_lookup(
                 model=get_target_object.device_under_tests_info[ap]['model'])
@@ -60,7 +61,7 @@ class TestKafkaApEvents(object):
                          "URI: " + str(url) + "\n" +
                          "Data: " + str(payload) + "\n" +
                          "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
-            allure.attach(name="firmware upgrade: \n", body="Sending Command: POST " + str(command) + "\n" +
+            allure.attach(name="firmware upgrade: \n", body="Sending Command: POST " + str(url) + "\n" +
                                                             "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                             "Data: " + str(payload) + "\n" +
                                                             "Headers: " + str(
@@ -68,7 +69,6 @@ class TestKafkaApEvents(object):
 
             timeout = 300  # Timeout in seconds
             start_time = time.time()
-
             while time.time() - start_time < timeout:
                 # Poll for new messages
                 messages = kafka_consumer_deq.poll(timeout_ms=120000)
@@ -80,7 +80,7 @@ class TestKafkaApEvents(object):
                         logging.info(f"Kafka Topic {topic}")
                         logging.info(f"Messages in Record: {records}")
                         for record in records:
-                            logging.info(f"Record : {record}")
+                            record_messages.append(record)
                             if 'payload' in record.value['payload']:
                                 payload_msg = record.value['payload']['payload']
                             if 'type' in record.value['payload']:
@@ -105,6 +105,7 @@ class TestKafkaApEvents(object):
                 else:
                     # No messages received, sleep for a bit
                     time.sleep(1)
+        allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
 
         # Assert that the message is valid
         assert is_valid, f'Message not found'
