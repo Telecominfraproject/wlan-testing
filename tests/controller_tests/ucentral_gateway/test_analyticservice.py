@@ -3,139 +3,275 @@
     UCentral Analytics Service OPEN API Tests
 
 """
+import datetime
+import json
+import random
+import string
+import time
 
 import allure
 import pytest
+import logging
 
 
 @pytest.mark.uc_sanity
-@pytest.mark.ow_sdk_load_tests
+@pytest.mark.ow_sdk_tests
+@pytest.mark.ow_analytics_api_tests
 @allure.parent_suite("OpenWifi SDK Tests")
 @allure.suite("OpenWifi Analytics Service Tests")
 class TestUcentralAnalyticService(object):
+    boards, board_id, clients = [], "", []
 
     @pytest.mark.system_info_analytics
     @allure.title("Get System Info Analytics")
     def test_analytics_system_info(self, get_target_object):
-        system_info = get_target_object.controller_library_object.get_system_ow_analytics()
-        print(system_info.json())
-        allure.attach(name="GET - Analytics system info:\n", body=str(system_info.json()),
+        response = get_target_object.controller_library_object.get_system_ow_analytics()
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
-        assert system_info.status_code == 200
+        assert response.status_code == 200
 
     @pytest.mark.get_boards
-    @allure.title("GET Boards")
+    @allure.title("Retrieve list of available boards")
     def test_analytics_get_boards(self, get_target_object):
-        response = get_target_object.controller_library_object.get_boards()
-        print(response.json())
-        allure.attach(name="GET - List of Boards :\n", body=str(response.json()),
-                      attachment_type=allure.attachment_type.JSON)
-        assert response.status_code == 200
-
-    @pytest.mark.add_board
-    @allure.title("Create a Board")
-    def test_analytics_create_board(self, get_target_object):
-        response = get_target_object.controller_library_object.create_board()
-        print(response.json())
-        allure.attach(name="POST - Create a Board:\n", body=str(response.json()),
-                      attachment_type=allure.attachment_type.JSON)
-        assert response.status_code == 200
-
-    @pytest.mark.retireve_board
-    @allure.title("Retrieve a Board")
-    def test_analytics_get_board(self, get_target_object):
-        response = get_target_object.controller_library_object.get_board()
-        print(response.json())
-        allure.attach(name="PUT - Update a Board:\n", body=str(response.json()),
-                      attachment_type=allure.attachment_type.JSON)
-        assert response.status_code == 200
-
-    @pytest.mark.edit_board
-    @allure.title("Update a Board")
-    def test_analytics_update_board(self, get_target_object):
-        response = get_target_object.controller_library_object.edit_board()
-        print(response.json())
-        allure.attach(name="PUT - Update a Board:\n", body=str(response.json()),
-                      attachment_type=allure.attachment_type.JSON)
-        assert response.status_code == 200
-
-    @pytest.mark.remove_board
-    @allure.title("Remove a Board")
-    def test_analytics_delete_board(self, get_target_object):
-        response = get_target_object.controller_library_object.remove_board()
-        print(response.json())
-        allure.attach(name="DEL - Update a Board:\n", body=str(response.json()),
+        response = get_target_object.analytics_library_object.get_boards()
+        logging.info(response.json())
+        if response.status_code == 200:
+            body = response.json()
+            self.boards = body["boards"]
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
     @pytest.mark.get_board_devices
     @allure.title("GET Board Devices")
+    def test_analytics_get_board_devices(self, get_target_object):
+        response = get_target_object.analytics_library_object.get_boards()
+        logging.info(response.json())
+        if response.status_code == 200:
+            body = response.json()
+            self.boards = body["boards"]
+        else:
+            assert response.status_code == 200, "Failed in getting boards data"
+        if len(self.boards) > 0:
+            response = get_target_object.analytics_library_object.get_board_devices(
+                board_id=self.boards[random.randint(0, len(self.boards))])
+            logging.info(response.json())
+            allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                          attachment_type=allure.attachment_type.JSON)
+            assert response.status_code == 200, "Failed in getting devices in a board"
+        else:
+            assert False, "No Boards Available"
+
+    @pytest.mark.create_board
+    @allure.title("Create a Board")
     def test_analytics_create_board(self, get_target_object):
-        response = get_target_object.controller_library_object.get_board_devices()
-        print(response.json())
-        allure.attach(name="GET - Devices in a Board:\n", body=str(response.json()),
+        resp, venue_list = {}, []
+        temp_response = get_target_object.prov_library_object.get_entity_by_id("aefb7254-571f-42c3-be51-39a2b1441234")
+        if temp_response.status_code == 200:
+            resp = temp_response.json()
+            venue_list = resp['venues']
+        else:
+            assert temp_response.status_code == 200, "Failed in getting Venues"
+        response = get_target_object.analytics_library_object.get_boards()
+        if response.status_code == 200:
+            body = response.json()
+            self.boards = body["boards"]
+        else:
+            assert response.status_code == 200, "Failed in getting boards data"
+        data = {
+            "name": "Test-Create-Board-" + "".join(random.choices(string.ascii_letters, k=6)),
+            "description": "Create Board API using Automation Test",
+            "notes": [
+                {
+                    "note": "Test-Note"
+                }
+            ],
+            "tags": [],
+            "venueList": [
+                {
+                    "id": venue_list[random.randint(0, len(venue_list))],
+                    "name": "Test-create-board-in-a-sub-venue",
+                    "description": "test-create-board-API",
+                    "retention": 604800,
+                    "interval": 60,
+                    "monitorSubVenues": True
+                }
+            ]
+        }
+        response = get_target_object.analytics_library_object.create_board(data)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        if response.status_code == 200:
+            self.board_id = response.json()['id']
+        assert response.status_code == 200, "Failed in creating a board"
+
+    @pytest.mark.get_board
+    @allure.title("Retrieve a Board")
+    def test_analytics_get_board(self, get_target_object):
+        boards_list = []
+        resp = get_target_object.analytics_library_object.get_boards()
+        if resp.status_code == 200:
+            body = resp.json()
+            boards_list = body["boards"]
+        else:
+            assert resp.status_code == 200, "Failed in getting boards data"
+        if self.board_id == "" and len(self.boards) > 0:
+            response = get_target_object.analytics_library_object.get_board(boards_list[random.randint(0, len(boards_list))])
+        else:
+            response = get_target_object.analytics_library_object.get_board(self.board_id)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        assert response.status_code == 200
+
+    @pytest.mark.update_board
+    @allure.title("Update a Board")
+    def test_analytics_update_board(self, get_target_object):
+        response = get_target_object.analytics_library_object.get_boards()
+        if response.status_code == 200:
+            body = response.json()
+            self.boards = body["boards"]
+        else:
+            assert response.status_code == 200, "Failed in getting boards data"
+        data = {
+            "name": "Test-update-board-check-sub-venue",
+            "description": "This is a test to check Update board API"
+        }
+        if self.board_id == "" and len(self.boards) > 0:
+            response = get_target_object.analytics_library_object.edit_board(board_id=self.boards[random.randint(0, len(self.boards))], payload=data)
+        else:
+            response = get_target_object.analytics_library_object.edit_board(board_id=self.board_id, payload=data)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        if response.status_code == 200:
+            response1 = get_target_object.analytics_library_object.get_board(response.json()['id'])
+            if response1.status_code == 200:
+                allure.attach(name=f"Response: {response1.status_code} - {response1.reason}", body=str(response1.json()),
+                              attachment_type=allure.attachment_type.JSON)
+        else:
+            assert response.status_code == 200, "Failed in updating a board"
+        assert response.status_code == response1.status_code
+
+    @pytest.mark.remove_board
+    @allure.title("Remove a Board")
+    def test_analytics_delete_board(self, get_target_object):
+        response = get_target_object.analytics_library_object.get_boards()
+        if response.status_code == 200:
+            body = response.json()
+            self.boards = body["boards"]
+        else:
+            assert response.status_code == 200, "Failed in getting boards data"
+        if self.board_id == "" and len(self.boards) > 0:
+            response = get_target_object.analytics_library_object.remove_board(self.boards[random.randint(0, len(self.boards))]['id'])
+        else:
+            response = get_target_object.analytics_library_object.remove_board(self.board_id)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
     @pytest.mark.get_wificlients_history
     @allure.title("GET Wifi Clients History")
     def test_analytics_get_wificlients_history(self, get_target_object):
-        response = get_target_object.controller_library_object.get_wificlients_history()
-        print(response.json())
-        allure.attach(name="GET - Wifi Clients History :\n", body=str(response.json()),
+        resp, venue_list = {}, []
+        temp_response = get_target_object.prov_library_object.get_entity_by_id("aefb7254-571f-42c3-be51-39a2b1441234")
+        if temp_response.status_code == 200:
+            resp = temp_response.json()
+            venue_list = resp['venues']
+        else:
+            assert temp_response.status_code == 200, "Failed in getting Venues"
+        venue = venue_list[random.randint(0, len(venue_list))]
+        response = get_target_object.analytics_library_object.get_wificlients_history(venue=venue)
+        logging.info(response.json())
+        if response.status_code == 200:
+            self.clients = response.json()['entries']
+        allure.attach(name="Response:GET - Wifi Clients History ", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
     @pytest.mark.get_wificlient_history
     @allure.title("GET Wifi Client History")
     def test_analytics_get_wificlient_history(self, get_target_object):
-        response = get_target_object.controller_library_object.get_wificlient_history()
-        print(response.json())
-        allure.attach(name="GET - A Wifi Client History :\n", body=str(response.json()),
+        if len(self.clients) != 0:
+            client = self.clients[random.randint(0, len(self.clients))]
+        else:
+            client = '04f021d405cc'
+        response = get_target_object.analytics_library_object.get_wificlient_history(client=client, venue='dd869ca7-40a3-4d7a-9f6f-a7769baf76e0')
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
     @pytest.mark.remove_wificlient_history
     @allure.title("DELETE Wifi Client History")
     def test_analytics_remove_wificlient_history(self, get_target_object):
-        response = get_target_object.controller_library_object.remove_wificlient_history()
-        print(response.json())
-        allure.attach(name="DEL - A Wifi Client History :\n", body=str(response.json()),
+        if len(self.clients) != 0:
+            client = self.clients[random.randint(0, len(self.clients))]
+        else:
+            client = '04f021d405cc'
+        response = get_target_object.analytics_library_object.remove_wificlient_history(client=client, venue='dd869ca7-40a3-4d7a-9f6f-a7769baf76e0')
+        logging.info(response.json())
+        allure.attach(name="Response:DEL - A Wifi Client History ", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
     @pytest.mark.retireve_board_timepoints
     @allure.title("Retrieve a Board within a time period")
     def test_analytics_get_board_data(self, get_target_object):
-        response = get_target_object.controller_library_object.get_board_data()
-        print(response.json())
-        allure.attach(name="GET - Retrieve a Board Data within a specific period:\n", body=str(response.json()),
+        response = get_target_object.analytics_library_object.get_boards()
+        if response.status_code == 200:
+            body = response.json()
+            self.boards = body["boards"]
+        else:
+            assert response.status_code == 200, "Failed in getting boards data"
+        if self.board_id == "":
+            response = get_target_object.analytics_library_object.get_board_data(self.boards[random.randint(0, len(self.boards))])
+        else:
+            response = get_target_object.analytics_library_object.get_board_data(self.board_id)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
     @pytest.mark.remove_board_timepoints
     @allure.title("Retrieve a Board within a time period")
     def test_analytics_remove_board_data(self, get_target_object):
-        response = get_target_object.controller_library_object.remove_board_data()
-        print(response.json())
-        allure.attach(name="DEL - Retrieve a Board Data within a specific period:\n", body=str(response.json()),
+        response = get_target_object.analytics_library_object.get_boards()
+        if response.status_code == 200:
+            body = response.json()
+            self.boards = body["boards"]
+        else:
+            assert response.status_code == 200, "Failed in getting boards data"
+        if self.board_id == "":
+            response = get_target_object.analytics_library_object.remove_board_data(self.boards[random.randint(0, len(self.boards))])
+        else:
+            response = get_target_object.analytics_library_object.remove_board_data(self.board_id)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
     @pytest.mark.post_system_commands
     @allure.title("Perform some system wide commands")
     def test_analytics_post_system_commands(self, get_target_object):
-        system_info = get_target_object.controller_library_object.post_system_commands()
-        print(system_info.json())
-        allure.attach(name="POST - Analytics system info:\n", body=str(system_info.json()),
+        payload = {
+            "command": "getsubsystemnames"
+        }
+        response = get_target_object.analytics_library_object.post_system_commands(payload)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
-        assert system_info.status_code == 200
+        assert response.status_code == 200
 
     @pytest.mark.get_system_commands
     @allure.title("Retrieve different values from the running service")
     def test_analytics_get_system_commands(self, get_target_object):
-        system_info = get_target_object.controller_library_object.get_system_commands()
-        print(system_info.json())
-        allure.attach(name="GET - Analytics system info:\n", body=str(system_info.json()),
+        command = 'info'
+        response = get_target_object.analytics_library_object.get_system_commands(command)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
-        assert system_info.status_code == 200
+        assert response.status_code == 200

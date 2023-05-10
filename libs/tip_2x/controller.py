@@ -191,7 +191,7 @@ class ConfigureController:
                    "Connection": "keep-alive",
                    "Content-Type": "application/json",
                    "Keep-Alive": "timeout=10, max=1000"
-                   "conte"
+                                 "conte"
                    }
         return headers
 
@@ -1592,33 +1592,31 @@ class ProvUtils:
         return resp
 
 
-class AnalyticsUtility(ConfigureController):
+class AnalyticsUtility:
     def __init__(self, sdk_client=None, controller_data=None):
         if sdk_client is None:
             self.sdk_client = Controller(controller_data=controller_data)
-            super().__init__(controller_data=controller_data)
         self.sdk_client = sdk_client
 
-    def add_board(self, payload):
-        uri = self.build_url_owanalytics("board/1")
-        payload = json.dumps(payload)
+    def create_board(self, payload):
+        uri = self.sdk_client.build_url_owanalytics("board/0")
+        data = json.dumps(payload)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
                      "Data: " + str(payload) + "\n" +
-                     "Headers: " + str(self.make_headers()))
-        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
-                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-                                                    "URI: " + str(uri) + "\n" +
-                                                    "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+                     "Headers: " + str(self.sdk_client.make_headers()))
+        allure.attach(name="Create a Board", body="Sending Command: POST" + str(uri) + "\n" +
+                                                  "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                  "Data: " + str(payload) + "\n" +
+                                                  "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.post(uri, data=data, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
 
-        self.sdk_client.check_response("POST", resp, self.make_headers(), payload, uri)
+        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
-    def get_board(self):
-        uri = self.sdk_client.build_url_owanalytics("board")
+    def get_board(self, board_id="7475645a-9df9-4f45-834f-d73d2e801927"):
+        uri = self.sdk_client.build_url_owanalytics("board/" + board_id)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1659,21 +1657,18 @@ class AnalyticsUtility(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("DELETE", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_boards(self):
-        uri = self.sdk_client.build_url_owanalytics("boards/")
+        uri = self.sdk_client.build_url_owanalytics("boards")
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
                      "Headers: " + str(self.sdk_client.make_headers()))
-        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+        allure.attach(name="Get List of Boards", body="Sending Command: GET " + str(uri) + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-                                                    "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def get_board_devices(self, board_id):
@@ -1687,11 +1682,16 @@ class AnalyticsUtility(ConfigureController):
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
-    def get_board_data(self, board_id, timepoints):
-        uri = self.sdk_client.build_url_owanalytics("boards/" + board_id + "/" + timepoints)
+    def get_board_data(self, board_id):
+        uri = self.sdk_client.build_url_owanalytics("boards/" + board_id + "/timepoints")
+        current_time = int(time.time())
+        params = {
+            'fromDate': current_time,
+            'endDate': current_time
+        }
+        params = json.dumps(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1700,12 +1700,17 @@ class AnalyticsUtility(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        resp = requests.get(uri, params=params, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
-    def delete_board_data(self, board_id, timepoints):
-        uri = self.sdk_client.build_url_owanalytics("boards/" + board_id + "/" + timepoints)
+    def delete_board_data(self, board_id):
+        uri = self.sdk_client.build_url_owanalytics("boards/" + board_id + "/timepoints")
+        current_time = int(time.time())
+        params = {
+            'fromDate': current_time,
+            'endDate': current_time
+        }
+        params = json.dumps(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1714,12 +1719,18 @@ class AnalyticsUtility(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        resp = requests.delete(uri, params=params, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
     def get_wifi_clients_history(self, venue):
         uri = self.sdk_client.build_url_owanalytics("wifiClientHistory")
+        params = {
+            'venue': venue,
+            'macsOnly': True,
+            'limit': 500,
+            'offset': 0
+        }
+        params = json.dumps(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1728,12 +1739,16 @@ class AnalyticsUtility(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        resp = requests.get(uri, params=params, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
     def get_wifi_client_history(self, client, venue):
         uri = self.sdk_client.build_url_owanalytics("wifiClientHistory/" + client)
+        params = {
+            'venue': venue,
+            'macsOnly': True
+        }
+        params = json.dumps(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1742,12 +1757,16 @@ class AnalyticsUtility(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        resp = requests.get(uri, params=params, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
     def delete_wifi_client_history(self, client, venue):
         uri = self.sdk_client.build_url_owanalytics("wifiClientHistory/" + client)
+        params = {
+            'venue': venue,
+            'macsOnly': True
+        }
+        params = json.dumps(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1756,28 +1775,31 @@ class AnalyticsUtility(ConfigureController):
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.delete(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
+        resp = requests.delete(uri, params=params, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
     def post_system_commands(self, payload):
         uri = self.sdk_client.build_url_owanalytics("system/")
+        payload = json.dumps(payload)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
                      "Data: " + str(payload) + "\n" +
-                     "Headers: " + str(self.make_headers()))
+                     "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(self.make_headers()))
-        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("POST", resp, self.make_headers(), payload, uri)
+                                                    "Headers: " + str(self.sdk_client.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
     def get_system_commands(self, command):
-        uri = self.sdk_client.build_url_owanalytics("system/" + command)
+        uri = self.sdk_client.build_url_owanalytics("system/")
+        params = {
+            'command': command
+        }
+        params = json.dumps(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
