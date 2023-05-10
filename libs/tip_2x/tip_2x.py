@@ -26,6 +26,7 @@ ConfigureController = controller.ConfigureController
 Controller = controller.Controller
 FMSUtils = controller.FMSUtils
 ProvUtils = controller.ProvUtils
+AnalyticsUtility = controller.AnalyticsUtility
 UProfileUtility = controller.UProfileUtility
 APLIBS = ap_lib.APLIBS
 
@@ -49,6 +50,7 @@ class tip_2x:
     prov_library_object = object()
     firmware_library_object = object()
     dut_library_object = object()
+    analytics_library_object = object()
     supported_bands = ["2G", "5G", "6G", "5G-lower", "5G-upper"]
     supported_modes = ["BRIDGE", "NAT", "VLAN"]
     supported_encryption = ["open",
@@ -112,6 +114,7 @@ class tip_2x:
             self.controller_library_object = Controller(controller_data=self.controller_data)
             self.prov_library_object = ProvUtils(sdk_client=self.controller_library_object)
             self.firmware_library_object = FMSUtils(sdk_client=self.controller_library_object)
+            self.analytics_library_object = AnalyticsUtility(sdk_client=self.controller_library_object)
         except Exception as e:
             pytest.fail("Unable to setup Controller Objects")
             logging.error("Exception in setting up Controller objects:" + str(e))
