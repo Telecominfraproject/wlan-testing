@@ -126,9 +126,6 @@ class tip_2x:
     def teardown_objects(self):
         self.controller_library_object.logout()
 
-    def teardown_objects(self):
-        self.controller_library_object.logout()
-
     """ Standard getter methods. Should be available for all type of libraries. Commonly used by wlan-testing"""
 
     def get_dut_library_object(self):
