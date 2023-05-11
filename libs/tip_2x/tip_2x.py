@@ -117,7 +117,6 @@ class tip_2x:
             self.analytics_library_object = AnalyticsUtility(sdk_client=self.controller_library_object)
         except Exception as e:
             pytest.fail("Unable to setup Controller Objects")
-            logging.error("Exception in setting up Controller objects:" + str(e))
         try:
             self.dut_library_object = APLIBS(dut_data=self.device_under_tests_info)
         except Exception as e:
