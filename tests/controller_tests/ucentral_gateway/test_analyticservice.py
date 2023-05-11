@@ -20,7 +20,8 @@ import logging
 @allure.parent_suite("OpenWifi SDK Tests")
 @allure.suite("OpenWifi Analytics Service Tests")
 class TestUcentralAnalyticService(object):
-    boards, board_id, clients = [], "", []
+    boards, clients = [], []
+    board_id, entity_id = "", "aefb7254-571f-42c3-be51-39a2b1441234"
 
     @pytest.mark.system_info_analytics
     @allure.title("Get System Info Analytics")
@@ -67,18 +68,12 @@ class TestUcentralAnalyticService(object):
     @allure.title("Create a Board")
     def test_analytics_create_board(self, get_target_object):
         resp, venue_list = {}, []
-        temp_response = get_target_object.prov_library_object.get_entity_by_id("aefb7254-571f-42c3-be51-39a2b1441234")
+        temp_response = get_target_object.prov_library_object.get_entity_by_id(TestUcentralAnalyticService.entity_id)
         if temp_response.status_code == 200:
             resp = temp_response.json()
             venue_list = resp['venues']
         else:
             assert temp_response.status_code == 200, "Failed in getting Venues"
-        response = get_target_object.analytics_library_object.get_boards()
-        if response.status_code == 200:
-            body = response.json()
-            self.boards = body["boards"]
-        else:
-            assert response.status_code == 200, "Failed in getting boards data"
         data = {
             "name": "Test-Create-Board-" + "".join(random.choices(string.ascii_letters, k=6)),
             "description": "Create Board API using Automation Test",
@@ -104,23 +99,22 @@ class TestUcentralAnalyticService(object):
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         if response.status_code == 200:
-            self.board_id = response.json()['id']
+            TestUcentralAnalyticService.board_id = response.json()['id']
         assert response.status_code == 200, "Failed in creating a board"
 
     @pytest.mark.get_board
     @allure.title("Retrieve a Board")
     def test_analytics_get_board(self, get_target_object):
-        boards_list = []
         resp = get_target_object.analytics_library_object.get_boards()
         if resp.status_code == 200:
             body = resp.json()
-            boards_list = body["boards"]
+            self.boards = body["boards"]
         else:
             assert resp.status_code == 200, "Failed in getting boards data"
-        if self.board_id == "" and len(self.boards) > 0:
-            response = get_target_object.analytics_library_object.get_board(boards_list[random.randint(0, len(boards_list))])
+        if TestUcentralAnalyticService.board_id == "" and len(self.boards) > 0:
+            response = get_target_object.analytics_library_object.get_board(self.boards[random.randint(0, len(self.boards))])
         else:
-            response = get_target_object.analytics_library_object.get_board(self.board_id)
+            response = get_target_object.analytics_library_object.get_board(TestUcentralAnalyticService.board_id)
         logging.info(response.json())
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
@@ -139,10 +133,10 @@ class TestUcentralAnalyticService(object):
             "name": "Test-update-board-check-sub-venue",
             "description": "This is a test to check Update board API"
         }
-        if self.board_id == "" and len(self.boards) > 0:
+        if TestUcentralAnalyticService.board_id == "" and len(self.boards) > 0:
             response = get_target_object.analytics_library_object.edit_board(board_id=self.boards[random.randint(0, len(self.boards))], payload=data)
         else:
-            response = get_target_object.analytics_library_object.edit_board(board_id=self.board_id, payload=data)
+            response = get_target_object.analytics_library_object.edit_board(board_id=TestUcentralAnalyticService.board_id, payload=data)
         logging.info(response.json())
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
@@ -164,10 +158,10 @@ class TestUcentralAnalyticService(object):
             self.boards = body["boards"]
         else:
             assert response.status_code == 200, "Failed in getting boards data"
-        if self.board_id == "" and len(self.boards) > 0:
-            response = get_target_object.analytics_library_object.remove_board(self.boards[random.randint(0, len(self.boards))]['id'])
+        if TestUcentralAnalyticService.board_id == "" and len(self.boards) > 0:
+            response = get_target_object.analytics_library_object.delete_board(self.boards[random.randint(0, len(self.boards))]['id'])
         else:
-            response = get_target_object.analytics_library_object.remove_board(self.board_id)
+            response = get_target_object.analytics_library_object.delete_board(TestUcentralAnalyticService.board_id)
         logging.info(response.json())
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
@@ -177,17 +171,17 @@ class TestUcentralAnalyticService(object):
     @allure.title("GET Wifi Clients History")
     def test_analytics_get_wificlients_history(self, get_target_object):
         resp, venue_list = {}, []
-        temp_response = get_target_object.prov_library_object.get_entity_by_id("aefb7254-571f-42c3-be51-39a2b1441234")
+        temp_response = get_target_object.prov_library_object.get_entity_by_id(TestUcentralAnalyticService.entity_id)
         if temp_response.status_code == 200:
             resp = temp_response.json()
             venue_list = resp['venues']
         else:
             assert temp_response.status_code == 200, "Failed in getting Venues"
         venue = venue_list[random.randint(0, len(venue_list))]
-        response = get_target_object.analytics_library_object.get_wificlients_history(venue=venue)
+        response = get_target_object.analytics_library_object.get_wifi_clients_history(venue=venue)
         logging.info(response.json())
         if response.status_code == 200:
-            self.clients = response.json()['entries']
+            TestUcentralAnalyticService.clients = response.json()['entries']
         allure.attach(name="Response:GET - Wifi Clients History ", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
@@ -195,11 +189,22 @@ class TestUcentralAnalyticService(object):
     @pytest.mark.get_wificlient_history
     @allure.title("GET Wifi Client History")
     def test_analytics_get_wificlient_history(self, get_target_object):
-        if len(self.clients) != 0:
-            client = self.clients[random.randint(0, len(self.clients))]
+        resp, venue_list = {}, []
+        if len(TestUcentralAnalyticService.clients) != 0:
+            client = TestUcentralAnalyticService.clients[random.randint(0, len(TestUcentralAnalyticService.clients))]
         else:
             client = '04f021d405cc'
-        response = get_target_object.analytics_library_object.get_wificlient_history(client=client, venue='dd869ca7-40a3-4d7a-9f6f-a7769baf76e0')
+        temp_response = get_target_object.prov_library_object.get_entity_by_id(TestUcentralAnalyticService.entity_id)
+        if temp_response.status_code == 200:
+            resp = temp_response.json()
+            venue_list = resp['venues']
+        else:
+            assert temp_response.status_code == 200, "Failed in getting Venues"
+        if len(venue_list) > 0:
+            venue = venue_list[random.randint(0, len(venue_list))]
+        else:
+            venue = 'eb5c5165-b168-4748-8609-fcabd564b5e3'
+        response = get_target_object.analytics_library_object.get_wifi_client_history(client=client, venue=venue)
         logging.info(response.json())
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
@@ -208,11 +213,22 @@ class TestUcentralAnalyticService(object):
     @pytest.mark.remove_wificlient_history
     @allure.title("DELETE Wifi Client History")
     def test_analytics_remove_wificlient_history(self, get_target_object):
-        if len(self.clients) != 0:
-            client = self.clients[random.randint(0, len(self.clients))]
+        resp, venue_list = {}, []
+        if len(TestUcentralAnalyticService.clients) != 0:
+            client = TestUcentralAnalyticService.clients[random.randint(0, len(TestUcentralAnalyticService.clients))]
         else:
             client = '04f021d405cc'
-        response = get_target_object.analytics_library_object.remove_wificlient_history(client=client, venue='dd869ca7-40a3-4d7a-9f6f-a7769baf76e0')
+        temp_response = get_target_object.prov_library_object.get_entity_by_id(TestUcentralAnalyticService.entity_id)
+        if temp_response.status_code == 200:
+            resp = temp_response.json()
+            venue_list = resp['venues']
+        else:
+            assert temp_response.status_code == 200, "Failed in getting Venues"
+        if len(venue_list) > 0:
+            venue = venue_list[random.randint(0, len(venue_list))]
+        else:
+            venue = 'eb5c5165-b168-4748-8609-fcabd564b5e3'
+        response = get_target_object.analytics_library_object.delete_wifi_client_history(client=client, venue=venue)
         logging.info(response.json())
         allure.attach(name="Response:DEL - A Wifi Client History ", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
@@ -227,10 +243,10 @@ class TestUcentralAnalyticService(object):
             self.boards = body["boards"]
         else:
             assert response.status_code == 200, "Failed in getting boards data"
-        if self.board_id == "":
+        if TestUcentralAnalyticService.board_id == "":
             response = get_target_object.analytics_library_object.get_board_data(self.boards[random.randint(0, len(self.boards))])
         else:
-            response = get_target_object.analytics_library_object.get_board_data(self.board_id)
+            response = get_target_object.analytics_library_object.get_board_data(TestUcentralAnalyticService.board_id)
         logging.info(response.json())
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
@@ -245,10 +261,10 @@ class TestUcentralAnalyticService(object):
             self.boards = body["boards"]
         else:
             assert response.status_code == 200, "Failed in getting boards data"
-        if self.board_id == "":
+        if TestUcentralAnalyticService.board_id == "":
             response = get_target_object.analytics_library_object.remove_board_data(self.boards[random.randint(0, len(self.boards))])
         else:
-            response = get_target_object.analytics_library_object.remove_board_data(self.board_id)
+            response = get_target_object.analytics_library_object.remove_board_data(TestUcentralAnalyticService.board_id)
         logging.info(response.json())
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)

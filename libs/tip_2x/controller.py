@@ -1611,8 +1611,6 @@ class AnalyticsUtility:
                                                   "Data: " + str(payload) + "\n" +
                                                   "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.post(uri, data=data, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-
-        self.sdk_client.check_response("POST", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def get_board(self, board_id="7475645a-9df9-4f45-834f-d73d2e801927"):
@@ -1626,7 +1624,6 @@ class AnalyticsUtility:
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
     def edit_board(self, payload, board_id):
@@ -1643,7 +1640,6 @@ class AnalyticsUtility:
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.put(uri, data=payload, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
-        self.sdk_client.check_response("PUT", resp, self.sdk_client.make_headers(), payload, uri)
         return resp
 
     def delete_board(self, board_id):
@@ -1723,7 +1719,7 @@ class AnalyticsUtility:
         return resp
 
     def get_wifi_clients_history(self, venue):
-        uri = self.sdk_client.build_url_owanalytics("wifiClientHistory")
+        uri = self.sdk_client.build_url_owanalytics("wifiClientHistory?macsOnly=true&venue=dd869ca7-40a3-4d7a-9f6f-a7769baf76e0")
         params = {
             'venue': venue,
             'macsOnly': True,
@@ -1739,7 +1735,7 @@ class AnalyticsUtility:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, params=params, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
+        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
     def get_wifi_client_history(self, client, venue):
