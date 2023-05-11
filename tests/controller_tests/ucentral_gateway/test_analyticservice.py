@@ -56,7 +56,7 @@ class TestUcentralAnalyticService(object):
             assert response.status_code == 200, "Failed in getting boards data"
         if len(self.boards) > 0:
             response = get_target_object.analytics_library_object.get_board_devices(
-                board_id=self.boards[random.randint(0, len(self.boards))])
+                board_id=self.boards[random.randint(0, len(self.boards))]['id'])
             logging.info(response.json())
             allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                           attachment_type=allure.attachment_type.JSON)
@@ -162,13 +162,14 @@ class TestUcentralAnalyticService(object):
             response = get_target_object.analytics_library_object.delete_board(self.boards[random.randint(0, len(self.boards))]['id'])
         else:
             response = get_target_object.analytics_library_object.delete_board(TestUcentralAnalyticService.board_id)
-        logging.info(response.json())
-        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+        if len(response.content) == 0:
+            logging.info('Response content is empty')
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=response.text,
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
-    @pytest.mark.get_wificlients_history
-    @allure.title("GET Wifi Clients History")
+    @pytest.mark.get_wifi_clients_history
+    @allure.title("Retrieve WiFi clients history")
     def test_analytics_get_wificlients_history(self, get_target_object):
         resp, venue_list = {}, []
         temp_response = get_target_object.prov_library_object.get_entity_by_id(TestUcentralAnalyticService.entity_id)
@@ -186,9 +187,9 @@ class TestUcentralAnalyticService(object):
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
-    @pytest.mark.get_wificlient_history
-    @allure.title("GET Wifi Client History")
-    def test_analytics_get_wificlient_history(self, get_target_object):
+    @pytest.mark.get_wifi_client_history
+    @allure.title("Retrieve a Wifi Client History")
+    def test_analytics_get_wifi_client_history(self, get_target_object):
         resp, venue_list = {}, []
         if len(TestUcentralAnalyticService.clients) != 0:
             client = TestUcentralAnalyticService.clients[random.randint(0, len(TestUcentralAnalyticService.clients))]
@@ -210,8 +211,8 @@ class TestUcentralAnalyticService(object):
                       attachment_type=allure.attachment_type.JSON)
         assert response.status_code == 200
 
-    @pytest.mark.remove_wificlient_history
-    @allure.title("DELETE Wifi Client History")
+    @pytest.mark.delete_wifi_client_history
+    @allure.title("Delete specific Wifi Client History")
     def test_analytics_remove_wificlient_history(self, get_target_object):
         resp, venue_list = {}, []
         if len(TestUcentralAnalyticService.clients) != 0:

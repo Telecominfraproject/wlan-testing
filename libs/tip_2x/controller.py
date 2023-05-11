@@ -11,7 +11,7 @@ import sys
 import time
 from operator import itemgetter
 from urllib.parse import urlparse
-
+from urllib.parse import urlencode
 import allure
 import pytest
 import requests
@@ -1668,7 +1668,7 @@ class AnalyticsUtility:
         return resp
 
     def get_board_devices(self, board_id):
-        uri = self.sdk_client.build_url_owanalytics("boards/" + board_id + "/devices")
+        uri = self.sdk_client.build_url_owanalytics("board/" + board_id + "/devices")
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1687,7 +1687,7 @@ class AnalyticsUtility:
             'fromDate': current_time,
             'endDate': current_time
         }
-        params = json.dumps(params)
+        params = urlencode(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1706,7 +1706,7 @@ class AnalyticsUtility:
             'fromDate': current_time,
             'endDate': current_time
         }
-        params = json.dumps(params)
+        params = urlencode(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1726,7 +1726,7 @@ class AnalyticsUtility:
             'limit': 500,
             'offset': 0
         }
-        params = json.dumps(params)
+        params = urlencode(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1744,7 +1744,7 @@ class AnalyticsUtility:
             'venue': venue,
             'macsOnly': True
         }
-        params = json.dumps(params)
+        params = urlencode(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1762,7 +1762,7 @@ class AnalyticsUtility:
             'venue': venue,
             'macsOnly': True
         }
-        params = json.dumps(params)
+        params = urlencode(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1775,7 +1775,7 @@ class AnalyticsUtility:
         return resp
 
     def post_system_commands(self, payload):
-        uri = self.sdk_client.build_url_owanalytics("system/")
+        uri = self.sdk_client.build_url_owanalytics("system")
         payload = json.dumps(payload)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
@@ -1791,11 +1791,11 @@ class AnalyticsUtility:
         return resp
 
     def get_system_commands(self, command):
-        uri = self.sdk_client.build_url_owanalytics("system/")
+        uri = self.sdk_client.build_url_owanalytics("system")
         params = {
             'command': command
         }
-        params = json.dumps(params)
+        params = urlencode(params)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
