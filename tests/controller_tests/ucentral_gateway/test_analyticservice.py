@@ -263,9 +263,9 @@ class TestUcentralAnalyticService(object):
         else:
             assert response.status_code == 200, "Failed in getting boards data"
         if TestUcentralAnalyticService.board_id == "":
-            response = get_target_object.analytics_library_object.remove_board_data(self.boards[random.randint(0, len(self.boards))])
+            response = get_target_object.analytics_library_object.delete_board_data(self.boards[random.randint(0, len(self.boards))])
         else:
-            response = get_target_object.analytics_library_object.remove_board_data(TestUcentralAnalyticService.board_id)
+            response = get_target_object.analytics_library_object.delete_board_data(TestUcentralAnalyticService.board_id)
         logging.info(response.json())
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
