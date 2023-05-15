@@ -1719,10 +1719,10 @@ class AnalyticsUtility:
         return resp
 
     def get_wifi_clients_history(self, venue):
-        uri = self.sdk_client.build_url_owanalytics("wifiClientHistory?macsOnly=true&venue=dd869ca7-40a3-4d7a-9f6f-a7769baf76e0")
+        uri = self.sdk_client.build_url_owanalytics("wifiClientHistory")
         params = {
             'venue': venue,
-            'macsOnly': True,
+            'macsOnly': json.dumps(True),
             'limit': 500,
             'offset': 0
         }
@@ -1735,14 +1735,14 @@ class AnalyticsUtility:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
+        resp = requests.get(uri, params=params, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
     def get_wifi_client_history(self, client, venue):
         uri = self.sdk_client.build_url_owanalytics("wifiClientHistory/" + client)
         params = {
             'venue': venue,
-            'macsOnly': True
+            'macsOnly': json.dumps(True)
         }
         params = urlencode(params)
         logging.info("Sending Command: " + "\n" +
@@ -1760,7 +1760,7 @@ class AnalyticsUtility:
         uri = self.sdk_client.build_url_owanalytics("wifiClientHistory/" + client)
         params = {
             'venue': venue,
-            'macsOnly': True
+            'macsOnly': json.dumps(True)
         }
         params = urlencode(params)
         logging.info("Sending Command: " + "\n" +

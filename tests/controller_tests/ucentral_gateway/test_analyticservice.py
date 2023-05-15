@@ -56,7 +56,7 @@ class TestUcentralAnalyticService(object):
             assert response.status_code == 200, "Failed in getting boards data"
         if len(self.boards) > 0:
             response = get_target_object.analytics_library_object.get_board_devices(
-                board_id=self.boards[random.randint(0, len(self.boards))]['id'])
+                board_id=self.boards[random.randint(0, len(self.boards)-1)]['id'])
             logging.info(response.json())
             allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                           attachment_type=allure.attachment_type.JSON)
@@ -112,7 +112,7 @@ class TestUcentralAnalyticService(object):
         else:
             assert resp.status_code == 200, "Failed in getting boards data"
         if TestUcentralAnalyticService.board_id == "" and len(self.boards) > 0:
-            response = get_target_object.analytics_library_object.get_board(self.boards[random.randint(0, len(self.boards))])
+            response = get_target_object.analytics_library_object.get_board(self.boards[random.randint(0, len(self.boards)-1)])
         else:
             response = get_target_object.analytics_library_object.get_board(TestUcentralAnalyticService.board_id)
         logging.info(response.json())
@@ -134,7 +134,7 @@ class TestUcentralAnalyticService(object):
             "description": "This is a test to check Update board API"
         }
         if TestUcentralAnalyticService.board_id == "" and len(self.boards) > 0:
-            response = get_target_object.analytics_library_object.edit_board(board_id=self.boards[random.randint(0, len(self.boards))], payload=data)
+            response = get_target_object.analytics_library_object.edit_board(board_id=self.boards[random.randint(0, len(self.boards)-1)], payload=data)
         else:
             response = get_target_object.analytics_library_object.edit_board(board_id=TestUcentralAnalyticService.board_id, payload=data)
         logging.info(response.json())
@@ -159,7 +159,7 @@ class TestUcentralAnalyticService(object):
         else:
             assert response.status_code == 200, "Failed in getting boards data"
         if TestUcentralAnalyticService.board_id == "" and len(self.boards) > 0:
-            response = get_target_object.analytics_library_object.delete_board(self.boards[random.randint(0, len(self.boards))]['id'])
+            response = get_target_object.analytics_library_object.delete_board(self.boards[random.randint(q)]['id'])
         else:
             response = get_target_object.analytics_library_object.delete_board(TestUcentralAnalyticService.board_id)
         if len(response.content) == 0:
@@ -245,7 +245,7 @@ class TestUcentralAnalyticService(object):
         else:
             assert response.status_code == 200, "Failed in getting boards data"
         if TestUcentralAnalyticService.board_id == "":
-            response = get_target_object.analytics_library_object.get_board_data(self.boards[random.randint(0, len(self.boards))])
+            response = get_target_object.analytics_library_object.get_board_data(self.boards[random.randint(0, len(self.boards)-1)])
         else:
             response = get_target_object.analytics_library_object.get_board_data(TestUcentralAnalyticService.board_id)
         logging.info(response.json())
@@ -263,7 +263,7 @@ class TestUcentralAnalyticService(object):
         else:
             assert response.status_code == 200, "Failed in getting boards data"
         if TestUcentralAnalyticService.board_id == "":
-            response = get_target_object.analytics_library_object.delete_board_data(self.boards[random.randint(0, len(self.boards))])
+            response = get_target_object.analytics_library_object.delete_board_data(self.boards[random.randint(0, len(self.boards)-1)])
         else:
             response = get_target_object.analytics_library_object.delete_board_data(TestUcentralAnalyticService.board_id)
         logging.info(response.json())
