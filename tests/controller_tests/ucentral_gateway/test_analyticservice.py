@@ -85,7 +85,7 @@ class TestUcentralAnalyticService(object):
             "tags": [],
             "venueList": [
                 {
-                    "id": venue_list[random.randint(0, len(venue_list))],
+                    "id": venue_list[random.randint(0, len(venue_list) - 1)],
                     "name": "Test-create-board-in-a-sub-venue",
                     "description": "test-create-board-API",
                     "retention": 604800,
@@ -159,7 +159,7 @@ class TestUcentralAnalyticService(object):
         else:
             assert response.status_code == 200, "Failed in getting boards data"
         if TestUcentralAnalyticService.board_id == "" and len(self.boards) > 0:
-            response = get_target_object.analytics_library_object.delete_board(self.boards[random.randint(q)]['id'])
+            response = get_target_object.analytics_library_object.delete_board(self.boards[random.randint(0, len(self.boards)-1)]['id'])
         else:
             response = get_target_object.analytics_library_object.delete_board(TestUcentralAnalyticService.board_id)
         if len(response.content) == 0:
@@ -178,7 +178,10 @@ class TestUcentralAnalyticService(object):
             venue_list = resp['venues']
         else:
             assert temp_response.status_code == 200, "Failed in getting Venues"
-        venue = venue_list[random.randint(0, len(venue_list))]
+        if len(venue_list) > 0:
+            venue = venue_list[random.randint(0, len(venue_list)-1)]
+        else:
+            assert False, "No Venues found in selected Entity"
         response = get_target_object.analytics_library_object.get_wifi_clients_history(venue=venue)
         logging.info(response.json())
         if response.status_code == 200:
@@ -191,8 +194,8 @@ class TestUcentralAnalyticService(object):
     @allure.title("Retrieve a Wifi Client History")
     def test_analytics_get_wifi_client_history(self, get_target_object):
         resp, venue_list = {}, []
-        if len(TestUcentralAnalyticService.clients) != 0:
-            client = TestUcentralAnalyticService.clients[random.randint(0, len(TestUcentralAnalyticService.clients))]
+        if len(TestUcentralAnalyticService.clients) > 0:
+            client = TestUcentralAnalyticService.clients[random.randint(0, len(TestUcentralAnalyticService.clients)-1)]
         else:
             client = '04f021d405cc'
         temp_response = get_target_object.prov_library_object.get_entity_by_id(TestUcentralAnalyticService.entity_id)
@@ -202,7 +205,7 @@ class TestUcentralAnalyticService(object):
         else:
             assert temp_response.status_code == 200, "Failed in getting Venues"
         if len(venue_list) > 0:
-            venue = venue_list[random.randint(0, len(venue_list))]
+            venue = venue_list[random.randint(0, len(venue_list) - 1)]
         else:
             venue = 'eb5c5165-b168-4748-8609-fcabd564b5e3'
         response = get_target_object.analytics_library_object.get_wifi_client_history(client=client, venue=venue)
@@ -215,8 +218,8 @@ class TestUcentralAnalyticService(object):
     @allure.title("Delete specific Wifi Client History")
     def test_analytics_remove_wificlient_history(self, get_target_object):
         resp, venue_list = {}, []
-        if len(TestUcentralAnalyticService.clients) != 0:
-            client = TestUcentralAnalyticService.clients[random.randint(0, len(TestUcentralAnalyticService.clients))]
+        if len(TestUcentralAnalyticService.clients) > 0:
+            client = TestUcentralAnalyticService.clients[random.randint(0, len(TestUcentralAnalyticService.clients)-1)]
         else:
             client = '04f021d405cc'
         temp_response = get_target_object.prov_library_object.get_entity_by_id(TestUcentralAnalyticService.entity_id)
@@ -226,7 +229,7 @@ class TestUcentralAnalyticService(object):
         else:
             assert temp_response.status_code == 200, "Failed in getting Venues"
         if len(venue_list) > 0:
-            venue = venue_list[random.randint(0, len(venue_list))]
+            venue = venue_list[random.randint(0, len(venue_list)-1)]
         else:
             venue = 'eb5c5165-b168-4748-8609-fcabd564b5e3'
         response = get_target_object.analytics_library_object.delete_wifi_client_history(client=client, venue=venue)
@@ -254,7 +257,7 @@ class TestUcentralAnalyticService(object):
         assert response.status_code == 200
 
     @pytest.mark.remove_board_timepoints
-    @allure.title("Retrieve a Board within a time period")
+    @allure.title("Remove a Board within a time period")
     def test_analytics_remove_board_data(self, get_target_object):
         response = get_target_object.analytics_library_object.get_boards()
         if response.status_code == 200:

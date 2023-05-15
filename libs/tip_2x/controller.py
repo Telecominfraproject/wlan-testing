@@ -1681,7 +1681,7 @@ class AnalyticsUtility:
         return resp
 
     def get_board_data(self, board_id):
-        uri = self.sdk_client.build_url_owanalytics("boards/" + board_id + "/timepoints")
+        uri = self.sdk_client.build_url_owanalytics("board/" + board_id + "/timepoints")
         current_time = int(time.time())
         params = {
             'fromDate': current_time,
@@ -1700,7 +1700,7 @@ class AnalyticsUtility:
         return resp
 
     def delete_board_data(self, board_id):
-        uri = self.sdk_client.build_url_owanalytics("boards/" + board_id + "/timepoints")
+        uri = self.sdk_client.build_url_owanalytics("board/" + board_id + "/timepoints")
         current_time = int(time.time())
         params = {
             'fromDate': current_time,
@@ -1804,7 +1804,7 @@ class AnalyticsUtility:
                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                                                     "URI: " + str(uri) + "\n" +
                                                     "Headers: " + str(self.sdk_client.make_headers()))
-        resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
+        resp = requests.get(uri, params=params, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         self.sdk_client.check_response("GET", resp, self.sdk_client.make_headers(), "", uri)
         return resp
 
