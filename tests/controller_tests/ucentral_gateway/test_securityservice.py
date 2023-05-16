@@ -107,3 +107,62 @@ class TestUcentralSecService(object):
 
         if system['start'] == '':
             assert False
+
+    @allure.title("Get List of existing users(User Management)")
+    @allure.testcase(name="WIFI-12605",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12605")
+    @pytest.mark.list_of_existing_users_user_management
+    def test_list_of_existing_users_user_management(self, get_target_object):
+        """
+            Retrieve a list of existing users as well as some information about them
+            Unique marker:pytest -m "list_of_existing_users_user_management"
+        """
+        resp = get_target_object.controller_library_object.request("sec", "users", "GET", None, None)
+
+        if resp.status_code != 200:
+            assert False
+
+    @allure.title("Get List of existing users(Subscribers)")
+    @allure.testcase(name="WIFI-12606",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12606")
+    @pytest.mark.list_of_existing_users_subscribers
+    def test_list_of_existing_users_subscribers(self, get_target_object):
+        """
+            Retrieve a list of existing users as well as some information about them
+            Unique marker:pytest -m "list_of_existing_users_subscribers"
+        """
+        resp = get_target_object.controller_library_object.request("sec", "subusers", "GET", None, None)
+
+        if resp.status_code != 200:
+            assert False
+
+    @allure.title("Allows any microservice to validate a token and get security policy for a specific user")
+    @allure.testcase(name="WIFI-12608",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12608")
+    @pytest.mark.validatetoken
+    def test_validatetoken(self, get_target_object):
+        """
+            Allows any microservice to validate a token and get security policy for a specific user
+            Unique marker:pytest -m "validatetoken"
+        """
+        print("Token: ", get_target_object.controller_library_object.access_token)
+        params = {'token': get_target_object.controller_library_object.access_token}
+        resp = get_target_object.controller_library_object.request("sec", "validateToken", "GET", params, None)
+
+        if resp.status_code != 200:
+            assert False
+
+    @allure.title("Get system configuration items")
+    @allure.testcase(name="WIFI-12609",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12609")
+    @pytest.mark.system_configuration_items
+    def test_system_configuration_items(self, get_target_object):
+        """
+            Get system configuration items
+            Unique marker:pytest -m "system_configuration_items"
+        """
+        params = {'entries': "element1"}
+        resp = get_target_object.controller_library_object.request("sec", "systemConfiguration", "GET", params, None)
+
+        if resp.status_code != 200:
+            assert False
