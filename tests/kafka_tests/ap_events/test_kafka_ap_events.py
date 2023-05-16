@@ -188,7 +188,7 @@ class TestKafkaApEvents(object):
         assert is_valid, f'Message not found'
 
     @allure.title("Test Device configuration change")
-    @pytest.mark.wifi_start
+    @pytest.mark.dev_config_change
     def test_kafka_dev_config_change(self, get_target_object, kafka_consumer_deq):
         is_valid = False
         msg_found = False
