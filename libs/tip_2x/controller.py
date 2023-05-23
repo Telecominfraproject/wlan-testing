@@ -264,6 +264,24 @@ class Controller(ConfigureController):
         version = resp.json()
         return version['version']
 
+    def perform_system_wide_commands(self, payload):
+        uri = self.build_uri("system")
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
     def get_sdk_version_fms(self):
         uri = self.build_url_fms("system?command=info")
         logging.info("Sending Command: " + "\n" +
@@ -871,6 +889,239 @@ class Controller(ConfigureController):
         resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
+
+    def create_default_configuration(self, name, payload):
+        uri = self.build_uri("default_configuration/" + name)
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_default_configuration(self, name):
+        uri = self.build_uri("default_configuration/" + name)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def edit_default_configuration(self, name, payload):
+        uri = self.build_uri("default_configuration/" + name)
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_default_configuration(self, name):
+        uri = self.build_uri("default_configuration/" + name)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def create_to_the_blacklist(self, serial_number, payload):
+        uri = self.build_uri("blacklist/" + serial_number)
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_blacklist_entry(self, serial_number):
+        uri = self.build_uri("blacklist/" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def modify_to_the_blacklist(self, serial_number, payload):
+        uri = self.build_uri("blacklist/" + serial_number)
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_from_blacklist(self, serial_number):
+        uri = self.build_uri("blacklist/" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def debug_device(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/script")
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def delete_file(self, serial_number, uuid):
+        uri = self.build_uri("file/" + uuid + "?serialNumber=" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        time.sleep(10)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def delete_some_commands(self, serial_number):
+        uri = self.build_uri("commands" + "?serialNumber=" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def delete_some_device_logs(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/logs")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def delete_some_device_health_checks(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/healthchecks")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def delete_capabilities_device(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/capabilities")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def delete_statistics_device(self, serial_number):
+        uri = self.build_uri("device/" + serial_number + "/statistics")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+
 
 
 class FMSUtils:
