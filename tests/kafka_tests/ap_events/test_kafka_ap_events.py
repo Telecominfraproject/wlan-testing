@@ -191,7 +191,7 @@ class TestKafkaApEvents(object):
 
     @allure.title("Test Wifi Stop Event")
     @pytest.mark.wifi_stop
-    def test_kafka_wifi_stop_event(self, get_target_object, kafka_consumer_deq, get_test_library, setup_configuration):
+    def test_kafka_wifi_stop_event(self, get_target_object, kafka_consumer_deq, get_test_library):
         is_valid = False
         msg_found = False
         payload_msg = ""
@@ -234,7 +234,7 @@ class TestKafkaApEvents(object):
                 if not client_created:
                     sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2", sta_mode=0,
                                                                mode="BRIDGE", band="twog", num_sta=1, scan_ssid=False,
-                                                               allure_name="station data", dut_data=setup_configuration)
+                                                               allure_name="station data", dut_data=get_target_object.device_under_tests_info)
                     if type(sta_data) == dict:
                         allure.attach(body=str(sta_data), name="client data")
                         client_created = True
@@ -342,7 +342,7 @@ class TestKafkaApEvents(object):
 
     @allure.title("Test UE/Client join event")
     @pytest.mark.client_join
-    def test_kafka_client_join(self, get_target_object, kafka_consumer_deq, setup_configuration, get_test_library):
+    def test_kafka_client_join(self, get_target_object, kafka_consumer_deq, get_test_library):
         is_valid = False
         msg_found = False
         payload_msg = ""
@@ -382,7 +382,7 @@ class TestKafkaApEvents(object):
                 if not client_created:
                     sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2", sta_mode=0,
                                                                mode="BRIDGE", band="twog", num_sta=1, scan_ssid=False,
-                                                               allure_name="station data", dut_data=setup_configuration)
+                                                               allure_name="station data", dut_data=get_target_object.device_under_tests_info)
                     if type(sta_data) == dict:
                         allure.attach(body=str(sta_data), name="client data")
                         client_created = True
