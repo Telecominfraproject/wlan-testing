@@ -565,18 +565,6 @@ class TestUcentralGatewayService(object):
         else:
             logging.info("Removed Restrictions")
 
-    @pytest.mark.gw_lists_of_all_default_configurations
-    @allure.title("Get lists of all default configurations")
-    @allure.testcase(name="WIFI-12553",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12553")
-    def test_gw_service_get_lists_of_all_default_configurations(self, get_target_object, get_testbed_details):
-        """
-            Retrieve the lists of all default configurations
-            Unique marker:pytest -m "gw_lists_of_all_default_configurations"
-        """
-        resp = get_target_object.controller_library_object.get_lists_of_all_default_configurations()
-        assert resp.status_code == 200
-
     @pytest.mark.gw_list_of_OUIs
     @allure.title("Get a list of OUIs")
     @allure.testcase(name="WIFI-12554",
@@ -587,8 +575,7 @@ class TestUcentralGatewayService(object):
             Unique marker:pytest -m "gw_list_of_OUIs"
         """
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
-        mac_list = ':'.join(device_name[i:i+2] for i in range(0, len(device_name), 2))
-        print("MAclist", mac_list)
+        mac_list = ':'.join(device_name[i:i + 2] for i in range(0, len(device_name), 2))
         resp = get_target_object.controller_library_object.get_list_of_OUIs(maclist=mac_list)
         assert resp.status_code == 200
 
@@ -602,18 +589,6 @@ class TestUcentralGatewayService(object):
             Unique marker:pytest -m "gw_list_of_scripts"
         """
         resp = get_target_object.controller_library_object.get_list_of_scripts()
-        assert resp.status_code == 200
-
-    @pytest.mark.gw_list_of_blacklisted_devices
-    @allure.title("Get list blacklisted devices")
-    @allure.testcase(name="WIFI-12556",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12556")
-    def test_gw_service_get_list_of_blacklisted_devices(self, get_target_object, get_testbed_details):
-        """
-            Get a list blacklisted devices
-            Unique marker:pytest -m "gw_list_of_blacklisted_devices"
-        """
-        resp = get_target_object.controller_library_object.get_list_of_blacklisted_devices()
         assert resp.status_code == 200
 
     @pytest.mark.gw_radius_proxy_configuration
@@ -641,3 +616,260 @@ class TestUcentralGatewayService(object):
         print("iplist", iplist)
         resp = get_target_object.controller_library_object.get_country_code_for_ip_address(iplist=iplist)
         assert resp.status_code == 200
+
+    @pytest.mark.gw_lists_of_all_default_configurations
+    @allure.title("Get lists of all default configurations")
+    @allure.testcase(name="WIFI-12553",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12553")
+    def test_gw_service_get_lists_of_all_default_configurations(self, get_target_object, get_testbed_details):
+        """
+            Retrieve the lists of all default configurations
+            Unique marker:pytest -m "gw_lists_of_all_default_configurations"
+        """
+        resp = get_target_object.controller_library_object.get_lists_of_all_default_configurations()
+        assert resp.status_code == 200
+
+    @allure.title("CRUD a default configuration")
+    @allure.testcase(name="WIFI-12619",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12619")
+    @pytest.mark.gw_crud_default_configuration
+    def test_gw_service_create_read_edit_delete_default_configuration(self, get_target_object, get_testbed_details):
+        """
+            Test to create,read,edit and delete default configuration
+            Unique marker: pytest -m "gw_crud_default_configuration"
+        """
+        device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
+                                                  random.randint(0, 255),
+                                                  random.randint(0, 255))
+        device_name = device_mac.replace(":", "")
+        model = get_testbed_details['device_under_tests'][0]['model']
+        # device_name = "deadbeef0011" + testbed.replace("-","")
+        payload = {'name': device_name,
+                   "modelIds": [model],
+                   "description": "Testing through Automation",
+                   'configuration': self.configuration,
+                   "created": 0,
+                   "lastModified": 0
+                   }
+        resp = get_target_object.controller_library_object.create_default_configuration(device_name, payload)
+        if resp.status_code != 200:
+            assert False
+        resp = get_target_object.controller_library_object.get_default_configuration(device_name)
+        if resp.status_code != 200:
+            assert False
+
+        editing_payload = {
+            "description": "edit_default_configuration"
+        }
+        # print(json.dumps(editing_payload))
+        resp = get_target_object.controller_library_object.edit_default_configuration(device_name, editing_payload)
+        if resp.status_code != 200:
+            assert False
+
+        resp = get_target_object.controller_library_object.delete_default_configuration(device_name)
+        if resp.status_code != 200:
+            assert False
+
+    @pytest.mark.gw_list_of_blacklisted_devices
+    @allure.title("Get list blacklisted devices")
+    @allure.testcase(name="WIFI-12556",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12556")
+    def test_gw_service_get_list_of_blacklisted_devices(self, get_target_object, get_testbed_details):
+        """
+            Get a list blacklisted devices
+            Unique marker:pytest -m "gw_list_of_blacklisted_devices"
+        """
+        resp = get_target_object.controller_library_object.get_list_of_blacklisted_devices()
+        assert resp.status_code == 200
+
+    @allure.title("CRUD a  blacklist entry")
+    @allure.testcase(name="WIFI-12620",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12620")
+    @pytest.mark.gw_crud_blacklist_entry
+    def test_gw_service_create_read_edit_delete_blacklist_entry(self, get_target_object, get_testbed_details):
+        """
+            Test to create,read,edit and delete blacklist entry
+            Unique marker: pytest -m "gw_crud_blacklist_entry"
+        """
+        device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
+                                                  random.randint(0, 255),
+                                                  random.randint(0, 255))
+        device_name = device_mac.replace(":", "")
+        # Adding dummy ap
+        payload = {'serialNumber': device_name,
+                   'UUID': '123456',
+                   'configuration': self.configuration,
+                   'deviceType': 'AP',
+                   'location': '',
+                   'macAddress': device_mac,
+                   'manufacturer': 'Testing through Automation',
+                   'owner': ''}
+        resp = get_target_object.controller_library_object.add_device_to_gw(device_name, payload)
+        if resp.status_code != 200:
+            assert False
+
+        # Testing blacklist
+        payload_blacklist = {'serialNumber': device_name,
+                             'reason': 'Testing through Automation'
+                             }
+        resp = get_target_object.controller_library_object.create_to_the_blacklist(device_name, payload_blacklist)
+        if resp.status_code != 200:
+            assert False
+
+        resp = get_target_object.controller_library_object.get_blacklist_entry(device_name)
+        if resp.status_code != 200:
+            assert False
+
+        editing_payload = {
+            "reason": "edit blacklist entry"
+        }
+        resp = get_target_object.controller_library_object.modify_to_the_blacklist(device_name, editing_payload)
+        if resp.status_code != 200:
+            assert False
+
+        resp = get_target_object.controller_library_object.delete_from_blacklist(device_name)
+        if resp.status_code != 200:
+            assert False
+
+        # deleting dummy ap
+        resp = get_target_object.controller_library_object.delete_device_from_gw(device_name)
+        if resp.status_code != 200:
+            assert False
+
+    @pytest.mark.gw_debug_device
+    @allure.title("Debug a device")
+    @allure.testcase(name="WIFI-12628",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12628")
+    def test_gw_service_debug_device(self, get_target_object, get_testbed_details):
+        """
+            Get a file from the upload directory
+            Unique marker: pytest -m "gw_debug_device"
+        """
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        # Running one script
+        payload = {
+            "serialNumber": device_name,
+            "timeout": 30,
+            "type": "diagnostic",
+            "script": "",
+            "scriptId": "",
+            "when": 0,
+            "signature": "",
+            "deferred": True,
+            "uri": ""
+        }
+        resp = get_target_object.controller_library_object.debug_device(device_name, payload)
+        if resp.status_code != 200:
+            assert False
+
+    @pytest.mark.gw_get_delete_files
+    @allure.title("Get and Delete file from the upload directory")
+    @allure.testcase(name="WIFI-12629",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12629")
+    def test_gw_service_get_delete_files(self, get_target_object, get_testbed_details):
+        """
+            Get and Delete file from the upload directory
+            Unique marker: pytest -m "gw_get_delete_files"
+        """
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        # Running one script
+        payload = {
+            "serialNumber": device_name,
+            "timeout": 30,
+            "type": "diagnostic",
+            "script": "",
+            "scriptId": "",
+            "when": 0,
+            "signature": "",
+            "deferred": True,
+            "uri": ""
+        }
+        # Running diagnostic script for uuid
+        resp = get_target_object.controller_library_object.debug_device(device_name, payload)
+        if resp.status_code != 200:
+            assert False
+        resp = resp.json()
+        uuid = resp['UUID']
+
+        # get file
+        resp = get_target_object.controller_library_object.get_file(device_name, uuid)
+        if resp.status_code != 200:
+            assert False
+        # Delete file
+        resp = get_target_object.controller_library_object.delete_file(device_name, uuid)
+        if resp.status_code != 200:
+            assert False
+
+    @pytest.mark.gw_system
+    @allure.title("Perform some system wide commands")
+    @allure.testcase(name="WIFI-12627",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12627")
+    def test_gw_service_gw_system(self, get_target_object, get_testbed_details):
+        """
+            Perform some system wide commands
+            Unique marker:pytest -m "gw_system"
+        """
+        payload = {
+            "command": "setloglevel",
+            "subsystems": [
+                {
+                    "tag": "",
+                    "value": ""
+                }
+            ]
+        }
+        resp = get_target_object.controller_library_object.perform_system_wide_commands(payload)
+        if resp.status_code != 200:
+            assert False
+
+    @allure.title("Delete commands, device logs, health checks, capabilities and statistics")
+    @allure.testcase(name="WIFI-12626",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12626")
+    @pytest.mark.gw_delete_commands_logs_healthchecks_capabilities_statistics
+    def test_gw_service_delete_commands_logs_healthchecks_capabilities_statistics(self, get_target_object, get_testbed_details):
+        """
+            Delete commands, device logs, health checks, capabilities and statistics
+            Unique marker: pytest -m "gw_delete_commands_logs_healthchecks_capabilities_statistics"
+        """
+        device_mac = "02:00:00:%02x:%02x:%02x" % (random.randint(0, 255),
+                                                  random.randint(0, 255),
+                                                  random.randint(0, 255))
+        device_name = device_mac.replace(":", "")
+        # Adding dummy ap
+        payload = {'serialNumber': device_name,
+                   'UUID': '123456',
+                   'configuration': self.configuration,
+                   'deviceType': 'AP',
+                   'location': '',
+                   'macAddress': device_mac,
+                   'manufacturer': 'Testing through Automation',
+                   'owner': ''}
+        resp = get_target_object.controller_library_object.add_device_to_gw(device_name, payload)
+        if resp.status_code != 200:
+            assert False
+
+        # Deleting Delete some commands
+        resp = get_target_object.controller_library_object.delete_some_commands(device_name)
+        if resp.status_code != 200:
+            assert False
+
+        # Delete some device logs
+        resp = get_target_object.controller_library_object.delete_some_device_logs(device_name)
+        if resp.status_code != 200:
+            assert False
+        # Delete some device health checks
+        resp = get_target_object.controller_library_object.delete_some_device_health_checks(device_name)
+        if resp.status_code != 200:
+            assert False
+        # Delete the capabilities for a given device
+        resp = get_target_object.controller_library_object.delete_capabilities_device(device_name)
+        if resp.status_code != 200:
+            assert False
+        # Get the latest statistics for a given device
+        resp = get_target_object.controller_library_object.delete_statistics_device(device_name)
+        if resp.status_code != 200:
+            assert False
+        # Deleting dummy ap
+        resp = get_target_object.controller_library_object.delete_device_from_gw(device_name)
+        if resp.status_code != 200:
+            assert False
