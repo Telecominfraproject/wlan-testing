@@ -125,7 +125,7 @@ class TestKafkaApEvents(object):
     def test_kafka_wifi_start_event(self, get_target_object, kafka_consumer_deq):
         is_valid = False
         msg_found = False
-        payload_msg = ""
+        payload_msg = "wifi.start"
         record_messages = []
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
@@ -164,12 +164,10 @@ class TestKafkaApEvents(object):
                         logging.info(f"Messages in Record: {records}")
                         for record in records:
                             record_messages.append(record)
-                            if 'payload' in record.value['payload']:
-                                payload_msg = record.value['payload']['payload']
                             if 'type' in record.value['payload']:
                                 event_type = record.value['payload']['type']
                                 # Validate the message value here
-                                if event_type == 'wifi.start':
+                                if event_type == payload_msg:
                                     logging.info(f"wifi.start has found in the Message")
                                     is_valid = True
                                     allure.attach(
@@ -187,18 +185,18 @@ class TestKafkaApEvents(object):
         allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
 
         # Assert that the message is valid
-        assert is_valid, f'Message not found'
+        assert is_valid, f'{payload_msg} Message not found'
 
     @allure.title("Test Wifi Stop Event")
     @pytest.mark.wifi_stop
     def test_kafka_wifi_stop_event(self, get_target_object, kafka_consumer_deq, get_test_library):
         is_valid = False
         msg_found = False
-        payload_msg = ""
+        payload_msg = "wifi.stop"
         record_messages = []
         client_created = False
-        ssid, passwd = config_data["interfaces"][0]["ssids"]["name"], \
-            config_data["interfaces"][0]["ssids"]["encryption"]["key"]
+        ssid, passwd = config_data["interfaces"][0]["ssids"][0]["name"], \
+            config_data["interfaces"][0]["ssids"][0]["encryption"]["key"]
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
             if 'wifi.start' in config_data["metrics"]["realtime"]["types"]:
@@ -246,12 +244,10 @@ class TestKafkaApEvents(object):
                         logging.info(f"Messages in Record: {records}")
                         for record in records:
                             record_messages.append(record)
-                            if 'payload' in record.value['payload']:
-                                payload_msg = record.value['payload']['payload']
                             if 'type' in record.value['payload']:
                                 event_type = record.value['payload']['type']
                                 # Validate the message value here
-                                if event_type == 'wifi.stop':
+                                if event_type == payload_msg:
                                     logging.info(f"wifi.stop has found in the Message")
                                     is_valid = True
                                     allure.attach(
@@ -269,14 +265,14 @@ class TestKafkaApEvents(object):
         allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
 
         # Assert that the message is valid
-        assert is_valid, f'Message not found'
+        assert is_valid, f'{payload_msg} Message not found'
 
     @allure.title("Test Device configuration change")
     @pytest.mark.dev_config_change
     def test_kafka_dev_config_change(self, get_target_object, kafka_consumer_deq):
         is_valid = False
         msg_found = False
-        payload_msg = ""
+        payload_msg = "unit.configuration_change"
         record_messages = []
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
@@ -315,12 +311,10 @@ class TestKafkaApEvents(object):
                         logging.info(f"Messages in Record: {records}")
                         for record in records:
                             record_messages.append(record)
-                            if 'payload' in record.value['payload']:
-                                payload_msg = record.value['payload']['payload']
                             if 'type' in record.value['payload']:
                                 event_type = record.value['payload']['type']
                                 # Validate the message value here
-                                if event_type == 'unit.configuration_change':
+                                if event_type == payload_msg:
                                     logging.info("unit.configuration_change has found in the Message")
                                     is_valid = True
                                     allure.attach(
@@ -338,18 +332,18 @@ class TestKafkaApEvents(object):
         allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
 
         # Assert that the message is valid
-        assert is_valid, f'{event_type} Message not found'
+        assert is_valid, f'{payload_msg} Message not found'
 
     @allure.title("Test UE/Client join event")
     @pytest.mark.client_join
     def test_kafka_client_join(self, get_target_object, kafka_consumer_deq, get_test_library):
         is_valid = False
         msg_found = False
-        payload_msg = ""
+        payload_msg = "client.join"
         record_messages = []
         client_created = False
-        ssid, passwd = config_data["interfaces"][0]["ssids"]["name"], \
-            config_data["interfaces"][0]["ssids"]["encryption"]["key"]
+        ssid, passwd = config_data["interfaces"][0]["ssids"][0]["name"], \
+            config_data["interfaces"][0]["ssids"][0]["encryption"]["key"]
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
             if 'types' in config_data["metrics"]["realtime"]:
@@ -373,7 +367,7 @@ class TestKafkaApEvents(object):
             logging.info(resp.json())
             allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
 
-            timeout = 120  # Timeout in seconds
+            timeout = 180  # Timeout in seconds
             start_time = time.time()
             while time.time() - start_time < timeout:
                 # Poll for new messages
@@ -394,12 +388,10 @@ class TestKafkaApEvents(object):
                         logging.info(f"Messages in Record: {records}")
                         for record in records:
                             record_messages.append(record)
-                            if 'payload' in record.value['payload']:
-                                payload_msg = record.value['payload']['payload']
                             if 'type' in record.value['payload']:
                                 event_type = record.value['payload']['type']
                                 # Validate the message value here
-                                if event_type == 'client.join':
+                                if event_type == payload_msg:
                                     logging.info("client.join has found in the Message")
                                     is_valid = True
                                     allure.attach(
@@ -417,4 +409,4 @@ class TestKafkaApEvents(object):
         allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
 
         # Assert that the message is valid
-        assert is_valid, f'{event_type} Message not found'
+        assert is_valid, f'{payload_msg} Message not found'
