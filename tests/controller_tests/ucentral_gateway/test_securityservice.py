@@ -166,3 +166,32 @@ class TestUcentralSecService(object):
 
         if resp.status_code != 200:
             assert False
+
+    @allure.title("Get the list of security profiles for a specific service type")
+    @allure.testcase(name="WIFI-12632",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12632")
+    @pytest.mark.list_security_profiles
+    def test_list_security_profiles(self, get_target_object):
+        """
+            Get the list of security profiles for a specific service type
+            Unique marker:pytest -m "list_security_profiles"
+        """
+        resp = get_target_object.controller_library_object.request("sec", "securityProfiles", "GET", None, None)
+
+        if resp.status_code != 200:
+            assert False
+
+    @allure.title("Get the Authenticator QR Code")
+    @allure.testcase(name="WIFI-12633",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12633")
+    @pytest.mark.authenticator_qr_code
+    def test_authenticator_qr_code(self, get_target_object):
+        """
+            Get the Authenticator QR Code
+            Unique marker:pytest -m "authenticator_qr_code"
+        """
+        params = {'reset': False}
+        resp = get_target_object.controller_library_object.request("sec", "totp", "GET", params, None)
+
+        if resp.status_code != 200:
+            assert False
