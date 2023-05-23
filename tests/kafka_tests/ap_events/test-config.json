@@ -33,14 +33,14 @@
 			},
 			"ssids": [
 				{
-					"name": "OpenWifi123",
+					"name": "OpenWifi",
 					"wifi-bands": [
 						"2G", "5G"
 					],
 					"bss-mode": "ap",
 					"encryption": {
 						"proto": "psk2",
-						"key": "OpenWifi",
+						"key": "OpenWifi@123",
 						"ieee80211w": "optional"
 					}
 				}
