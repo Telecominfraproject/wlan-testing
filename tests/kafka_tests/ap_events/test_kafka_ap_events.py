@@ -236,6 +236,8 @@ class TestKafkaApEvents(object):
                     if type(sta_data) == dict:
                         allure.attach(body=str(sta_data), name="client data")
                         client_created = True
+                if client_created:
+                    get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
@@ -377,6 +379,165 @@ class TestKafkaApEvents(object):
                     sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2", sta_mode=0,
                                                                mode="BRIDGE", band="twog", num_sta=1, scan_ssid=False,
                                                                allure_name="station data", dut_data=get_target_object.device_under_tests_info)
+                    if type(sta_data) == dict:
+                        allure.attach(body=str(sta_data), name="client data")
+                        client_created = True
+                # Check if any messages were returned
+                if messages and not msg_found:
+                    logging.info(f"Polled messages: {messages}")
+                    for topic, records in messages.items():
+                        logging.info(f"Kafka Topic {topic}")
+                        logging.info(f"Messages in Record: {records}")
+                        for record in records:
+                            record_messages.append(record)
+                            if 'type' in record.value['payload']:
+                                event_type = record.value['payload']['type']
+                                # Validate the message value here
+                                if event_type == payload_msg:
+                                    logging.info("client.join has found in the Message")
+                                    is_valid = True
+                                    allure.attach(
+                                        name="Check Device Configuration change Event Message",
+                                        body=str(record))
+                                    msg_found = True
+                                    break
+                                else:
+                                    continue
+                elif msg_found:
+                    break
+                else:
+                    # No messages received, sleep for a bit
+                    time.sleep(1)
+        allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
+
+        # Assert that the message is valid
+        assert is_valid, f'{payload_msg} Message not found'
+
+    @allure.title("Test UE/Client leave event")
+    @pytest.mark.client_leave
+    def test_kafka_client_leave(self, get_target_object, kafka_consumer_deq, get_test_library):
+        is_valid = False
+        msg_found = False
+        payload_msg = "client.leave"
+        record_messages = []
+        client_created = False
+        ssid, passwd = config_data["interfaces"][0]["ssids"][0]["name"], \
+            config_data["interfaces"][0]["ssids"][0]["encryption"]["key"]
+        for ap in range(len(get_target_object.device_under_tests_info)):
+            serial_number = get_target_object.device_under_tests_info[ap]['identifier']
+            if 'types' in config_data["metrics"]["realtime"]:
+                config_data["metrics"]["realtime"]["types"] = ["client.join", "client.leave", "client.key-mismatch"]
+            logging.info(config_data)
+            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
+            uri = get_target_object.firmware_library_object.sdk_client.build_uri(
+                "device/" + serial_number + "/configure")
+            logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                         "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+            allure.attach(name="Sending Command:", body="Sending Command: " + "\n" + str(uri) + "\n" +
+                                                        "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                        "Data: " + str(payload) + "\n" +
+                                                        "Headers: " + str(
+                get_target_object.firmware_library_object.sdk_client.make_headers()))
+            resp = requests.post(uri, data=json.dumps(payload),
+                                 headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                 verify=False, timeout=120)
+            logging.info(resp.json())
+            allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
+
+            timeout = 180  # Timeout in seconds
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                # Poll for new messages
+                messages = kafka_consumer_deq.poll(timeout_ms=120000)
+                # create a client to identify client join event from kafka log
+                if not client_created:
+                    sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2",
+                                                               sta_mode=0,
+                                                               mode="BRIDGE", band="twog", num_sta=1,
+                                                               scan_ssid=False,
+                                                               allure_name="station data",
+                                                               dut_data=get_target_object.device_under_tests_info)
+                    if type(sta_data) == dict:
+                        allure.attach(body=str(sta_data), name="client data")
+                        client_created = True
+                if client_created:
+                    get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+                # Check if any messages were returned
+                if messages and not msg_found:
+                    logging.info(f"Polled messages: {messages}")
+                    for topic, records in messages.items():
+                        logging.info(f"Kafka Topic {topic}")
+                        logging.info(f"Messages in Record: {records}")
+                        for record in records:
+                            record_messages.append(record)
+                            if 'type' in record.value['payload']:
+                                event_type = record.value['payload']['type']
+                                # Validate the message value here
+                                if event_type == payload_msg:
+                                    logging.info("client.join has found in the Message")
+                                    is_valid = True
+                                    allure.attach(
+                                        name="Check Device Configuration change Event Message",
+                                        body=str(record))
+                                    msg_found = True
+                                    break
+                                else:
+                                    continue
+                elif msg_found:
+                    break
+                else:
+                    # No messages received, sleep for a bit
+                    time.sleep(1)
+        allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
+
+        # Assert that the message is valid
+        assert is_valid, f'{payload_msg} Message not found'
+
+    @allure.title("Test UE/Client Pass Key Mismatch event")
+    @pytest.mark.client_key_mismatch
+    def test_kafka_client_key_mismatch(self, get_target_object, kafka_consumer_deq, get_test_library):
+        is_valid = False
+        msg_found = False
+        payload_msg = "client.key-mismatch"
+        record_messages = []
+        client_created = False
+        ssid, passwd = config_data["interfaces"][0]["ssids"][0]["name"], "something"
+        for ap in range(len(get_target_object.device_under_tests_info)):
+            serial_number = get_target_object.device_under_tests_info[ap]['identifier']
+            if 'types' in config_data["metrics"]["realtime"]:
+                config_data["metrics"]["realtime"]["types"] = ["client.join", "client.leave", "client.key-mismatch"]
+            logging.info(config_data)
+            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
+            uri = get_target_object.firmware_library_object.sdk_client.build_uri(
+                "device/" + serial_number + "/configure")
+            logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                         "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+            allure.attach(name="Sending Command:", body="Sending Command: " + "\n" + str(uri) + "\n" +
+                                                        "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                        "Data: " + str(payload) + "\n" +
+                                                        "Headers: " + str(
+                get_target_object.firmware_library_object.sdk_client.make_headers()))
+            resp = requests.post(uri, data=json.dumps(payload),
+                                 headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                 verify=False, timeout=120)
+            logging.info(resp.json())
+            allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
+
+            timeout = 180  # Timeout in seconds
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                # Poll for new messages
+                messages = kafka_consumer_deq.poll(timeout_ms=120000)
+                # create a client to identify client join event from kafka log
+                if not client_created:
+                    sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2", sta_mode=0,
+                                                               mode="BRIDGE", band="twog", num_sta=1, scan_ssid=False,
+                                                               allure_name="station data",
+                                                               dut_data=get_target_object.device_under_tests_info)
                     if type(sta_data) == dict:
                         allure.attach(body=str(sta_data), name="client data")
                         client_created = True
