@@ -1032,7 +1032,7 @@ class Controller(ConfigureController):
                                                     "Data: " + str(payload) + "\n" +
                                                     "Headers: " + str(self.make_headers()))
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
-
+        time.sleep(10)
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
