@@ -163,7 +163,7 @@ jobs:
       run: |
         export NAMESPACE="${{ steps.ec2_facts.outputs.instance_name }}"
         export DEPLOY_METHOD=git
-        export CHART_VERSION=main
+        export CHART_VERSION=${{ github.event.inputs.sdk_version }}
         export OWGW_VERSION=master
         export OWGWUI_VERSION=main
         export OWSEC_VERSION=main
@@ -430,7 +430,7 @@ jobs:
       run: |
         export NAMESPACE="${{ steps.ec2_facts.outputs.instance_name }}"
         export DEPLOY_METHOD=git
-        export CHART_VERSION=main
+        export CHART_VERSION=${{ github.event.inputs.sdk_version }}
         export OWGW_VERSION=master
         export OWGWUI_VERSION=main
         export OWSEC_VERSION=main
