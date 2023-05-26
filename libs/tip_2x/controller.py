@@ -191,7 +191,7 @@ class ConfigureController:
                    "Connection": "keep-alive",
                    "Content-Type": "application/json",
                    "Keep-Alive": "timeout=10, max=1000"
-                   "conte"
+                                 "conte"
                    }
         return headers
 
@@ -1119,6 +1119,66 @@ class Controller(ConfigureController):
                                                     "Headers: " + str(self.make_headers()))
         resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
         self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def delete_radius_proxy_configuration(self):
+        uri = self.build_uri("radiusProxyConfig")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
+    def modify_radius_proxy_configuration(self, payload):
+        uri = self.build_uri("radiusProxyConfig")
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(payload) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.put(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+        time.sleep(2)
+        self.check_response("PUT", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_radius_proxy_configuration(self):
+        uri = self.build_uri("radiusProxyConfig")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_radius_sessions(self, serial_number):
+        uri = self.build_uri("radiusSessions/" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
 
