@@ -591,17 +591,160 @@ class TestUcentralGatewayService(object):
         resp = get_target_object.controller_library_object.get_list_of_scripts()
         assert resp.status_code == 200
 
-    @pytest.mark.gw_radius_proxy_configuration
-    @allure.title("Get RADIUS Proxy configuration")
+    @pytest.mark.gw_delete_update_read_radius_proxy_configuration
+    @allure.title("Delete, Update, Read RADIUS Proxy configuration")
     @allure.testcase(name="WIFI-12557",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-12557")
-    def test_gw_service_get_radius_proxy_configuration(self, get_target_object, get_testbed_details):
+    def test_gw_service_delete_update_read_radius_proxy_configuration(self, get_target_object, get_testbed_details):
         """
-            Get RADIUS Proxy configuration
-            Unique marker:pytest -m "gw_radius_proxy_configuration"
+            Delete, Update, read RADIUS Proxy configuration
+            Unique marker:pytest -m "gw_delete_update_read_radius_proxy_configuration"
         """
+        # Delete RADIUS Proxy configuration
+        resp = get_target_object.controller_library_object.delete_radius_proxy_configuration()
+        assert resp.status_code == 200
+        # Modify RADIUS Proxy configuration
+        editing_payload = {
+            "pools": [
+                {
+                    "acctConfig": {
+                        "methodParameters": [],
+                        "monitor": False,
+                        "monitorMethod": "none",
+                        "servers": [
+                            {
+                                "allowSelfSigned": False,
+                                "certificate": "",
+                                "ignore": False,
+                                "ip": "10.10.1.221",
+                                "name": "svr1",
+                                "port": 1813,
+                                "radsec": False,
+                                "radsecCacerts": [],
+                                "radsecCert": "",
+                                "radsecKey": "",
+                                "radsecPort": 2083,
+                                "radsecRealms": [],
+                                "radsecSecret": "",
+                                "secret": "testing123",
+                                "weight": 10
+                            },
+                            {
+                                "allowSelfSigned": False,
+                                "certificate": "",
+                                "ignore": False,
+                                "ip": "10.10.1.221",
+                                "name": "svr2",
+                                "port": 1813,
+                                "radsec": False,
+                                "radsecCacerts": [],
+                                "radsecCert": "",
+                                "radsecKey": "",
+                                "radsecPort": 2083,
+                                "radsecRealms": [],
+                                "radsecSecret": "",
+                                "secret": "testing123",
+                                "weight": 20
+                            }
+                        ],
+                        "strategy": "random"
+                    },
+                    "authConfig": {
+                        "methodParameters": [],
+                        "monitor": False,
+                        "monitorMethod": "none",
+                        "servers": [
+                            {
+                                "allowSelfSigned": False,
+                                "certificate": "",
+                                "ignore": False,
+                                "ip": "10.10.1.221",
+                                "name": "svr1",
+                                "port": 1812,
+                                "radsec": False,
+                                "radsecCacerts": [],
+                                "radsecCert": "",
+                                "radsecKey": "",
+                                "radsecPort": 2083,
+                                "radsecRealms": [],
+                                "radsecSecret": "",
+                                "secret": "testing123",
+                                "weight": 10
+                            },
+                            {
+                                "allowSelfSigned": False,
+                                "certificate": "",
+                                "ignore": False,
+                                "ip": "10.10.1.221",
+                                "name": "svr2",
+                                "port": 1812,
+                                "radsec": False,
+                                "radsecCacerts": [],
+                                "radsecCert": "",
+                                "radsecKey": "",
+                                "radsecPort": 2083,
+                                "radsecRealms": [],
+                                "radsecSecret": "",
+                                "secret": "testing123",
+                                "weight": 20
+                            }
+                        ],
+                        "strategy": "weighted"
+                    },
+                    "coaConfig": {
+                        "methodParameters": [],
+                        "monitor": False,
+                        "monitorMethod": "none",
+                        "servers": [
+                            {
+                                "allowSelfSigned": False,
+                                "certificate": "",
+                                "ignore": False,
+                                "ip": "10.10.1.221",
+                                "name": "svr1",
+                                "port": 3799,
+                                "radsec": False,
+                                "radsecCacerts": [],
+                                "radsecCert": "",
+                                "radsecKey": "",
+                                "radsecPort": 2083,
+                                "radsecRealms": [],
+                                "radsecSecret": "",
+                                "secret": "testing123",
+                                "weight": 10
+                            },
+                            {
+                                "allowSelfSigned": False,
+                                "certificate": "",
+                                "ignore": False,
+                                "ip": "10.10.1.221",
+                                "name": "svr2",
+                                "port": 3799,
+                                "radsec": False,
+                                "radsecCacerts": [],
+                                "radsecCert": "",
+                                "radsecKey": "",
+                                "radsecPort": 2083,
+                                "radsecRealms": [],
+                                "radsecSecret": "",
+                                "secret": "testing123",
+                                "weight": 20
+                            }
+                        ],
+                        "strategy": "round_robin"
+                    },
+                    "description": "master pool",
+                    "name": "master",
+                    "useByDefault": True
+                }
+            ]
+        }
+        resp = get_target_object.controller_library_object.modify_radius_proxy_configuration(editing_payload)
+        assert resp.status_code == 200
+        # Retrieve RADIUS Proxy configuration
         resp = get_target_object.controller_library_object.get_radius_proxy_configuration()
         assert resp.status_code == 200
+
 
     @pytest.mark.gw_country_code_for_ip_address
     @allure.title("Get the country code for an IP address")
@@ -826,7 +969,8 @@ class TestUcentralGatewayService(object):
     @allure.testcase(name="WIFI-12626",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-12626")
     @pytest.mark.gw_delete_commands_logs_healthchecks_capabilities_statistics
-    def test_gw_service_delete_commands_logs_healthchecks_capabilities_statistics(self, get_target_object, get_testbed_details):
+    def test_gw_service_delete_commands_logs_healthchecks_capabilities_statistics(self, get_target_object,
+                                                                                  get_testbed_details):
         """
             Delete commands, device logs, health checks, capabilities and statistics
             Unique marker: pytest -m "gw_delete_commands_logs_healthchecks_capabilities_statistics"
@@ -873,3 +1017,16 @@ class TestUcentralGatewayService(object):
         resp = get_target_object.controller_library_object.delete_device_from_gw(device_name)
         if resp.status_code != 200:
             assert False
+
+    @pytest.mark.gw_get_radius_sessions
+    @allure.title("Get RADIUS sessions for a given AP")
+    @allure.testcase(name="WIFI-12642",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12642")
+    def test_gw_service_get_radius_sessions(self, get_target_object, get_testbed_details):
+        """
+            Get RADIUS sessions for a given AP
+            Unique marker:pytest -m "gw_get_radius_sessions"
+        """
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp = get_target_object.controller_library_object.get_radius_sessions(device_name)
+        assert resp.status_code == 200
