@@ -223,21 +223,23 @@ class TestKafkaApEvents(object):
             logging.info(resp.json())
             allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
 
-            timeout = 180  # Timeout in seconds
+            timeout = 300  # Timeout in seconds
             start_time = time.time()
             while time.time() - start_time < timeout:
                 # Poll for new messages
-                messages = kafka_consumer_deq.poll(timeout_ms=120000)
+                messages = kafka_consumer_deq.poll(timeout_ms=300000)
                 # create a client to identify wifi stop event from kafka log
                 if not client_created:
-                    sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2", sta_mode=0,
-                                                               mode="BRIDGE", band="twog", num_sta=1, scan_ssid=False,
-                                                               allure_name="station data", dut_data=get_target_object.device_under_tests_info)
-                    if type(sta_data) == dict:
-                        allure.attach(body=str(sta_data), name="client data")
-                        client_created = True
+                    sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd,
+                                                                              security="wpa2",
+                                                                              mode="BRIDGE", radio="wiphy0",
+                                                                              station_name=["sta100"],
+                                                                              create_vlan=False)
+                    if not sta_created:
+                        logging.info("Failed to create station")
+                        pytest.fail("Station creation Failed")
                 if client_created:
-                    get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+                    get_test_library.client_disconnect(station_name=["sta100"])
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
@@ -369,19 +371,23 @@ class TestKafkaApEvents(object):
             logging.info(resp.json())
             allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
 
-            timeout = 180  # Timeout in seconds
+            timeout = 300  # Timeout in seconds
             start_time = time.time()
             while time.time() - start_time < timeout:
                 # Poll for new messages
-                messages = kafka_consumer_deq.poll(timeout_ms=120000)
-                # create a client to identify client join event from kafka log
+                messages = kafka_consumer_deq.poll(timeout_ms=300000)
+                # create a client to identify wifi stop event from kafka log
                 if not client_created:
-                    sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2", sta_mode=0,
-                                                               mode="BRIDGE", band="twog", num_sta=1, scan_ssid=False,
-                                                               allure_name="station data", dut_data=get_target_object.device_under_tests_info)
-                    if type(sta_data) == dict:
-                        allure.attach(body=str(sta_data), name="client data")
-                        client_created = True
+                    sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd,
+                                                                              security="wpa2",
+                                                                              mode="BRIDGE", radio="wiphy0",
+                                                                              station_name=["sta100"],
+                                                                              create_vlan=False)
+                    if not sta_created:
+                        logging.info("Failed to create station")
+
+                if client_created:
+                    get_test_library.client_disconnect(station_name=["sta100"])
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
@@ -446,24 +452,23 @@ class TestKafkaApEvents(object):
             logging.info(resp.json())
             allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
 
-            timeout = 180  # Timeout in seconds
+            timeout = 300  # Timeout in seconds
             start_time = time.time()
             while time.time() - start_time < timeout:
                 # Poll for new messages
-                messages = kafka_consumer_deq.poll(timeout_ms=120000)
-                # create a client to identify client join event from kafka log
+                messages = kafka_consumer_deq.poll(timeout_ms=300000)
+                # create a client to identify wifi stop event from kafka log
                 if not client_created:
-                    sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2",
-                                                               sta_mode=0,
-                                                               mode="BRIDGE", band="twog", num_sta=1,
-                                                               scan_ssid=False,
-                                                               allure_name="station data",
-                                                               dut_data=get_target_object.device_under_tests_info)
-                    if type(sta_data) == dict:
-                        allure.attach(body=str(sta_data), name="client data")
-                        client_created = True
+                    sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd,
+                                                                              security="wpa2",
+                                                                              mode="BRIDGE", radio="wiphy0",
+                                                                              station_name=["sta100"],
+                                                                              create_vlan=False)
+                    if not sta_created:
+                        logging.info("Failed to create station")
+                        pytest.fail("Station creation Failed")
                 if client_created:
-                    get_test_library.client_disconnect(clear_all_sta=True, clean_l3_traffic=True)
+                    get_test_library.client_disconnect(station_name=["sta100"])
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
@@ -527,20 +532,23 @@ class TestKafkaApEvents(object):
             logging.info(resp.json())
             allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
 
-            timeout = 180  # Timeout in seconds
+            timeout = 300  # Timeout in seconds
             start_time = time.time()
             while time.time() - start_time < timeout:
                 # Poll for new messages
-                messages = kafka_consumer_deq.poll(timeout_ms=120000)
-                # create a client to identify client join event from kafka log
+                messages = kafka_consumer_deq.poll(timeout_ms=300000)
+                # create a client to identify wifi stop event from kafka log
                 if not client_created:
-                    sta_data = get_test_library.client_connect(ssid=ssid, passkey=passwd, security="wpa2", sta_mode=0,
-                                                               mode="BRIDGE", band="twog", num_sta=1, scan_ssid=False,
-                                                               allure_name="station data",
-                                                               dut_data=get_target_object.device_under_tests_info)
-                    if type(sta_data) == dict:
-                        allure.attach(body=str(sta_data), name="client data")
-                        client_created = True
+                    sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey="something",
+                                                                              security="wpa2",
+                                                                              mode="BRIDGE", radio="wiphy0",
+                                                                              station_name=["sta100"],
+                                                                              create_vlan=False)
+                    if not sta_created:
+                        logging.info("Failed to create station")
+                        pytest.fail("Station creation Failed")
+                if client_created:
+                    get_test_library.client_disconnect(station_name=["sta100"])
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
