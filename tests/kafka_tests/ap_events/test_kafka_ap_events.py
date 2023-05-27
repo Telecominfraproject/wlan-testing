@@ -238,6 +238,8 @@ class TestKafkaApEvents(object):
                     if not sta_created:
                         logging.info("Failed to create station")
                         pytest.fail("Station creation Failed")
+                    else:
+                        client_created = True
                 if client_created:
                     get_test_library.client_disconnect(station_name=["sta100"])
                 # Check if any messages were returned
@@ -385,7 +387,9 @@ class TestKafkaApEvents(object):
                                                                               create_vlan=False)
                     if not sta_created:
                         logging.info("Failed to create station")
-
+                        pytest.fail("Station creation failed")
+                    else:
+                        client_created = True
                 if client_created:
                     get_test_library.client_disconnect(station_name=["sta100"])
                 # Check if any messages were returned
@@ -467,6 +471,8 @@ class TestKafkaApEvents(object):
                     if not sta_created:
                         logging.info("Failed to create station")
                         pytest.fail("Station creation Failed")
+                    else:
+                        client_created = True
                 if client_created:
                     get_test_library.client_disconnect(station_name=["sta100"])
                 # Check if any messages were returned
@@ -545,8 +551,7 @@ class TestKafkaApEvents(object):
                                                                               station_name=["sta100"],
                                                                               create_vlan=False)
                     if not sta_created:
-                        logging.info("Failed to create station")
-                        pytest.fail("Station creation Failed")
+                        client_created = False
                 if client_created:
                     get_test_library.client_disconnect(station_name=["sta100"])
                 # Check if any messages were returned
