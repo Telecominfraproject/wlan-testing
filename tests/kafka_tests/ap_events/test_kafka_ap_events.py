@@ -168,7 +168,7 @@ class TestKafkaApEvents(object):
                                 event_type = record.value['payload']['type']
                                 # Validate the message value here
                                 if event_type == payload_msg:
-                                    logging.info(f"wifi.start has found in the Message")
+                                    logging.info(f"{payload_msg} has found in the Message")
                                     is_valid = True
                                     allure.attach(
                                         name="Check Wifi Start Event Message",
@@ -199,11 +199,8 @@ class TestKafkaApEvents(object):
             config_data["interfaces"][0]["ssids"][0]["encryption"]["key"]
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
-            if 'wifi.start' in config_data["metrics"]["realtime"]["types"]:
-                idx = config_data["metrics"]["realtime"]["types"].index('wifi.start')
-                config_data["metrics"]["realtime"]["types"][idx] = 'wifi.stop'
-            elif 'wifi.stop' not in config_data["metrics"]["realtime"]["types"]:
-                config_data["metrics"]["realtime"]["types"].append('wifi.stop')
+            if 'wifi.stop' not in config_data["metrics"]["realtime"]["types"]:
+                config_data["metrics"]["realtime"]["types"] = ['wifi.start', 'wifi.stop']
             logging.info(config_data)
             payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
             uri = get_target_object.firmware_library_object.sdk_client.build_uri(
@@ -222,12 +219,12 @@ class TestKafkaApEvents(object):
                                  verify=False, timeout=120)
             logging.info(resp.json())
             allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
-
-            timeout = 300  # Timeout in seconds
+            timeout = 120  # Timeout in seconds
             start_time = time.time()
+            run_once = False
             while time.time() - start_time < timeout:
                 # Poll for new messages
-                messages = kafka_consumer_deq.poll(timeout_ms=300000)
+                messages = kafka_consumer_deq.poll(timeout_ms=120000)
                 # create a client to identify wifi stop event from kafka log
                 if not client_created:
                     sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd,
@@ -237,11 +234,19 @@ class TestKafkaApEvents(object):
                                                                               create_vlan=False)
                     if not sta_created:
                         logging.info("Failed to create station")
-                        pytest.fail("Station creation Failed")
+                        pytest.fail("Station creation failed")
                     else:
                         client_created = True
                 if client_created:
                     get_test_library.client_disconnect(station_name=["sta100"])
+                # Apply config to check whether wifi-stop event has occurred or not
+                if not run_once:
+                    resp = requests.post(uri, data=json.dumps(payload),
+                                     headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                     verify=False, timeout=120)
+                    logging.info(resp.json())
+                    if resp.status_code == 200:
+                        run_once = True
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
@@ -254,7 +259,7 @@ class TestKafkaApEvents(object):
                                 event_type = record.value['payload']['type']
                                 # Validate the message value here
                                 if event_type == payload_msg:
-                                    logging.info(f"wifi.stop has found in the Message")
+                                    logging.info(f"{payload_msg} has found in the Message")
                                     is_valid = True
                                     allure.attach(
                                         name="Check Wifi Stop Event Message",
@@ -584,3 +589,90 @@ class TestKafkaApEvents(object):
 
         # Assert that the message is valid
         assert is_valid, f'{payload_msg} Message not found'
+
+    @allure.title("Test Health Radius event")
+    @pytest.mark.health_radius
+    def test_kafka_check_health_radius(self, get_target_object, kafka_consumer_deq, get_test_library):
+        is_valid = False
+        msg_found = False
+        payload_msg = "health.radius"
+        record_messages = []
+        for i in range(len(config_data["interfaces"][0]["ssids"])):
+            if "key" in config_data["interfaces"][0]["ssids"][i]["encryption"]:
+                del config_data["interfaces"][0]["ssids"][i]["encryption"]["key"]
+            if "radius" not in config_data["interfaces"][0]["ssids"]:
+                config_data["interfaces"][0]["ssids"][i]["radius"] = {
+                    "authentication": {
+                        "host": "18.189.85.2",
+                        "port": 1812,
+                        "secret": "testing123"
+                    },
+                    "accounting": {
+                        "host": "18.189.85.2",
+                        "port": 1813,
+                        "secret": "testing123"
+                    },
+                    "health": {
+                        "username": "user",
+                        "password": "password"
+                    }
+                }
+        for ap in range(len(get_target_object.device_under_tests_info)):
+            serial_number = get_target_object.device_under_tests_info[ap]['identifier']
+            if 'types' in config_data["metrics"]["realtime"]:
+                config_data["metrics"]["realtime"]["types"] = ["health", "client.join", "client.leave", "client.keymismatch", "wifi.start", "wifi.stop", "unit.boot-up"]
+            logging.info(config_data)
+            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
+            uri = get_target_object.firmware_library_object.sdk_client.build_uri(
+                "device/" + serial_number + "/configure")
+            logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                         "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+            allure.attach(name="Sending Command:", body="Sending Command: " + "\n" + str(uri) + "\n" +
+                                                        "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                        "Data: " + str(payload) + "\n" +
+                                                        "Headers: " + str(
+                get_target_object.firmware_library_object.sdk_client.make_headers()))
+            resp = requests.post(uri, data=json.dumps(payload),
+                                 headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                 verify=False, timeout=120)
+            logging.info(resp.json())
+            allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
+
+            timeout = 300  # Timeout in seconds
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                # Poll for new messages
+                messages = kafka_consumer_deq.poll(timeout_ms=300000)
+
+                # Check if any messages were returned
+                if messages and not msg_found:
+                    logging.info(f"Polled messages: {messages}")
+                    for topic, records in messages.items():
+                        logging.info(f"Kafka Topic {topic}")
+                        logging.info(f"Messages in Record: {records}")
+                        for record in records:
+                            record_messages.append(record)
+                            if 'type' in record.value['payload']:
+                                event_type = record.value['payload']['type']
+                                # Validate the message value here
+                                if event_type == payload_msg:
+                                    logging.info(f"{payload_msg} has found in the Message")
+                                    is_valid = True
+                                    allure.attach(
+                                        name="Check Health radius Event Message",
+                                        body=str(record))
+                                    msg_found = True
+                                    break
+                                else:
+                                    continue
+                elif msg_found:
+                    break
+                else:
+                    # No messages received, sleep for a bit
+                    time.sleep(1)
+        allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
+        # Assert that the message is valid
+        assert is_valid, f'{payload_msg} Message not found'
+
