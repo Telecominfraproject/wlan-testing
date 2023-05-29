@@ -242,8 +242,8 @@ class TestKafkaApEvents(object):
                 # Apply config to check whether wifi-stop event has occurred or not
                 if not run_once:
                     resp = requests.post(uri, data=json.dumps(payload),
-                                     headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
-                                     verify=False, timeout=120)
+                                         headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                         verify=False, timeout=120)
                     logging.info(resp.json())
                     if resp.status_code == 200:
                         run_once = True
@@ -597,6 +597,7 @@ class TestKafkaApEvents(object):
         msg_found = False
         payload_msg = "health.radius"
         record_messages = []
+        ssid = config_data["interfaces"][0]["ssids"][0]["name"]
         for i in range(len(config_data["interfaces"][0]["ssids"])):
             if "key" in config_data["interfaces"][0]["ssids"][i]["encryption"]:
                 del config_data["interfaces"][0]["ssids"][i]["encryption"]["key"]
@@ -620,7 +621,9 @@ class TestKafkaApEvents(object):
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
             if 'types' in config_data["metrics"]["realtime"]:
-                config_data["metrics"]["realtime"]["types"] = ["health", "client.join", "client.leave", "client.keymismatch", "wifi.start", "wifi.stop", "unit.boot-up"]
+                config_data["metrics"]["realtime"]["types"] = ["health", "client.join", "client.leave",
+                                                               "client.keymismatch", "wifi.start", "wifi.stop",
+                                                               "unit.boot-up"]
             logging.info(config_data)
             payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
             uri = get_target_object.firmware_library_object.sdk_client.build_uri(
@@ -642,10 +645,18 @@ class TestKafkaApEvents(object):
 
             timeout = 300  # Timeout in seconds
             start_time = time.time()
+            run_once = False
             while time.time() - start_time < timeout:
                 # Poll for new messages
                 messages = kafka_consumer_deq.poll(timeout_ms=300000)
-
+                # create a ttls client to check whether radius health event can be captured
+                if not run_once:
+                    result, description = get_test_library.enterprise_client_connectivity_test(ssid=ssid, security="wpa2",
+                                                                                       key_mgmt="WPA-EAP",
+                                                                                       ttls_passwd="password",
+                                                                                       eap="TTLS", allure_attach=False,
+                                                                                       identity="user")
+                    run_once = True
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
