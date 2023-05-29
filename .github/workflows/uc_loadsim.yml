@@ -193,7 +193,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/v2.9.0
+        ref: refs/tags/${{ github.event.inputs.sdk_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -460,8 +460,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/v2.9.0
-
+        ref: refs/tags/${{ github.event.inputs.sdk_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -654,6 +653,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
+        ref: refs/tags/${{ github.event.inputs.sdk_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -820,7 +820,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/v2.9.0
+        ref: refs/tags/${{ github.event.inputs.sdk_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
