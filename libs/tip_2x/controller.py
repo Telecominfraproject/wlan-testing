@@ -99,7 +99,7 @@ class ConfigureController:
             resp = requests.post(uri, params=params, data=payload, headers=self.make_headers(), verify=False,
                                  timeout=120)
         elif method == "PUT":
-            resp = requests.put(uri, params=params, data=payload, verify=False, timeout=120)
+            resp = requests.put(uri, params=params, data=payload, headers=self.make_headers(), verify=False, timeout=120)
         elif method == "DELETE":
             resp = requests.delete(uri, headers=self.make_headers(), params=params, verify=False, timeout=120)
 
