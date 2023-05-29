@@ -3,6 +3,7 @@
     2.x Security Services Rest API Tests: Test Login, Logout API's
 
 """
+import logging
 import time
 import pytest
 import json
@@ -179,8 +180,8 @@ class TestUcentralSecService(object):
         resp = resp.json()
         all_users = resp["users"]
         for i in all_users:
-            print(i["email"], payload["email"])
             if i["email"] == payload["email"]:
+                logging.info("User already exist")
                 resp = get_target_object.controller_library_object.request("sec", "user/" + str(i["id"]), "DELETE",
                                                                            None, None)
                 time.sleep(2)
@@ -269,9 +270,9 @@ class TestUcentralSecService(object):
         resp = resp.json()
         all_users = resp["users"]
         for i in all_users:
-            print(i["email"], payload["email"])
             if i["email"] == payload["email"]:
-                resp = get_target_object.controller_library_object.request("sec", "user/" + str(i["id"]), "DELETE",
+                logging.info("User already exist")
+                resp = get_target_object.controller_library_object.request("sec", "subuser/" + str(i["id"]), "DELETE",
                                                                            None, None)
                 time.sleep(2)
                 if resp.status_code != 200:
