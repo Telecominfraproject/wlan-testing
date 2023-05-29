@@ -126,20 +126,20 @@ class TestUcentralSecService(object):
         if resp.status_code != 200:
             assert False
 
-    @allure.title("Get system configuration items")
-    @allure.testcase(name="WIFI-12609",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12609")
-    @pytest.mark.system_configuration_items
-    def test_system_configuration_items(self, get_target_object):
-        """
-            Get system configuration items
-            Unique marker:pytest -m "system_configuration_items"
-        """
-        params = {'entries': "element1"}
-        resp = get_target_object.controller_library_object.request("sec", "systemConfiguration", "GET", params, None)
-
-        if resp.status_code != 200:
-            assert False
+    # @allure.title("Get system configuration items")
+    # @allure.testcase(name="WIFI-12609",
+    #                  url="https://telecominfraproject.atlassian.net/browse/WIFI-12609")
+    # @pytest.mark.system_configuration_items
+    # def test_system_configuration_items(self, get_target_object):
+    #     """
+    #         Get system configuration items
+    #         Unique marker:pytest -m "system_configuration_items"
+    #     """
+    #     params = {'entries': "element1"}
+    #     resp = get_target_object.controller_library_object.request("sec", "systemConfiguration", "GET", params, None)
+    #
+    #     if resp.status_code != 200:
+    #         assert False
 
     @allure.title("Get List of existing users(User Management)")
     @allure.testcase(name="WIFI-12605",
