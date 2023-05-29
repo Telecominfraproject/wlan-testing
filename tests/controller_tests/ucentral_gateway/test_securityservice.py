@@ -3,6 +3,7 @@
     2.x Security Services Rest API Tests: Test Login, Logout API's
 
 """
+import time
 import pytest
 import json
 import allure
@@ -28,12 +29,12 @@ class TestUcentralSecService(object):
         """
         resp = get_target_object.controller_library_object.request("sec", "systemEndpoints", "GET", None, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        #allure.attach(name="security systemEndpoints", body=body)
+        # allure.attach(name="security systemEndpoints", body=body)
 
         if resp.status_code != 200:
             assert False
         services = json.loads(resp.text)
-        #print(services)
+        # print(services)
 
         if 'endpoints' not in services:
             assert False
@@ -70,12 +71,12 @@ class TestUcentralSecService(object):
         params = {'command': 'info'}
         resp = get_target_object.controller_library_object.request("sec", "system", "GET", params, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        #allure.attach(name="security get version result", body=body)
+        # allure.attach(name="security get version result", body=body)
 
         if resp.status_code != 200:
             assert False
         system = json.loads(resp.text)
-        #print(system)
+        # print(system)
         if 'version' not in system:
             assert False
         if system['version'] == '':
@@ -91,11 +92,11 @@ class TestUcentralSecService(object):
         params = {'command': 'info'}
         resp = get_target_object.controller_library_object.request("sec", "system", "GET", params, None)
         body = resp.url + "," + str(resp.status_code) + ',' + resp.text
-        #allure.attach(name="security get uptime", body=body)
+        # allure.attach(name="security get uptime", body=body)
         if resp.status_code != 200:
             assert False
         system = json.loads(resp.text)
-        #print(system)
+        # print(system)
         if 'uptime' not in system:
             assert False
 
@@ -106,34 +107,6 @@ class TestUcentralSecService(object):
             assert False
 
         if system['start'] == '':
-            assert False
-
-    @allure.title("Get List of existing users(User Management)")
-    @allure.testcase(name="WIFI-12605",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12605")
-    @pytest.mark.list_of_existing_users_user_management
-    def test_list_of_existing_users_user_management(self, get_target_object):
-        """
-            Retrieve a list of existing users as well as some information about them
-            Unique marker:pytest -m "list_of_existing_users_user_management"
-        """
-        resp = get_target_object.controller_library_object.request("sec", "users", "GET", None, None)
-
-        if resp.status_code != 200:
-            assert False
-
-    @allure.title("Get List of existing users(Subscribers)")
-    @allure.testcase(name="WIFI-12606",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12606")
-    @pytest.mark.list_of_existing_users_subscribers
-    def test_list_of_existing_users_subscribers(self, get_target_object):
-        """
-            Retrieve a list of existing users as well as some information about them
-            Unique marker:pytest -m "list_of_existing_users_subscribers"
-        """
-        resp = get_target_object.controller_library_object.request("sec", "subusers", "GET", None, None)
-
-        if resp.status_code != 200:
             assert False
 
     @allure.title("Allows any microservice to validate a token and get security policy for a specific user")
@@ -167,17 +140,78 @@ class TestUcentralSecService(object):
         if resp.status_code != 200:
             assert False
 
-    @allure.title("Get the list of security profiles for a specific service type")
+    @allure.title("Get List of existing users(User Management)")
+    @allure.testcase(name="WIFI-12605",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12605")
+    @pytest.mark.list_of_existing_users_user_management
+    def test_list_of_existing_users_user_management(self, get_target_object):
+        """
+            Retrieve a list of existing users as well as some information about them
+            Unique marker:pytest -m "list_of_existing_users_user_management"
+        """
+        resp = get_target_object.controller_library_object.request("sec", "users", "GET", None, None)
+
+        if resp.status_code != 200:
+            assert False
+
+    @allure.title("CRUD User")
     @allure.testcase(name="WIFI-12632",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-12632")
-    @pytest.mark.list_security_profiles
-    def test_list_security_profiles(self, get_target_object):
+    @pytest.mark.crud_user
+    def test_crud_user(self, get_target_object):
         """
-            Get the list of security profiles for a specific service type
-            Unique marker:pytest -m "list_security_profiles"
+            CRUD User
+            Unique marker:pytest -m "crud_user"
         """
-        resp = get_target_object.controller_library_object.request("sec", "securityProfiles", "GET", None, None)
+        payload = {
+            "id": "0",
+            "name": "Default User",
+            "description": "Testing through Automation",
+            "email": "testautomation@telecominfraproject.com",
+            "validated": True,
+            "validationEmail": "testautomation@telecominfraproject.com",
+            "changePassword": True,
+            "currentPassword": "OpenWifi%123",
+            "userRole": "root"
+        }
+        # Delete if user already exist
+        resp = get_target_object.controller_library_object.request("sec", "users", "GET", None, None)
+        resp = resp.json()
+        all_users = resp["users"]
+        for i in all_users:
+            print(i["email"], payload["email"])
+            if i["email"] == payload["email"]:
+                resp = get_target_object.controller_library_object.request("sec", "user/" + str(i["id"]), "DELETE",
+                                                                           None, None)
+                time.sleep(2)
+                if resp.status_code != 200:
+                    assert False
 
+        # Create a single user
+        payload = json.dumps(payload)
+        resp = get_target_object.controller_library_object.request("sec", "user/0", "POST", None, payload)
+        if resp.status_code != 200:
+            assert False
+        time.sleep(2)
+        resp = resp.json()
+        user_id = resp['id']
+        # Retrieve the information for a single user
+        resp = get_target_object.controller_library_object.request("sec", "user/" + str(user_id), "GET", None, None)
+        if resp.status_code != 200:
+            assert False
+        # Modify a single user
+        edited_payload = {
+            "name": "Modified name"
+        }
+        edited_payload = json.dumps(edited_payload)
+        resp = get_target_object.controller_library_object.request("sec", "user/" + str(user_id), "PUT", None,
+                                                                   edited_payload)
+        if resp.status_code != 200:
+            assert False
+
+        # Delete a single user
+        resp = get_target_object.controller_library_object.request("sec", "user/" + str(user_id), "DELETE", None,
+                                                                   None)
         if resp.status_code != 200:
             assert False
 
@@ -193,5 +227,79 @@ class TestUcentralSecService(object):
         params = {'reset': False}
         resp = get_target_object.controller_library_object.request("sec", "totp", "GET", params, None)
 
+        if resp.status_code != 200:
+            assert False
+
+    @allure.title("Get List of existing users(Subscribers)")
+    @allure.testcase(name="WIFI-12606",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12606")
+    @pytest.mark.list_of_existing_users_subscribers
+    def test_list_of_existing_users_subscribers(self, get_target_object):
+        """
+            Retrieve a list of existing users as well as some information about them
+            Unique marker:pytest -m "list_of_existing_users_subscribers"
+        """
+        resp = get_target_object.controller_library_object.request("sec", "subusers", "GET", None, None)
+
+        if resp.status_code != 200:
+            assert False
+
+    @allure.title("CRUD subuser")
+    @allure.testcase(name="WIFI-12643",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-12643")
+    @pytest.mark.crud_subuser
+    def test_crud_subuser(self, get_target_object):
+        """
+            CRUD subuser
+            Unique marker:pytest -m "crud_subuser"
+        """
+        payload = {
+            "id": "0",
+            "name": "Default User",
+            "description": "Testing through Automation",
+            "email": "testautomation@telecominfraproject.com",
+            "validated": True,
+            "validationEmail": "testautomation@telecominfraproject.com",
+            "changePassword": False,
+            "currentPassword": "OpenWifi%123",
+            "userRole": "subscriber"
+        }
+        # Delete if user already exist
+        resp = get_target_object.controller_library_object.request("sec", "subusers", "GET", None, None)
+        resp = resp.json()
+        all_users = resp["users"]
+        for i in all_users:
+            print(i["email"], payload["email"])
+            if i["email"] == payload["email"]:
+                resp = get_target_object.controller_library_object.request("sec", "user/" + str(i["id"]), "DELETE",
+                                                                           None, None)
+                time.sleep(2)
+                if resp.status_code != 200:
+                    assert False
+        # Create a single user
+        payload = json.dumps(payload)
+        resp = get_target_object.controller_library_object.request("sec", "subuser/0", "POST", None, payload)
+        if resp.status_code != 200:
+            assert False
+        time.sleep(2)
+        resp = resp.json()
+        user_id = resp['id']
+        # Retrieve the information for a single user
+        resp = get_target_object.controller_library_object.request("sec", "subuser/" + str(user_id), "GET", None, None)
+        if resp.status_code != 200:
+            assert False
+        # Modify a single user
+        edited_payload = {
+            "name": "Modified name"
+        }
+        edited_payload = json.dumps(edited_payload)
+        resp = get_target_object.controller_library_object.request("sec", "subuser/" + str(user_id), "PUT", None,
+                                                                   edited_payload)
+        if resp.status_code != 200:
+            assert False
+
+        # Delete a single user
+        resp = get_target_object.controller_library_object.request("sec", "subuser/" + str(user_id), "DELETE", None,
+                                                                   None)
         if resp.status_code != 200:
             assert False
