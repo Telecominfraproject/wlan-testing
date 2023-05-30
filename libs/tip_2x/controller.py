@@ -383,6 +383,21 @@ class Controller(ConfigureController):
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
+    def perform_system_wide_commands(self, payload):
+        uri = self.build_url_fms("system")
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
     def get_list_of_firmwares(self):
         uri = self.build_url_fms("firmwares")
         logging.info("Sending Command: " + "\n" +
