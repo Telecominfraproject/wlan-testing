@@ -600,7 +600,7 @@ class TestKafkaApEvents(object):
         ssid = config_data["interfaces"][0]["ssids"][0]["name"]
         for i in range(len(config_data["interfaces"][0]["ssids"])):
             if "key" in config_data["interfaces"][0]["ssids"][i]["encryption"]:
-                del config_data["interfaces"][0]["ssids"][i]["encryption"]["key"]
+                config_data["interfaces"][0]["ssids"][i]["encryption"].pop("key")
             if "radius" not in config_data["interfaces"][0]["ssids"]:
                 config_data["interfaces"][0]["ssids"][i]["radius"] = {
                     "authentication": {
@@ -825,3 +825,86 @@ class TestKafkaApEvents(object):
         # Assert that the message is valid
         assert is_valid, f'{payload_msg}/{payload_msg1} Message not found'
 
+    @allure.title("Test to check black listed device")
+    @pytest.mark.check_blacklisted_device
+    def test_kafka_check_blacklisted_device(self, get_target_object, kafka_consumer_deq):
+        is_valid = False
+        msg_found = False
+        payload_msg = "blacklisted_device"
+        record_messages = []
+        for ap in range(len(get_target_object.device_under_tests_info)):
+            serial_number = get_target_object.device_under_tests_info[ap]['identifier']
+            logging.info(config_data)
+            payload = {"serialNumber": serial_number, "reason": "Automation Test to check blacklisted device"}
+            uri = get_target_object.firmware_library_object.sdk_client.build_uri(
+                "blacklist/" + serial_number)
+            logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                         "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+            allure.attach(name="Sending Command:", body="Sending Command: " + "\n" + str(uri) + "\n" +
+                                                        "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                        "Data: " + str(payload) + "\n" +
+                                                        "Headers: " + str(
+                get_target_object.firmware_library_object.sdk_client.make_headers()))
+            resp = requests.post(uri, data=json.dumps(payload),
+                                 headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                 verify=False, timeout=120)
+            logging.info(resp.json())
+            allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
+
+            timeout = 120  # Timeout in seconds
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                # Poll for new messages
+                messages = kafka_consumer_deq.poll(timeout_ms=120000)
+
+                # Check if any messages were returned
+                if messages and not msg_found:
+                    logging.info(f"Polled messages: {messages}")
+                    for topic, records in messages.items():
+                        logging.info(f"Kafka Topic {topic}")
+                        logging.info(f"Messages in Record: {records}")
+                        for record in records:
+                            record_messages.append(record)
+                            if 'type' in record.value['payload']:
+                                event_type = record.value['payload']['type']
+                                # Validate the message value here
+                                if event_type == payload_msg:
+                                    logging.info(f"{payload_msg} has found in the Message")
+                                    is_valid = True
+                                    allure.attach(
+                                        name="Check Blacklisted Device Message",
+                                        body=str(record))
+                                    msg_found = True
+                                    break
+                                else:
+                                    continue
+                elif msg_found:
+                    break
+                else:
+                    # No messages received, sleep for a bit
+                    time.sleep(1)
+            # If Device becomes black listed, remove it from black list to connect it back to controller
+            uri = get_target_object.firmware_library_object.sdk_client.build_uri(
+                "blacklist/" + serial_number)
+            logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                         "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+            allure.attach(name="Sending Command:", body="Sending Command: " + "\n" + str(uri) + "\n" +
+                                                        "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                        "Data: " + str(payload) + "\n" +
+                                                        "Headers: " + str(
+                get_target_object.firmware_library_object.sdk_client.make_headers()))
+            resp1 = requests.get(uri, headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                 verify=False, timeout=120)
+            if resp1.status_code == 200:
+                resp2 = requests.delete(uri, headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                      verify=False, timeout=120)
+            if resp2.status_code != 200:
+                assert False, "Failed to remove device from blacklisted Devices"
+        allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
+
+        # Assert that the message is valid
+        assert is_valid, f'{payload_msg} Message not found'
