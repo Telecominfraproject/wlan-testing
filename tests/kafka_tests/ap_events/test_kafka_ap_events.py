@@ -701,14 +701,15 @@ class TestKafkaApEvents(object):
         msg_found = False
         payload_msg = "unit.boot-up"
         record_messages = []
+        run_once = False
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
             if 'unit.boot-up' not in config_data["metrics"]["realtime"]["types"]:
                 config_data["metrics"]["realtime"]["types"] = ["unit.boot-up"]
             logging.info(config_data)
-            payload = {"serialNumber": serial_number, "when": 0}
+            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
             uri = get_target_object.firmware_library_object.sdk_client.build_uri(
-                "device/" + serial_number + "/reboot")
+                "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
@@ -722,14 +723,33 @@ class TestKafkaApEvents(object):
                                  headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
                                  verify=False, timeout=120)
             logging.info(resp.json())
-            allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
 
-            timeout = 120  # Timeout in seconds
+            timeout = 180  # Timeout in seconds
             start_time = time.time()
             while time.time() - start_time < timeout:
                 # Poll for new messages
                 messages = kafka_consumer_deq.poll(timeout_ms=120000)
-
+                # Trigger reboot to capture uboot up event message
+                if not run_once:
+                    payload = {"serialNumber": serial_number, "when": 0}
+                    uri = get_target_object.firmware_library_object.sdk_client.build_uri(
+                        "device/" + serial_number + "/reboot")
+                    logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
+                                 "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                 "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                                 "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+                    allure.attach(name="Sending Command:", body="Sending Command: " + "\n" + str(uri) + "\n" +
+                                                                "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                                "Data: " + str(payload) + "\n" +
+                                                                "Headers: " + str(
+                        get_target_object.firmware_library_object.sdk_client.make_headers()))
+                    resp1 = requests.post(uri, data=json.dumps(payload),
+                                         headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                         verify=False, timeout=120)
+                    logging.info(resp1.json())
+                    allure.attach(name=f"Response - {resp1.status_code}{resp1.reason}", body=str(resp1.json()))
+                    if resp1.status_code == 200:
+                        run_once = True
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
@@ -909,8 +929,8 @@ class TestKafkaApEvents(object):
             if resp1.status_code == 200:
                 resp2 = requests.delete(uri, headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
                                       verify=False, timeout=120)
-            if resp2.status_code != 200:
-                assert False, "Failed to remove device from blacklisted Devices"
+                if resp2.status_code != 200:
+                    assert False, "Failed to remove device from blacklisted Devices"
         allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
 
         # Assert that the message is valid
