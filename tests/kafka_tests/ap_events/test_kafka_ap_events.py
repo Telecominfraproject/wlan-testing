@@ -41,6 +41,9 @@ class TestKafkaApEvents(object):
             ap_model = get_target_object.firmware_library_object.ap_model_lookup(
                 model=get_target_object.device_under_tests_info[ap]['model'])
             devices.append(ap_model)
+            # check the current AP Revision before upgrade
+            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+            current_version = str(ap_version).replace("\n", "")
             params = "limit=500" + \
                      "&deviceType=" + ap_model + \
                      "&offset=0"
@@ -49,7 +52,11 @@ class TestKafkaApEvents(object):
 
             firmwares = response.json()
             if response.status_code == 200:
-                firmware_list[f"{ap_model}"] = firmwares['firmwares']
+                # Remove the current AP Revision from the firmwares list
+                if len(firmwares['firmwares']) > 0:
+                    firmware_list[f"{ap_model}"] = [f for f in firmwares['firmwares'] if f["revision"] != current_version]
+                else:
+                    pytest.fail("No firmware found to upgrade")
             else:
                 pytest.fail("Test failed - Error Code: " + response.status_code + f" - {response.reason}")
             firmware_uri = firmware_list[ap_model][random.randint(0, len(firmware_list[ap_model]))]['uri']
