@@ -605,26 +605,27 @@ class TestKafkaApEvents(object):
         payload_msg = "health.radius"
         record_messages = []
         ssid = config_data["interfaces"][0]["ssids"][0]["name"]
+        radius = {
+            "authentication": {
+                "host": "18.189.85.2",
+                "port": 1812,
+                "secret": "testing123"
+            },
+            "accounting": {
+                "host": "18.189.85.2",
+                "port": 1813,
+                "secret": "testing123"
+            },
+            "health": {
+                "username": "user",
+                "password": "password"
+            }
+        }
         for i in range(len(config_data["interfaces"][0]["ssids"])):
+            if "radius" not in config_data["interfaces"][0]["ssids"][i]:
+                config_data["interfaces"][0]["ssids"][i].update({"radius": radius})
             if "key" in config_data["interfaces"][0]["ssids"][i]["encryption"]:
                 config_data["interfaces"][0]["ssids"][i]["encryption"].pop("key")
-            if "radius" not in config_data["interfaces"][0]["ssids"]:
-                config_data["interfaces"][0]["ssids"][i]["radius"] = {
-                    "authentication": {
-                        "host": "18.189.85.2",
-                        "port": 1812,
-                        "secret": "testing123"
-                    },
-                    "accounting": {
-                        "host": "18.189.85.2",
-                        "port": 1813,
-                        "secret": "testing123"
-                    },
-                    "health": {
-                        "username": "user",
-                        "password": "password"
-                    }
-                }
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
             if 'types' in config_data["metrics"]["realtime"]:
@@ -656,7 +657,7 @@ class TestKafkaApEvents(object):
             while time.time() - start_time < timeout:
                 # Poll for new messages
                 messages = kafka_consumer_deq.poll(timeout_ms=300000)
-                # create a ttls client to check whether radius health event can be captured
+                # create a client to check whether radius health event can be captured
                 if not run_once:
                     result, description = get_test_library.enterprise_client_connectivity_test(ssid=ssid, security="wpa2",
                                                                                        key_mgmt="WPA-EAP",
