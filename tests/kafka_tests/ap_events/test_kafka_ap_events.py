@@ -4,12 +4,14 @@
 import json
 import os
 import random
+import re
 import time
 import allure
 import pytest
 import requests
 import logging
 import datetime
+import paramiko
 
 # Get the directory of the current test config file
 test_file_dir = os.path.dirname(os.path.abspath(__file__))
@@ -54,7 +56,8 @@ class TestKafkaApEvents(object):
             if response.status_code == 200:
                 # Remove the current AP Revision from the firmwares list
                 if len(firmwares['firmwares']) > 0:
-                    firmware_list[f"{ap_model}"] = [f for f in firmwares['firmwares'] if f["revision"] != current_version]
+                    firmware_list[f"{ap_model}"] = [f for f in firmwares['firmwares'] if
+                                                    f["revision"] != current_version]
                 else:
                     pytest.fail("No firmware found to upgrade")
             else:
@@ -659,11 +662,13 @@ class TestKafkaApEvents(object):
                 messages = kafka_consumer_deq.poll(timeout_ms=300000)
                 # create a client to check whether radius health event can be captured
                 if not run_once:
-                    result, description = get_test_library.enterprise_client_connectivity_test(ssid=ssid, security="wpa2",
-                                                                                       key_mgmt="WPA-EAP",
-                                                                                       ttls_passwd="password",
-                                                                                       eap="TTLS", allure_attach=False,
-                                                                                       identity="user")
+                    result, description = get_test_library.enterprise_client_connectivity_test(ssid=ssid,
+                                                                                               security="wpa2",
+                                                                                               key_mgmt="WPA-EAP",
+                                                                                               ttls_passwd="password",
+                                                                                               eap="TTLS",
+                                                                                               allure_attach=False,
+                                                                                               identity="user")
                     run_once = True
                 # Check if any messages were returned
                 if messages and not msg_found:
@@ -745,8 +750,8 @@ class TestKafkaApEvents(object):
                                                                 "Headers: " + str(
                         get_target_object.firmware_library_object.sdk_client.make_headers()))
                     resp1 = requests.post(uri, data=json.dumps(payload),
-                                         headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
-                                         verify=False, timeout=120)
+                                          headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                          verify=False, timeout=120)
                     logging.info(resp1.json())
                     allure.attach(name=f"Response - {resp1.status_code}{resp1.reason}", body=str(resp1.json()))
                     if resp1.status_code == 200:
@@ -928,10 +933,109 @@ class TestKafkaApEvents(object):
             resp1 = requests.get(uri, headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
                                  verify=False, timeout=120)
             if resp1.status_code == 200:
-                resp2 = requests.delete(uri, headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
-                                      verify=False, timeout=120)
+                resp2 = requests.delete(uri,
+                                        headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                        verify=False, timeout=120)
                 if resp2.status_code != 200:
                     assert False, "Failed to remove device from blacklisted Devices"
+        allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
+
+        # Assert that the message is valid
+        assert is_valid, f'{payload_msg} Message not found'
+
+    @allure.title("Test to check ssh event")
+    @pytest.mark.ssh_event
+    def test_kafka_ssh(self, get_target_object, get_testbed_details, kafka_consumer_deq):
+        is_valid = False
+        msg_found = False
+        payload_msg = "ssh"
+        record_messages = []
+        run_once = False
+        for i in range(len(config_data["interfaces"])):
+            if "services" in config_data["interfaces"][i]:
+                if "ssh" not in config_data["interfaces"][i]["services"]:
+                    config_data["interfaces"][i]["services"].append("ssh")
+        if 'types' in config_data["metrics"]["realtime"]:
+            config_data["metrics"]["realtime"]["types"] = ["ssh"]
+        logging.info(config_data)
+        for ap in range(len(get_target_object.device_under_tests_info)):
+            serial_number = get_target_object.device_under_tests_info[ap]['identifier']
+            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
+            uri = get_target_object.firmware_library_object.sdk_client.build_uri(
+                "device/" + serial_number + "/configure")
+            logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                         "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+            allure.attach(name="Sending Command:", body="Sending Command: " + "\n" + str(uri) + "\n" +
+                                                        "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                        "Data: " + str(payload) + "\n" +
+                                                        "Headers: " + str(
+                get_target_object.firmware_library_object.sdk_client.make_headers()))
+            resp = requests.post(uri, data=json.dumps(payload),
+                                 headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                 verify=False, timeout=120)
+            logging.info(resp.json())
+            allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
+            cmd_output = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig up0v0")
+            ip_address = re.search(r"inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", cmd_output)
+            if ip_address:
+                logging.info(f"The IP address of up0v0 is: {ip_address}")
+            else:
+                logging.info(f"No IP address found for up0v0")
+            host_ip, host_username, host_password = get_target_object.device_under_tests[ap]['host_ip'], \
+                get_target_object.device_under_tests[ap]['host_username'], get_target_object.device_under_tests[ap][
+                'host_password']
+            upstream = get_target_object.device_under_tests_info[ap]['wan_port'].split(".")[2]
+            ssh_client = paramiko.SSHClient()
+            ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            timeout = 120  # Timeout in seconds
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                # Poll for new messages
+                messages = kafka_consumer_deq.poll(timeout_ms=120000)
+                if not run_once:
+                    try:
+                        ssh_client.connect(hostname=host_ip, username=host_username, password=host_password)
+                        # Create the lanforge SSH client from the jump host SSH session
+                        lf_client = ssh_client.invoke_shell()
+                        cmd = f'./vrf_exec.bash {upstream} ssh root@{ip_address}'
+                        # Execute the SSH command on the traffic generator
+                        lf_client.send(
+                            f'ssh root@{get_testbed_details["traffic_generator"]["details"]["manager_ip"]}\n')
+                        lf_client.send('lanforge\n')
+                        lf_client.send(f'{cmd}\n')
+                        lf_client.send(f'openwifi\n')
+                    finally:
+                        lf_client.close()
+                        ssh_client.close()
+                        run_once = True
+                # Check if any messages were returned
+                if messages and not msg_found:
+                    logging.info(f"Polled messages: {messages}")
+                    for topic, records in messages.items():
+                        logging.info(f"Kafka Topic {topic}")
+                        logging.info(f"Messages in Record: {records}")
+                        for record in records:
+                            record_messages.append(record)
+                            if 'type' in record.value['payload']:
+                                event_type = record.value['payload']['type']
+                                # Validate the message value here
+                                if event_type == payload_msg:
+                                    logging.info(f"{payload_msg} has found in the Message")
+                                    is_valid = True
+                                    allure.attach(
+                                        name="Check ssh event Message",
+                                        body=str(record))
+                                    msg_found = True
+                                    break
+                                else:
+                                    continue
+                elif msg_found:
+                    break
+                else:
+                    # No messages received, sleep for a bit
+                    time.sleep(1)
         allure.attach(name="Messages Recorded in Test Execution", body=str(record_messages))
 
         # Assert that the message is valid
