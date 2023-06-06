@@ -978,13 +978,15 @@ class TestKafkaApEvents(object):
             logging.info(resp.json())
             allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
             cmd_output = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig up0v0")
-            ip_address = re.search(r"inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", cmd_output)
-            if ip_address:
-                logging.info(f"The IP address of up0v0 is: {ip_address}")
+            pattern = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
+            if pattern:
+                ip_address = pattern.group(1)
+                logging.info(f"The IP address of up0v0 is: {pattern}")
             else:
                 logging.info(f"No IP address found for up0v0")
-            host_ip, host_username, host_password = get_target_object.device_under_tests[ap]['host_ip'], \
-                get_target_object.device_under_tests[ap]['host_username'], get_target_object.device_under_tests[ap][
+                pytest.fail("up0v0 Interface don't has IP address")
+            host_ip, host_username, host_password = get_target_object.device_under_tests_info[ap]['host_ip'], \
+                get_target_object.device_under_tests_info[ap]['host_username'], get_target_object.device_under_tests_info[ap][
                 'host_password']
             upstream = get_target_object.device_under_tests_info[ap]['wan_port'].split(".")[2]
             ssh_client = paramiko.SSHClient()
@@ -1006,8 +1008,9 @@ class TestKafkaApEvents(object):
                         lf_client.send('lanforge\n')
                         lf_client.send(f'{cmd}\n')
                         lf_client.send(f'openwifi\n')
+                        output = lf_client.recv(4096).decode()
+                        logging.info(f"Output: {output}")
                     finally:
-                        lf_client.close()
                         ssh_client.close()
                         run_once = True
                 # Check if any messages were returned
