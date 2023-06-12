@@ -507,6 +507,8 @@ class APLIBS:
         return output
 
     def add_restrictions(self, restrictions_file, developer_mode):
+        self.factory_reset(print_log=False)
+        time.sleep(200)
         output = self.run_generic_command(cmd=developer_mode,
                                           idx=0,
                                           print_log=True,
