@@ -61,7 +61,6 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.ow_sanity_lf
-    @pytest.mark.kl
     @pytest.mark.twog_upload_per_ssid
     @allure.title("Test for Upload per SSID 2.4 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
@@ -84,6 +83,7 @@ class TestRateLimitingWithRadiusBridge(object):
         eap = "TTLS"
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
+        configured = profile_data["rate-limit"]["ingress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
@@ -97,13 +97,19 @@ class TestRateLimitingWithRadiusBridge(object):
             assert passes == "PASS", result
         if passes == "PASS":
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
-            get_test_library.wifi_capacity(instance_name="Test_Radius_2g_up_per_ssid", mode=mode,
-                                           download_rate="0Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
-                                           move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                           add_stations=False, raw_lines=raw_lines)
-
-        assert True
+            obj = get_test_library.wifi_capacity(instance_name="Test_Radius_2g_up_per_ssid", mode=mode,
+                                                 download_rate="0Gbps", batch_size="1",
+                                                 upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                                 move_to_influx=False, dut_data=setup_configuration,
+                                                 ssid_name=ssid_name,
+                                                 add_stations=False, raw_lines=raw_lines)
+            report_name = obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+            kpi_data = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
+            achieved = float("{:.2f}".format(kpi_data[1][0]))
+            if achieved <= configured:
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -130,6 +136,7 @@ class TestRateLimitingWithRadiusBridge(object):
         eap = "TTLS"
         ttls_passwd = rate_radius_info["password"]
         identity = rate_radius_info['user']
+        configured = profile_data["rate-limit"]["egress-rate"]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
@@ -142,13 +149,19 @@ class TestRateLimitingWithRadiusBridge(object):
             assert passes == "PASS", result
         if passes == "PASS":
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
-            get_test_library.wifi_capacity(instance_name="Test_Radius_2g_down_perssid_persta", mode=mode,
-                                           download_rate="1Gbps", batch_size="1",
-                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
-                                           move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                           add_stations=False, raw_lines=raw_lines)
-
-        assert True
+            obj = get_test_library.wifi_capacity(instance_name="Test_Radius_2g_down_perssid_persta", mode=mode,
+                                                 download_rate="1Gbps", batch_size="1",
+                                                 upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                                 move_to_influx=False, dut_data=setup_configuration,
+                                                 ssid_name=ssid_name,
+                                                 add_stations=False, raw_lines=raw_lines)
+            report_name = obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+            kpi_data = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
+            achieved = float("{:.2f}".format(kpi_data[0][0]))
+            if achieved <= configured:
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
@@ -307,7 +320,6 @@ class TestRateLimitingWithRadiusBridge(object):
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
-
         assert True
 
     @pytest.mark.wpa2_enterprise
@@ -384,7 +396,6 @@ class TestRateLimitingWithRadiusBridge(object):
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
-
         assert True
 
     @pytest.mark.wpa2_enterprise
@@ -420,12 +431,12 @@ class TestRateLimitingWithRadiusBridge(object):
             assert passes == "PASS", result
         if passes == "PASS":
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
-            get_test_library.wifi_capacity(instance_name="Test_Radius_5g_upstream_downstream_per_ssid_perclient", mode=mode,
+            get_test_library.wifi_capacity(instance_name="Test_Radius_5g_upstream_downstream_per_ssid_perclient",
+                                           mode=mode,
                                            download_rate="1Gbps", batch_size="1",
                                            upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
-
 
         assert True
 
@@ -837,7 +848,6 @@ class TestRateLimitingWithRadiusBridge(object):
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
-
         #     kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
         #     print(kpi_data)
         #     achieved = float("{:.2f}".format(kpi_data[0][1]))
@@ -950,7 +960,6 @@ class TestRateLimitingWithRadiusBridge(object):
                                            upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
-
 
         #     kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
         #     print(kpi_data)
