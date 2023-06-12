@@ -978,13 +978,13 @@ class TestKafkaApEvents(object):
             logging.info(resp.json())
             allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
             cmd_output = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig up0v0")
-            pattern = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
-            if pattern:
+            if "inet addr:" in cmd_output:
+                pattern = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
                 ip_address = pattern.group(1)
                 logging.info(f"The IP address of up0v0 is: {ip_address}")
             else:
                 logging.info(f"No IP address found for up0v0")
-                pytest.fail("up0v0 Interface don't has IP address")
+                pytest.fail("up0v0 Interface doesn't have an IP address")
             host_ip, host_username, host_password = get_target_object.device_under_tests_info[ap]['host_ip'], \
                 get_target_object.device_under_tests_info[ap]['host_username'], \
             get_target_object.device_under_tests_info[ap][
@@ -1047,12 +1047,13 @@ class TestKafkaApEvents(object):
 
     @allure.title("Test to check Health DNS event")
     @pytest.mark.health_dns
-    def test_kafka_health_dns(self, get_target_object, get_testbed_details, kafka_consumer_deq):
+    def test_kafka_health_dns(self, get_target_object, get_testbed_details, get_test_library, kafka_consumer_deq):
         is_valid = False
         msg_found = False
         payload_msg = "health.dns"
         record_messages = []
         run_once = False
+        client_created = False
         for ap in range(len(get_target_object.device_under_tests_info)):
             for i in range(len(config_data["interfaces"])):
                 if config_data["interfaces"][i]["name"] == "WAN":
@@ -1102,22 +1103,38 @@ class TestKafkaApEvents(object):
                 messages = kafka_consumer_deq.poll(timeout_ms=120000)
                 # change the interface ip from configured gateway to some other ip to capture dns event
                 if not run_once:
+                    if not client_created:
+                        ssid, passwd = config_data["interfaces"][1]["ssids"][1]["name"], \
+                            config_data["interfaces"][1]["ssids"][1]["encryption"]["key"]
+                        sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd,
+                                                                                  security="wpa2",
+                                                                                  mode="BRIDGE", radio="wiphy0",
+                                                                                  station_name=["sta0001"],
+                                                                                  create_vlan=False)
+                        if not sta_created:
+                            logging.info("Failed to create station")
+                            pytest.fail("Station creation failed")
+                        else:
+                            client_created = True
+                    if client_created:
+                        get_test_library.client_disconnect(station_name=["sta0001"])
                     cmd_output = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig down1v0")
                     allure.attach(name="down1v0 interface info before ip change", body=str(cmd_output))
-                    pattern = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
-                    ip_address = pattern.group(1)
-                    if ip_address:
+                    if "inet addr:" in cmd_output:
+                        pattern = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
+                        ip_address = pattern.group(1)
                         logging.info(f"The IP address of down1v0 is: {ip_address}")
-                        cmd_output = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig down1v0 "
+                        cmd_set_ip = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig down1v0 "
                                                                                                   "192.146.5.6")
-                        allure.attach(name="down1v0 interface info after ip change", body=str(cmd_output))
-                        pattern1 = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
+                        cmd_output2 = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig down1v0")
+                        allure.attach(name="down1v0 interface info after ip change", body=str(cmd_output2))
+                        pattern1 = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output2)
                         ip_address1 = pattern1.group(1)
                         if ip_address1 == '192.146.5.6':
                             run_once = True
                     else:
                         logging.info(f"No IP address found for down1v0")
-                        pytest.fail("down1v0 Interface do not have an IP address")
+                        pytest.fail("down1v0 Interface does not have an IP address")
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
@@ -1157,6 +1174,7 @@ class TestKafkaApEvents(object):
         payload_msg = "health.dhcp"
         record_messages = []
         run_once = False
+        client_created = False
         logging.info(config_data)
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
@@ -1206,22 +1224,38 @@ class TestKafkaApEvents(object):
                 messages = kafka_consumer_deq.poll(timeout_ms=120000)
                 # change the interface ip from configured gateway to some other ip to capture dhcp event
                 if not run_once:
+                    if not client_created:
+                        ssid, passwd = config_data["interfaces"][1]["ssids"][1]["name"], \
+                            config_data["interfaces"][1]["ssids"][1]["encryption"]["key"]
+                        sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd,
+                                                                                  security="wpa2",
+                                                                                  mode="BRIDGE", radio="wiphy0",
+                                                                                  station_name=["sta0001"],
+                                                                                  create_vlan=False)
+                        if not sta_created:
+                            logging.info("Failed to create station")
+                            pytest.fail("Station creation failed")
+                        else:
+                            client_created = True
+                    if client_created:
+                        get_test_library.client_disconnect(station_name=["sta0001"])
                     cmd_output = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig down1v0")
                     allure.attach(name="down1v0 interface info before ip change", body=str(cmd_output))
-                    pattern = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
-                    ip_address = pattern.group(1)
-                    if ip_address:
+                    if "inet addr:" in cmd_output:
+                        pattern = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
+                        ip_address = pattern.group(1)
                         logging.info(f"The IP address of down1v0 is: {ip_address}")
-                        cmd_output = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig down1v0 "
+                        cmd_set_ip = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig down1v0 "
                                                                                                   "192.146.5.6")
-                        allure.attach(name="down1v0 interface info after ip change", body=str(cmd_output))
-                        pattern1 = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output)
+                        cmd_output2 = get_target_object.dut_library_object.run_generic_command(cmd="ifconfig down1v0")
+                        allure.attach(name="down1v0 interface info after ip change", body=str(cmd_output2))
+                        pattern1 = re.search(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})', cmd_output2)
                         ip_address1 = pattern1.group(1)
                         if ip_address1 == '192.146.5.6':
                             run_once = True
                     else:
                         logging.info(f"No IP address found for down1v0")
-                        pytest.fail("down1v0 Interface do not have an IP address")
+                        pytest.fail("down1v0 Interface does not have an IP address")
                 # Check if any messages were returned
                 if messages and not msg_found:
                     logging.info(f"Polled messages: {messages}")
