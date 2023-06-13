@@ -481,6 +481,7 @@ jobs:
 
         cat > input_sim_info.json <<EOF
         {
+          "id":"0",
           "name":"test",
           "deviceType":"edgecore_ecw5410",
           "devices":${{ github.event.inputs.devices_count }},
@@ -674,6 +675,7 @@ jobs:
 
         cat > input_sim_info.json <<EOF
         {
+          "id":"0",
           "name":"test",
           "deviceType":"edgecore_ecw5410",
           "devices":${{ github.event.inputs.devices_count }},
@@ -841,6 +843,7 @@ jobs:
 
         cat > input_sim_info.json <<EOF
         {
+          "id":"0",
           "name":"test",
           "deviceType":"edgecore_ecw5410",
           "devices":${{ github.event.inputs.devices_count }},
