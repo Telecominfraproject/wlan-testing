@@ -1104,8 +1104,8 @@ class TestKafkaApEvents(object):
                 # change the interface ip from configured gateway to some other ip to capture dns event
                 if not run_once:
                     if not client_created:
-                        ssid, passwd = config_data["interfaces"][1]["ssids"][1]["name"], \
-                            config_data["interfaces"][1]["ssids"][1]["encryption"]["key"]
+                        ssid, passwd = config_data["interfaces"][1]["ssids"][0]["name"], \
+                            config_data["interfaces"][1]["ssids"][0]["encryption"]["key"]
                         sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd,
                                                                                   security="wpa2",
                                                                                   mode="BRIDGE", radio="wiphy0",
@@ -1225,8 +1225,8 @@ class TestKafkaApEvents(object):
                 # change the interface ip from configured gateway to some other ip to capture dhcp event
                 if not run_once:
                     if not client_created:
-                        ssid, passwd = config_data["interfaces"][1]["ssids"][1]["name"], \
-                            config_data["interfaces"][1]["ssids"][1]["encryption"]["key"]
+                        ssid, passwd = config_data["interfaces"][1]["ssids"][0]["name"], \
+                            config_data["interfaces"][1]["ssids"][0]["encryption"]["key"]
                         sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd,
                                                                                   security="wpa2",
                                                                                   mode="BRIDGE", radio="wiphy0",
