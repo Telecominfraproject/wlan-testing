@@ -23,6 +23,10 @@ on:
         default: 'main'
         description: 'Version of Cloud SDK to test'
         required: true
+      owls_version:
+        default: 'v2.10.0'
+        description: 'Version of OWLs to use'
+        required: true
       devices_count:
         default: '25000'
         description: 'Amount of devices to simulate'
@@ -127,7 +131,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: ${{ github.event.inputs.sdk_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -193,7 +197,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: refs/tags/${{ github.event.inputs.owls_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -394,7 +398,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: ${{ github.event.inputs.sdk_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -460,7 +464,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: refs/tags/${{ github.event.inputs.owls_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -581,7 +585,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: ${{ github.event.inputs.sdk_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -654,7 +658,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: refs/tags/${{ github.event.inputs.owls_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -749,7 +753,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: ${{ github.event.inputs.sdk_version }}
 
     - name: Get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -822,7 +826,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: refs/tags/${{ github.event.inputs.owls_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
