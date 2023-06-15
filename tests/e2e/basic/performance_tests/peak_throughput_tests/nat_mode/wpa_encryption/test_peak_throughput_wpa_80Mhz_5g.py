@@ -51,7 +51,7 @@ class Test80Mhz5GChannel36PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
@@ -68,7 +68,7 @@ class Test80Mhz5GChannel36PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
@@ -85,7 +85,7 @@ class Test80Mhz5GChannel36PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -102,7 +102,7 @@ class Test80Mhz5GChannel36PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -119,7 +119,7 @@ class Test80Mhz5GChannel36PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -136,7 +136,7 @@ class Test80Mhz5GChannel36PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -183,7 +183,7 @@ class Test80Mhz5GChannel52PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
@@ -200,7 +200,7 @@ class Test80Mhz5GChannel52PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
@@ -217,7 +217,7 @@ class Test80Mhz5GChannel52PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -234,7 +234,7 @@ class Test80Mhz5GChannel52PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -251,7 +251,7 @@ class Test80Mhz5GChannel52PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -268,7 +268,7 @@ class Test80Mhz5GChannel52PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -316,7 +316,7 @@ class Test80Mhz5GChannel100PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
@@ -333,7 +333,7 @@ class Test80Mhz5GChannel100PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
@@ -350,7 +350,7 @@ class Test80Mhz5GChannel100PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -367,7 +367,7 @@ class Test80Mhz5GChannel100PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -384,7 +384,7 @@ class Test80Mhz5GChannel100PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -401,7 +401,7 @@ class Test80Mhz5GChannel100PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_100", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -449,7 +449,7 @@ class Test80Mhz5GChannel132PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
@@ -466,7 +466,7 @@ class Test80Mhz5GChannel132PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
@@ -483,7 +483,7 @@ class Test80Mhz5GChannel132PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -500,7 +500,7 @@ class Test80Mhz5GChannel132PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
@@ -517,7 +517,7 @@ class Test80Mhz5GChannel132PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
@@ -534,7 +534,7 @@ class Test80Mhz5GChannel132PeakThroughput(object):
         """
         profile_data = {"ssid_name": "ssid_wpa_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
-        mode = "NAT"
+        mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
