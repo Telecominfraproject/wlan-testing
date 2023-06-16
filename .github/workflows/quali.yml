@@ -1701,7 +1701,7 @@ jobs:
         run: cp -r allure-results allure-report/results
 
       - name: upload to S3
-        if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'ow_sanity_lf'
+        # if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'ow_sanity_lf'
         uses: ./.github/actions/allure-report-to-s3
         with:
           test_type: sanity
