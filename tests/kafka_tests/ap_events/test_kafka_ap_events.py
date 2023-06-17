@@ -627,14 +627,14 @@ class TestKafkaApEvents(object):
         for i in range(len(config_data["interfaces"][0]["ssids"])):
             if "radius" not in config_data["interfaces"][0]["ssids"][i]:
                 config_data["interfaces"][0]["ssids"][i].update({"radius": radius})
+            if "proto" in config_data[0]["ssids"][i]["encryption"]:
+                config_data["interfaces"][0]["ssids"][i]["encryption"]["proto"] = "wpa2"
             if "key" in config_data["interfaces"][0]["ssids"][i]["encryption"]:
                 config_data["interfaces"][0]["ssids"][i]["encryption"].pop("key")
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
             if 'types' in config_data["metrics"]["realtime"]:
-                config_data["metrics"]["realtime"]["types"] = ["health", "client.join", "client.leave",
-                                                               "client.keymismatch", "wifi.start", "wifi.stop",
-                                                               "unit.boot-up"]
+                config_data["metrics"]["realtime"]["types"] = ["health"]
             logging.info(config_data)
             payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
             uri = get_target_object.firmware_library_object.sdk_client.build_uri(
