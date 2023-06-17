@@ -315,7 +315,7 @@ class TestRateLimitingWithRadiusBridge(object):
         band = "fiveg"
         eap = "TTLS"
         ttls_passwd = "password"
-        identity = rate_radius_info['user']
+        identity = "bandwidth10m"
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
