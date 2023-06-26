@@ -110,7 +110,7 @@ class TestRateLimitingNAT(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_NAT_dw", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -299,7 +299,7 @@ class TestRateLimitingNAT(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_NAT_dw_per_cl", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, raw_lines=raw_lines, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -369,7 +369,7 @@ class TestRateLimitingNAT(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_NAT_dw_125", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -474,7 +474,7 @@ class TestRateLimitingNAT(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_NAT_up_1", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 1}, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -579,7 +579,7 @@ class TestRateLimitingNAT(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_NAT_dw_1_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 1}, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -759,7 +759,7 @@ class TestRateLimitingNAT(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_NAT_dw_per_cl_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, raw_lines=raw_lines, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
