@@ -78,7 +78,7 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    runs-on: [self-hosted, small]
+    runs-on: ubuntu-latest
     needs: [build]
     timeout-minutes: 1440
 
