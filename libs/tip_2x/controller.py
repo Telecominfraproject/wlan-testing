@@ -386,8 +386,122 @@ class Controller(ConfigureController):
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
-    def get_system_fms(self):
+    # FMS
+    def get_different_values_from_the_running_service(self):
         uri = self.build_url_fms("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def perform_system_wide_commands(self, payload):
+        uri = self.build_url_fms("system")
+        payload = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("POST", resp, self.make_headers(), payload, uri)
+        return resp
+
+    def get_list_of_firmwares(self):
+        uri = self.build_url_fms("firmwares")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_list_all_the_defined_device_revision_history(self, serial_number):
+        uri = self.build_url_fms("revisionHistory/" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_list_of_connected_devices_and_some_values(self):
+        uri = self.build_url_fms("connectedDevices")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_status_of_connected_device(self, serial_number):
+        uri = self.build_url_fms("connectedDevice/" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_analysis_of_the_existing_devices_we_know_about(self):
+        uri = self.build_url_fms("deviceReport")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_receive_a_report_on_single_decide(self, serial_number):
+        uri = self.build_url_fms("deviceInformation/" + serial_number)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_configuration_items(self, entries):
+        uri = self.build_url_fms("systemConfiguration?entries=" + entries)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
