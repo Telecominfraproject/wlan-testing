@@ -15,7 +15,6 @@ import pytest
 
 @pytest.mark.uc_sanity
 @pytest.mark.ow_sdk_tests
-@pytest.mark.ow_sanity_lf
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owgw_api_tests
 @allure.parent_suite("SDK Tests")
@@ -125,6 +124,7 @@ class TestUcentralGatewayService(object):
     @allure.testcase(name="WIFI-11399",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11399")
     @pytest.mark.get_all_devices
+    @pytest.mark.ow_sanity_lf
     def test_gwservice_listdevices(self, get_target_object):
         """
             Test the list of devices endpoint
@@ -140,6 +140,7 @@ class TestUcentralGatewayService(object):
     @allure.testcase(name="WIFI-11399",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11399")
     @pytest.mark.CRUD
+    @pytest.mark.ow_sanity_lf
     def test_gwservice_create_read_edit_delete_device(self, get_target_object, selected_testbed):
         """
             Test to create,read,edit and delete device endpoint
@@ -209,6 +210,7 @@ class TestUcentralGatewayService(object):
     @allure.testcase(name="WIFI-11436",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11436")
     @pytest.mark.OW_gateway_service
+    @pytest.mark.ow_sanity_lf
     def test_system_info_gw(self, get_target_object):
         """
         Test to verify OW gateway services
@@ -223,6 +225,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Get OW Gateway Commands")
     @allure.testcase(name="WIFI-11437",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11437")
+    @pytest.mark.ow_sanity_lf
     def test_gw_commands(self, get_target_object, get_testbed_details):
         """
         Test to verify OW gateway commands executed
@@ -239,6 +242,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Get Device Logs")
     @allure.testcase(name="WIFI-11438",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11438")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_get_logs(self, get_target_object, get_testbed_details):
         """
             Test the device logs present in Gateway UI
@@ -255,6 +259,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Get Health Checks")
     @allure.testcase(name="WIFI-11439",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11439")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_get_health_checks(self, get_target_object, get_testbed_details):
         """
             Test the device health checks present in Gateway UI
@@ -270,6 +275,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Get Capabilities")
     @allure.testcase(name="WIFI-11441",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11441")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_get_capabilities(self, get_target_object, get_testbed_details):
         """
             Test the device capabilities present in Gateway UI
@@ -286,6 +292,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Get Statistics")
     @allure.testcase(name="WIFI-11442",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11442")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_get_statistics(self, get_target_object, get_testbed_details):
         """
             Test the device statistics present in Gateway UI
@@ -301,6 +308,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Get Device Status")
     @allure.testcase(name="WIFI-11443",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11443")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_get_status(self, get_target_object, get_testbed_details):
         """
             Test the device status present in Gateway UI
@@ -316,6 +324,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Ping Device")
     @allure.testcase(name="WIFI-11444",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11444")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_ping_device(self, get_target_object, get_testbed_details):
         """
             Test to Ping device present in Gateway UI
@@ -335,6 +344,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Blink LED API")
     @allure.testcase(name="WIFI-11445",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11445")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_led_blink_device(self, get_target_object, get_testbed_details):
         """
             Test to Blink led on device present in Gateway UI
@@ -358,6 +368,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Trace Command")
     @allure.testcase(name="WIFI-11446",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11446")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_trace_device(self, get_target_object, get_testbed_details):
         """
             Test to trace device present in Gateway UI
@@ -382,6 +393,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Wi-Fi Scan Device")
     @allure.testcase(name="WIFI-11447",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11447")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_wifi_scan_device(self, get_target_object, get_testbed_details):
         """
             Test to Wi-Fi scan device present in Gateway UI
@@ -409,6 +421,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Request Message Device")
     @allure.testcase(name="WIFI-11448",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11448")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_request_msg_device(self, get_target_object, get_testbed_details):
         """
             Test to Request specific msg from device present in Gateway UI
@@ -431,6 +444,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Get Event Queue of Device")
     @allure.testcase(name="WIFI-11452",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11452")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_event_queue_device(self, get_target_object, get_testbed_details):
         """
             Test to Request Event Queue from device present in Gateway UI
@@ -454,6 +468,7 @@ class TestUcentralGatewayService(object):
     @allure.title("Telemetry Device")
     @allure.testcase(name="WIFI-11453",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11453")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_telemetry_device(self, get_target_object, get_testbed_details):
         """
             Test to Request telemetry from device present in Gateway UI
@@ -481,6 +496,7 @@ class TestUcentralGatewayService(object):
     @pytest.mark.ow_sdk_load_tests
     @pytest.mark.owgw_api_tests
     @allure.title("RTTY API")
+    @pytest.mark.ow_sanity_lf
     def test_gw_service_get_rtty(self, get_target_object, get_testbed_details):
         """
             Test the device rtty parameters in Gateway UI
@@ -494,6 +510,7 @@ class TestUcentralGatewayService(object):
     @pytest.mark.gw_asb_non_restricted
     @allure.title("Asb script on non restricted AP")
     @allure.testcase(name="WIFI-12235", url="https://telecominfraproject.atlassian.net/browse/WIFI-12235")
+    @pytest.mark.ow_sanity_lf
     def test_asb_on_non_restricted_ap(self, get_target_object, get_testbed_details):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         payload = {
@@ -529,6 +546,7 @@ class TestUcentralGatewayService(object):
     @pytest.mark.gw_asb_restricted
     @allure.title("Asb script on restricted AP")
     @allure.testcase(name="WIFI-12236", url="https://telecominfraproject.atlassian.net/browse/WIFI-12236")
+    @pytest.mark.ow_sanity_lf
     def test_asb_on_restricted_ap(self, get_target_object, get_testbed_details):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         payload = {
