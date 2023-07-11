@@ -8,8 +8,10 @@ import random
 
 import allure
 import pytest
+import json
 from _pytest.fixtures import SubRequest
 from typing import Any, Callable, Optional
+from kafka import KafkaConsumer
 
 ALLURE_ENVIRONMENT_PROPERTIES_FILE = 'environment.properties'
 ALLUREDIR_OPTION = '--alluredir'
@@ -517,3 +519,27 @@ def check_connectivity(request, get_testbed_details, get_target_object, run_lf):
     if not run_lf:
         request.addfinalizer(collect_logs)
 
+
+# Pytest fixture for the Kafka consumer
+@pytest.fixture(scope='session')
+def kafka_consumer_deq():
+    # Create a Kafka consumer
+    consumer = KafkaConsumer(
+        'device_event_queue',
+        bootstrap_servers=['kafka-headless.openwifi-qa01.svc.cluster.local:9092'],
+        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    )
+    yield consumer
+    consumer.close()
+
+
+@pytest.fixture(scope='session')
+def kafka_consumer_healthcheck():
+    # Create a Kafka consumer
+    consumer = KafkaConsumer(
+        'healthcheck',
+        bootstrap_servers=['kafka-headless.openwifi-qa01.svc.cluster.local:9092'],
+        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    )
+    yield consumer
+    consumer.close()
