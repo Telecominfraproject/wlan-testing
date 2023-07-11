@@ -11,7 +11,6 @@ import allure
 
 
 @pytest.mark.uc_sanity
-@pytest.mark.ow_sanity_lf
 @pytest.mark.ow_sdk_tests
 @pytest.mark.ow_sdk_load_tests
 @pytest.mark.owsec_api_tests
@@ -23,6 +22,7 @@ class TestUcentralSecService(object):
     @allure.testcase(name="WIFI-3450",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3450")
     @pytest.mark.system_endpoints
+    @pytest.mark.ow_sanity_lf
     def test_secservice_system_endpoints(self, get_target_object):
         """
             Test the system endpoints to verify list of services that are present
@@ -63,6 +63,7 @@ class TestUcentralSecService(object):
     @allure.testcase(name="WIFI-3451",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3451")
     @pytest.mark.security_versions
+    @pytest.mark.ow_sanity_lf
     def test_secservice_get_version(self, get_target_object):
         """
             Test the system endpoint to verify the version of the service
@@ -84,6 +85,7 @@ class TestUcentralSecService(object):
             assert False
 
     @allure.title("Get Security Service Uptime")
+    @pytest.mark.ow_sanity_lf
     def test_secservice_get_uptime(self, get_target_object):
         """
             Test the system endpoint to verify the uptime of the service
