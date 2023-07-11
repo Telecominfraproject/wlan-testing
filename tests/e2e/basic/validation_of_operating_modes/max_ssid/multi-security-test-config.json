@@ -1,0 +1,192 @@
+{
+	"uuid": 2,
+	"radios": [
+		{
+			"band": "5G",
+			"channel": 36,
+			"channel-mode": "HE",
+			"channel-width": 80,
+			"country": "CA"
+		}
+	],
+	"interfaces": [
+		{
+			"name": "WAN",
+			"role": "upstream",
+			"services": [ "lldp" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"WAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "dynamic"
+			},
+			"ssids": [
+				{
+					"name": "OpenWifi_Open",
+                    "role": "downstream",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "none",
+						"ieee80211w": "optional"
+					}
+				},{
+					"name": "OpenWifi_wpa",
+                    "role": "downstream",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk",
+						"key": "OpenWifi",
+						"ieee80211w": "optional"
+					}
+				},{
+					"name": "OpenWifi_wpa2",
+                    "role": "downstream",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk2",
+						"key": "OpenWifi",
+						"ieee80211w": "optional"
+					}
+				},{
+					"name": "OpenWifi_wpa3",
+                    "role": "downstream",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "sae",
+						"key": "OpenWifi",
+						"ieee80211w": "optional"
+					}
+				},
+              {
+					"name": "OpenWifi_wpa2_enter",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "wpa2",
+						"ieee80211w": "optional"
+					},
+					"radius": {
+						"authentication": {
+							"host": "18.189.85.200",
+							"port": 1812,
+							"secret": "testing123"
+						},
+						"accounting": {
+							"host": "18.189.85.200",
+							"port": 1813,
+							"secret": "testing123"
+						}
+					}
+				},
+              {
+					"name": "OpenWifi_wpa3_enter",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "wpa2",
+						"ieee80211w": "optional"
+					},
+					"radius": {
+						"authentication": {
+							"host": "18.189.85.200",
+							"port": 1812,
+							"secret": "testing123"
+						},
+						"accounting": {
+							"host": "18.189.85.200",
+							"port": 1813,
+							"secret": "testing123"
+						}
+					}
+				},
+              {
+                    "bss-mode": "ap",
+                    "encryption": {
+                        "ieee80211w": "required",
+                        "proto": "owe"
+                    },
+                    "name": "OpenWifi_OWE",
+                    "role": "downstream",
+                    "wifi-bands": [
+                        "5G"
+                    ]
+                },
+              {
+					"name": "OpenWifi_sae-mixed",
+                    "role": "downstream",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "sae-mixed",
+						"key": "OpenWifi",
+						"ieee80211w": "optional"
+					}
+				}
+			]
+		},
+		{
+			"name": "LAN",
+			"role": "downstream",
+			"services": [ "ssh", "lldp" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"LAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "static",
+				"subnet": "192.168.1.1/24",
+				"dhcp": {
+					"lease-first": 10,
+					"lease-count": 100,
+					"lease-time": "6h"
+				}
+			}
+		}
+	],
+	"metrics": {
+		"statistics": {
+			"interval": 120,
+			"types": [ "ssids", "lldp", "clients" ]
+		},
+		"health": {
+			"interval": 120
+		},
+		"wifi-frames": {
+			"filters": [ "probe", "auth" ]
+		}
+	},
+	"services": {
+		"lldp": {
+			"describe": "uCentral",
+			"location": "universe"
+		},
+		"ssh": {
+			"port": 22
+		}
+	}
+}

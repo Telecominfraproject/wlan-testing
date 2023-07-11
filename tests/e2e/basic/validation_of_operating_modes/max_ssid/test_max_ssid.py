@@ -2,12 +2,25 @@
     Config AP with maximum no.of SSIDs Test: Bridge Mode
     pytest -m max_ssid
 """
-
+import logging
+import os
 import time
+from datetime import datetime
+
 import allure
 import pytest
-from configuration import DYNAMIC_VLAN_RADIUS_SERVER_DATA
-from configuration import DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
+import json
+
+import requests
+
+# Get the directory of the current test config file
+test_file_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the file path relative to the config file directory
+file_path = os.path.join(test_file_dir, 'multi-security-test-config.json')
+with open(file_path, 'r') as file:
+    json_string = file.read()
+    config_data = json.loads(json_string)
 
 pytestmark = [pytest.mark.max_ssid, pytest.mark.bridge]
 
@@ -46,6 +59,7 @@ class TestMaxEightSsid2G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
            pytest -m "max_ssid and bridge"
     """
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.wpa
@@ -73,13 +87,14 @@ class TestMaxEightSsid2G(object):
                 security = security_list[count_security]
                 station_names = station_names_twog[0] + str(int(station_names_twog[0][-1]) + sta_count)
                 passes = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
-                                                band=band, station_name=[station_names], vlan_id=vlan, scan_ssid=scan_ssid)
+                                                band=band, station_name=[station_names], vlan_id=vlan,
+                                                scan_ssid=scan_ssid)
                 scan_ssid = False
                 pass_list.append(passes)
                 sta_list.append(station_names)
                 sta_count += 1
             count_security += 1
-        fail_list = list(filter(lambda x : x == False, pass_list))
+        fail_list = list(filter(lambda x: x == False, pass_list))
         if len(fail_list) == 0:
             lf_test.layer3_traffic(ssid_num=len(pass_list), band="2.4 Ghz", station_name=sta_list)
             assert True
@@ -122,6 +137,7 @@ class TestMaxEightSsid5G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
            pytest -m "max_ssid and bridge"
     """
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.wpa
@@ -149,13 +165,14 @@ class TestMaxEightSsid5G(object):
                 security = security_list[count_security]
                 station_names = station_names_fiveg[0] + str(int(station_names_fiveg[0][-1]) + sta_count)
                 passes = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
-                                                band=band, station_name=[station_names], vlan_id=vlan, scan_ssid=scan_ssid)
+                                                band=band, station_name=[station_names], vlan_id=vlan,
+                                                scan_ssid=scan_ssid)
                 scan_ssid = False
                 pass_list.append(passes)
                 sta_list.append(station_names)
                 sta_count += 1
             count_security += 1
-        fail_list = list(filter(lambda x : x == False, pass_list))
+        fail_list = list(filter(lambda x: x == False, pass_list))
         if len(fail_list) == 0:
             lf_test.layer3_traffic(ssid_num=len(pass_list), band="5 Ghz", station_name=sta_list)
             assert True
@@ -199,6 +216,7 @@ class TestMoreThanEightSsid2G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
            pytest -m "max_ssid and bridge"
     """
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.wpa
@@ -226,13 +244,14 @@ class TestMoreThanEightSsid2G(object):
                 security = security_list[count_security]
                 station_names = station_names_twog[0] + str(int(station_names_twog[0][-1]) + sta_count)
                 passes = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
-                                                band=band, station_name=[station_names], vlan_id=vlan, scan_ssid=scan_ssid)
+                                                band=band, station_name=[station_names], vlan_id=vlan,
+                                                scan_ssid=scan_ssid)
                 scan_ssid = False
                 pass_list.append(passes)
                 sta_list.append(station_names)
                 sta_count += 1
             count_security += 1
-        fail_list = list(filter(lambda x : x == False, pass_list))
+        fail_list = list(filter(lambda x: x == False, pass_list))
         if len(fail_list) == len(pass_list):
             lf_test.Client_disconnect(sta_list)
             allure.attach(name="Definition",
@@ -285,6 +304,7 @@ class TestMoreThanEightSsid5G(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
            pytest -m "max_ssid and bridge"
     """
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.wpa
@@ -312,13 +332,14 @@ class TestMoreThanEightSsid5G(object):
                 security = security_list[count_security]
                 station_names = station_names_fiveg[0] + str(int(station_names_fiveg[0][-1]) + sta_count)
                 passes = lf_test.Client_Connect(ssid=ssid_name, security=security, passkey=security_key, mode=mode,
-                                                band=band, station_name=[station_names], vlan_id=vlan, scan_ssid=scan_ssid)
+                                                band=band, station_name=[station_names], vlan_id=vlan,
+                                                scan_ssid=scan_ssid)
                 scan_ssid = False
                 pass_list.append(passes)
                 sta_list.append(station_names)
                 sta_count += 1
             count_security += 1
-        fail_list = list(filter(lambda x : x == False, pass_list))
+        fail_list = list(filter(lambda x: x == False, pass_list))
         if len(fail_list) == len(pass_list):
             lf_test.Client_disconnect(sta_list)
             allure.attach(name="Definition",
@@ -359,7 +380,7 @@ setup_params_general4 = {
             {"ssid_name": "ssid2_wpa3_2g", "appliedRadios": ["2G"], "security_key": "something"},
             {"ssid_name": "ssid1_wpa3_5g", "appliedRadios": ["5G"], "security_key": "something"},
             {"ssid_name": "ssid2_wpa3_5g", "appliedRadios": ["5G"], "security_key": "something"}],
-        },
+    },
     "rf": {},
     "radius": False
 }
@@ -376,6 +397,7 @@ class TestMaxSixteenSsid(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
        pytest -m "max_ssid and bridge"
     """
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.wpa
@@ -451,7 +473,7 @@ setup_params_general5 = {
             {"ssid_name": "ssid1_wpa3_5g", "appliedRadios": ["5G"], "security_key": "something"},
             {"ssid_name": "ssid2_wpa3_5g", "appliedRadios": ["5G"], "security_key": "something"},
             {"ssid_name": "ssid3_wpa3_5g", "appliedRadios": ["5G"], "security_key": "something"}],
-        },
+    },
     "rf": {},
     "radius": False
 }
@@ -468,6 +490,7 @@ class TestMoreThanSixteenSsid(object):
     """Config AP with maximum no.of SSIDs Test Bridge mode
        pytest -m "max_ssid and bridge"
     """
+
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7678", name="WIFI-7678")
     @pytest.mark.open
     @pytest.mark.wpa
@@ -524,3 +547,41 @@ class TestMoreThanSixteenSsid(object):
             assert True
         else:
             assert False
+
+
+class TestMultiSecurityConfig(object):
+    """
+        Test Config with various Security Modes
+        pytest -m "multi_security_config and bridge "
+    """
+    @allure.title("Test Config with Multiple Securities")
+    @pytest.mark.multi_security_config
+    def test_multi_security_config(self, get_target_object, get_test_library, check_connectivity):
+        configured_ssid_data = config_data["interfaces"][0]["ssids"]
+        for ap in range(len(get_target_object.device_under_tests_info)):
+            serial_number = get_target_object.device_under_tests_info[ap]['identifier']
+            logging.info(config_data)
+            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 1}
+            uri = get_target_object.firmware_library_object.sdk_client.build_uri(
+                "device/" + serial_number + "/configure")
+            logging.info("Sending Command: " + str(uri) + "\n" +
+                         "TimeStamp: " + str(datetime.utcnow()) + "\n" +
+                         "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                         "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
+            allure.attach(name="Sending Command:", body="Sending Command: " + str(uri) + "\n" +
+                                                        "TimeStamp: " + str(datetime.utcnow()) + "\n" +
+                                                        "Data: " + str(payload) + "\n" +
+                                                        "Headers: " + str(
+                get_target_object.firmware_library_object.sdk_client.make_headers()))
+            resp = requests.post(uri, data=json.dumps(payload),
+                                 headers=get_target_object.firmware_library_object.sdk_client.make_headers(),
+                                 verify=False, timeout=120)
+            logging.info(resp.json())
+            allure.attach(name=f"Response - {resp.status_code}{resp.reason}", body=str(resp.json()))
+            if resp.status_code != 200:
+                pytest.fail(f"configuration push failed, Error - {resp.reason}")
+            get_test_library.set_radio_channel(radio="1.1.wiphy0", channel="36", country=None, antenna=None)
+            for i in range(len(configured_ssid_data)):
+                get_test_library.scan_ssid(radio="wiphy0", retry=1, allure_attach=True, scan_time=30,
+                                           ssid=configured_ssid_data[i]["name"], ssid_channel=None)
+        assert True
