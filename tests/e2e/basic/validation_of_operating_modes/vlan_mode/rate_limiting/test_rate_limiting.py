@@ -76,14 +76,23 @@ class TestRateLimitingVLAN(object):
         down_rate = profile_data["rate-limit"]["egress-rate"]
         vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up", mode=mode,
-                                            download_rate="0Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
-                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
-                                            down_rate=down_rate)
-        print("Test Completed... Cleaning up Stations")
-        assert True
+        obj = get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up", mode=mode,
+                                                  download_rate="0Gbps", batch_size="1,2,5",
+                                                  upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                                  move_to_influx=False, dut_data=setup_configuration,
+                                                  ssid_name=ssid_name,
+                                                  num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey,
+                                                  up_rate=up_rate,
+                                                  down_rate=down_rate)
+        report_name = obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+        kpi_data = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
+        achieved_1_station = float("{:.2f}".format(kpi_data[1][0]))
+        achieved_2_station = float("{:.2f}".format(kpi_data[4][0]))
+        achieved_5_station = float("{:.2f}".format(kpi_data[7][0]))
+        if achieved_1_station <= up_rate and achieved_2_station <= 2 * up_rate and achieved_5_station <= 5 * up_rate:
+            assert True
+        else:
+            assert False, f"Expected Throughput should be less than {up_rate} Mbps"
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -113,14 +122,23 @@ class TestRateLimitingVLAN(object):
         down_rate = profile_data["rate-limit"]["egress-rate"]
         vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_dw", mode=mode,
-                                            download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
-                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
-                                            down_rate=down_rate)
-        print("Test Completed... Cleaning up Stations")
-        assert True
+        obj = get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_dw", mode=mode,
+                                                  download_rate="1Gbps", batch_size="1,2,5",
+                                                  upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                                  move_to_influx=False, dut_data=setup_configuration,
+                                                  ssid_name=ssid_name,
+                                                  num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey,
+                                                  up_rate=up_rate,
+                                                  down_rate=down_rate)
+        report_name = obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+        kpi_data = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
+        achieved_1_station = float("{:.2f}".format(kpi_data[0][0]))
+        achieved_2_station = float("{:.2f}".format(kpi_data[3][0]))
+        achieved_5_station = float("{:.2f}".format(kpi_data[6][0]))
+        if achieved_1_station <= down_rate and achieved_2_station <= 2 * down_rate and achieved_5_station <= 5 * down_rate:
+            assert True
+        else:
+            assert False, f"Expected Throughput should be less than {down_rate} Mbps"
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -154,14 +172,27 @@ class TestRateLimitingVLAN(object):
         down_rate = profile_data["rate-limit"]["egress-rate"]
         vlan = [100]
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
-        get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_dw", mode=mode,
-                                            download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
-                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                            num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
-                                            down_rate=down_rate)
+        obj = get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_dw", mode=mode,
+                                                  download_rate="1Gbps", batch_size="1,2,5",
+                                                  upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                                  move_to_influx=False, dut_data=setup_configuration,
+                                                  ssid_name=ssid_name,
+                                                  num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey,
+                                                  up_rate=up_rate,
+                                                  down_rate=down_rate)
 
-        assert True
+        report_name = obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+        kpi_data = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
+        achieved_1_station_up = float("{:.2f}".format(kpi_data[1][0]))
+        achieved_2_station_up = float("{:.2f}".format(kpi_data[4][0]))
+        achieved_5_station_up = float("{:.2f}".format(kpi_data[7][0]))
+        achieved_1_station_dw = float("{:.2f}".format(kpi_data[0][0]))
+        achieved_2_station_dw = float("{:.2f}".format(kpi_data[3][0]))
+        achieved_5_station_dw = float("{:.2f}".format(kpi_data[6][0]))
+        if achieved_1_station_dw <= down_rate and achieved_2_station_dw <= 2 * down_rate and achieved_5_station_dw <= 5 * down_rate and achieved_1_station_up <= up_rate and achieved_2_station_up <= 2 * up_rate and achieved_5_station_up <= 5 * up_rate:
+            assert True
+        else:
+            assert False, f"Expected Throughput should be less than {down_rate} or {up_rate} Mbps"
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
@@ -798,4 +829,3 @@ class TestRateLimitingVLAN(object):
                                             )
 
         assert True
-
