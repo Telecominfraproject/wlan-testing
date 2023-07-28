@@ -1,0 +1,238 @@
+{
+	"uuid": 2,
+	"radios": [
+		{
+			"band": "5G",
+			"channel": 36,
+			"channel-mode": "HE",
+			"channel-width": 80,
+			"country": "US"
+		},
+		{
+			"band": "2G",
+			"channel": 11,
+			"channel-mode": "HE",
+			"channel-width": 20,
+			"country": "US"
+		}
+	],
+	"interfaces": [
+		{
+			"name": "WAN",
+			"role": "upstream",
+			"services": [ "lldp", "ssh" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"WAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "dynamic"
+			},
+			"ssids": [
+              {
+					"name": "multi-psk-1",
+                    "role": "downstream",
+					"wifi-bands": [
+						"2G", "5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk",
+						"key": "OpenWifi",
+						"ieee80211w": "optional"
+					},
+                  "multi-psk": [
+						{
+							"key": "wpassidkey300",
+							"vlan-id": 300
+						},
+						{
+							"key": "wpassidkey400",
+                            "vlan-id": 400
+						}
+					]
+				},{
+					"name": "roaming-ratelimit-2",
+					"wifi-bands": [
+						"5G",
+						"2G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk2",
+                      "key": "OpenWifi",
+						"ieee80211w": "optional"
+					},
+                  "roaming": {
+						"message-exchange": "ds",
+						"generate-psk": true
+					},
+					"services": [ "wifi-steering" ],
+					"rate-limit": {
+						"ingress-rate": 50,
+						"egress-rate": 50
+					}
+				},
+ {
+					"name": "owe-2g-7",
+                    "role": "downstream",
+					"wifi-bands": [
+						"2G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "owe",
+						"ieee80211w": "required"
+					},
+	 				"rrm": {
+						"reduced-neighbor-reporting": true
+                    }
+				},{
+					"name": "owe-5g-8",
+                    "role": "downstream",
+					"wifi-bands": [
+					    "5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "owe",
+						"ieee80211w": "required"
+					},  "rrm": {
+                                                "reduced-neighbor-reporting": true
+                                        }
+				},
+              {
+					"name": "radius-ratelimit-3",
+					"wifi-bands": [
+						"5G",
+						"2G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "wpa2",
+						"ieee80211w": "optional"
+					},
+					"rate-limit": {
+						"ingress-rate": 50,
+						"egress-rate": 50
+					},
+					"radius": {
+						"authentication": {
+							"host": "18.189.85.200",
+							"port": 1812,
+							"secret": "testing123"
+						},
+						"accounting": {
+							"host": "18.189.85.200",
+							"port": 1813,
+							"secret": "testing123"
+						}
+					}
+				},
+               {
+          "name": "captive-credential-4",
+          "services": [
+            "captive"
+          ],
+          "wifi-bands": [
+            "5G",
+            "2G"
+          ],
+          "bss-mode": "ap",
+          "encryption": {
+            "proto": "psk2",
+            "key": "OpenWifi",
+            "ieee80211w": "optional"
+          }, "captive": {
+      "auth-mode": "credentials",
+      "credentials": [
+        {
+          "username": "user1",
+          "password": "password1"
+        }
+      ],
+      "walled-garden-fqdn": [
+        "*.google.com",
+        "telecominfraproject.com"
+      ]
+    }
+        },
+              {
+                    "bss-mode": "ap",
+                    "encryption": {
+                        "ieee80211w": "optional",
+                        "proto": "psk2-radius"
+                    },
+                    "name": "radius-MPSK1-5",
+                    "wifi-bands": [
+                        "2G","5G"
+                    ],
+                    "radius": {
+                        "authentication": {
+                                "host": "18.117.247.76",
+                                "port": 1812,
+                                "secret": "secret"
+                        },
+                        "accounting": {
+                                "host": "18.117.247.76",
+                                "port": 1813,
+                                "secret": "secret"
+                        }
+                    }
+                }]},
+		{
+			"name": "LAN",
+			"role": "downstream",
+			"services": [ "ssh", "lldp" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"LAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "static",
+				"subnet": "192.168.1.1/24",
+				"dhcp": {
+					"lease-first": 10,
+					"lease-count": 100,
+					"lease-time": "6h"
+				}
+			}
+		}
+	],
+	"metrics": {
+		"statistics": {
+			"interval": 120,
+			"types": [ "ssids", "lldp", "clients" ]
+		},
+		"health": {
+			"interval": 120
+		},
+		"wifi-frames": {
+			"filters": [ "probe", "auth" ]
+		}
+	},
+	"services": {
+        "wifi-steering": {
+			"mode": "local",
+			"network": "upstream",
+			"assoc-steering": true,
+			"required-snr": -85,
+			"required-probe-snr": -80,
+			"required-roam-snr": -80,
+			"load-kick-threshold": 90
+		},
+    	"lldp": {
+			"describe": "uCentral",
+			"location": "universe"
+		},
+		"ssh": {
+			"port": 22
+		}
+	}
+}
