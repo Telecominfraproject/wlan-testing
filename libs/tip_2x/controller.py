@@ -99,7 +99,8 @@ class ConfigureController:
             resp = requests.post(uri, params=params, data=payload, headers=self.make_headers(), verify=False,
                                  timeout=120)
         elif method == "PUT":
-            resp = requests.put(uri, params=params, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+            resp = requests.put(uri, params=params, data=payload, headers=self.make_headers(), verify=False,
+                                timeout=120)
         elif method == "DELETE":
             resp = requests.delete(uri, headers=self.make_headers(), params=params, verify=False, timeout=120)
 
@@ -374,6 +375,20 @@ class Controller(ConfigureController):
 
     def get_system_gw(self):
         uri = self.build_uri("system?command=info")
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.get(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("GET", resp, self.make_headers(), "", uri)
+        return resp
+
+    def get_system_fms(self):
+        uri = self.build_url_fms("system?command=info")
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
@@ -1296,8 +1311,6 @@ class Controller(ConfigureController):
         return resp
 
 
-
-
 class FMSUtils:
 
     def __init__(self, sdk_client=None, controller_data=None):
@@ -2171,8 +2184,8 @@ class AnalyticsUtility:
                      "URI: " + str(uri) + "\n" +
                      "Headers: " + str(self.sdk_client.make_headers()))
         allure.attach(name="Get List of Boards", body="Sending Command: GET " + str(uri) + "\n" +
-                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-                                                    "Headers: " + str(self.sdk_client.make_headers()))
+                                                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                      "Headers: " + str(self.sdk_client.make_headers()))
         resp = requests.get(uri, headers=self.sdk_client.make_headers(), verify=False, timeout=120)
         return resp
 
