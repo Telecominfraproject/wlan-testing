@@ -16,3 +16,4 @@ xlsxwriter
 tabulate
 pdfkit
 matplotlib
+kafka-python

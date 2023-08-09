@@ -23,6 +23,10 @@ on:
         default: 'main'
         description: 'Version of Cloud SDK to test'
         required: true
+      owls_version:
+        default: 'v2.10.0'
+        description: 'Version of OWLs to use'
+        required: true
       devices_count:
         default: '25000'
         description: 'Amount of devices to simulate'
@@ -193,7 +197,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: refs/tags/${{ github.event.inputs.owls_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -367,6 +371,8 @@ jobs:
           chmod +x docker.sh;
           bash docker.sh;
           apt install -y python3-pip jq git;
+          pip3 install --upgrade requests;
+          pip3 install --upgrade urllib3;
           pip3 install docker-compose;
         EOF
         scp -i ssh_key.pem cert.pem ubuntu@${{ steps.ec2_instance.outputs.instance_public_ip }}:/tmp/websocket-cert.pem
@@ -460,7 +466,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: refs/tags/${{ github.event.inputs.owls_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -653,7 +659,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: refs/tags/${{ github.event.inputs.owls_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
@@ -820,7 +826,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
-        ref: refs/tags/${{ github.event.inputs.sdk_version }}
+        ref: refs/tags/${{ github.event.inputs.owls_version }}
 
     - name: Run simulation
       working-directory: wlan-cloud-owls/test_scripts/curl
