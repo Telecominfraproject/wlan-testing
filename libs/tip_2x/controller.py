@@ -2681,6 +2681,7 @@ class UProfileUtility:
                     ssid_info[options] = ssid_data[options]
                 if options == "captive":
                     ssid_info[options] = ssid_data[options]
+                    ssid_info["services"] = ["captive"]
             for i in ssid_data["appliedRadios"]:
                 ssid_info["wifi-bands"].append(i)
             ssid_info['encryption'] = {}
