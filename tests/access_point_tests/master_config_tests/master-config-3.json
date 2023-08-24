@@ -1,0 +1,192 @@
+{
+	"uuid": 2,
+	"radios": [
+		{
+			"band": "5G",
+			"channel": 149,
+			"channel-mode": "HE",
+			"channel-width": 80,
+			"country": "CA"
+		},
+		{
+			"band": "2G",
+			"channel": 11,
+			"channel-mode": "HE",
+			"channel-width": 20,
+			"country": "CA"
+		}
+	],
+	"interfaces": [
+		{
+			"name": "WAN",
+			"role": "upstream",
+			"tunnel": {
+			   "proto": "mesh"
+			},
+			"services": [ "lldp" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"WAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "dynamic"
+			},
+			"ssids": [
+                {
+					"name": "mesh-transit-1",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "mesh",
+					"encryption": {
+						"proto": "psk2",
+						"key": "meshpassword",
+						"ieee80211w": "optional"
+					}
+                },
+                {
+					"name": "Mesh-SSID-2G",
+					"wifi-bands": [
+						"2G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk",
+                       "key": "OpenWifi",
+						"ieee80211w": "optional"
+					}
+                },
+					 {
+					"name": "Mesh-SSID-5G",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk",
+                         "key": "OpenWifi",
+						"ieee80211w": "optional"
+				}
+					 },
+              {
+					"name": "usteering-air-3",
+					"wifi-bands": [
+						"5G",
+						"2G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk2",
+						"key": "password@123",
+						"ieee80211w": "optional"
+					},
+					"roaming": {
+						"message-exchange": "air",
+						"generate-psk": true
+					},
+					"services": [ "wifi-steering" ]
+				},{
+					"name": "Uchannel-ds-4",
+					"wifi-bands": [
+						"2G","5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk2",
+						"key": "OpenWifi",
+						"ieee80211w": "optional"
+					},
+					"roaming": {
+						"message-exchange": "ds",
+						"generate-psk": true
+					},
+					"rrm": {                        
+					  "neighbor-reporting": true,              
+					  "ftm-responder": true,                     
+                      "stationary-ap": true                    },
+					"services": [ "wifi-steering" ]
+				},
+               {
+          "name": "captive-radius-5",
+          "services": [
+            "captive"
+          ],
+          "wifi-bands": [
+            "5G",
+            "2G"
+          ],
+          "bss-mode": "ap",
+          "encryption": {
+            "proto": "psk2",
+            "key": "OpenWifi",
+            "ieee80211w": "optional"
+          },
+       "captive": {
+      "auth-mode": "radius",
+      "auth-server": "10.28.3.100",
+      "auth-port": 1812,
+      "auth-secret": "testing123",
+      "walled-garden-fqdn": [
+        "*.google.com",
+        "telecominfraproject.com"
+      ]
+    }
+        }
+			]
+		},
+		{
+			"name": "LAN",
+			"role": "downstream",
+			"services": [ "ssh", "lldp" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"LAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "static",
+				"subnet": "192.168.1.1/24",
+				"dhcp": {
+					"lease-first": 10,
+					"lease-count": 100,
+					"lease-time": "6h"
+				}
+			}
+		}
+	],
+	"metrics": {
+		"statistics": {
+			"interval": 120,
+			"types": [ "ssids", "lldp", "clients" ]
+		},
+		"health": {
+			"interval": 120
+		},
+		"wifi-frames": {
+			"filters": [ "probe", "auth" ]
+		}
+	},
+	"services": {
+		"lldp": {
+			"describe": "uCentral",
+			"location": "universe"
+		},
+      "wifi-steering": {
+			"mode": "local",
+			"network": "upstream",
+			"assoc-steering": true,
+			"required-snr": -85,
+			"required-probe-snr": -80,
+			"required-roam-snr": -80,
+			"load-kick-threshold": 90
+		},
+		"ssh": {
+			"port": 22
+		}
+	}
+}
