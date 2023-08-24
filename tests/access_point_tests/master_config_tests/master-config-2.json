@@ -1,0 +1,259 @@
+{
+	"uuid": 2,
+	"globals": {
+		"wireless-multimedia": {
+			"profile": "rfc8325"
+		}
+	},
+	"radios": [
+		{
+			"band": "2G",
+			"country": "CA",
+			"channel-mode": "HE",
+			"channel-width": 40,
+			"channel": 11,
+           "dtim-period": 3
+		},
+      {
+			"band": "5G",
+			"channel": 36,
+			"channel-mode": "HE",
+			"channel-width": 80,
+			"country": "CA",
+         "dtim-period": 3
+		}
+	],
+	"interfaces": [
+		{
+			"name": "WAN",
+			"role": "upstream",
+			"services": [ "lldp" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"WAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "dynamic"
+			},
+			"ssids": [
+            {
+					"name": "radsec-proxy-2",
+					"wifi-bands": [
+						"2G", "5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "wpa2",
+						"ieee80211w": "optional"
+					},
+					"radius": {
+						"authentication": {
+							"host": "10.28.3.100",
+							"port": 1812,
+							"secret": "testing123"
+						},
+						"accounting": {
+							"host": "10.28.3.100",
+							"port": 1813,
+							"secret": "testing123"
+						}
+					},
+					"services": [ "radius-gw-proxy" ]
+				},
+             {
+                    "bss-mode": "ap",
+                    "encryption": {
+                        "ieee80211w": "optional",
+                        "key": "OpenWifi1",
+                        "proto": "psk2"
+                    },
+                    "isolate-clients": true,
+                    "name": "Client-isolation-3",
+                    "wifi-bands": [
+                        "2G","5G"
+                    ]
+                },
+             {
+          "name": "local-mac-acl-4",
+          "access-control-list": {
+            "mode": "allow",
+            "mac-address": [
+              "ac:67:5d:7e:90:a0"
+            ]
+          },
+          "wifi-bands": [
+            "2G",
+            "5G"
+          ],
+          "bss-mode": "ap",
+          "encryption": {
+            "proto": "none",
+            "ieee80211w": "optional"
+          }
+        },
+            {
+          "name": "radius-mac-acl-5",
+          "wifi-bands": [
+            "2G","5G"
+          ],
+          "bss-mode": "ap",
+          "encryption": {
+            "proto": "none"
+          },
+          "radius": {
+            "authentication": {
+              "host": "192.168.178.192",
+              "port": 1812,
+              "secret": "secret",
+              "mac-filter": true
+            }
+          }
+        },{
+					"name": "owe-transition-2G-6",
+                    "role": "downstream",
+					"wifi-bands": [
+						"2G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "owe-transition",
+						"ieee80211w": "required"
+					}
+				},{
+					"name": "owe-transition-5G-6",
+                    "role": "downstream",
+					"wifi-bands": [
+						"5G"
+					],
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "owe-transition",
+						"ieee80211w": "required"
+					}
+				},
+            {
+					"name": "power-save-7",
+                    "role": "downstream",
+					"wifi-bands": [
+						"2G","5G"
+					],
+                    "power-save": true,
+                    "unicast-conversion": false,
+					"bss-mode": "ap",
+					"encryption": {
+						"proto": "psk2",
+						"key": "OpenWifi",
+						"ieee80211w": "optional"
+					}
+				},
+            {
+          "name": "captive-uam-8",
+          "services": [
+            "captive"
+          ],
+          "wifi-bands": [
+            "5G",
+            "2G"
+          ],
+          "bss-mode": "ap",
+          "encryption": {
+            "proto": "psk2",
+            "key": "OpenWifi",
+            "ieee80211w": "optional"
+          }, "captive": {
+      "auth-mode": "uam",
+      "uam-port": 3990,
+      "uam-secret": "hotsys123",
+      "uam-server": "https://customer.hotspotsystem.com/customer/hotspotlogin.php",
+      "nasid": "AlmondLabs",
+      "auth-server": "radius.hotspotsystem.com",
+      "auth-port": 1812,
+      "auth-secret": "hotsys123",
+      "walled-garden-fqdn": [
+        "*.google.com",
+	"facebook.com",
+        "telecominfraproject.com",
+        "customer.hotspotsystem.com"
+      ]
+    }
+        }]
+		},
+		{
+			"name": "LAN",
+			"role": "downstream",
+			"services": [ "ssh", "lldp" ],
+			"ethernet": [
+				{
+					"select-ports": [
+						"LAN*"
+					]
+				}
+			],
+			"ipv4": {
+				"addressing": "static",
+				"subnet": "192.168.1.1/24",
+				"dhcp": {
+					"lease-first": 10,
+					"lease-count": 100,
+					"lease-time": "6h"
+				}
+			}
+		}
+	],
+	"metrics": {
+		"statistics": {
+			"interval": 120,
+			"types": [ "ssids", "lldp", "clients" ]
+		},
+		"health": {
+			"interval": 120
+		}
+	},
+	"services": {
+		"lldp": {
+			"describe": "uCentral",
+			"location": "universe"
+		},
+		"ssh": {
+			"port": 22
+		},
+		"quality-of-service": {
+			"select-ports": [ "WAN" ],
+			"bandwidth_up": 1000,
+			"bandwidth_down": 1000,
+			"bulk-detection": {
+				"dscp": "CS1",
+				"packets-per-second": 500
+			},
+			"classifier": [
+				{
+					"dscp":  "CS1",
+					"ports": [
+						{ "protocol": "any", "port": 53 },
+						{ "protocol": "tcp", "port": 80 }
+					],
+					"dns": [
+						{ "fqdn": "telecominfraproject.com", "suffix-matching": false }
+					]
+				}, {
+					"dscp":  "AF41",
+					"dns": [
+						{ "fqdn": "zoom.us" }
+					]
+				}
+			]
+		},
+		"airtime-fairness": {
+			"voice-weight": 4,
+			"packet-threshold": 100,
+			"bulk-threshold": 50,
+			"priority-threshold": 30,
+			"weight-normal": 256,
+			"weight-priority": 384,
+			"weight-bulk": 128
+		}
+	}
+}
