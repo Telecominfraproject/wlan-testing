@@ -1,6 +1,6 @@
 """
     Master Configuration Tests:
-    pytest -m master_config
+    pytest -m master_config_tests
 """
 import json
 import os
@@ -31,16 +31,16 @@ pytestmark = [pytest.mark.master_config]
 class TestMasterConfig(object):
     """
         Master Configuration Tests:
-        pytest -m master_config
+        pytest -m master_config_tests
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12752", name="WIFI-12752")
     @pytest.mark.wpa_personal
-    @pytest.mark.master_config
+    @pytest.mark.master_config1
     def test_master_config_one(self, get_test_library, check_connectivity, get_target_object):
         """
-            Multi-SSID Bridge Mode
-            pytest -m "multi_ssid and single_ssid"
+            Master Config One
+            pytest -m "master_config1"
         """
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
@@ -52,7 +52,7 @@ class TestMasterConfig(object):
                          "TimeStamp: " + str(datetime.utcnow()) + "\n" +
                          "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
                          "Headers: " + str(get_target_object.firmware_library_object.sdk_client.make_headers()))
-            allure.attach(name="Sending Command:", body="Sending Command: " + "\n" + str(uri) + "\n" +
+            allure.attach(name="Push Config:", body="Sending Command: " + "\n" + str(uri) + "\n" +
                                                         "TimeStamp: " + str(datetime.utcnow()) + "\n" +
                                                         "Data: " + str(payload) + "\n" +
                                                         "Headers: " + str(
@@ -67,15 +67,21 @@ class TestMasterConfig(object):
             else:
                 pytest.exit("Configuration Push Failed")
 
+            # check RX message from AP after config push
+            after_config_push = get_target_object.dut_library_object.get_dut_logs()
+            logging.info(after_config_push)
+
+            # get pushed config from ap
+            config_pushed = get_target_object.dut_library_object.run_generic_command(cmd="cat /etc/ucentral/ucentral"
+                                                                                         ".active", attach_allure=True)
+            logging.info(config_pushed)
             # check ssid info in iwinfo
             configured_ssids = config_data_1
             iw_info = get_target_object.dut_library_object.get_iwinfo()
-            logging.info(iw_info)
-            allure.attach(name="iw info", body=str(iw_info))
             if iw_info is not None:
                 interface_pattern = r'(\S+)\s+ESSID:\s+"(.*?)"'
                 matches = re.findall(interface_pattern, iw_info)
-                print(matches)
+                logging.info(matches)
                 if matches and len(matches) != 0:
                     data = {interface: essid for interface, essid in matches}
                 else:
