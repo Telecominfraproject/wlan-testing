@@ -32,7 +32,6 @@ class TestProvAPIInventory(object):
     @allure.title("Get All Inventory List")
     @allure.testcase(name="WIFI-7859",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-7859")
-
     def test_provservice_inventorylist(self, get_target_object, get_testbed_details):
         """
             Test to get the information of all device present in Inventory of Provisioning UI
@@ -91,7 +90,6 @@ class TestProvAPIInventory(object):
     @allure.title("Edit Inventory device")
     @allure.testcase(name="WIFI-9238",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9238")
-
     def test_prov_service_edit_inventory_device(self, get_target_object, selected_testbed):
         """
         Test to Edit a device in inventory of Provision Service
@@ -128,6 +126,7 @@ class TestProvAPIInventory(object):
         if resp.status_code != 200:
             assert False
 
+
 @pytest.mark.ow_sanity_lf
 @pytest.mark.uc_sanity
 @pytest.mark.ow_sdk_tests
@@ -142,9 +141,10 @@ class TestProvAPISystemCommands(object):
     @allure.title("System Info OW Prov Service")
     def test_system_info_prov(self, get_target_object):
         system_info = get_target_object.prov_library_object.get_system_prov()
-        #print(system_info.json())
-        #allure.attach(name="system info", body=str(system_info.json()), attachment_type=#allure.attachment_type.JSON)
+        # print(system_info.json())
+        # allure.attach(name="system info", body=str(system_info.json()), attachment_type=#allure.attachment_type.JSON)
         assert system_info.status_code == 200
+
 
 @pytest.mark.ow_sanity_lf
 @pytest.mark.uc_sanity
@@ -159,7 +159,6 @@ class TestProvAPIEntity(object):
     @allure.title("Read All Entities")
     @allure.testcase(name="WIFI-7704",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-7704")
-
     def test_read_all_entities(self, get_target_object):
         """
         Test to Read all entities in Provision service
@@ -172,7 +171,6 @@ class TestProvAPIEntity(object):
     @allure.title("Create Entity")
     @allure.testcase(name="WIFI-7836",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-7836")
-
     def test_prov_service_create_entity(self, get_target_object, selected_testbed):
         """
             Test to create an Entity in provision Service
@@ -210,7 +208,6 @@ class TestProvAPIEntity(object):
     @allure.title("Edit Entity")
     @allure.testcase(name="WIFI-7857",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-7857")
-
     def test_prov_service_edit_entity(self, get_target_object, selected_testbed):
         """
         Test to Edit an entity in Provision Service
@@ -238,7 +235,6 @@ class TestProvAPIEntity(object):
     @allure.title("Delete Entity")
     @allure.testcase(name="WIFI-7858",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-7858")
-
     def test_prov_service_delete_entity(self, get_target_object, selected_testbed):
         """
         Test to Delete an entity in Provision service
@@ -248,6 +244,7 @@ class TestProvAPIEntity(object):
         resp = get_target_object.prov_library_object.delete_entity(entity_id)
         if resp.status_code != 200:
             assert False
+
 
 @pytest.mark.ow_sanity_lf
 @pytest.mark.uc_sanity
@@ -263,7 +260,6 @@ class TestProvAPIContact(object):
     @allure.title("Get All Contacts")
     @allure.testcase(name="WIFI-9240",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9240")
-
     def test_get_contacts(self, get_target_object):
         """
         Test to get all contacts in Provision services
@@ -276,7 +272,6 @@ class TestProvAPIContact(object):
     @allure.title("Create Contact")
     @allure.testcase(name="WIFI-9242",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9242")
-
     def test_prov_service_create_contact(self, get_target_object, selected_testbed):
         """
             Test to create Contact in provision Service
@@ -313,7 +308,6 @@ class TestProvAPIContact(object):
     @allure.title("Read Contact")
     @allure.testcase(name="WIFI-9241",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9241")
-
     def test_prov_service_read_contact(self, get_target_object, selected_testbed):
         """
         Test to Read a contact in Provision Services
@@ -328,7 +322,6 @@ class TestProvAPIContact(object):
     @allure.title("Edit Contact")
     @allure.testcase(name="WIFI-9243",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9243")
-
     def test_prov_service_edit_contact(self, get_target_object, selected_testbed):
         """
         Test to edit a contact in Provision service
@@ -364,7 +357,6 @@ class TestProvAPIContact(object):
     @allure.title("Delete Contact")
     @allure.testcase(name="WIFI-9244",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9244")
-
     def test_prov_service_delete_contact(self, get_target_object, selected_testbed):
         """
         Test to Delete a contact in provision service
@@ -374,6 +366,7 @@ class TestProvAPIContact(object):
         resp = get_target_object.prov_library_object.delete_contact(contact_id)
         if resp.status_code != 200:
             assert False
+
 
 @pytest.mark.ow_sanity_lf
 @pytest.mark.uc_sanity
@@ -401,7 +394,6 @@ class TestProvAPILocation(object):
     @allure.title("Create Location")
     @allure.testcase(name="WIFI-9247",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9247")
-
     def test_prov_service_create_location(self, get_target_object, selected_testbed):
         """
             Test to create location in provision Service
@@ -450,7 +442,6 @@ class TestProvAPILocation(object):
     @allure.title("Edit Location")
     @allure.testcase(name="WIFI-9248",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9248")
-
     def test_prov_service_edit_location(self, get_target_object, selected_testbed):
         """
         Test to Edit the locations in Provision services
@@ -489,7 +480,6 @@ class TestProvAPILocation(object):
     @allure.title("Delete Location")
     @allure.testcase(name="WIFI-9249",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9249")
-
     def test_prov_service_delete_location(self, get_target_object, selected_testbed):
         """
         Test to Delete location in provision service
@@ -500,6 +490,7 @@ class TestProvAPILocation(object):
         resp = get_target_object.prov_library_object.delete_location(location_id)
         if resp.status_code != 200:
             assert False
+
 
 @pytest.mark.ow_sanity_lf
 @pytest.mark.uc_sanity
@@ -515,7 +506,6 @@ class TestProvAPIVenue(object):
     @allure.title("Get All Venues")
     @allure.testcase(name="WIFI-9250",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9250")
-
     def test_get_venue(self, get_target_object):
         """
         Test to get all venues in provision services
@@ -528,13 +518,12 @@ class TestProvAPIVenue(object):
     @allure.title("Create Venue")
     @allure.testcase(name="WIFI-9252",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9252")
-
     def test_prov_service_create_venue(self, get_target_object, selected_testbed):
         """
             Test the create venue in provision Service
             Unique marker: pytest -m "prov_api_create_venue_test"
         """
-        global venue_id, entity_id
+        global venue_id, entity_id, location_id
         payload = {"name": "Testing_prov",
                    "rrm": "inherit",
                    "description": "For testing Purposes through Automation",
@@ -549,30 +538,52 @@ class TestProvAPIVenue(object):
         entity_id = entity['id']
 
         payload = {
+            "name": "TIP",
+            "type": "AUTO",
+            "buildingName": "",
+            "addressLines": ["Pedda Rushikonda"],
+            "city": "Visakhapatnam",
+            "state": "Andhra pradesh",
+            "postal": "530045",
+            "country": "IN",
+            "phones": [],
+            "mobiles": [],
+            "geoCode": "",
+            "description": "For Testing through Automation",
+            "initialNote": "Testing purposes through Automation",
+            "entity": "0000-0000-0000",
+            "notes": [{"note": "Testing purposes"}]
+        }
+        resp = get_target_object.prov_library_object.add_location(payload)
+        if resp.status_code != 200:
+            assert False
+        location = json.loads(resp.text)
+        logging.info(location)
+        location_id = location['id']
+        payload = {
             "description": "For testing Purposes",
             "entity": entity_id,
-            "location": "",
-                      "name": "Testing Prov",
-                      "notes": [
-                        {
-                          "note": "For testing Purposes"
-                        }
-                      ],
-                      "parent": "",
-                      "rrm": "inherit"
-                    }
+            "location": location_id,
+            "name": "Testing Prov",
+            "notes": [
+                {
+                    "note": "For testing Purposes"
+                }
+            ],
+            "parent": "",
+            "rrm": "inherit"
+        }
         resp = get_target_object.prov_library_object.add_venue(payload)
         if resp.status_code != 200:
             assert False
         venue = json.loads(resp.text)
         logging.info(venue)
         venue_id = venue['id']
-
+        location_id = venue['location']
     @pytest.mark.prov_api_read_venue_test
     @allure.title("Read Venue")
     @allure.testcase(name="WIFI-9251",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9251")
-
     def test_prov_service_read_venue(self, get_target_object, selected_testbed):
         """
         Test to Read venues in Provision services
@@ -587,22 +598,21 @@ class TestProvAPIVenue(object):
     @allure.title("Edit Venue")
     @allure.testcase(name="WIFI-9253",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9253")
-
     def test_prov_service_edit_venue(self, get_target_object, selected_testbed):
         """
         Test to Edit venues in Provision Services
         Unique marker:pytest -m "prov_api_edit_venue_test"
         """
         # This to edit venue
-        global venue_id
+        global venue_id, location_id
         editing_payload = {
-                          "description": "For testing Purposes through Automation",
-                          "location": "",
-                          "name": "Testing Prov",
-                          "notes": [],
-                          "rrm": "inherit",
-                          "sourceIP": []
-                        }
+            "description": "For testing Purposes through Automation",
+            "location": location_id,
+            "name": "Testing Prov",
+            "notes": [],
+            "rrm": "inherit",
+            "sourceIP": []
+        }
         resp = get_target_object.prov_library_object.edit_venue(editing_payload, venue_id)
         if resp.status_code != 200:
             assert False
@@ -616,17 +626,19 @@ class TestProvAPIVenue(object):
     @allure.title("Delete Venue")
     @allure.testcase(name="WIFI-9254",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-9254")
-
     def test_prov_service_delete_venue(self, get_target_object, selected_testbed):
         """
         Test to Delete venue in Provision Service
         Unique Marker:pytest -m "prov_api_delete_venue_test"
         """
-        global venue_id, entity_id
+        global venue_id, entity_id, location_id
         resp = get_target_object.prov_library_object.delete_venue(venue_id)
         if resp.status_code != 200:
             assert False
         resp = get_target_object.prov_library_object.delete_entity(entity_id)
+        if resp.status_code != 200:
+            assert False
+        resp = get_target_object.prov_library_object.delete_location(location_id)
         if resp.status_code != 200:
             assert False
 
@@ -652,37 +664,37 @@ class TestProvAPIMaps(object):
                 """
         global map_id
         payload = {
-                  "access": {
-                    "list": []
-                  },
-                  "created": 1654266780,
-                  "creator": "11111111-0000-0000-6666-999999999999",
-                  "data": "{\"elements\":[{\"id\":\"entity/0000-0000-0000\",\"position\":{\"x\":788.0001984205973,\"y\":-228}},"
-                          "{\"id\":\"entity/0d3b713c-579f-4449-b005-980fc45266f7\",\"position\":{\"x\":125.00091086366538,\"y\":110}},"
-                          "{\"id\":\"entity/25e3781c-ff89-4060-98de-72f2f469ece7\",\"position\":{\"x\":0.00013680958416162147,\"y\":220}},"
-                          "{\"id\":\"venue/d25b862d-7211-4f5d-8980-eb796cf90259\",\"position\":{\"x\":0.0009741442442360648,\"y\":330}},"
-                          "{\"id\":\"entity/3bf7563a-3d9d-11ec-bc4b-6ed02b842da1\",\"position\":{\"x\":375.0004521666363,\"y\":110}},"
-                          "{\"id\":\"entity/6a657863-9940-4303-ac68-4cc10d3078ec\",\"position\":{\"x\":633.0000704105611,\"y\":310}},"
-                          "{\"id\":\"entity/7ef6dd8e-5ad3-47d6-951f-681adcf2171c\",\"position\":{\"x\":857.0000877260527,\"y\":184}},"
-                          "{\"id\":\"entity/da165a23-2562-4a1a-b0c5-8f6e955a2e01\",\"position\":{\"x\":1125.000287727392,\"y\":110}},"
-                          "{\"id\":\"venue/b7c1825b-2f25-41b7-8a39-b51b07a5bc64\",\"position\":{\"x\":1339.0000824838032,\"y\":220}},"
-                          "{\"id\":\"entity/e6223c6a-c150-43ea-8286-f2d6395e6d65\",\"position\":{\"x\":1625.000942559204,\"y\":110}},"
-                          "{\"id\":\"entity/4002042d-b2a7-4a74-bde3-10229ab889a3\",\"position\":{\"x\":1093.0008368135925,\"y\":592}},"
-                          "{\"id\":\"entity/c3993947-f5af-4530-9f6e-72edb767abfe\",\"position\":{\"x\":1501.0009763642392,\"y\":462}},"
-                          "{\"id\":\"entity/ee468f28-465d-47bc-8ffe-b02678450fd8\",\"position\":{\"x\":1875.0002469570716,\"y\":220}},"
-                          "{\"id\":\"device/903cb3bb24df\",\"position\":{\"x\":354.0006993336034,\"y\":264}},"
-                          "{\"id\":\"device/68215f9d076a\",\"position\":{\"x\":887.0006396562085,\"y\":352}}],\"zoom\":0.5,\"position\":[-100.25009594166397,168],\"rootNode\":\"entity/0000-0000-0000\"}",
-                  "description": "",
-                  "entity": "",
-                  "id": "d24b07e9-9925-47d7-b7e6-4cc28fb11603",
-                  "managementPolicy": "",
-                  "modified": 1654266955,
-                  "name": "Maps from API Automation",
-                  "notes": [],
-                  "tags": [],
-                  "venue": "",
-                  "visibility": "public"
-                }
+            "access": {
+                "list": []
+            },
+            "created": 1654266780,
+            "creator": "11111111-0000-0000-6666-999999999999",
+            "data": "{\"elements\":[{\"id\":\"entity/0000-0000-0000\",\"position\":{\"x\":788.0001984205973,\"y\":-228}},"
+                    "{\"id\":\"entity/0d3b713c-579f-4449-b005-980fc45266f7\",\"position\":{\"x\":125.00091086366538,\"y\":110}},"
+                    "{\"id\":\"entity/25e3781c-ff89-4060-98de-72f2f469ece7\",\"position\":{\"x\":0.00013680958416162147,\"y\":220}},"
+                    "{\"id\":\"venue/d25b862d-7211-4f5d-8980-eb796cf90259\",\"position\":{\"x\":0.0009741442442360648,\"y\":330}},"
+                    "{\"id\":\"entity/3bf7563a-3d9d-11ec-bc4b-6ed02b842da1\",\"position\":{\"x\":375.0004521666363,\"y\":110}},"
+                    "{\"id\":\"entity/6a657863-9940-4303-ac68-4cc10d3078ec\",\"position\":{\"x\":633.0000704105611,\"y\":310}},"
+                    "{\"id\":\"entity/7ef6dd8e-5ad3-47d6-951f-681adcf2171c\",\"position\":{\"x\":857.0000877260527,\"y\":184}},"
+                    "{\"id\":\"entity/da165a23-2562-4a1a-b0c5-8f6e955a2e01\",\"position\":{\"x\":1125.000287727392,\"y\":110}},"
+                    "{\"id\":\"venue/b7c1825b-2f25-41b7-8a39-b51b07a5bc64\",\"position\":{\"x\":1339.0000824838032,\"y\":220}},"
+                    "{\"id\":\"entity/e6223c6a-c150-43ea-8286-f2d6395e6d65\",\"position\":{\"x\":1625.000942559204,\"y\":110}},"
+                    "{\"id\":\"entity/4002042d-b2a7-4a74-bde3-10229ab889a3\",\"position\":{\"x\":1093.0008368135925,\"y\":592}},"
+                    "{\"id\":\"entity/c3993947-f5af-4530-9f6e-72edb767abfe\",\"position\":{\"x\":1501.0009763642392,\"y\":462}},"
+                    "{\"id\":\"entity/ee468f28-465d-47bc-8ffe-b02678450fd8\",\"position\":{\"x\":1875.0002469570716,\"y\":220}},"
+                    "{\"id\":\"device/903cb3bb24df\",\"position\":{\"x\":354.0006993336034,\"y\":264}},"
+                    "{\"id\":\"device/68215f9d076a\",\"position\":{\"x\":887.0006396562085,\"y\":352}}],\"zoom\":0.5,\"position\":[-100.25009594166397,168],\"rootNode\":\"entity/0000-0000-0000\"}",
+            "description": "",
+            "entity": "",
+            "id": "d24b07e9-9925-47d7-b7e6-4cc28fb11603",
+            "managementPolicy": "",
+            "modified": 1654266955,
+            "name": "Maps from API Automation",
+            "notes": [],
+            "tags": [],
+            "venue": "",
+            "visibility": "public"
+        }
         resp = get_target_object.prov_library_object.add_map(payload)
         if resp.status_code != 200:
             assert False
@@ -704,37 +716,37 @@ class TestProvAPIMaps(object):
         # This to edit Map
         global map_id
         editing_payload = {
-                          "access": {
-                            "list": []
-                          },
-                          "created": 1654267598,
-                          "creator": "11111111-0000-0000-6666-999999999999",
-                          "data": "{\"elements\":[{\"id\":\"entity/0000-0000-0000\",\"position\":{\"x\":742.0002986856452,\"y\":-258}},"
-                                  "{\"id\":\"entity/0d3b713c-579f-4449-b005-980fc45266f7\",\"position\":{\"x\":125.0000746112698,\"y\":110}},"
-                                  "{\"id\":\"entity/25e3781c-ff89-4060-98de-72f2f469ece7\",\"position\":{\"x\":0.000987247185699772,\"y\":220}},"
-                                  "{\"id\":\"venue/d25b862d-7211-4f5d-8980-eb796cf90259\",\"position\":{\"x\":0.00015366265594566887,\"y\":330}},"
-                                  "{\"id\":\"entity/3bf7563a-3d9d-11ec-bc4b-6ed02b842da1\",\"position\":{\"x\":375.00078943444134,\"y\":110}},"
-                                  "{\"id\":\"entity/6a657863-9940-4303-ac68-4cc10d3078ec\",\"position\":{\"x\":625.0001373023756,\"y\":110}},"
-                                  "{\"id\":\"entity/7ef6dd8e-5ad3-47d6-951f-681adcf2171c\",\"position\":{\"x\":995.0002519718007,\"y\":390}},"
-                                  "{\"id\":\"entity/da165a23-2562-4a1a-b0c5-8f6e955a2e01\",\"position\":{\"x\":1125.0005714344913,\"y\":110}},"
-                                  "{\"id\":\"venue/b7c1825b-2f25-41b7-8a39-b51b07a5bc64\",\"position\":{\"x\":1125.0000846706366,\"y\":220}},"
-                                  "{\"id\":\"entity/e6223c6a-c150-43ea-8286-f2d6395e6d65\",\"position\":{\"x\":1625.0007765709465,\"y\":110}},"
-                                  "{\"id\":\"entity/4002042d-b2a7-4a74-bde3-10229ab889a3\",\"position\":{\"x\":1455.000216347443,\"y\":426}},"
-                                  "{\"id\":\"entity/c3993947-f5af-4530-9f6e-72edb767abfe\",\"position\":{\"x\":1625.0006288181921,\"y\":220}},"
-                                  "{\"id\":\"entity/ee468f28-465d-47bc-8ffe-b02678450fd8\",\"position\":{\"x\":1875.0006116378358,\"y\":220}},"
-                                  "{\"id\":\"device/903cb3bb24df\",\"position\":{\"x\":790.000930605748,\"y\":328}},"
-                                  "{\"id\":\"device/68215f9d076a\",\"position\":{\"x\":1125.0006631675788,\"y\":330}}],\"zoom\":0.5,\"position\":[-236.25019132512296,168],\"rootNode\":\"entity/0000-0000-0000\"}",
-                          "description": "",
-                          "entity": "",
-                          "id": "34cfd185-da33-4885-85c7-1fef21900570",
-                          "managementPolicy": "",
-                          "modified": 1654267727,
-                          "name": "Maps from API Automation after Edit",
-                          "notes": [],
-                          "tags": [],
-                          "venue": "",
-                          "visibility": "public"
-                        }
+            "access": {
+                "list": []
+            },
+            "created": 1654267598,
+            "creator": "11111111-0000-0000-6666-999999999999",
+            "data": "{\"elements\":[{\"id\":\"entity/0000-0000-0000\",\"position\":{\"x\":742.0002986856452,\"y\":-258}},"
+                    "{\"id\":\"entity/0d3b713c-579f-4449-b005-980fc45266f7\",\"position\":{\"x\":125.0000746112698,\"y\":110}},"
+                    "{\"id\":\"entity/25e3781c-ff89-4060-98de-72f2f469ece7\",\"position\":{\"x\":0.000987247185699772,\"y\":220}},"
+                    "{\"id\":\"venue/d25b862d-7211-4f5d-8980-eb796cf90259\",\"position\":{\"x\":0.00015366265594566887,\"y\":330}},"
+                    "{\"id\":\"entity/3bf7563a-3d9d-11ec-bc4b-6ed02b842da1\",\"position\":{\"x\":375.00078943444134,\"y\":110}},"
+                    "{\"id\":\"entity/6a657863-9940-4303-ac68-4cc10d3078ec\",\"position\":{\"x\":625.0001373023756,\"y\":110}},"
+                    "{\"id\":\"entity/7ef6dd8e-5ad3-47d6-951f-681adcf2171c\",\"position\":{\"x\":995.0002519718007,\"y\":390}},"
+                    "{\"id\":\"entity/da165a23-2562-4a1a-b0c5-8f6e955a2e01\",\"position\":{\"x\":1125.0005714344913,\"y\":110}},"
+                    "{\"id\":\"venue/b7c1825b-2f25-41b7-8a39-b51b07a5bc64\",\"position\":{\"x\":1125.0000846706366,\"y\":220}},"
+                    "{\"id\":\"entity/e6223c6a-c150-43ea-8286-f2d6395e6d65\",\"position\":{\"x\":1625.0007765709465,\"y\":110}},"
+                    "{\"id\":\"entity/4002042d-b2a7-4a74-bde3-10229ab889a3\",\"position\":{\"x\":1455.000216347443,\"y\":426}},"
+                    "{\"id\":\"entity/c3993947-f5af-4530-9f6e-72edb767abfe\",\"position\":{\"x\":1625.0006288181921,\"y\":220}},"
+                    "{\"id\":\"entity/ee468f28-465d-47bc-8ffe-b02678450fd8\",\"position\":{\"x\":1875.0006116378358,\"y\":220}},"
+                    "{\"id\":\"device/903cb3bb24df\",\"position\":{\"x\":790.000930605748,\"y\":328}},"
+                    "{\"id\":\"device/68215f9d076a\",\"position\":{\"x\":1125.0006631675788,\"y\":330}}],\"zoom\":0.5,\"position\":[-236.25019132512296,168],\"rootNode\":\"entity/0000-0000-0000\"}",
+            "description": "",
+            "entity": "",
+            "id": "34cfd185-da33-4885-85c7-1fef21900570",
+            "managementPolicy": "",
+            "modified": 1654267727,
+            "name": "Maps from API Automation after Edit",
+            "notes": [],
+            "tags": [],
+            "venue": "",
+            "visibility": "public"
+        }
         resp = get_target_object.prov_library_object.edit_map(editing_payload, map_id)
         if resp.status_code != 200:
             assert False
@@ -772,22 +784,22 @@ class TestProvAPIOperators(object):
         """
         global operator_id
         payload = {
-                  "name": "Testing API through Automation",
-                  "deviceRules": {
-                    "rrm": "inherit",
-                    "rcOnly": "inherit",
-                    "firmwareUpgrade": "inherit"
-                  },
-                  "sourceIP": [],
-                  "registrationId": "12345",
-                  "description": "Testing API through Automation",
-                  "firmwareRCOnly": False,
-                  "notes": [
-                    {
-                      "note": "Testing purposes"
-                    }
-                  ]
+            "name": "Testing API through Automation",
+            "deviceRules": {
+                "rrm": "inherit",
+                "rcOnly": "inherit",
+                "firmwareUpgrade": "inherit"
+            },
+            "sourceIP": [],
+            "registrationId": "12345",
+            "description": "Testing API through Automation",
+            "firmwareRCOnly": False,
+            "notes": [
+                {
+                    "note": "Testing purposes"
                 }
+            ]
+        }
         resp = get_target_object.prov_library_object.add_operator(payload)
         if resp.status_code != 200:
             assert False
@@ -809,17 +821,17 @@ class TestProvAPIOperators(object):
         # This to edit operator
         global operator_id
         editing_payload = {
-                          "name": "Testing API through Automation after edit",
-                          "description": "Testing API through Automation after edit",
-                          "deviceRules": {
-                            "firmwareUpgrade": "inherit",
-                            "rcOnly": "inherit",
-                            "rrm": "inherit"
-                          },
-                          "sourceIP": [],
-                          "registrationId": "12345",
-                          "notes": []
-                        }
+            "name": "Testing API through Automation after edit",
+            "description": "Testing API through Automation after edit",
+            "deviceRules": {
+                "firmwareUpgrade": "inherit",
+                "rcOnly": "inherit",
+                "rrm": "inherit"
+            },
+            "sourceIP": [],
+            "registrationId": "12345",
+            "notes": []
+        }
         resp = get_target_object.prov_library_object.edit_operator(editing_payload, operator_id)
         if resp.status_code != 200:
             assert False
@@ -851,22 +863,22 @@ class TestProvAPIServiceClass(object):
         """
         global operator_id
         payload = {
-                  "name": "Testing API through Automation",
-                  "deviceRules": {
-                    "rrm": "inherit",
-                    "rcOnly": "inherit",
-                    "firmwareUpgrade": "inherit"
-                  },
-                  "sourceIP": [],
-                  "registrationId": "12345",
-                  "description": "Testing API through Automation",
-                  "firmwareRCOnly": False,
-                  "notes": [
-                    {
-                      "note": "Testing purposes"
-                    }
-                  ]
+            "name": "Testing API through Automation",
+            "deviceRules": {
+                "rrm": "inherit",
+                "rcOnly": "inherit",
+                "firmwareUpgrade": "inherit"
+            },
+            "sourceIP": [],
+            "registrationId": "12345",
+            "description": "Testing API through Automation",
+            "firmwareRCOnly": False,
+            "notes": [
+                {
+                    "note": "Testing purposes"
                 }
+            ]
+        }
         resp = get_target_object.prov_library_object.add_operator(payload)
         if resp.status_code != 200:
             assert False
@@ -885,19 +897,19 @@ class TestProvAPIServiceClass(object):
     def test_prov_service_create_service_class(self, get_target_object, selected_testbed):
         global operator_id, service_class_id
         payload = {
-                  "name": "Testing Purposes through API Automation",
-                  "billingCode": "12345",
-                  "description": "Testing Purposes through API Automation",
-                  "period": "monthly",
-                  "cost": 0,
-                  "currency": "USD",
-                  "notes": [
-                    {
-                      "note": "Testing Purposes through API Automation"
-                    }
-                  ],
-                  "operatorId": operator_id
+            "name": "Testing Purposes through API Automation",
+            "billingCode": "12345",
+            "description": "Testing Purposes through API Automation",
+            "period": "monthly",
+            "cost": 0,
+            "currency": "USD",
+            "notes": [
+                {
+                    "note": "Testing Purposes through API Automation"
                 }
+            ],
+            "operatorId": operator_id
+        }
         resp = get_target_object.prov_library_object.add_service_class(payload)
         if resp.status_code != 200:
             assert False
@@ -919,14 +931,14 @@ class TestProvAPIServiceClass(object):
         # This to edit operator
         global operator_id, service_class_id
         editing_payload = {
-                          "name": "Testing Purposes through API Automation",
-                          "billingCode": "12345",
-                          "description": "Testing Purposes through API Automation after editing",
-                          "period": "monthly",
-                          "cost": 0,
-                          "currency": "USD",
-                          "notes": []
-                        }
+            "name": "Testing Purposes through API Automation",
+            "billingCode": "12345",
+            "description": "Testing Purposes through API Automation after editing",
+            "period": "monthly",
+            "cost": 0,
+            "currency": "USD",
+            "notes": []
+        }
         resp = get_target_object.prov_library_object.edit_service_class(editing_payload, service_class_id)
         if resp.status_code != 200:
             assert False
@@ -967,198 +979,198 @@ class TestProvAPIConfigurations(object):
         """
         global configuration_id, modified
         payload = {
-                  "name": "VLAN",
-                  "deviceRules": {
-                    "rrm": "inherit",
-                    "rcOnly": "inherit",
-                    "firmwareUpgrade": "inherit"
-                  },
-                  "deviceTypes": [
-                    "cig_wf188n",
-                    "edgecore_ssw2ac2600",
-                    "indio_um-305ax",
-                    "hfcl_ion4xe",
-                    "wallys_dr40x9",
-                    "udaya_a5-id2",
-                    "x64_vm"
-                  ],
-                  "entity": "0000-0000-0000",
-                  "venue": "",
-                  "configuration": [
-                    {
-                      "name": "Radios",
-                      "description": "",
-                      "weight": 1,
-                      "configuration": {
+            "name": "VLAN",
+            "deviceRules": {
+                "rrm": "inherit",
+                "rcOnly": "inherit",
+                "firmwareUpgrade": "inherit"
+            },
+            "deviceTypes": [
+                "cig_wf188n",
+                "edgecore_ssw2ac2600",
+                "indio_um-305ax",
+                "hfcl_ion4xe",
+                "wallys_dr40x9",
+                "udaya_a5-id2",
+                "x64_vm"
+            ],
+            "entity": "0000-0000-0000",
+            "venue": "",
+            "configuration": [
+                {
+                    "name": "Radios",
+                    "description": "",
+                    "weight": 1,
+                    "configuration": {
                         "radios": [
-                          {
-                            "band": "5G",
-                            "channel": 52,
-                            "channel-mode": "HE",
-                            "channel-width": 80,
-                            "country": "CA"
-                          },
-                          {
-                            "band": "2G",
-                            "channel": 11,
-                            "channel-mode": "HE",
-                            "channel-width": 20,
-                            "country": "CA"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "name": "Interfaces",
-                      "description": "",
-                      "weight": 1,
-                      "configuration": {
-                        "interfaces": [
-                          {
-                            "name": "WAN",
-                            "role": "upstream",
-                            "services": [
-                              "lldp"
-                            ],
-                            "ethernet": [
-                              {
-                                "select-ports": [
-                                  "WAN*"
-                                ]
-                              }
-                            ],
-                            "ipv4": {
-                              "addressing": "dynamic"
+                            {
+                                "band": "5G",
+                                "channel": 52,
+                                "channel-mode": "HE",
+                                "channel-width": 80,
+                                "country": "CA"
                             },
-                            "ssids": [
-                              {
-                                "name": "OpenWifi",
-                                "role": "downstream",
-                                "wifi-bands": [
-                                  "2G",
-                                  "5G"
-                                ],
-                                "bss-mode": "ap",
-                                "encryption": {
-                                  "proto": "none",
-                                  "ieee80211w": "optional"
-                                }
-                              },
-                              {
-                                "name": "OpenWifi_wpa",
-                                "role": "downstream",
-                                "wifi-bands": [
-                                  "2G",
-                                  "5G"
-                                ],
-                                "bss-mode": "ap",
-                                "encryption": {
-                                  "proto": "psk",
-                                  "key": "OpenWifi",
-                                  "ieee80211w": "optional"
-                                }
-                              },
-                              {
-                                "name": "OpenWifi_wpa2",
-                                "role": "downstream",
-                                "wifi-bands": [
-                                  "2G",
-                                  "5G"
-                                ],
-                                "bss-mode": "ap",
-                                "encryption": {
-                                  "proto": "psk2",
-                                  "key": "OpenWifi",
-                                  "ieee80211w": "optional"
-                                }
-                              },
-                              {
-                                "name": "OpenWifi_wpa3",
-                                "role": "downstream",
-                                "wifi-bands": [
-                                  "2G",
-                                  "5G"
-                                ],
-                                "bss-mode": "ap",
-                                "encryption": {
-                                  "proto": "sae",
-                                  "key": "OpenWifi",
-                                  "ieee80211w": "optional"
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "name": "LAN",
-                            "role": "downstream",
-                            "services": [
-                              "ssh",
-                              "lldp"
-                            ],
-                            "ethernet": [
-                              {
-                                "select-ports": [
-                                  "LAN*"
-                                ]
-                              }
-                            ],
-                            "ipv4": {
-                              "addressing": "static",
-                              "subnet": "192.168.1.1/24",
-                              "dhcp": {
-                                "lease-first": 10,
-                                "lease-count": 100,
-                                "lease-time": "6h"
-                              }
+                            {
+                                "band": "2G",
+                                "channel": 11,
+                                "channel-mode": "HE",
+                                "channel-width": 20,
+                                "country": "CA"
                             }
-                          }
                         ]
-                      }
-                    },
-                    {
-                      "name": "Metrics",
-                      "description": "",
-                      "weight": 1,
-                      "configuration": {
-                        "metrics": {
-                          "statistics": {
-                            "interval": 120,
-                            "types": [
-                              "ssids",
-                              "lldp",
-                              "clients"
-                            ]
-                          },
-                          "health": {
-                            "interval": 120
-                          },
-                          "wifi-frames": {
-                            "filters": [
-                              "probe",
-                              "auth"
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "name": "Services",
-                      "description": "",
-                      "weight": 1,
-                      "configuration": {
-                        "services": {
-                          "lldp": {
-                            "describe": "uCentral",
-                            "location": "universe"
-                          },
-                          "ssh": {
-                            "port": 22
-                          }
-                        }
-                      }
                     }
-                  ]
+                },
+                {
+                    "name": "Interfaces",
+                    "description": "",
+                    "weight": 1,
+                    "configuration": {
+                        "interfaces": [
+                            {
+                                "name": "WAN",
+                                "role": "upstream",
+                                "services": [
+                                    "lldp"
+                                ],
+                                "ethernet": [
+                                    {
+                                        "select-ports": [
+                                            "WAN*"
+                                        ]
+                                    }
+                                ],
+                                "ipv4": {
+                                    "addressing": "dynamic"
+                                },
+                                "ssids": [
+                                    {
+                                        "name": "OpenWifi",
+                                        "role": "downstream",
+                                        "wifi-bands": [
+                                            "2G",
+                                            "5G"
+                                        ],
+                                        "bss-mode": "ap",
+                                        "encryption": {
+                                            "proto": "none",
+                                            "ieee80211w": "optional"
+                                        }
+                                    },
+                                    {
+                                        "name": "OpenWifi_wpa",
+                                        "role": "downstream",
+                                        "wifi-bands": [
+                                            "2G",
+                                            "5G"
+                                        ],
+                                        "bss-mode": "ap",
+                                        "encryption": {
+                                            "proto": "psk",
+                                            "key": "OpenWifi",
+                                            "ieee80211w": "optional"
+                                        }
+                                    },
+                                    {
+                                        "name": "OpenWifi_wpa2",
+                                        "role": "downstream",
+                                        "wifi-bands": [
+                                            "2G",
+                                            "5G"
+                                        ],
+                                        "bss-mode": "ap",
+                                        "encryption": {
+                                            "proto": "psk2",
+                                            "key": "OpenWifi",
+                                            "ieee80211w": "optional"
+                                        }
+                                    },
+                                    {
+                                        "name": "OpenWifi_wpa3",
+                                        "role": "downstream",
+                                        "wifi-bands": [
+                                            "2G",
+                                            "5G"
+                                        ],
+                                        "bss-mode": "ap",
+                                        "encryption": {
+                                            "proto": "sae",
+                                            "key": "OpenWifi",
+                                            "ieee80211w": "optional"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "LAN",
+                                "role": "downstream",
+                                "services": [
+                                    "ssh",
+                                    "lldp"
+                                ],
+                                "ethernet": [
+                                    {
+                                        "select-ports": [
+                                            "LAN*"
+                                        ]
+                                    }
+                                ],
+                                "ipv4": {
+                                    "addressing": "static",
+                                    "subnet": "192.168.1.1/24",
+                                    "dhcp": {
+                                        "lease-first": 10,
+                                        "lease-count": 100,
+                                        "lease-time": "6h"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "Metrics",
+                    "description": "",
+                    "weight": 1,
+                    "configuration": {
+                        "metrics": {
+                            "statistics": {
+                                "interval": 120,
+                                "types": [
+                                    "ssids",
+                                    "lldp",
+                                    "clients"
+                                ]
+                            },
+                            "health": {
+                                "interval": 120
+                            },
+                            "wifi-frames": {
+                                "filters": [
+                                    "probe",
+                                    "auth"
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Services",
+                    "description": "",
+                    "weight": 1,
+                    "configuration": {
+                        "services": {
+                            "lldp": {
+                                "describe": "uCentral",
+                                "location": "universe"
+                            },
+                            "ssh": {
+                                "port": 22
+                            }
+                        }
+                    }
                 }
+            ]
+        }
         resp = get_target_object.prov_library_object.add_configuration(payload)
         if resp.status_code != 200:
             assert False
@@ -1181,216 +1193,216 @@ class TestProvAPIConfigurations(object):
         # This to edit configuration
         global configuration_id, modified
         editing_payload = {
-                          "configuration": [
+            "configuration": [
+                {
+                    "configuration": {
+                        "radios": [
                             {
-                              "configuration": {
-                                "radios": [
-                                  {
-                                    "band": "5G",
-                                    "channel": 52,
-                                    "channel-mode": "HE",
-                                    "channel-width": 80,
-                                    "country": "CA"
-                                  },
-                                  {
-                                    "band": "2G",
-                                    "channel": 11,
-                                    "channel-mode": "HE",
-                                    "channel-width": 20,
-                                    "country": "CA"
-                                  }
-                                ]
-                              },
-                              "description": "",
-                              "name": "Radios",
-                              "weight": 1
+                                "band": "5G",
+                                "channel": 52,
+                                "channel-mode": "HE",
+                                "channel-width": 80,
+                                "country": "CA"
                             },
                             {
-                              "configuration": {
-                                "interfaces": [
-                                  {
-                                    "ethernet": [
-                                      {
+                                "band": "2G",
+                                "channel": 11,
+                                "channel-mode": "HE",
+                                "channel-width": 20,
+                                "country": "CA"
+                            }
+                        ]
+                    },
+                    "description": "",
+                    "name": "Radios",
+                    "weight": 1
+                },
+                {
+                    "configuration": {
+                        "interfaces": [
+                            {
+                                "ethernet": [
+                                    {
                                         "select-ports": [
-                                          "WAN*"
+                                            "WAN*"
                                         ]
-                                      }
-                                    ],
-                                    "ipv4": {
-                                      "addressing": "dynamic"
-                                    },
-                                    "name": "WAN",
-                                    "role": "upstream",
-                                    "services": [
-                                      "lldp"
-                                    ],
-                                    "ssids": [
-                                      {
+                                    }
+                                ],
+                                "ipv4": {
+                                    "addressing": "dynamic"
+                                },
+                                "name": "WAN",
+                                "role": "upstream",
+                                "services": [
+                                    "lldp"
+                                ],
+                                "ssids": [
+                                    {
                                         "bss-mode": "ap",
                                         "encryption": {
-                                          "ieee80211w": "optional",
-                                          "proto": "none"
+                                            "ieee80211w": "optional",
+                                            "proto": "none"
                                         },
                                         "name": "OpenWifi",
                                         "role": "downstream",
                                         "wifi-bands": [
-                                          "2G",
-                                          "5G"
+                                            "2G",
+                                            "5G"
                                         ]
-                                      },
-                                      {
+                                    },
+                                    {
                                         "bss-mode": "ap",
                                         "encryption": {
-                                          "ieee80211w": "optional",
-                                          "key": "OpenWifi",
-                                          "proto": "psk"
+                                            "ieee80211w": "optional",
+                                            "key": "OpenWifi",
+                                            "proto": "psk"
                                         },
                                         "name": "OpenWifi_wpa",
                                         "role": "downstream",
                                         "wifi-bands": [
-                                          "2G",
-                                          "5G"
+                                            "2G",
+                                            "5G"
                                         ]
-                                      },
-                                      {
+                                    },
+                                    {
                                         "bss-mode": "ap",
                                         "encryption": {
-                                          "ieee80211w": "optional",
-                                          "key": "OpenWifi",
-                                          "proto": "psk2"
+                                            "ieee80211w": "optional",
+                                            "key": "OpenWifi",
+                                            "proto": "psk2"
                                         },
                                         "name": "OpenWifi_wpa2",
                                         "role": "downstream",
                                         "wifi-bands": [
-                                          "2G",
-                                          "5G"
+                                            "2G",
+                                            "5G"
                                         ]
-                                      },
-                                      {
+                                    },
+                                    {
                                         "bss-mode": "ap",
                                         "encryption": {
-                                          "ieee80211w": "optional",
-                                          "key": "OpenWifi",
-                                          "proto": "sae"
+                                            "ieee80211w": "optional",
+                                            "key": "OpenWifi",
+                                            "proto": "sae"
                                         },
                                         "name": "OpenWifi_wpa3",
                                         "role": "downstream",
                                         "wifi-bands": [
-                                          "2G",
-                                          "5G"
+                                            "2G",
+                                            "5G"
                                         ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "ethernet": [
-                                      {
+                                    }
+                                ]
+                            },
+                            {
+                                "ethernet": [
+                                    {
                                         "select-ports": [
-                                          "LAN*"
+                                            "LAN*"
                                         ]
-                                      }
-                                    ],
-                                    "ipv4": {
-                                      "addressing": "static",
-                                      "dhcp": {
+                                    }
+                                ],
+                                "ipv4": {
+                                    "addressing": "static",
+                                    "dhcp": {
                                         "lease-count": 100,
                                         "lease-first": 10,
                                         "lease-time": "6h"
-                                      },
-                                      "subnet": "192.168.1.1/24"
                                     },
-                                    "name": "LAN",
-                                    "role": "downstream",
-                                    "services": [
-                                      "ssh",
-                                      "lldp"
-                                    ]
-                                  }
+                                    "subnet": "192.168.1.1/24"
+                                },
+                                "name": "LAN",
+                                "role": "downstream",
+                                "services": [
+                                    "ssh",
+                                    "lldp"
                                 ]
-                              },
-                              "description": "",
-                              "name": "Interfaces",
-                              "weight": 1
-                            },
-                            {
-                              "configuration": {
-                                "metrics": {
-                                  "health": {
-                                    "interval": 120
-                                  },
-                                  "statistics": {
-                                    "interval": 120,
-                                    "types": [
-                                      "ssids",
-                                      "lldp",
-                                      "clients"
-                                    ]
-                                  },
-                                  "wifi-frames": {
-                                    "filters": [
-                                      "probe",
-                                      "auth"
-                                    ]
-                                  }
-                                }
-                              },
-                              "description": "",
-                              "name": "Metrics",
-                              "weight": 1
-                            },
-                            {
-                              "configuration": {
-                                "services": {
-                                  "lldp": {
-                                    "describe": "uCentral",
-                                    "location": "universe"
-                                  },
-                                  "ssh": {
-                                    "port": 22
-                                  }
-                                }
-                              },
-                              "description": "",
-                              "name": "Services",
-                              "weight": 1
                             }
-                          ],
-                          "created": modified,
-                          "description": "After Editing",
-                          "deviceRules": {
-                            "firmwareUpgrade": "inherit",
-                            "rcOnly": "inherit",
-                            "rrm": "inherit"
-                          },
-                          "deviceTypes": [
-                            "cig_wf188n",
-                            "edgecore_ssw2ac2600",
-                            "indio_um-305ax",
-                            "hfcl_ion4xe",
-                            "wallys_dr40x9",
-                            "udaya_a5-id2",
-                            "x64_vm"
-                          ],
-                          "entity": "0000-0000-0000",
-                          "extendedInfo": {
-                            "entity": {
-                              "description": "",
-                              "id": "0000-0000-0000",
-                              "name": "World123"
+                        ]
+                    },
+                    "description": "",
+                    "name": "Interfaces",
+                    "weight": 1
+                },
+                {
+                    "configuration": {
+                        "metrics": {
+                            "health": {
+                                "interval": 120
+                            },
+                            "statistics": {
+                                "interval": 120,
+                                "types": [
+                                    "ssids",
+                                    "lldp",
+                                    "clients"
+                                ]
+                            },
+                            "wifi-frames": {
+                                "filters": [
+                                    "probe",
+                                    "auth"
+                                ]
                             }
-                          },
-                          "id": configuration_id,
-                          "inUse": [],
-                          "managementPolicy": "",
-                          "modified": modified,
-                          "name": "VLAN",
-                          "notes": [],
-                          "subscriber": "",
-                          "subscriberOnly": False,
-                          "tags": [],
-                          "variables": [],
-                          "venue": ""
                         }
+                    },
+                    "description": "",
+                    "name": "Metrics",
+                    "weight": 1
+                },
+                {
+                    "configuration": {
+                        "services": {
+                            "lldp": {
+                                "describe": "uCentral",
+                                "location": "universe"
+                            },
+                            "ssh": {
+                                "port": 22
+                            }
+                        }
+                    },
+                    "description": "",
+                    "name": "Services",
+                    "weight": 1
+                }
+            ],
+            "created": modified,
+            "description": "After Editing",
+            "deviceRules": {
+                "firmwareUpgrade": "inherit",
+                "rcOnly": "inherit",
+                "rrm": "inherit"
+            },
+            "deviceTypes": [
+                "cig_wf188n",
+                "edgecore_ssw2ac2600",
+                "indio_um-305ax",
+                "hfcl_ion4xe",
+                "wallys_dr40x9",
+                "udaya_a5-id2",
+                "x64_vm"
+            ],
+            "entity": "0000-0000-0000",
+            "extendedInfo": {
+                "entity": {
+                    "description": "",
+                    "id": "0000-0000-0000",
+                    "name": "World123"
+                }
+            },
+            "id": configuration_id,
+            "inUse": [],
+            "managementPolicy": "",
+            "modified": modified,
+            "name": "VLAN",
+            "notes": [],
+            "subscriber": "",
+            "subscriberOnly": False,
+            "tags": [],
+            "variables": [],
+            "venue": ""
+        }
         resp = get_target_object.prov_library_object.edit_configuration(editing_payload, configuration_id)
         if resp.status_code != 200:
             assert False

@@ -27,6 +27,7 @@ with open(file_path, 'r') as file:
     json_string = file.read()
     config_data_2 = json.loads(json_string)
 
+
 pytestmark = [pytest.mark.master_config]
 
 
@@ -93,6 +94,7 @@ class TestMasterConfig(object):
                     pytest.fail("Some or ALL Configured SSID's are not present in iwinfo")
 
         assert True
+
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12753", name="WIFI-12753")
     @pytest.mark.wpa_personal
