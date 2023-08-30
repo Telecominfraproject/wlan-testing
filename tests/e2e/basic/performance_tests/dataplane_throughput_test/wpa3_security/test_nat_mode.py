@@ -63,7 +63,8 @@ class TestDataplaneThroughputNAT(object):
                                                    band=band,
                                                    instance_name="TIP_DPT_DPT_WPA3_PERSONAL_2G_NAT",
                                                    influx_tags=influx_tags, move_to_influx=False,
-                                                   dut_data=setup_configuration
+                                                   dut_data=setup_configuration,
+                                                   client_type=client_type
                                                    )
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3674", name="WIFI-3674")
@@ -89,7 +90,8 @@ class TestDataplaneThroughputNAT(object):
                                                    band=band,
                                                    instance_name="TIP_DPT_DPT_WPA3_PERSONAL_5G_NAT",
                                                    influx_tags=influx_tags, move_to_influx=False,
-                                                   dut_data=setup_configuration
+                                                   dut_data=setup_configuration,
+                                                   client_type=client_type
                                                    )
 
     @pytest.mark.wpa3_personal
@@ -115,5 +117,6 @@ class TestDataplaneThroughputNAT(object):
                                                    band=band,
                                                    instance_name="TIP_DPT_DPT_WPA3_PERSONAL_6G_NAT",
                                                    influx_tags=influx_tags, move_to_influx=False,
-                                                   dut_data=setup_configuration
+                                                   dut_data=setup_configuration,
+                                                   client_type=client_type
                                                    )

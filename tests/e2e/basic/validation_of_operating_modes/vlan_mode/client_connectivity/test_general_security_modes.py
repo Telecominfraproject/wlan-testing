@@ -50,7 +50,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10608", name="WIFI-10608")
     def test_vlan_open_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                               get_test_device_logs,
-                                              check_connectivity, setup_configuration):
+                                              check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with open authentication
            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and open and twog"
@@ -66,7 +66,8 @@ class TestVLANModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -77,7 +78,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10622", name="WIFI-10622")
     def test_vlan_open_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                               get_test_device_logs,
-                                              check_connectivity, setup_configuration):
+                                              check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 5G radio connects to AP in VLAN mode (VLAM-100) with open authentication
            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and open and fiveg"
@@ -93,7 +94,8 @@ class TestVLANModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -106,7 +108,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2125", name="WIFI-2125")
     def test_vlan_wpa_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                              get_test_device_logs,
-                                             check_connectivity, setup_configuration):
+                                             check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA personal authentication
             Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa and twog"
@@ -122,7 +124,8 @@ class TestVLANModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -133,7 +136,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2134", name="WIFI-2134")
     def test_vlan_wpa_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                              get_test_device_logs,
-                                             check_connectivity, setup_configuration):
+                                             check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA authentication
           Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa and fiveg"
@@ -149,7 +152,8 @@ class TestVLANModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -160,7 +164,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2124", name="WIFI-2124")
     def test_vlan_wpa2_personal_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
-                                                       check_connectivity, setup_configuration):
+                                                       check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 2G radio connects to AP in VLAN mode with WPA2-Personal authentication
            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa2_personal and twog"
@@ -176,7 +180,8 @@ class TestVLANModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -189,7 +194,7 @@ class TestVLANModeConnectivitySuiteA(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2140", name="WIFI-2140")
     def test_vlan_wpa2_personal_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
-                                                       check_connectivity, setup_configuration):
+                                                       check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA2-Personal authentication
            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa2_personal and fiveg"
@@ -205,7 +210,8 @@ class TestVLANModeConnectivitySuiteA(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -256,7 +262,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10627", name="WIFI-10627")
     def test_vlan_wpa3_personal_2g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
-                                                       check_connectivity, setup_configuration):
+                                                       check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal authentication
            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and twog"
@@ -272,7 +278,8 @@ class TestVLANModeConnectivitySuiteTwo(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -283,7 +290,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10629", name="WIFI-10629")
     def test_vlan_wpa3_personal_5g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
-                                                       check_connectivity, setup_configuration):
+                                                       check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal authentication
            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and fiveg"
@@ -299,7 +306,8 @@ class TestVLANModeConnectivitySuiteTwo(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -310,7 +318,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10764", name="WIFI-10764")
     def test_vlan_wpa3_personal_6g_client_connectivity(self, get_test_library, num_stations, get_dut_logs_per_test_case,
                                                        get_test_device_logs,
-                                                       check_connectivity, setup_configuration):
+                                                       check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 6G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal authentication
            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal and sixg"
@@ -326,7 +334,8 @@ class TestVLANModeConnectivitySuiteTwo(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -338,7 +347,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     def test_vlan_wpa3_personal_mixed_2g_client_connectivity(self, get_test_library,
                                                              num_stations, get_dut_logs_per_test_case,
                                                              get_test_device_logs,
-                                                             check_connectivity, setup_configuration):
+                                                             check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal-Mixed authentication
             Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal_mixed and twog"
@@ -354,7 +363,8 @@ class TestVLANModeConnectivitySuiteTwo(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -366,7 +376,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     def test_vlan_wpa3_personal_mixed_5g_client_connectivity(self, get_test_library,
                                                              num_stations, get_dut_logs_per_test_case,
                                                              get_test_device_logs,
-                                                             check_connectivity, setup_configuration):
+                                                             check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA3-Personal-Mixed authentication
            Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa3_personal_mixed and fiveg"
@@ -382,7 +392,8 @@ class TestVLANModeConnectivitySuiteTwo(object):
         passes, result = get_test_library.client_connectivity_test(ssid=ssid_name, security=security,
                                                                    dut_data=setup_configuration,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -394,7 +405,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     def test_vlan_wpa_wpa2_personal_mixed_2g_client_connectivity(self, get_test_library,
                                                                  num_stations, get_dut_logs_per_test_case,
                                                                  get_test_device_logs,
-                                                                 check_connectivity, setup_configuration):
+                                                                 check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 2G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA-WPA2-Personal-Mixed authentication
             Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa_wpa2_personal_mixed and twog"
@@ -412,7 +423,8 @@ class TestVLANModeConnectivitySuiteTwo(object):
                                                                    dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result
 
@@ -424,7 +436,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
     def test_vlan_wpa_wpa2_personal_mixed_5g_client_connectivity(self, get_test_library,
                                                                  num_stations, get_dut_logs_per_test_case,
                                                                  get_test_device_logs,
-                                                                 check_connectivity, setup_configuration):
+                                                                 check_connectivity, setup_configuration, client_type):
         """
             To verify that a client created on 5G radio connects to AP in VLAN mode (i.e VLAN-100) with WPA-WPA2-Personal-Mixed  authentication
             Unique Marker: pytest -m "client_connectivity_tests and vlan and general and wpa_wpa2_personal_mixed and fiveg"
@@ -442,6 +454,7 @@ class TestVLANModeConnectivitySuiteTwo(object):
                                                                    dut_data=setup_configuration,
                                                                    extra_securities=extra_secu,
                                                                    passkey=security_key, mode=mode, band=band,
-                                                                   num_sta=num_stations, vlan_id=vlan)
+                                                                   num_sta=num_stations, vlan_id=vlan,
+                                                                   client_type=client_type)
 
         assert passes == "PASS", result

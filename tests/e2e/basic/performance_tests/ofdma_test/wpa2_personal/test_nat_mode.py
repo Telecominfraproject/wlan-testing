@@ -61,7 +61,7 @@ class TestOfdmaNatMode(object):
             for j in range(len(radios_ax) - 1):
                 sta_list.append(sta + str(j))
                 lf_test.Client_Connect_Using_Radio(ssid=ssid_2g, passkey=passkey, security="wpa2", mode="NAT",
-                                                   vlan_id=100, radio=radios_ax[j], sta_mode=sta_mode,
+                                                   vlan_id=100, radio=radios_ax[j], client_type=sta_mode,
                                                    station_name=[sta + str(j)])
             print(sta_list)
             sniffer_channel = int(lf_tools.station_data_query(station_name=sta_list[0]))
@@ -108,7 +108,7 @@ class TestOfdmaNatMode(object):
             for j in range(len(radios_ax) - 1):
                 sta_list.append(sta + str(j))
                 lf_test.Client_Connect_Using_Radio(ssid=ssid_5g, passkey=passkey, security="wpa2", mode="NAT",
-                                                   vlan_id=100, radio=radios_ax[j], sta_mode=sta_mode,
+                                                   vlan_id=100, radio=radios_ax[j], client_type=sta_mode,
                                                    station_name=[sta + str(j)])
             print(sta_list)
             sniffer_channel = int(lf_tools.station_data_query(station_name=sta_list[0]))

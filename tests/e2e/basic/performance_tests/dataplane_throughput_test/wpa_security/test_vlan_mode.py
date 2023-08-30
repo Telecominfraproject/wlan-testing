@@ -61,7 +61,8 @@ class TestDataplaneThroughputVLAN(object):
                                                    band=band, vlan_id=vlan,
                                                    instance_name="TIP_DPT_DPT_WPA_2G_VLAN",
                                                    influx_tags=influx_tags, move_to_influx=False,
-                                                   dut_data=setup_configuration
+                                                   dut_data=setup_configuration,
+                                                   client_type=client_type
                                                    )
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3674", name="WIFI-3674")
@@ -88,5 +89,6 @@ class TestDataplaneThroughputVLAN(object):
                                                    band=band, vlan_id=vlan,
                                                    instance_name="TIP_DPT_DPT_WPA_5G_VLAN",
                                                    influx_tags=influx_tags, move_to_influx=False,
-                                                   dut_data=setup_configuration
+                                                   dut_data=setup_configuration,
+                                                   client_type=client_type
                                                    )
