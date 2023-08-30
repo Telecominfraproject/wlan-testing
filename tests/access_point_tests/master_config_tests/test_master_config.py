@@ -34,7 +34,7 @@ with open(file_path, 'r') as file:
     config_data_3 = json.loads(json_string)
 
 
-pytestmark = [pytest.mark.master_config]
+pytestmark = [pytest.mark.master_config_tests, pytest.mark.ow_regression_lf]
 
 
 @allure.feature("Master Configurations Test")
@@ -101,8 +101,6 @@ class TestMasterConfig(object):
 
         assert True
 
-
-
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12753", name="WIFI-12753")
     @pytest.mark.wpa_personal
     @pytest.mark.master_config2
@@ -113,8 +111,8 @@ class TestMasterConfig(object):
         """
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
-            logging.info(config_data_1)
-            payload = {"configuration": json.dumps(config_data_1), "serialNumber": serial_number, "UUID": 1}
+            logging.info(config_data_2)
+            payload = {"configuration": json.dumps(config_data_2), "serialNumber": serial_number, "UUID": 1}
             uri = get_target_object.firmware_library_object.sdk_client.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -169,8 +167,8 @@ class TestMasterConfig(object):
         """
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
-            logging.info(config_data_1)
-            payload = {"configuration": json.dumps(config_data_1), "serialNumber": serial_number, "UUID": 1}
+            logging.info(config_data_3)
+            payload = {"configuration": json.dumps(config_data_3), "serialNumber": serial_number, "UUID": 1}
             uri = get_target_object.firmware_library_object.sdk_client.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
