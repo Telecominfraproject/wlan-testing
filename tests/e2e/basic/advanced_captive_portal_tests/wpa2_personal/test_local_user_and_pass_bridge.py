@@ -56,6 +56,7 @@ class TestBridgeModeadvancedcaptiveportal(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.local_user_and_pass
+    @pytest.mark.ow_regression_lf
     @allure.title("Local user/pass mode with wpa2_personal encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10991", name="WIFI-10991")
     def test_bridge_wpa2_2g_local_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
