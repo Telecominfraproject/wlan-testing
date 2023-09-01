@@ -50,6 +50,7 @@ class TestBridgeModeadvancedcaptiveportal(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.click_to_continue
+    @pytest.mark.ow_regression_lf
     @allure.title("Click-to-continue mode with open encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10977", name="WIFI-10977")
     def test_bridge_open_2g_click_to_continue(self, get_test_library, get_dut_logs_per_test_case,
