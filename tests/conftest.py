@@ -99,8 +99,25 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         "--client-type",
-        default="ac",
-        help="Select the client type for test ac | ax"
+        default=0,
+        help='''--client-type use values in second column
+        AUTO        |  0        #  802.11g
+        802.11a     |  1        #  802.11a
+        b           |  2        #  802.11b
+        g           |  3        #  802.11g
+        abg         |  4        #  802.11abg
+        abgn        |  5        #  802.11abgn
+        bgn         |  6        #  802.11bgn
+        bg          |  7        #  802.11bg
+        abgnAC      |  8        #  802.11abgn-AC
+        anAC        |  9        #  802.11an-AC
+        an          | 10        #  802.11an
+        bgnAC       | 11        #  802.11bgn-AC
+        abgnAX      | 12        #  802.11abgn-AX
+                                #     a/b/g/n/AC/AX (dual-band AX) support
+        bgnAX       | 13        #  802.11bgn-AX
+        anAX        | 14        #  802.11an-AX
+        aAX         | 15        #  802.11a-AX (6E disables /n and /ac)'''
     )
 
     parser.addoption(
