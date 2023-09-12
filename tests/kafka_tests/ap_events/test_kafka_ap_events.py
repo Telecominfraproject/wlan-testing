@@ -627,7 +627,7 @@ class TestKafkaApEvents(object):
         for i in range(len(config_data["interfaces"][0]["ssids"])):
             if "radius" not in config_data["interfaces"][0]["ssids"][i]:
                 config_data["interfaces"][0]["ssids"][i].update({"radius": radius})
-            if "proto" in config_data[0]["ssids"][i]["encryption"]:
+            if "proto" in config_data["interfaces"][0]["ssids"][i]["encryption"]:
                 config_data["interfaces"][0]["ssids"][i]["encryption"]["proto"] = "wpa2"
             if "key" in config_data["interfaces"][0]["ssids"][i]["encryption"]:
                 config_data["interfaces"][0]["ssids"][i]["encryption"].pop("key")
