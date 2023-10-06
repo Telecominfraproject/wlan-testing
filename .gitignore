@@ -154,3 +154,4 @@ pytest/nightly*log
 test_everything.xml
 .vscode
 .envrc
+.DS_Store
