@@ -34,7 +34,7 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "v2.11.0-RC2",
+      "chart_version": "v2.11.0",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
@@ -78,7 +78,8 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
-        ref: ${{ matrix.chart_version }}
+        #ref: ${{ matrix.chart_version }}
+        ref: region_and_k8s_change
 
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
@@ -93,7 +94,8 @@ jobs:
     # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
     - name: install kubectl
       run: |
-        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        #curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Deploy OpenWIFI Cloud SDK
@@ -124,6 +126,7 @@ jobs:
         export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
         export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
         export EXTRA_VALUES='owgw.configProperties.logging\.level=information'
+        echo "key=${AWS_SECRET_ACCESS_KEY}" | base64
         ./deploy.sh
 
     - name: Show resource state on deployment failure
