@@ -4,7 +4,7 @@ env:
   # AWS credentials
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
-  AWS_DEFAULT_REGION: us-east-2
+  AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -152,7 +152,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -412,7 +412,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -672,7 +672,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -932,7 +932,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -1192,7 +1192,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -1452,7 +1452,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -1712,7 +1712,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -1972,7 +1972,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -2232,7 +2232,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -2492,7 +2492,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -2752,7 +2752,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -3006,7 +3006,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool

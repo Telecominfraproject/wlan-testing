@@ -1,4 +1,4 @@
-name: Update QA OpenWIFI Cloud SDK 2.x clusters
+name: Update DEMO OpenWIFI Cloud SDK 2.x clusters
 
 defaults:
   run:
@@ -16,25 +16,25 @@ env:
   DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
   DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
 
-  # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
-  # Required object fiels per environment:
-  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'openwifi-test')
-  # - deploy_method - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0
-  # - chart_version - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)
-  # - owgw_version - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owsec_version - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owfms_version - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owprov_version - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owanalytics_version - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owsub_version - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owrrm_version - OpenWIFI radio resource management service version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owgwui_version - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
-  # - owprovui_version - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
+#  # Required object fiels per environment:
+#  # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'openwifi-test')
+#  # - deploy_method - deployment method for the chart deployment (supported methods - 'git' (will use helm-git from assembly chart) and 'bundle' (will use chart stored in the Artifactory0
+#  # - chart_version - version of chart to be deployed from assembly chart (for 'git' method git ref may be passed, for 'bundle' method version of chart may be passed)
+#  # - owgw_version - OpenWIFI Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owsec_version - OpenWIFI Security version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owfms_version - OpenWIFI Firmware version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owprov_version - OpenWIFI Provisioning version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owanalytics_version - OpenWIFI Analytics version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owsub_version - OpenWIFI Subscription (Userportal) version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owrrm_version - OpenWIFI radio resource management service version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owgwui_version - OpenWIFI Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
+#  # - owprovui_version - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   testbeds: '[
     {
-      "namespace": "qa01",
+      "namespace": "demo",
       "deploy_method": "git",
-      "chart_version": "v2.11.0",
+      "chart_version": "main",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
@@ -48,12 +48,29 @@ env:
   ]'
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force_latest:
+        default: 'false'
+        description: 'Force deployment of the latest versions of all microservices ignoring matrix versions'
+        required: true
+      id:
+        description: 'run identifier'
+        required: false
 
 jobs:
+  id:
+    name: Workflow ID Provider
+    runs-on: ubuntu-latest
+    steps:
+      - name: ${{ github.event.inputs.id }}
+        run: echo run identifier ${{ inputs.id }}
+
   generate-matrix:
     name: Generate matrix for build
     runs-on: ubuntu-latest
+    needs:
+      - id
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -67,7 +84,9 @@ jobs:
   deploy:
     name: Update OpenWIFI Cloud SDK instances
     runs-on: ubuntu-latest
-    needs: [ generate-matrix ]
+    needs:
+      - id
+      - generate-matrix
     strategy:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
       fail-fast: false
@@ -101,17 +120,6 @@ jobs:
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE=${{ matrix.namespace }}
-        export DEPLOY_METHOD=${{ matrix.deploy_method }}
-        export CHART_VERSION=${{ matrix.chart_version }}
-        export OWGW_VERSION=${{ matrix.owgw_version }}
-        export OWGWUI_VERSION=${{ matrix.owgwui_version }}
-        export OWSEC_VERSION=${{ matrix.owsec_version }}
-        export OWFMS_VERSION=${{ matrix.owfms_version }}
-        export OWPROV_VERSION=${{ matrix.owprov_version }}
-        export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
-        export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
-        export OWSUB_VERSION=${{ matrix.owsub_version }}
-        export OWRRM_VERSION=${{ matrix.owrrm_version }}
         export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
@@ -124,9 +132,33 @@ jobs:
         export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
         export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
         export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
-        export EXTRA_VALUES='owgw.configProperties.logging\.level=information'
-        echo "key=${AWS_SECRET_ACCESS_KEY}" | base64
-        ./deploy.sh
+        if [[ "${{ github.event.inputs.force_latest }}" == "false" ]]; then
+          export DEPLOY_METHOD=${{ matrix.deploy_method }}
+          export CHART_VERSION=${{ matrix.chart_version }}
+          export OWGW_VERSION=${{ matrix.owgw_version }}
+          export OWGWUI_VERSION=${{ matrix.owgwui_version }}
+          export OWSEC_VERSION=${{ matrix.owsec_version }}
+          export OWFMS_VERSION=${{ matrix.owfms_version }}
+          export OWPROV_VERSION=${{ matrix.owprov_version }}
+          export OWPROVUI_VERSION=${{ matrix.owprovui_version }}
+          export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
+          export OWSUB_VERSION=${{ matrix.owsub_version }}
+          export OWRRM_VERSION=${{ matrix.owrrm_version }}
+          ./deploy.sh
+        else
+          export DEPLOY_METHOD=git
+          export CHART_VERSION=main
+          export OWGW_VERSION=master
+          export OWGWUI_VERSION=main
+          export OWSEC_VERSION=main
+          export OWFMS_VERSION=main
+          export OWPROV_VERSION=main
+          export OWPROVUI_VERSION=main
+          export OWANALYTICS_VERSION=main
+          export OWSUB_VERSION=main
+          export OWRRM_VERSION=main
+          ./deploy.sh
+        fi
 
     - name: Show resource state on deployment failure
       if: failure()

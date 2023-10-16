@@ -70,7 +70,7 @@ jobs:
     name: Deploy OpenWIFI Cloud SDK
     env:
       AWS_DEFAULT_OUTPUT: json
-      AWS_DEFAULT_REGION: us-east-2
+      AWS_DEFAULT_REGION: ap-south-1
     runs-on: ubuntu-latest
     needs: id
     outputs:
@@ -98,7 +98,7 @@ jobs:
     # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
     - name: install kubectl
       run: |
-        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Set namespace output
@@ -163,7 +163,7 @@ jobs:
     needs: deploy-controller
     runs-on: ubuntu-latest
     env:
-      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_REGION: ap-south-1
     outputs:
       serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
       instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
@@ -215,7 +215,7 @@ jobs:
     needs: [deploy-controller, test]
     runs-on: ubuntu-latest
     env:
-      AWS_DEFAULT_REGION: us-east-2
+      AWS_DEFAULT_REGION: ap-south-1
     if: always()
     steps:
       - name: Fetch kubeconfig
@@ -225,7 +225,7 @@ jobs:
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: Delete Cloud SDK
@@ -238,7 +238,7 @@ jobs:
     needs: [deploy-virtual-ap-instance, test]
     runs-on: ubuntu-latest
     env:
-      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_REGION: ap-south-1
     if: always()
     steps:
       - name: Terminate virtual AP EC2 instance

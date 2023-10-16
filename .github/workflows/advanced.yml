@@ -3,7 +3,7 @@ name: advanced testing
 env:
   AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
-  AWS_DEFAULT_REGION: us-east-2
+  AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -60,11 +60,11 @@ jobs:
     runs-on: [ self-hosted, small ]
     needs: [ build ]
     timeout-minutes: 1440
-     
+
     strategy:
       fail-fast: false
       matrix:
-        testbed: 
+        testbed:
         - advanced-01
         - advanced-02
 
@@ -79,7 +79,7 @@ jobs:
     - name: install kubectl
       run: |
         # TODO WIFI-7839 revert to using stable when issue is resolved on AWS CLI side
-        curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: get EKS access credentials
