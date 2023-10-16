@@ -1,6 +1,7 @@
 """
 Rate LImiting with radius Bridge Mode Scenario
 """
+import time
 
 import allure
 import pytest
@@ -8,7 +9,7 @@ import importlib
 
 lf_library = importlib.import_module("configuration")
 RATE_LIMITING_RADIUS_SERVER_DATA = {
-    "ip": "18.189.85.200",
+    "ip": "10.28.3.21",
     "port": 1812,
     "secret": "testing123",
     "user": "bandwidth10m",
@@ -16,7 +17,7 @@ RATE_LIMITING_RADIUS_SERVER_DATA = {
     "pk_password": "whatever"
 }
 RATE_LIMITING_RADIUS_ACCOUNTING_DATA = {
-    "ip": "18.189.85.200",
+    "ip": "10.28.3.21",
     "port": 1813,
     "secret": "testing123",
     "user": "bandwidth10m",
@@ -232,7 +233,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                                     get_target_object,
                                                                     num_stations, setup_configuration, rate_radius_info,
                                                                     rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -270,7 +277,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                    get_target_object,
                                                    num_stations, setup_configuration, rate_radius_info,
                                                    rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
+        profile_data = {"ssid_name": "ssid_wpa2_5g_br",
+                        "appliedRadios": ["5G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -308,7 +321,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                  get_target_object,
                                                  num_stations, setup_configuration, rate_radius_info,
                                                  rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
+        profile_data = {"ssid_name": "ssid_wpa2_5g_br",
+                        "appliedRadios": ["5G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -346,7 +365,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                              get_target_object,
                                                              num_stations, setup_configuration, rate_radius_info,
                                                              rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
+        profile_data = {"ssid_name": "ssid_wpa2_5g_br",
+                        "appliedRadios": ["5G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -384,7 +409,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                              get_target_object,
                                                              num_stations, setup_configuration, rate_radius_info,
                                                              rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
+        profile_data = {"ssid_name": "ssid_wpa2_5g_br",
+                        "appliedRadios": ["5G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -425,7 +456,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                                         rate_radius_info,
                                                                         rate_radius_accounting_info,
                                                                         check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
+        profile_data = {"ssid_name": "ssid_wpa2_5g_br",
+                        "appliedRadios": ["5G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -464,7 +501,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                        get_target_object,
                                        num_stations, setup_configuration, rate_radius_info,
                                        rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -503,7 +546,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                           get_target_object,
                                           num_stations, setup_configuration, rate_radius_info,
                                           rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
+        profile_data = {"ssid_name": "ssid_wpa2_5g_br",
+                        "appliedRadios": ["5G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -542,7 +591,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                   get_target_object,
                                                   num_stations, setup_configuration, rate_radius_info,
                                                   rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -581,7 +636,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                      get_target_object,
                                                      num_stations, setup_configuration, rate_radius_info,
                                                      rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][1]
+        profile_data = {"ssid_name": "ssid_wpa2_5g_br",
+                        "appliedRadios": ["5G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -620,7 +681,13 @@ class TestRateLimitingWithRadiusBridge(object):
                                                   get_target_object,
                                                   num_stations, setup_configuration, rate_radius_info,
                                                   rate_radius_accounting_info, check_connectivity):
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -663,7 +730,13 @@ class TestRateLimitingWithRadiusBridge(object):
             Test: check max-upload ratelimit of group - user1
             pytest -m "wpa2_enterprise and twog and max_upload_user1"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -720,7 +793,13 @@ class TestRateLimitingWithRadiusBridge(object):
             Test: check max-download ratelimit of group - user1
             pytest -m "wpa2_enterprise and twog and max_download_user1"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -777,7 +856,13 @@ class TestRateLimitingWithRadiusBridge(object):
             Test: check max-upload ratelimit of group - user2
             pytest -m "wpa2_enterprise and twog and max_upload_user2"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -834,7 +919,13 @@ class TestRateLimitingWithRadiusBridge(object):
                     Test: check max-download ratelimit of group - user2
                     pytest -m "wpa2_enterprise and twog and max_download_user2"
                 """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -891,7 +982,13 @@ class TestRateLimitingWithRadiusBridge(object):
             Test: check max-download ratelimit of group - user3
             pytest -m "wpa2_enterprise and twog and max_upload_user3"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -947,7 +1044,13 @@ class TestRateLimitingWithRadiusBridge(object):
             Test: check max-download ratelimit of group - user3
             pytest -m "wpa2_enterprise and twog and max_download_user3"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -1004,7 +1107,13 @@ class TestRateLimitingWithRadiusBridge(object):
             Test: check max-upload ratelimit of group - user4
             pytest -m "wpa2_enterprise and twog and max_upload_user4"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
@@ -1061,7 +1170,13 @@ class TestRateLimitingWithRadiusBridge(object):
             Test: check max-download ratelimit of group - user4
             pytest -m "wpa2_enterprise and twog and max_download_user4"
         """
-        profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"][0]
+        profile_data = {"ssid_name": "ssid_wpa2_2g_br",
+                        "appliedRadios": ["2G"],
+                        "security_key": "something",
+                        "rate-limit": {
+                            "ingress-rate": 10,
+                            "egress-rate": 10
+                        }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         security = "wpa2"
