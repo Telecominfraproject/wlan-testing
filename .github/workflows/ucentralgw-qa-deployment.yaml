@@ -78,8 +78,7 @@ jobs:
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
-        #ref: ${{ matrix.chart_version }}
-        ref: region_and_k8s_change
+        ref: ${{ matrix.chart_version }}
 
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
