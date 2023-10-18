@@ -106,8 +106,8 @@ runs:
                   mountPath: "/wlan-testing/tests/lab_info.json"
                   subPath: configuration
                   readOnly: true
-              nodeSelector:
-                env: tests
+              #nodeSelector:
+              #  env: tests
               tolerations:
               - key: "tests"
                 operator: "Exists"
