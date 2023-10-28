@@ -1417,7 +1417,7 @@ class FMSUtils:
                     release_images_all.append(firmware)
         latest_release_image_number = int(release_images_all[0]['image'].split("-")[2].split(".")[1])
         latest_4_releases_list_num = [latest_release_image_number, latest_release_image_number - 1,
-                                      latest_release_image_number - 2]
+                                      latest_release_image_number - 2, latest_release_image_number - 3]
         count = 0
         # Find out List of recent 4 release Image
         # Logic for latest 4 release Images
