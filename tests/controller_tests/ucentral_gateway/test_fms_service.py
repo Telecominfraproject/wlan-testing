@@ -205,20 +205,20 @@ class TestFirmwareUpgradeDowngrade(object):
                 logging.info("Waiting for 300 Sec for Firmware Upgrade")
                 time.sleep(300)
 
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F1: ",
-                          body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF1 revision: " + str(f1_version))
+                # check the current AP Revision again
+                ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                # print and report the Firmware versions after upgrade
+                allure.attach(name="After Firmware Upgrade Request to F1: ",
+                              body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
+                logging.info("current revision: " + str(current_version) +
+                             "\nF1 revision: " + str(f1_version))
 
-            if current_version == f1_version:
-                logging.info("firmware upgrade successfully to F1: " + f1_version)
-            else:
-                logging.info("firmware upgrade failed to F1: " + f1_version)
-                pytest.fail("firmware upgrade failed to F1: " + f1_version)
+                if current_version == f1_version:
+                    logging.info("firmware upgrade successfully to F1: " + f1_version)
+                else:
+                    logging.info("firmware upgrade failed to F1: " + f1_version)
+                    pytest.fail("firmware upgrade failed to F1: " + f1_version)
 
             # Downgrade to one lower Release image (F2)
             f2_version = latest_4_release_images[1]['revision'].split("/")[1].replace(" ", "")
@@ -298,20 +298,20 @@ class TestFirmwareUpgradeDowngrade(object):
                 logging.info("Waiting for 300 Sec for Firmware Upgrade")
                 time.sleep(300)
 
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F2: ",
-                          body="Current revision: " + current_version + "\nF2 revision: " + f2_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF2 revision: " + str(f2_version))
+                # check the current AP Revision again
+                ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                # print and report the Firmware versions after upgrade
+                allure.attach(name="After Firmware Upgrade Request to F2: ",
+                              body="Current revision: " + current_version + "\nF2 revision: " + f2_version)
+                logging.info("current revision: " + str(current_version) +
+                             "\nF2 revision: " + str(f2_version))
 
-            if current_version == f2_version:
-                logging.info("firmware upgrade successfully to F2: " + f2_version)
-            else:
-                logging.info("firmware upgrade failed to F2: " + f2_version)
-                pytest.fail("firmware upgrade failed to F2: " + f2_version)
+                if current_version == f2_version:
+                    logging.info("firmware upgrade successfully to F2: " + f2_version)
+                else:
+                    logging.info("firmware upgrade failed to F2: " + f2_version)
+                    pytest.fail("firmware upgrade failed to F2: " + f2_version)
 
             # Upgrade to one upper Release image (F1)
             f1_version = latest_4_release_images[0]['revision'].split("/")[1].replace(" ", "")
@@ -391,20 +391,20 @@ class TestFirmwareUpgradeDowngrade(object):
                 logging.info("Waiting for 300 Sec for Firmware Upgrade")
                 time.sleep(300)
 
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F1: ",
-                          body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF1 revision: " + str(f1_version))
+                # check the current AP Revision again
+                ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                # print and report the Firmware versions after upgrade
+                allure.attach(name="After Firmware Upgrade Request to F1: ",
+                              body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
+                logging.info("current revision: " + str(current_version) +
+                             "\nF1 revision: " + str(f1_version))
 
-            if current_version == f1_version:
-                logging.info("firmware upgrade successfully to F1: " + f1_version)
-            else:
-                logging.info("firmware upgrade failed to F1: " + f1_version)
-                pytest.fail("firmware upgrade failed to F1: " + f1_version)
+                if current_version == f1_version:
+                    logging.info("firmware upgrade successfully to F1: " + f1_version)
+                else:
+                    logging.info("firmware upgrade failed to F1: " + f1_version)
+                    pytest.fail("firmware upgrade failed to F1: " + f1_version)
 
             # Downgrade to two lower Release image (F3)
             f3_version = latest_4_release_images[2]['revision'].split("/")[1].replace(" ", "")
@@ -484,20 +484,20 @@ class TestFirmwareUpgradeDowngrade(object):
                 logging.info("Waiting for 300 Sec for Firmware Upgrade")
                 time.sleep(300)
 
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F3: ",
-                          body="Current revision: " + current_version + "\nF3 revision: " + f3_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF3 revision: " + str(f3_version))
+                # check the current AP Revision again
+                ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                # print and report the Firmware versions after upgrade
+                allure.attach(name="After Firmware Upgrade Request to F3: ",
+                              body="Current revision: " + current_version + "\nF3 revision: " + f3_version)
+                logging.info("current revision: " + str(current_version) +
+                             "\nF3 revision: " + str(f3_version))
 
-            if current_version == f3_version:
-                logging.info("firmware upgrade successfully to F3: " + f3_version)
-            else:
-                logging.info("firmware upgrade failed to F3: " + f3_version)
-                pytest.fail("firmware upgrade failed to F3: " + f3_version)
+                if current_version == f3_version:
+                    logging.info("firmware upgrade successfully to F3: " + f3_version)
+                else:
+                    logging.info("firmware upgrade failed to F3: " + f3_version)
+                    pytest.fail("firmware upgrade failed to F3: " + f3_version)
 
             # Upgrade to two upper Release image (F1)
             f1_version = latest_4_release_images[0]['revision'].split("/")[1].replace(" ", "")
@@ -577,20 +577,20 @@ class TestFirmwareUpgradeDowngrade(object):
                 logging.info("Waiting for 300 Sec for Firmware Upgrade")
                 time.sleep(300)
 
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F1: ",
-                          body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF1 revision: " + str(f1_version))
+                # check the current AP Revision again
+                ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                # print and report the Firmware versions after upgrade
+                allure.attach(name="After Firmware Upgrade Request to F1: ",
+                              body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
+                logging.info("current revision: " + str(current_version) +
+                             "\nF1 revision: " + str(f1_version))
 
-            if current_version == f1_version:
-                logging.info("firmware upgrade successfully to F1: " + f1_version)
-            else:
-                logging.info("firmware upgrade failed to F1: " + f1_version)
-                pytest.fail("firmware upgrade failed to F1: " + f1_version)
+                if current_version == f1_version:
+                    logging.info("firmware upgrade successfully to F1: " + f1_version)
+                else:
+                    logging.info("firmware upgrade failed to F1: " + f1_version)
+                    pytest.fail("firmware upgrade failed to F1: " + f1_version)
 
             # Downgrade to three lower Release image (F4)
             f4_version = latest_4_release_images[3]['revision'].split("/")[1].replace(" ", "")
@@ -670,20 +670,20 @@ class TestFirmwareUpgradeDowngrade(object):
                 logging.info("Waiting for 300 Sec for Firmware Upgrade")
                 time.sleep(300)
 
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F4: ",
-                          body="Current revision: " + current_version + "\nF4 revision: " + f4_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF4 revision: " + str(f4_version))
+                # check the current AP Revision again
+                ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                # print and report the Firmware versions after upgrade
+                allure.attach(name="After Firmware Upgrade Request to F4: ",
+                              body="Current revision: " + current_version + "\nF4 revision: " + f4_version)
+                logging.info("current revision: " + str(current_version) +
+                             "\nF4 revision: " + str(f4_version))
 
-            if current_version == f4_version:
-                logging.info("firmware upgrade successfully to F4: " + f4_version)
-            else:
-                logging.info("firmware upgrade failed to F4: " + f4_version)
-                pytest.fail("firmware upgrade failed to F4: " + f4_version)
+                if current_version == f4_version:
+                    logging.info("firmware upgrade successfully to F4: " + f4_version)
+                else:
+                    logging.info("firmware upgrade failed to F4: " + f4_version)
+                    pytest.fail("firmware upgrade failed to F4: " + f4_version)
 
             # Upgrade to three upper Release image (F1)
             f1_version = latest_4_release_images[0]['revision'].split("/")[1].replace(" ", "")
