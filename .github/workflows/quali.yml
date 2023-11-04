@@ -116,7 +116,6 @@ jobs:
   test-edgecore-eap104:
     needs: [ "vars", "build" ]
     runs-on: ubuntu-latest
-    timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
     env:
       AP_MODEL: edgecore_eap104
@@ -214,7 +213,6 @@ jobs:
   test-edgecore-oap101-6e:
     needs: ["vars", "build"]
     runs-on: ubuntu-latest
-    timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_oap101_6e')"
     env:
       AP_MODEL: edgecore_oap101_6e
