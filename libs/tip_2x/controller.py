@@ -1397,9 +1397,11 @@ class FMSUtils:
 
         return "error"
 
-    def get_latest_four_release_images(self, firmware_list=[]):
+    def get_least_three_release_images_from_current_image(self, firmware_list=[], current_image=""):
         """This method will return latest three release images"""
         image_date = []
+        all_images_from_current_image = []
+        current_image_index = None
         for i in firmware_list:
             image_date.append(i["imageDate"])
         image_date.sort(reverse=True)
@@ -1409,26 +1411,31 @@ class FMSUtils:
                 if i == j["imageDate"]:
                     ordered_list_firmware.append(j)
                     break
+        for i in range(len(ordered_list_firmware)):
+            if current_image in ordered_list_firmware[i]:
+                current_image_index = i
+                break
+        all_images_from_current_image = ordered_list_firmware[current_image_index:]
         release_images_all = []
-        latest_4_release_images = []
-        for firmware in ordered_list_firmware:
+        latest_3_release_images = []
+        for firmware in all_images_from_current_image:
             if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
                 if len(firmware['image'].split("-")) == 5:
                     release_images_all.append(firmware)
         latest_release_image_number = int(release_images_all[0]['image'].split("-")[2].split(".")[1])
-        latest_4_releases_list_num = [latest_release_image_number, latest_release_image_number - 1,
-                                      latest_release_image_number - 2, latest_release_image_number - 3]
+        latest_3_releases_list_num = [latest_release_image_number, latest_release_image_number - 1,
+                                      latest_release_image_number - 2]
         count = 0
         # Find out List of recent 4 release Image
         # Logic for latest 4 release Images
         for i in release_images_all:
-            if "v2." + str(latest_4_releases_list_num[count]) + "." in str(i['image'].split("-")[2]):
-                latest_4_release_images.append(i)
+            if "v2." + str(latest_3_releases_list_num[count]) + "." in str(i['image'].split("-")[2]):
+                latest_3_release_images.append(i)
                 count = count + 1
-            if len(latest_4_release_images) == 4:
+            if len(latest_3_release_images) == 3:
                 break
-        logging.info("latest 4 release images: " + str(latest_4_release_images))
-        return latest_4_release_images
+        logging.info("latest 4 release images: " + str(latest_3_release_images))
+        return latest_3_release_images
 
 
 class ProvUtils:
