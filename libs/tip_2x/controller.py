@@ -1397,6 +1397,49 @@ class FMSUtils:
 
         return "error"
 
+    def get_least_three_release_images_from_current_image(self, firmware_list=[], current_image=""):
+        """This method will return latest three release images"""
+        image_date = []
+        all_images_from_current_image = []
+        current_image_index = None
+        for i in firmware_list:
+            image_date.append(i["imageDate"])
+        image_date.sort(reverse=True)
+        ordered_list_firmware = []
+        for i in image_date:
+            for j in firmware_list:
+                if i == j["imageDate"]:
+                    ordered_list_firmware.append(j)
+                    break
+        for i in range(len(ordered_list_firmware)):
+            if current_image in ordered_list_firmware[i]["revision"]:
+                current_image_index = i
+                break
+        logging.info("current_image_index: " + str(current_image_index))
+        all_images_from_current_image = ordered_list_firmware[current_image_index:]
+        logging.info("all_images_from_current_image" + str(all_images_from_current_image))
+        release_images_all = []
+        least_3_release_images = []
+        for firmware in all_images_from_current_image:
+            if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+                if "rc" not in firmware['image']:
+                    release_images_all.append(firmware)
+        logging.info("release_images_all" + str(release_images_all))
+        latest_release_image_number = int(release_images_all[0]['image'].split(".")[1])
+        latest_3_releases_list_num = [latest_release_image_number, latest_release_image_number - 1,
+                                      latest_release_image_number - 2]
+        count = 0
+        # Find out List of least 3 release Image
+        # Logic for least 3 release Images
+        for i in release_images_all:
+            if "v2." + str(latest_3_releases_list_num[count]) + "." in str(i['image']):
+                least_3_release_images.append(i)
+                count = count + 1
+            if len(least_3_release_images) == 3:
+                break
+        logging.info("least three release images from current image: " + str(least_3_release_images))
+        return least_3_release_images
+
 
 class ProvUtils:
 
