@@ -181,10 +181,15 @@ class TestFirmwareUpgradeDowngrade(object):
                 offset='3000')
             # check the current AP Revision (F1)
             ap_version_f1 = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            print("JIYUU", ap_version_f1)
+
             current_version = str(ap_version_f1).split("/")[1].replace(" ", "").splitlines()[0]
             f1_version = current_version
-            latest_3_release_images = get_target_object.firmware_library_object.get_latest_three_release_images(
+            # Finding uri for current image
+            for i in firmware_list:
+                if f1_version in i["revision"]:
+                    ap_version_f1 = i
+                    break
+            latest_3_release_images = get_target_object.firmware_library_object.get_least_three_release_images_from_current_image(
                 firmware_list=firmware_list, current_image=current_version)
             if len(latest_3_release_images) < 3:
                 pytest.fail("Least 3 release images from current image are not available on GW")
