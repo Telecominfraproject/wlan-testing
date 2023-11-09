@@ -287,7 +287,19 @@ class TestFirmwareUpgrade(object):
                 commit_id='',
                 limit='10000',
                 offset='3000')
-            firmware_list.reverse()
+            # firmware_list.reverse()
+            # Firmware list from newer to older image
+            image_date = []
+            for i in firmware_list:
+                image_date.append(i["imageDate"])
+            image_date.sort(reverse=True)
+            ordered_list_firmware = []
+            for i in image_date:
+                for j in firmware_list:
+                    if i == j["imageDate"]:
+                        ordered_list_firmware.append(j)
+                        break
+            firmware_list = ordered_list_firmware
             release_list_data = []
             for i in firmware_list:
                 release_list_data.append(str(i['release']))
@@ -381,11 +393,6 @@ class TestFirmwareUpgrade(object):
     def test_firmware_upgrade_request(self, get_target_object, get_dut_logs_per_test_case, check_connectivity):
         for update in get_target_object.setup_firmware():
             allure.attach(name='serial: ' + update[0], body="")
-        assert True
-
-    @pytest.mark.test_firmware_ap
-    def test_firmware_upgrade_status_AP(self):
-        allure.attach(name="firmware Upgrade Status:", body="")
         assert True
 
     @pytest.mark.test_firmware_gw
