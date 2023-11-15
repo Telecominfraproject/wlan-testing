@@ -1,4 +1,4 @@
-name: Update DEV OpenWIFI Cloud SDK 2.x clusters
+name: Update DEV01 OpenWIFI Cloud SDK
 
 defaults:
   run:
