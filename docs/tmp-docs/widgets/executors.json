@@ -1,0 +1,9 @@
+[ {
+  "name" : "Github runner",
+  "type" : "github",
+  "buildOrder" : 62,
+  "buildName" : "Telecominfraproject/wlan-testing Update tests list from master branch #62",
+  "buildUrl" : "https://github.com/Telecominfraproject/wlan-testing/actions/runs/6971501311",
+  "reportName" : "Telecominfraproject/wlan-testing Update tests list from master branch #62",
+  "reportUrl" : "../62/index.html"
+} ]

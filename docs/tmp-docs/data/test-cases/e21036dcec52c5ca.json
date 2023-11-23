@@ -1,0 +1,297 @@
+{
+  "uid" : "e21036dcec52c5ca",
+  "name" : "test_client_wpa2_personal_5g_down_nss2_tcp[setup_configuration0]",
+  "fullName" : "e2e.basic.performance_tests.throughput_benchmark.tcp_udp_upstream_downstream_bidirection_throughput_test.wpa2_personal.test_bridge_mode#test_client_wpa2_personal_5g_down_nss2_tcp",
+  "historyId" : "a21970119a7db1ab76717811d14f3c13",
+  "time" : {
+    "start" : 1700752565955,
+    "stop" : 1700752565955,
+    "duration" : 0
+  },
+  "status" : "skipped",
+  "statusMessage" : "Skipped: Skipping all",
+  "statusTrace" : "('/wlan-testing/tests/conftest.py', 283, 'Skipped: Skipping all')",
+  "flaky" : false,
+  "newFailed" : false,
+  "beforeStages" : [ {
+    "name" : "get_testbed_details",
+    "time" : {
+      "start" : 1700752555358,
+      "stop" : 1700752555358,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "8090bc9580356b01",
+      "name" : "Testbed Details",
+      "source" : "8090bc9580356b01.json",
+      "type" : "application/json",
+      "size" : 2478
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 1,
+    "shouldDisplayMessage" : false,
+    "hasContent" : true
+  }, {
+    "name" : "selected_testbed",
+    "time" : {
+      "start" : 1700752555358,
+      "stop" : 1700752555358,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_target_object",
+    "time" : {
+      "start" : 1700752555358,
+      "stop" : 1700752555358,
+      "duration" : 0
+    },
+    "status" : "skipped",
+    "statusMessage" : "Skipped: Skipping all\n",
+    "statusTrace" : "  File \"/usr/local/lib/python3.8/site-packages/pluggy/callers.py\", line 187, in _multicall\n    res = hook_impl.function(*args)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 1126, in pytest_fixture_setup\n    result = call_fixture_func(fixturefunc, request, kwargs)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 925, in call_fixture_func\n    fixture_result = next(generator)\n  File \"/wlan-testing/tests/conftest.py\", line 283, in get_target_object\n    pytest.skip(\"Skipping all\")\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/outcomes.py\", line 139, in skip\n    raise Skipped(msg=msg, allow_module_level=allow_module_level)\n",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  }, {
+    "name" : "get_markers",
+    "time" : {
+      "start" : 1700752555814,
+      "stop" : 1700752556030,
+      "duration" : 216
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "run_lf",
+    "time" : {
+      "start" : 1700752555358,
+      "stop" : 1700752555358,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_security_flags",
+    "time" : {
+      "start" : 1700752555814,
+      "stop" : 1700752555814,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "add_allure_environment_property",
+    "time" : {
+      "start" : 1700752555357,
+      "stop" : 1700752555357,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "afterStages" : [ {
+    "name" : "get_testbed_details::0",
+    "time" : {
+      "start" : 1700752569788,
+      "stop" : 1700752569788,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "selected_testbed::0",
+    "time" : {
+      "start" : 1700752569882,
+      "stop" : 1700752569882,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_markers::0",
+    "time" : {
+      "start" : 1700752570437,
+      "stop" : 1700752570437,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "run_lf::0",
+    "time" : {
+      "start" : 1700752569978,
+      "stop" : 1700752569978,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_security_flags::0",
+    "time" : {
+      "start" : 1700752570453,
+      "stop" : 1700752570454,
+      "duration" : 1
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "add_allure_environment_property::0",
+    "time" : {
+      "start" : 1700752569996,
+      "stop" : 1700752569996,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "labels" : [ {
+    "name" : "feature",
+    "value" : "BRIDGE MODE CLIENT CONNECTIVITY"
+  }, {
+    "name" : "tag",
+    "value" : "tcp"
+  }, {
+    "name" : "tag",
+    "value" : "fiveg"
+  }, {
+    "name" : "tag",
+    "value" : "nss2"
+  }, {
+    "name" : "tag",
+    "value" : "Mhz20"
+  }, {
+    "name" : "tag",
+    "value" : "performance"
+  }, {
+    "name" : "tag",
+    "value" : "bridge"
+  }, {
+    "name" : "tag",
+    "value" : "throughput_benchmark_test"
+  }, {
+    "name" : "tag",
+    "value" : "wpa2_personal"
+  }, {
+    "name" : "tag",
+    "value" : "@pytest.mark.usefixtures('setup_configuration')"
+  }, {
+    "name" : "tag",
+    "value" : "downstream"
+  }, {
+    "name" : "parentSuite",
+    "value" : "e2e.basic.performance_tests.throughput_benchmark.tcp_udp_upstream_downstream_bidirection_throughput_test.wpa2_personal"
+  }, {
+    "name" : "suite",
+    "value" : "test_bridge_mode"
+  }, {
+    "name" : "subSuite",
+    "value" : "TestThroughputUnderCombinationsBridge20MHz"
+  }, {
+    "name" : "host",
+    "value" : "db590689a354"
+  }, {
+    "name" : "thread",
+    "value" : "1-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "e2e.basic.performance_tests.throughput_benchmark.tcp_udp_upstream_downstream_bidirection_throughput_test.wpa2_personal.test_bridge_mode"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "setup_configuration",
+    "value" : "{'mode': 'BRIDGE', 'ssid_modes': {'wpa2_personal': [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something'}]}, 'rf': {'is5GHz': {'channelBandwidth': 'is20MHz'}, 'is5GHzL': {'channelBandwidth': 'is20MHz'}, 'is5GHzU': {'channelBandwidth': 'is20MHz'}}, 'radius': False}"
+  } ],
+  "links" : [ ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ ],
+    "tags" : [ "tcp", "@pytest.mark.usefixtures('setup_configuration')", "Mhz20", "performance", "nss2", "downstream", "wpa2_personal", "fiveg", "bridge", "throughput_benchmark_test" ]
+  },
+  "source" : "e21036dcec52c5ca.json",
+  "parameterValues" : [ "{'mode': 'BRIDGE', 'ssid_modes': {'wpa2_personal': [{'ssid_name': 'ssid_wpa2_2g', 'appliedRadios': ['2G'], 'security_key': 'something'}, {'ssid_name': 'ssid_wpa2_5g', 'appliedRadios': ['5G'], 'security_key': 'something'}]}, 'rf': {'is5GHz': {'channelBandwidth': 'is20MHz'}, 'is5GHzL': {'channelBandwidth': 'is20MHz'}, 'is5GHzU': {'channelBandwidth': 'is20MHz'}}, 'radius': False}" ]
+}

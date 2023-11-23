@@ -1,0 +1,213 @@
+{
+  "uid" : "5f9eaa459f2429c5",
+  "name" : "Firmware Downgrade and Upgrade test",
+  "fullName" : "controller_tests.ucentral_gateway.test_fms_service#test_upgrade_downgrade_tests",
+  "historyId" : "a1aeb81b8db036b6d182679168da9b19",
+  "time" : {
+    "start" : 1700752555421,
+    "stop" : 1700752555421,
+    "duration" : 0
+  },
+  "description" : "\n                    To validate the reliability and correctness of the firmware downgrade and upgrade process\n                    on Access Points (APs) for three consecutive releases, ensuring no functionality issues.\n                    Unique marker: pytest -m \"upgrade_downgrade_test\"\n                    F1 - Current AP firmware\n                    F2 - One lower release image\n                    F3 - Two lower release image\n                    F4 - Three lower release image\n                    Flow:\n                    AP is on F1 (If F1 is current AP image)\n                    AP downgrade to F2\n                    AP upgrade from F2 to F1\n                    AP downgrade from F1 to F3\n                    AP upgrade from F3 to F1\n                    AP downgrade from F1 to F4\n                    AP upgrade from F4 to F1\n        ",
+  "descriptionHtml" : "<pre><code>                To validate the reliability and correctness of the firmware downgrade and upgrade process\n                on Access Points (APs) for three consecutive releases, ensuring no functionality issues.\n                Unique marker: pytest -m &quot;upgrade_downgrade_test&quot;\n                F1 - Current AP firmware\n                F2 - One lower release image\n                F3 - Two lower release image\n                F4 - Three lower release image\n                Flow:\n                AP is on F1 (If F1 is current AP image)\n                AP downgrade to F2\n                AP upgrade from F2 to F1\n                AP downgrade from F1 to F3\n                AP upgrade from F3 to F1\n                AP downgrade from F1 to F4\n                AP upgrade from F4 to F1\n</code></pre>\n",
+  "status" : "skipped",
+  "statusMessage" : "Skipped: Skipping all",
+  "statusTrace" : "('/wlan-testing/tests/conftest.py', 283, 'Skipped: Skipping all')",
+  "flaky" : false,
+  "newFailed" : false,
+  "beforeStages" : [ {
+    "name" : "get_testbed_details",
+    "time" : {
+      "start" : 1700752555358,
+      "stop" : 1700752555358,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "8090bc9580356b01",
+      "name" : "Testbed Details",
+      "source" : "8090bc9580356b01.json",
+      "type" : "application/json",
+      "size" : 2478
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 1,
+    "shouldDisplayMessage" : false,
+    "hasContent" : true
+  }, {
+    "name" : "selected_testbed",
+    "time" : {
+      "start" : 1700752555358,
+      "stop" : 1700752555358,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "get_target_object",
+    "time" : {
+      "start" : 1700752555358,
+      "stop" : 1700752555358,
+      "duration" : 0
+    },
+    "status" : "skipped",
+    "statusMessage" : "Skipped: Skipping all\n",
+    "statusTrace" : "  File \"/usr/local/lib/python3.8/site-packages/pluggy/callers.py\", line 187, in _multicall\n    res = hook_impl.function(*args)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 1126, in pytest_fixture_setup\n    result = call_fixture_func(fixturefunc, request, kwargs)\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/fixtures.py\", line 925, in call_fixture_func\n    fixture_result = next(generator)\n  File \"/wlan-testing/tests/conftest.py\", line 283, in get_target_object\n    pytest.skip(\"Skipping all\")\n  File \"/usr/local/lib/python3.8/site-packages/_pytest/outcomes.py\", line 139, in skip\n    raise Skipped(msg=msg, allow_module_level=allow_module_level)\n",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  }, {
+    "name" : "run_lf",
+    "time" : {
+      "start" : 1700752555358,
+      "stop" : 1700752555358,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "add_allure_environment_property",
+    "time" : {
+      "start" : 1700752555357,
+      "stop" : 1700752555357,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "afterStages" : [ {
+    "name" : "get_testbed_details::0",
+    "time" : {
+      "start" : 1700752569788,
+      "stop" : 1700752569788,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "selected_testbed::0",
+    "time" : {
+      "start" : 1700752569882,
+      "stop" : 1700752569882,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "run_lf::0",
+    "time" : {
+      "start" : 1700752569978,
+      "stop" : 1700752569978,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  }, {
+    "name" : "add_allure_environment_property::0",
+    "time" : {
+      "start" : 1700752569996,
+      "stop" : 1700752569996,
+      "duration" : 0
+    },
+    "status" : "passed",
+    "steps" : [ ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 0,
+    "shouldDisplayMessage" : false,
+    "hasContent" : false
+  } ],
+  "labels" : [ {
+    "name" : "suite",
+    "value" : "Firmware Upgrade/Downgrade Tests"
+  }, {
+    "name" : "parentSuite",
+    "value" : "Firmware Tests"
+  }, {
+    "name" : "tag",
+    "value" : "upgrade_downgrade_test"
+  }, {
+    "name" : "tag",
+    "value" : "firmware_upgrade_downgrade"
+  }, {
+    "name" : "subSuite",
+    "value" : "TestFirmwareUpgradeDowngrade"
+  }, {
+    "name" : "host",
+    "value" : "db590689a354"
+  }, {
+    "name" : "thread",
+    "value" : "1-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "controller_tests.ucentral_gateway.test_fms_service"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ ],
+  "links" : [ {
+    "name" : "WIFI-13007",
+    "url" : "https://telecominfraproject.atlassian.net/browse/WIFI-13012",
+    "type" : "tms"
+  } ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ ],
+    "tags" : [ "upgrade_downgrade_test", "firmware_upgrade_downgrade" ]
+  },
+  "source" : "5f9eaa459f2429c5.json",
+  "parameterValues" : [ ]
+}
