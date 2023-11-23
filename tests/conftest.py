@@ -54,7 +54,7 @@ def pytest_addoption(parser):
         "--testbed",
         # nargs="+",
         default="basic-testbed",
-        help="AP Model which is needed to test"
+        help="Testbed name for the AP Model which is needed to test"
     )
     parser.addoption(
         "--num_stations",
