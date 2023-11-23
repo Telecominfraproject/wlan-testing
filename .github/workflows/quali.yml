@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf188n,cig_wf196,edgecore_ecw5211,indio_um-305ac,hfcl_ion4xe,edgecore_eap101"
+        default: "cig_wf188n,cig_wf196,edgecore_ecw5211,indio_um-305ac,edgecore_eap101"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -76,10 +76,10 @@ jobs:
           echo "Current slot is $SLOT"
           if [[ "$SLOT" -eq "0" ]]; then
             echo "Choosing first slot since $SLOT == 0"
-            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n, cig_wf196, edgecore_eap104, edgecore_eap101' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n, cig_wf196, edgecore_eap101, edgecore_ecw5211, indio_um-305ac' }}"
           else
             echo "Choosing second slot since $SLOT != 0"
-            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_ecw5211, indio_um-305ac, edgecore_oap101_6e, edgecore_eap102' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap101_6e, edgecore_eap102, edgecore_eap101, edgecore_eap104, indio_um-305ac' }}"
           fi
           echo "List of AP models to test - $AP_MODELS"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
@@ -747,7 +747,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: advanced-1b
+          testbed: basic-1a
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -844,7 +844,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: advanced-1c
+          testbed: basic-3
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -943,7 +943,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1041,7 +1041,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: advanced-2c
+          testbed: basic-2a
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
