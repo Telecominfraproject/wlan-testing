@@ -404,6 +404,7 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-qa01 logs deployment/owsec
 
+
   test-edgecore-ecw5211:
     needs: [ "vars", "build" ]
     runs-on: ubuntu-latest
