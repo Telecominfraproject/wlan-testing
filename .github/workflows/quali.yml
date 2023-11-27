@@ -748,7 +748,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: basic-1a
+          testbed: advanced-1b
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -944,7 +944,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: basic-3a
+          testbed: advanced-2a
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
