@@ -147,6 +147,7 @@ class TestUcentralFMSService(object):
 
 
 @pytest.mark.firmware_upgrade_downgrade
+@pytest.mark.ow_regression_lf
 @allure.parent_suite("Firmware Tests")
 @allure.suite("Firmware Upgrade/Downgrade Tests")
 class TestFirmwareUpgradeDowngrade(object):
