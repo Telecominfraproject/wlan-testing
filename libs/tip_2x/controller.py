@@ -1421,18 +1421,22 @@ class FMSUtils:
         release_images_all = []
         least_3_release_images = []
         for firmware in all_images_from_current_image:
-            if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+            if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1][0] == "v":
                 if "rc" not in firmware['image']:
                     release_images_all.append(firmware)
         logging.info("release_images_all" + str(release_images_all))
         latest_release_image_number = int(release_images_all[0]['image'].split(".")[1])
-        latest_3_releases_list_num = [latest_release_image_number, latest_release_image_number - 1,
-                                      latest_release_image_number - 2]
+        logging.info("latest_release_image_number: " + str(latest_release_image_number))
+        all_releases_num_list = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 11, 10]
+        index_latest_release = all_releases_num_list.index(latest_release_image_number)
+        latest_3_releases_list_num = [all_releases_num_list[index_latest_release], all_releases_num_list[index_latest_release+1],
+                                      all_releases_num_list[index_latest_release+2]]
+        logging.info("latest_3_releases_list_num: " + str(latest_3_releases_list_num))
         count = 0
         # Find out List of least 3 release Image
         # Logic for least 3 release Images
         for i in release_images_all:
-            if "v2." + str(latest_3_releases_list_num[count]) + "." in str(i['image']):
+            if "." + str(latest_3_releases_list_num[count]) + "." in str(i['image']):
                 least_3_release_images.append(i)
                 count = count + 1
             if len(least_3_release_images) == 3:
