@@ -46,7 +46,7 @@ on:
 jobs:
   # Set vars
   vars:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     outputs:
       openwifi_revision: ${{ steps.vars.outputs.openwifi }}
       ap_models: ${{ steps.vars.outputs.ap_models }}
@@ -89,7 +89,7 @@ jobs:
 
   # Build test image
   build:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs: ["vars"]
     steps:
       - uses: actions/checkout@v3
@@ -105,7 +105,7 @@ jobs:
   # Run tests on APs
   test-edgecore-oap101-6e:
     needs: ["vars", "build", "test-cig-wf188n"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_oap101_6e')"
     env:
@@ -283,7 +283,7 @@ jobs:
 
   test-hfcl-ion4xe:
     needs: ["vars", "build"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xe')"
     env:
@@ -460,7 +460,7 @@ jobs:
 
   test-edgecore-eap101:
     needs: ["vars", "build", "test-hfcl-ion4xe"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap101')"
     env:
@@ -637,7 +637,7 @@ jobs:
 
   test-edgecore-ecw5211:
     needs: ["vars", "build"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_ecw5211')"
     env:
@@ -814,7 +814,7 @@ jobs:
 
   test-cig-wf188n:
     needs: ["vars", "build"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf188n')"
     env:
@@ -991,7 +991,7 @@ jobs:
 
   test-edgecore-eap102:
     needs: ["vars", "build", "test-cig-wf196"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap102')"
     env:
@@ -1169,7 +1169,7 @@ jobs:
 
   test-edgecore-eap104:
     needs: ["vars", "build", "test-edgecore-ecw5211"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
     env:
@@ -1346,7 +1346,7 @@ jobs:
 
   test-indio-um-305ac:
     needs: ["vars", "build"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'indio_um-305ac')"
     env:
@@ -1525,7 +1525,7 @@ jobs:
 
   test-edgecore-ecw5410:
     needs: [ "vars", "build", "test-indio-um-305ac" ]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_ecw5410')"
     env:
@@ -1703,7 +1703,7 @@ jobs:
 
   test-cig-wf196:
     needs: ["vars", "build"]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf196')"
     env:
@@ -1883,7 +1883,7 @@ jobs:
   # Save reports
   report:
     if: "!cancelled()"
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     needs: [vars, test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-edgecore-eap104, test-indio-um-305ac, test-edgecore-ecw5410]
     strategy:
       fail-fast: false
@@ -1960,7 +1960,7 @@ jobs:
   # Cleanup
   cleanup:
     needs: [test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-edgecore-eap104, test-indio-um-305ac, test-edgecore-ecw5410]
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, small ]
     if: always()
     steps:
       - uses: actions/checkout@v3
