@@ -46,7 +46,7 @@ on:
 jobs:
   # Set vars
   vars:
-    runs-on: [ self-hosted, small ]
+    runs-on: ubuntu-latest
     outputs:
       openwifi_revision: ${{ steps.vars.outputs.openwifi }}
       ap_models: ${{ steps.vars.outputs.ap_models }}
@@ -89,7 +89,7 @@ jobs:
 
   # Build test image
   build:
-    runs-on: [ self-hosted, small ]
+    runs-on: ubuntu-latest
     needs: ["vars"]
     steps:
       - uses: actions/checkout@v3
@@ -1883,7 +1883,7 @@ jobs:
   # Save reports
   report:
     if: "!cancelled()"
-    runs-on: [ self-hosted, small ]
+    runs-on: ubuntu-latest
     needs: [vars, test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-edgecore-eap104, test-indio-um-305ac, test-edgecore-ecw5410]
     strategy:
       fail-fast: false
@@ -1960,7 +1960,7 @@ jobs:
   # Cleanup
   cleanup:
     needs: [test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-edgecore-eap104, test-indio-um-305ac, test-edgecore-ecw5410]
-    runs-on: [ self-hosted, small ]
+    runs-on: ubuntu-latest
     if: always()
     steps:
       - uses: actions/checkout@v3
