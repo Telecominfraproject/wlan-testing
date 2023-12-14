@@ -924,7 +924,7 @@ jobs:
     runs-on: ubuntu-latest
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xi')"
     env:
-      AP_MODEL: edgecore_eap102
+      AP_MODEL: hfcl_ion4xi
     steps:
       - name: Set AP model output
         id: ap_model
