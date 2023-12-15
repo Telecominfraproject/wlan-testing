@@ -8,7 +8,7 @@
 import pytest
 import allure
 
-pytestmark = [pytest.mark.advance, pytest.mark.multi_assoc_disassoc_tests, pytest.mark.nat, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.multi_assoc_disassoc_tests, pytest.mark.nat, pytest.mark.wpa2_personal]
 
 setup_params_general = {
     "mode": "NAT",
