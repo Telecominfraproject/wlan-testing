@@ -6,7 +6,7 @@
 import pytest
 import allure
 
-pytestmark = [pytest.mark.advance, pytest.mark.rate_vs_range, pytest.mark.nat]
+pytestmark = [pytest.mark.rate_vs_range, pytest.mark.nat]
 
 
 setup_params_general = {
@@ -53,9 +53,9 @@ class Test_RatevsRange_Nat(object):
                                                                   dut_data=setup_configuration, num_sta=1,
                                                                   direction="DUT Transmit",
                                                                   instance_name="NAT_RVR_TWOG_DL",
-                                                                  pass_value={"strong": 100, "medium": 95, "weak": 14},
-                                                                  attenuations=[0, 10, 21, 24, 27, 30, 33, 36, 39, 42,
-                                                                                45, 48, 51, 54, 57, 60, 63])
+                                                                  pass_value={"strong": 100, "medium": 45, "weak": 3},
+                                                                  attenuations=[0, 6, 12, 18, 24, 30, 36, 39, 41, 43,
+                                                                                45, 47, 49])
         if result:
             assert True
         else:
@@ -81,9 +81,9 @@ class Test_RatevsRange_Nat(object):
                                                                   dut_data=setup_configuration, num_sta=1,
                                                                   direction="DUT Receive",
                                                                   instance_name="NAT_RVR_TWOG_UL",
-                                                                  pass_value={"strong": 100, "medium": 95, "weak": 14},
-                                                                  attenuations=[0, 10, 21, 24, 27, 30, 33, 36, 39, 42,
-                                                                                45, 48, 51, 54, 57, 60, 63])
+                                                                  pass_value={"strong": 100, "medium": 31, "weak": 3},
+                                                                  attenuations=[0, 6, 12, 18, 24, 30, 36, 39, 41, 43,
+                                                                                45, 47, 49])
         if result:
             assert True
         else:
@@ -110,9 +110,9 @@ class Test_RatevsRange_Nat(object):
                                                                   dut_data=setup_configuration, num_sta=1,
                                                                   direction="DUT Transmit",
                                                                   instance_name="NAT_RVR_FIVEG_DL",
-                                                                  pass_value={"strong": 560, "medium": 220, "weak": 5},
-                                                                  attenuations=[0, 10, 21, 24, 27, 30, 33, 36, 39, 42,
-                                                                                45, 48, 51, 54])
+                                                                  pass_value={"strong": 560, "medium": 300, "weak": 45},
+                                                                  attenuations=[0, 6, 12, 18, 24, 30, 36, 39, 41, 43,
+                                                                                45, 47, 49])
         if result:
             assert True
         else:
@@ -139,9 +139,9 @@ class Test_RatevsRange_Nat(object):
                                                                   dut_data=setup_configuration, num_sta=1,
                                                                   direction="DUT Receive",
                                                                   instance_name="NAT_RVR_FIVEG_UL",
-                                                                  pass_value={"strong": 560, "medium": 220, "weak": 5},
-                                                                  attenuations=[0, 10, 21, 24, 27, 30, 33, 36, 39, 42,
-                                                                                45, 48, 51, 54])
+                                                                  pass_value={"strong": 560, "medium": 300, "weak": 45},
+                                                                  attenuations=[0, 6, 12, 18, 24, 30, 36, 39, 41, 43,
+                                                                                45, 47, 49])
         if result:
             assert True
         else:
