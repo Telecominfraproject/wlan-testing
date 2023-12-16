@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101_6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,edgecore_ecw5410"
+        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101_6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -103,231 +103,9 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   # Run tests on APs
-  test-edgecore-ecw5410:
-    needs: [ "vars", "build", "test-indio-um-305ac" ]
-    runs-on: [self-hosted, small]
-    timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_ecw5410')"
-    env:
-      AP_MODEL: edgecore_ecw5410
-    steps:
-      - name: Set AP model output
-        id: ap_model
-        run: |
-          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
-
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
-
-
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: get EKS access credentials
-        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-
-      - name: prepare namespace name
-        id: namespace
-        run: |
-          NAMESPACE="regression-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
-
-      - name: prepare configuration
-        run: |
-          cat << EOF > lab_info.json
-          ${{ secrets.LAB_INFO_JSON }}
-          EOF
-
-
-      - name: run dfs tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dfs_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-dfs
-          testbed: basic-5a
-          marker_expression: "ow_regression_lf and dfs_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-dfs_tests
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dfs
-
-      - name: run multipsk tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_psk_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-multipsk
-          testbed: basic-5a
-          marker_expression: "ow_regression_lf and multi_psk_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-multi_psk_tests
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multipsk
-
-      - name: run rate_limiting tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-rate-limiting
-          testbed: basic-5a
-          marker_expression: "ow_regression_lf and rate_limiting_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-rate_limiting_tests
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting
-
-      - name: run rate_limiting_with_radius tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_with_radius_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-rate-limiting-radius
-          testbed: basic-5a
-          marker_expression: "ow_regression_lf and rate_limiting_with_radius_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-rate_limiting_with_radius_tests
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting-radius --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting-radius $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting-radius
-
-      - name: run dynamic_vlan tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-dynamic-vlan
-          testbed: basic-5a
-          marker_expression: "ow_regression_lf and dynamic_vlan_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-dynamic_vlan_tests
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dynamic-vlan
-
-      - name: run multi_vlan tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_vlan_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-multi-vlan
-          testbed: basic-5a
-          marker_expression: "ow_regression_lf and multi_vlan_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-multi_vlan_tests
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
-
-      - name: show gw logs
-        if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owgw
-
-      - name: show fms logs
-        if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owfms
-
-      - name: show prov logs
-        if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owprov
-
-      - name: show analytics logs
-        if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owanalytics
-
-      - name: show subscription (userportal) logs
-        if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owsub
-
-      - name: show sec logs
-        if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owsec
-
 
   test-hfcl-ion4xe:
-    needs: ["vars", "build", "test-edgecore-eap102"]
+    needs: ["vars", "build", "test-edgecore-eap101"]
     runs-on: [self-hosted, small]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xe')"
@@ -379,7 +157,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dfs_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dfs
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "ow_regression_lf and dfs_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -404,7 +182,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_psk_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multipsk
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "ow_regression_lf and multi_psk_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -429,7 +207,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "ow_regression_lf and rate_limiting_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -454,7 +232,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_with_radius_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting-radius
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "ow_regression_lf and rate_limiting_with_radius_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -479,7 +257,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dynamic-vlan
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "ow_regression_lf and dynamic_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -504,7 +282,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multi-vlan
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "ow_regression_lf and multi_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -550,7 +328,7 @@ jobs:
 
 
   test-edgecore-eap101:
-    needs: ["vars", "build", "test-hfcl-ion4xe"]
+    needs: ["vars", "build"]
     runs-on: [self-hosted, small]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap101')"
@@ -602,7 +380,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dfs_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dfs
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and dfs_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -627,7 +405,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_psk_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multipsk
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and multi_psk_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -652,7 +430,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and rate_limiting_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -677,7 +455,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_with_radius_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting-radius
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and rate_limiting_with_radius_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -702,7 +480,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dynamic-vlan
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and dynamic_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -727,7 +505,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multi-vlan
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and multi_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2111,7 +1889,7 @@ jobs:
 
 
   test-hfcl-ion4xi:
-    needs: [ "vars", "build" ]
+    needs: [ "vars", "build", "test-indio-um-305ac"]
     runs-on: [self-hosted, small]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xi')"
@@ -2163,7 +1941,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dfs_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dfs
-          testbed: advanced-3b
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and dfs_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2188,7 +1966,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_psk_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multipsk
-          testbed: advanced-3b
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and multi_psk_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2213,7 +1991,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting
-          testbed: advanced-3b
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and rate_limiting_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2238,7 +2016,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_with_radius_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting-radius
-          testbed: advanced-3b
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and rate_limiting_with_radius_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2263,7 +2041,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dynamic-vlan
-          testbed: advanced-3b
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and dynamic_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2288,7 +2066,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multi-vlan
-          testbed: advanced-3b
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and multi_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2556,7 +2334,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-edgecore-ecw5410, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-indio-um-305ac, test-hfcl-ion4xi, test-cig-wf196]
+    needs: [vars, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-indio-um-305ac, test-hfcl-ion4xi, test-cig-wf196]
     strategy:
       fail-fast: false
       matrix:
@@ -2609,7 +2387,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-edgecore-ecw5410, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-indio-um-305ac, test-hfcl-ion4xi, test-cig-wf196]
+    needs: [test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-indio-um-305ac, test-hfcl-ion4xi, test-cig-wf196]
     runs-on: ubuntu-latest
     if: always()
     steps:
