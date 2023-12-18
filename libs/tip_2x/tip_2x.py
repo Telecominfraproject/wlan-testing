@@ -346,7 +346,8 @@ class tip_2x:
                     allure.attach(body=ap_logs, name="AP logs during config fails: ")
                     logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
                     pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
-
+            logging.info("Waiting for 30 sec after config push")
+            time.sleep(30)
             r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
             uuid_after_apply = r_data["latest"]
             x = 0
