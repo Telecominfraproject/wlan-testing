@@ -149,10 +149,10 @@ jobs:
         echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
     - name: prepare configuration
-        run: |
-          cat << EOF > lab_info.json
-          ${{ secrets.LAB_INFO_JSON }}
-          EOF
+      run: |
+        cat << EOF > lab_info.json
+        ${{ secrets.LAB_INFO_JSON }}
+        EOF
 
     - name: run tests
       uses: ./.github/actions/run-tests
@@ -245,10 +245,10 @@ jobs:
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
-          run: |
-            cat << EOF > lab_info.json
-            ${{ secrets.LAB_INFO_JSON }}
-            EOF
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -341,10 +341,10 @@ jobs:
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
-          run: |
-            cat << EOF > lab_info.json
-            ${{ secrets.LAB_INFO_JSON }}
-            EOF
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -437,10 +437,10 @@ jobs:
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
-          run: |
-            cat << EOF > lab_info.json
-            ${{ secrets.LAB_INFO_JSON }}
-            EOF
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -533,10 +533,10 @@ jobs:
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
-          run: |
-            cat << EOF > lab_info.json
-            ${{ secrets.LAB_INFO_JSON }}
-            EOF
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
 
       - name: run tests
         uses: ./.github/actions/run-tests
