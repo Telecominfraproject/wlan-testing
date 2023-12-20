@@ -347,6 +347,8 @@ class tip_2x:
                     logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
                     pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
             # Find uuid from response
+            resp = json.loads(resp.text)
+            logging.info("resp: " + str(resp))
             uuid = resp["details"]["uuid"]
             logging.info("uuid from resp: " + str(uuid))
             logging.info("Waiting for 30 sec after config push")
