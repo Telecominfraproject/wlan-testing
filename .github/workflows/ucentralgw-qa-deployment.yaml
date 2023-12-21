@@ -36,14 +36,14 @@ env:
       "deploy_method": "git",
       "chart_version": "v3.0.0-RC3",
       "owgw_version": "v3.0.0-RC3",
-      "owsec_version": "v3.0.0-RC3",
-      "owfms_version": "v3.0.0-RC3",
-      "owprov_version": "v3.0.0-RC3",
-      "owanalytics_version": "v3.0.0-RC3",
-      "owsub_version": "v3.0.0-RC3",
+      "owsec_version": "v3.0.0-RC1",
+      "owfms_version": "v3.0.0-RC1",
+      "owprov_version": "v3.0.0-RC1",
+      "owanalytics_version": "v3.0.0-RC1",
+      "owsub_version": "v3.0.0-RC1",
       "owrrm_version": "main",
-      "owgwui_version": "v3.0.0-RC3",
-      "owprovui_version": "v3.0.0-RC3"
+      "owgwui_version": "v3.0.0-RC1",
+      "owprovui_version": "v3.0.0-RC1"
     }
   ]'
 
