@@ -767,7 +767,7 @@ class tip_2x:
                         temp = "-".join(temp)
                         firmware['image'] = temp
                     if self.device_under_tests_info[ap]['firmware_version'].split('-')[0] == 'release':
-                        if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+                        if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1][0] == "v":
                             logging.info("Target Firmware: \n" + str(firmware))
                             allure.attach(name="Target firmware : ", body=str(firmware))
                             target_revision = firmware['revision'].split("/")[1].replace(" ", "")
@@ -935,7 +935,7 @@ class tip_2x:
                     target_fw = ""
                     for firmware in fw_list:
                         if self.device_under_tests_info[ap]['firmware_version'].split('-')[0] == 'release':
-                            if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1].__contains__('v2.'):
+                            if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1][0] == "v":
                                 target_fw = firmware
                                 break
                         if firmware['image'].split("-")[-2] == \
