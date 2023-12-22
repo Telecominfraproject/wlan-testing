@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "Wallys_DR6018,hfcl_ion4xe,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,liteon_wpx8324,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196"
+        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -73,7 +73,7 @@ jobs:
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'Wallys_DR6018,hfcl_ion4xe,edgecore_eap101,edgecore_ecw5211,cig_wf188n,edgecore_eap102,liteon_wpx8324,hfcl_ion4,indio_um-305ac,hfcl_ion4xi,udaya_a5-id2,cig_wf196' }}"
+          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           ap_models=${AP_MODELS}
@@ -103,16 +103,14 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   # Run tests on APs
-  test-wallys-DR6018:
-    needs: ["vars", "build"]
+  test-edgecore-oap101-6e:
+    needs: ["vars", "build", "test-cig-wf196"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'Wallys_DR6018')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_oap101-6e')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-      AP_MODEL: Wallys_DR6018
+
+      AP_MODEL: edgecore_oap101-6e
     steps:
       - name: Set AP model output
         id: ap_model
@@ -125,29 +123,6 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -176,21 +151,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-01
+          testbed: basic-2a
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -216,7 +183,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-01
+          testbed: basic-1a
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -242,7 +209,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-01
+          testbed: basic-1a
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -268,7 +235,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-01
+          testbed: basic-1a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -291,41 +258,35 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-hfcl-ion4xe:
-    needs: ["vars", "build", "test-edgecore-eap102"]
+    needs: ["vars", "build"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xe')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       AP_MODEL: hfcl_ion4xe
     steps:
       - name: Set AP model output
@@ -339,29 +300,6 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -390,21 +328,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-06a
+          testbed: basic-3a
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -430,7 +360,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-06a
+          testbed: basic-3a
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -456,7 +386,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-06a
+          testbed: basic-3a
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -482,7 +412,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-06a
+          testbed: basic-3a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -505,41 +435,35 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-edgecore-eap101:
-    needs: ["vars", "build"]
+    needs: ["vars", "build", "test-hfcl-ion4xe"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap101')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       AP_MODEL: edgecore_eap101
     steps:
       - name: Set AP model output
@@ -553,29 +477,6 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -604,21 +505,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-07
+          testbed: basic-3
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -644,7 +537,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-07
+          testbed: basic-3
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -670,7 +563,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-07
+          testbed: basic-3
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -696,7 +589,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-07
+          testbed: basic-3
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -719,31 +612,28 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-edgecore-ecw5211:
     needs: ["vars", "build"]
@@ -751,9 +641,6 @@ jobs:
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_ecw5211')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       AP_MODEL: edgecore_ecw5211
     steps:
       - name: Set AP model output
@@ -767,29 +654,6 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -818,21 +682,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-04
+          testbed: basic-4
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -858,7 +714,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-04
+          testbed: basic-4
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -884,7 +740,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-04
+          testbed: basic-4
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -910,7 +766,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-04
+          testbed: basic-4
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -933,41 +789,35 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-cig-wf188n:
-    needs: ["vars", "build"]
+    needs: ["vars", "build", "test-edgecore-eap102"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf188n')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       AP_MODEL: cig_wf188n
     steps:
       - name: Set AP model output
@@ -981,29 +831,6 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -1032,21 +859,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-05
+          testbed: basic-1a
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1072,7 +891,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-05
+          testbed: basic-1a
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1098,7 +917,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-05
+          testbed: basic-1a
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1124,7 +943,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-05
+          testbed: basic-1a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1147,31 +966,28 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-edgecore-eap102:
     needs: ["vars", "build"]
@@ -1179,9 +995,6 @@ jobs:
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap102')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       AP_MODEL: edgecore_eap102
     steps:
       - name: Set AP model output
@@ -1195,29 +1008,6 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -1246,21 +1036,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-06
+          testbed: basic-1
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1286,7 +1068,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-06
+          testbed: basic-1
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1312,7 +1094,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-06
+          testbed: basic-1
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1338,7 +1120,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-06
+          testbed: basic-1
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1361,42 +1143,36 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
-  test-liteon-wpx8324:
-    needs: ["vars", "build"]
+  test-edgecore-eap104:
+    needs: ["vars", "build", "test-edgecore-ecw5211"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'liteon_wpx8324')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-      AP_MODEL: liteon_wpx8324
+      AP_MODEL: edgecore_eap104
     steps:
       - name: Set AP model output
         id: ap_model
@@ -1409,29 +1185,6 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -1460,21 +1213,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-08
+          testbed: basic-4a
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1500,7 +1245,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-08
+          testbed: basic-4a
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1526,7 +1271,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-08
+          testbed: basic-4a
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1552,7 +1297,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-08
+          testbed: basic-4a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1575,245 +1320,28 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-
-  test-hfcl-ion4:
-    needs: ["vars", "build"]
-    runs-on: [ self-hosted, small ]
-    timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4')"
-    env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-      AP_MODEL: hfcl_ion4
-    steps:
-      - name: Set AP model output
-        id: ap_model
-        run: |
-          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
-
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
-
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
-
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: get EKS access credentials
-        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-
-      - name: prepare namespace name
-        id: namespace
-        run: |
-          NAMESPACE="performance-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
-
-      - name: prepare configuration
-        run: |
-          cat << EOF > lab_info.json
-          ${{ secrets.LAB_INFO_JSON }}
-          EOF
-
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
-
-      - name: run tests dataplane_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-02
-          marker_expression: "performance and dataplane_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dtt --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dtt $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
-
-      - name: run tests peak_throughput_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-02
-          marker_expression: "performance and peak_throughput_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-ssdbt --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-ssdbt $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
-
-      - name: run tests client_scale_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-02
-          marker_expression: "performance and client_scale_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
-
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-02
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
-
-      - name: show gw logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
-
-      - name: show fms logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
-
-      - name: show prov logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
-
-      - name: show analytics logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
-
-      - name: show subscription (userportal) logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
-
-      - name: show sec logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
-
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-indio-um-305ac:
     needs: ["vars", "build"]
@@ -1821,9 +1349,6 @@ jobs:
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'indio_um-305ac')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       AP_MODEL: indio_um-305ac
     steps:
       - name: Set AP model output
@@ -1837,29 +1362,7 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
+
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -1888,21 +1391,14 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
+
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-03
+          testbed: basic-5
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1928,7 +1424,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-03
+          testbed: basic-5
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1954,7 +1450,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-03
+          testbed: basic-5
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1980,7 +1476,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-03
+          testbed: basic-5
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2003,41 +1499,35 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-hfcl-ion4xi:
-    needs: [ "vars", "build", "test-edgecore-ecw5211" ]
+    needs: [ "vars", "build", "test-indio-um-305ac" ]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xi')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       AP_MODEL: hfcl_ion4xi
     steps:
       - name: Set AP model output
@@ -2051,243 +1541,6 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
-
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: get EKS access credentials
-        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-
-      - name: prepare namespace name
-        id: namespace
-        run: |
-          NAMESPACE="performance-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
-          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
-
-      - name: prepare configuration
-        run: |
-          cat << EOF > lab_info.json
-          ${{ secrets.LAB_INFO_JSON }}
-          EOF
-          
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
-
-      - name: run tests dataplane_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-04a
-          marker_expression: "performance and dataplane_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dtt --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dtt $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dtt
-
-      - name: run tests peak_throughput_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-04a
-          marker_expression: "performance and peak_throughput_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-ssdbt --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-ssdbt $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-ssdbt
-
-      - name: run tests client_scale_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-04a
-          marker_expression: "performance and client_scale_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
-
-      - name: run tests dual_band_tests
-        uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
-        with:
-          namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-04a
-          marker_expression: "performance and dual_band_tests"
-          configuration_file: "./lab_info.json"
-          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
-          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
-
-      # necessary because if conditionals in composite actions are currently not respected
-      - name: get tests logs
-        if: always()
-        continue-on-error: true
-        run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-wct --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-wct $podname || true
-
-      - name: delete namespace
-        if: always()
-        continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-wct
-
-      - name: show gw logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
-
-      - name: show fms logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
-
-      - name: show prov logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
-
-      - name: show analytics logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
-
-      - name: show subscription (userportal) logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
-
-      - name: show sec logs
-        if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
-
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
-
-  test-udaya-a5-id2:
-    needs: [ "vars", "build", "test-liteon-wpx8324" ]
-    runs-on: [ self-hosted, small ]
-    timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'udaya_a5-id2')"
-    env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
-      AP_MODEL: udaya_a5-id2
-    steps:
-      - name: Set AP model output
-        id: ap_model
-        run: |
-          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
-
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
-
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -2316,21 +1569,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-08a
+          testbed: basic-5a
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2356,7 +1601,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-08a
+          testbed: basic-5a
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2382,7 +1627,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-08a
+          testbed: basic-5a
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2408,7 +1653,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-08a
+          testbed: basic-5a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2431,31 +1676,28 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   test-cig-wf196:
     needs: ["vars", "build"]
@@ -2463,9 +1705,6 @@ jobs:
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf196')"
     env:
-#      CLOUDSHELL_URL: quali-cloudshell.lab.wlan.tip.build
-#      CLOUDSHELL_USER: ${{ secrets.CLOUDSHELL_USER }}
-#      CLOUDSHELL_PASSWORD: ${{ secrets.CLOUDSHELL_PASSWORD }}
       AP_MODEL: cig_wf196
     steps:
       - name: Set AP model output
@@ -2479,29 +1718,7 @@ jobs:
         with:
           python-version: "3.8"
 
-#      - name: install dependencies
-#        run: pip install -r .quali/requirements.txt
-#
-#      - name: start reservation
-#        run: |
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}","Optional Existing SDK Namespace":"${{ needs.vars.outputs.existing_controller }}"}' "Basic Lab"
-#          else
-#            python .quali/start_reservation.py --global-inputs '{"Chart Version":"${{ needs.vars.outputs.openwifi_revision }}","AP Model":"${{ steps.ap_model.outputs.model }}"}' "Basic Lab"
-#          fi
-#
-#      - name: set reservation outputs
-#        if: always()
-#        id: reservation
-#        run: |
-#          echo "identifier=$(cat ./reservation_id.txt)" >> $GITHUB_OUTPUT
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            echo "namespace=${{ needs.vars.outputs.existing_controller }}" >> $GITHUB_OUTPUT
-#          else
-#            echo "namespace=$(cat ./reservation_id.txt | cut -d "-" -f 1)" >> $GITHUB_OUTPUT
-#          fi
+
 
       # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
@@ -2530,21 +1747,13 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-#          DYN_CONFIG="$(python .quali/get_configuration.py --json ${{ steps.reservation.outputs.identifier }})"
-#          jq ".CONFIGURATION.basic=$DYN_CONFIG" lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#
-#          # overwrite configuration value from Quali
-#          if [ ${{ needs.vars.outputs.existing_controller }} != '' ]
-#          then
-#            jq '.CONFIGURATION.basic.controller.url="https://sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build:16001"' lab_info.json > lab_info.json.tmp && mv lab_info.json.tmp lab_info.json
-#          fi
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: advance-03
+          testbed: basic-2
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2570,7 +1779,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: advance-03
+          testbed: basic-2
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2596,7 +1805,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: advance-03
+          testbed: basic-2
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2622,7 +1831,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: advance-03
+          testbed: basic-2
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2645,37 +1854,34 @@ jobs:
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owgw
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owgw
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owfms
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owfms
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owprov
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owprov
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owanalytics
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owanalytics
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsub
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-${{ steps.reservation.outputs.namespace }} logs deployment/owsec
+        run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-#      - name: stop reservation
-#        if: always()
-#        run: python .quali/stop_reservation.py ${{ steps.reservation.outputs.identifier }}
 
   # Save reports
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-wallys-DR6018, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-liteon-wpx8324, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2, test-cig-wf196]
+    needs: [vars, test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-edgecore-eap104, test-indio-um-305ac, test-hfcl-ion4xi]
     strategy:
       fail-fast: false
       matrix:
@@ -2750,7 +1956,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-wallys-DR6018, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-cig-wf188n, test-edgecore-eap102, test-liteon-wpx8324, test-hfcl-ion4, test-indio-um-305ac, test-hfcl-ion4xi, test-udaya-a5-id2, test-cig-wf196]
+    needs: [test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-edgecore-eap104, test-indio-um-305ac, test-hfcl-ion4xi]
     runs-on: ubuntu-latest
     if: always()
     steps:

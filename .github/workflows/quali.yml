@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101_6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
+        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -79,7 +79,7 @@ jobs:
             AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac' }}"
           else
             echo "Choosing second slot since $SLOT != 0"
-            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap101_6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
           fi
           echo "List of AP models to test - $AP_MODELS"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
@@ -563,9 +563,9 @@ jobs:
   test-edgecore-oap101-6e:
     needs: ["vars", "build"]
     runs-on: ubuntu-latest
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_oap101_6e')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_oap101-6e')"
     env:
-      AP_MODEL: edgecore_oap101_6e
+      AP_MODEL: edgecore_oap101-6e
     steps:
       - name: Set AP model output
         id: ap_model
@@ -693,7 +693,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -784,7 +784,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
