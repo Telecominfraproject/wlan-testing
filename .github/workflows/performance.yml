@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101_6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
+        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -73,7 +73,7 @@ jobs:
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101_6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
+          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           ap_models=${AP_MODELS}
@@ -107,10 +107,10 @@ jobs:
     needs: ["vars", "build", "test-cig-wf196"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_oap101_6e')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_oap101-6e')"
     env:
 
-      AP_MODEL: edgecore_oap101_6e
+      AP_MODEL: edgecore_oap101-6e
     steps:
       - name: Set AP model output
         id: ap_model
@@ -334,7 +334,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -360,7 +360,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -386,7 +386,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -412,7 +412,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-3
+          testbed: basic-3a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -511,7 +511,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -537,7 +537,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -563,7 +563,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -589,7 +589,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
