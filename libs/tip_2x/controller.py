@@ -2595,7 +2595,7 @@ class UProfileUtility:
             base_radio_config_5g = {
                 "band": "5G",
                 "country": "US",
-                "allow-dfs": True,
+                "allow-dfs": False,
                 "channel-mode": "HE",
                 "channel": "auto"
             }
