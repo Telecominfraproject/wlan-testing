@@ -1378,7 +1378,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="56Kbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1453,7 +1453,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_tcp_ul", mode=mode,
-                                       download_rate="0Gbps", batch_size="1",
+                                       download_rate="56Kbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
@@ -1472,7 +1472,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_nat_udp_ul", mode=mode,
-                                       download_rate="0Gbps", batch_size="1",
+                                       download_rate="56Kbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
