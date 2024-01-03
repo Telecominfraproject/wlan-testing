@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
+        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -73,7 +73,7 @@ jobs:
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,indio_um-305ac,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
+          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           ap_models=${AP_MODELS}
@@ -1665,13 +1665,13 @@ jobs:
         run: kubectl -n openwifi-qa01 logs deployment/owsec
 
 
-  test-indio-um-305ac:
+  test-yuncore-ax820:
     needs: ["vars", "build"]
     runs-on: [self-hosted, small]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'indio_um-305ac')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'yuncore_ax820')"
     env:
-      AP_MODEL: indio_um-305ac
+      AP_MODEL: yuncore_ax820
     steps:
       - name: Set AP model output
         id: ap_model
