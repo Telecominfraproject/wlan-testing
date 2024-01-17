@@ -1,7 +1,7 @@
 {
     "sanity": {
         "OVERVIEW_TITLE": "'OpenWifi sanity results'",
-        "OVERVIEW_TESTBEDS": ["edgecore_oap101_6e","edgecore_eap101","cig_wf188n","cig_wf196","edgecore_eap102","edgecore_eap104","hfcl_ion4xe","hfcl_ion4xi","edgecore_ecw5211","yuncore_ax820"]
+        "OVERVIEW_TESTBEDS": ["edgecore_oap101-6e","edgecore_eap101","cig_wf188n","cig_wf196","edgecore_eap102","edgecore_eap104","hfcl_ion4xe","hfcl_ion4xi","edgecore_ecw5211","yuncore_ax820"]
     },
     "interop": {
         "OVERVIEW_TITLE": "'OpenWifi interop results'",
