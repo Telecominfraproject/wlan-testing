@@ -309,8 +309,8 @@ class tip_2x:
                     idx=i)
 
             # Check the latest uuid
-            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
-            uuid_before_apply = r_data["latest"]
+            # r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
+            # uuid_before_apply = r_data["latest"]
 
             # attaching ap logs before config push
             ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
@@ -346,59 +346,96 @@ class tip_2x:
                     allure.attach(body=ap_logs, name="AP logs during config fails: ")
                     logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
                     pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
+            # Find uuid from response
+            resp = json.loads(resp.text)
+            logging.info("resp: " + str(resp))
+            uuid = resp["details"]["uuid"]
+            logging.info("uuid from resp: " + str(uuid))
             logging.info("Waiting for 30 sec after config push")
             time.sleep(30)
             r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
-            uuid_after_apply = r_data["latest"]
-            x = 0
-            while uuid_before_apply == uuid_after_apply:
-                time.sleep(10)
-                x += 1
-                logging.info("uuid_before_apply: " + str(uuid_before_apply))
-                logging.info("uuid_after_apply: " + str(uuid_after_apply))
-                r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
-                uuid_after_apply = r_data["latest"]
-                if x == 5:
-                    break
-            time.sleep(5)
-            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
-            uuid_after_apply = r_data["latest"]
-            if uuid_after_apply == uuid_before_apply:
-                logging.error("Config is not received by AP")
-                logging.info("uuid_before_apply: " + str(uuid_before_apply))
-                logging.info("uuid_after_apply: " + str(uuid_after_apply))
-                self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
-                pytest.fail("Config sent from Gateway is not received by AP")
-            self.dut_library_object.get_latest_config_recieved(idx=i, print_log=True, attach_allure=False)
+            latest_uuid_after_apply = r_data["latest"]
+            active_uuid_after_apply = r_data["active"]
+            logging.info("latest_uuid_after_apply: " + str(latest_uuid_after_apply))
+            logging.info("active_uuid_after_apply: " + str(active_uuid_after_apply))
+            print(type(uuid), type(latest_uuid_after_apply), type(active_uuid_after_apply))
+            if uuid == latest_uuid_after_apply == active_uuid_after_apply:
+                logging.info("Config is Properly Applied on AP")
+                logging.info("latest_uuid_after_apply: " + str(latest_uuid_after_apply))
+                logging.info("active_uuid_after_apply: " + str(active_uuid_after_apply))
+            else:
+                all_three_uuid_same = False
+                for k in range(5):
+                    time.sleep(10)
+                    r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False,
+                                                                               attach_allure=False)
+                    latest_uuid_after_apply = r_data["latest"]
+                    active_uuid_after_apply = r_data["active"]
+                    logging.info("latest_uuid_after_apply: " + str(latest_uuid_after_apply))
+                    logging.info("active_uuid_after_apply: " + str(active_uuid_after_apply))
+                    if uuid == latest_uuid_after_apply == active_uuid_after_apply:
+                        all_three_uuid_same = True
+                        break
+                if not all_three_uuid_same:
+                    logging.info("latest_uuid_after_apply: " + str(latest_uuid_after_apply))
+                    logging.info("active_uuid_after_apply: " + str(active_uuid_after_apply))
+                    self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
+                    pytest.fail("Config is not Properly Applied on AP")
 
-            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
-            latest_uuid = r_data["latest"]
-
-            r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
-            active_uuid = r_data["active"]
-
-            x = 0
-            while latest_uuid == active_uuid:
-                time.sleep(10)
-                x += 1
-                logging.info("active_uuid: " + str(active_uuid))
-                logging.info("latest_uuid: " + str(latest_uuid))
-                r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
-                active_uuid = r_data["active"]
-                latest_uuid = r_data["latest"]
-                if x == 5:
-                    break
-            if latest_uuid != active_uuid:
-                logging.error("Config is not received by AP")
-                logging.info("uuid_before_apply: " + str(uuid_before_apply))
-                logging.info("uuid_after_apply: " + str(uuid_after_apply))
-                self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
-                pytest.fail("Config sent from Gateway is Received by AP, But not Applied by AP")
             self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=False)
-
-            logging.info("Config is Properly Applied on AP, Waiting for 30 Seconds for All interfaces to come up")
+            logging.info("Waiting for 30 Seconds for All interfaces to come up")
             # wait time interfaces to come up
             time.sleep(30)
+
+            # x = 0
+            # while uuid_before_apply == uuid_after_apply:
+            #     time.sleep(10)
+            #     x += 1
+            #     logging.info("uuid_before_apply: " + str(uuid_before_apply))
+            #     logging.info("uuid_after_apply: " + str(uuid_after_apply))
+            #     r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+            #     uuid_after_apply = r_data["latest"]
+            #     if x == 5:
+            #         break
+            # time.sleep(5)
+            # r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+            # uuid_after_apply = r_data["latest"]
+            # if uuid_after_apply == uuid_before_apply:
+            #     logging.error("Config is not received by AP")
+            #     logging.info("uuid_before_apply: " + str(uuid_before_apply))
+            #     logging.info("uuid_after_apply: " + str(uuid_after_apply))
+            #     self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
+            #     pytest.fail("Config sent from Gateway is not received by AP")
+            # self.dut_library_object.get_latest_config_recieved(idx=i, print_log=True, attach_allure=False)
+            #
+            # r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+            # latest_uuid = r_data["latest"]
+            #
+            # r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+            # active_uuid = r_data["active"]
+            #
+            # x = 0
+            # while latest_uuid == active_uuid:
+            #     time.sleep(10)
+            #     x += 1
+            #     logging.info("active_uuid: " + str(active_uuid))
+            #     logging.info("latest_uuid: " + str(latest_uuid))
+            #     r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=False, attach_allure=False)
+            #     active_uuid = r_data["active"]
+            #     latest_uuid = r_data["latest"]
+            #     if x == 5:
+            #         break
+            # if latest_uuid != active_uuid:
+            #     logging.error("Config is not received by AP")
+            #     logging.info("uuid_before_apply: " + str(uuid_before_apply))
+            #     logging.info("uuid_after_apply: " + str(uuid_after_apply))
+            #     self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=True)
+            #     pytest.fail("Config sent from Gateway is Received by AP, But not Applied by AP")
+            # self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=False)
+            #
+            # logging.info("Config is Properly Applied on AP, Waiting for 30 Seconds for All interfaces to come up")
+            # # wait time interfaces to come up
+            # time.sleep(30)
 
             self.post_apply_check(idx=i)  # Do check AP after pushing the configuration
 

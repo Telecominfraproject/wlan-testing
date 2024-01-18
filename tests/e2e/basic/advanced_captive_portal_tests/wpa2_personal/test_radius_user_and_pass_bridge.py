@@ -18,7 +18,7 @@ setup_params_general = {
             {"ssid_name": "ssid_captive_portal_wpa2_2g_br", "appliedRadios": ["2G"], "security_key": "something",
              "captive": {
                  "auth-mode": "radius",
-                 "auth-server": "10.28.3.43",
+                 "auth-server": "10.28.3.21",
                  "auth-port": 1812,
                  "auth-secret": "testing123",
                  "walled-garden-fqdn": [
@@ -68,7 +68,7 @@ class TestBridgeModeadvancedcaptiveportal(object):
                         "security_key": "something",
                         "captive": {
                             "auth-mode": "radius",
-                            "auth-server": "10.28.3.43",
+                            "auth-server": "10.28.3.21",
                             "auth-port": 1812,
                             "auth-secret": "testing123",
                             "walled-garden-fqdn": [

@@ -95,6 +95,7 @@ class TestDataplaneThroughputNAT(object):
                                                    )
 
     @pytest.mark.wpa3_personal
+    @pytest.mark.twog
     @pytest.mark.sixg
     @pytest.mark.performance
     @allure.title("Test for TCP UDP Download 6 GHz")
