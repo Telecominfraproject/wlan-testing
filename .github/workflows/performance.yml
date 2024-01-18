@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
+        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -73,7 +73,7 @@ jobs:
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,edgecore_ecw5211,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
+          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           ap_models=${AP_MODELS}
@@ -635,13 +635,13 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 
-  test-edgecore-ecw5211:
+  test-yuncore-fap655:
     needs: ["vars", "build"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_ecw5211')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'yuncore_fap655')"
     env:
-      AP_MODEL: edgecore_ecw5211
+      AP_MODEL: yuncore_fap655
     steps:
       - name: Set AP model output
         id: ap_model
@@ -1167,7 +1167,7 @@ jobs:
 
 
   test-edgecore-eap104:
-    needs: ["vars", "build", "test-edgecore-ecw5211"]
+    needs: ["vars", "build", "test-yuncore-fap655"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
@@ -1881,7 +1881,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-edgecore-eap104, test-yuncore-ax820, test-hfcl-ion4xi]
+    needs: [vars, test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-edgecore-eap104, test-yuncore-ax820, test-hfcl-ion4xi]
     strategy:
       fail-fast: false
       matrix:
@@ -1956,7 +1956,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-edgecore-ecw5211, test-edgecore-eap104, test-yuncore-ax820, test-hfcl-ion4xi]
+    needs: [test-cig-wf188n, test-edgecore-oap101-6e, test-cig-wf196, test-edgecore-eap102, test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-edgecore-eap104, test-yuncore-ax820, test-hfcl-ion4xi]
     runs-on: ubuntu-latest
     if: always()
     steps:
