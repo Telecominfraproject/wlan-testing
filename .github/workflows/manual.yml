@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       testbed:
-        default: "basic-01"
+        default: "basic-1"
         description: "testbed to execute tests against"
         required: false
       firmware:
@@ -27,6 +27,10 @@ on:
         default: ""
         description: "additional arguments that will be passed to the pytest execution"
         required: false
+      existing_controller:
+        required: true
+        default: "qa01"
+        description: "Use an existing cloud controller, e.g. like qa01 or dev01"
       upload_report:
         type: boolean
         default: "false"
@@ -117,40 +121,55 @@ jobs:
           echo "In order to get logs, open the link above and press 'View logs' button in top right corner"
           echo "If you want to get logs auto-updated, choose this option in dropdown menu hidden behind three dots in top right corner of logs viewer"
 
+      - name: prepare configuration
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
+          if [ "${{ github.event.inputs.existing_controller }}" == "dev01" ]; then
+            cat << EOF > lab_info.json
+            ${{ secrets.LAB_CONFIGURATION_JSON }}
+            EOF
+          else
+            cat << EOF > lab_info.json
+            ${{ secrets.LAB_INFO_JSON }}
+            EOF
+          fi
+
       - name: run tests
         uses: ./.github/actions/run-tests
         with:
           namespace: "manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
           testbed: "${{ github.event.inputs.testbed }}"
           marker_expression: "${{ github.event.inputs.marker_expression }}"
-          configuration: "${{ secrets.LAB_INFO_JSON }}"
+          configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ github.event.inputs.firmware }} ${{ github.event.inputs.additional_args }}"
           allure_results_artifact_name: allure-results
 
       - name: show gw logs
         if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owgw --since-time ${{ steps.logs_start_time.outputs.time }}
+        run: kubectl -n openwifi-${{ github.event.inputs.existing_controller }} logs deployment/owgw --since-time ${{ steps.logs_start_time.outputs.time }}
 
       - name: show fms logs
         if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owfms --since-time ${{ steps.logs_start_time.outputs.time }}
+        run: kubectl -n openwifi-${{ github.event.inputs.existing_controller }} logs deployment/owfms --since-time ${{ steps.logs_start_time.outputs.time }}
 
       - name: show prov logs
         if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owprov --since-time ${{ steps.logs_start_time.outputs.time }}
+        run: kubectl -n openwifi-${{ github.event.inputs.existing_controller }} logs deployment/owprov --since-time ${{ steps.logs_start_time.outputs.time }}
 
       - name: show analytics logs
         if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owanalytics --since-time ${{ steps.logs_start_time.outputs.time }}
+        run: kubectl -n openwifi-${{ github.event.inputs.existing_controller }} logs deployment/owanalytics --since-time ${{ steps.logs_start_time.outputs.time }}
 
       - name: show subscription (userportal) logs
         if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owsub --since-time ${{ steps.logs_start_time.outputs.time }}
+        run: kubectl -n openwifi-${{ github.event.inputs.existing_controller }} logs deployment/owsub --since-time ${{ steps.logs_start_time.outputs.time }}
 
       - name: show sec logs
         if: failure()
-        run: kubectl -n openwifi-qa01 logs deployment/owsec --since-time ${{ steps.logs_start_time.outputs.time }}
+        run: kubectl -n openwifi-${{ github.event.inputs.existing_controller }} logs deployment/owsec --since-time ${{ steps.logs_start_time.outputs.time }}
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
