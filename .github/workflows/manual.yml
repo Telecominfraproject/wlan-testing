@@ -124,13 +124,9 @@ jobs:
       - name: prepare configuration
         run: |
           if [ "${{ github.event.inputs.existing_controller }}" == "dev01" ]; then
-              cat << EOF > lab_info.json
-              ${{ secrets.LAB_CONFIGURATION_JSON }} 
-          EOF
+            echo "${{ secrets.LAB_CONFIGURATION_JSON }}" > lab_info.json
           else
-              cat << EOF > lab_info.json
-              ${{ secrets.LAB_INFO_JSON }} 
-          EOF
+            echo "${{ secrets.LAB_INFO_JSON }}" > lab_info.json
           fi
 
       - name: run tests
