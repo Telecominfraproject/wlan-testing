@@ -41,8 +41,8 @@ on:
         default: ""
         description: "Tests release branch to use (i.e. 'release/v2.8.0' or 'master'). If left empty, latest release branch is used"
 
-  schedule:
-    - cron: "35 20 * * 0-4"
+#  schedule:
+#    - cron: "35 20 * * 0-4"
 
 jobs:
   # Set vars
