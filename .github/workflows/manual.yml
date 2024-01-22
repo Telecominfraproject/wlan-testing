@@ -121,15 +121,15 @@ jobs:
           echo "In order to get logs, open the link above and press 'View logs' button in top right corner"
           echo "If you want to get logs auto-updated, choose this option in dropdown menu hidden behind three dots in top right corner of logs viewer"
 
-      - name: prepare configuration
-        run: |
-          if [ "${{ github.event.inputs.existing_controller }}" == "dev01" ]; then
-            echo "Existing controller is ${{ github.event.inputs.existing_controller }}"
-            LAB_CONFIGURATION="${{ secrets.LAB_CONFIGURATION_JSON }}"
-          else
-            echo "Existing controller is ${{ github.event.inputs.existing_controller }}"
-            LAB_CONFIGURATION="${{ secrets.LAB_INFO_JSON }}"
-          fi
+#      - name: prepare configuration
+#        run: |
+#          if [ "${{ github.event.inputs.existing_controller }}" == "dev01" ]; then
+#            echo "Existing controller is ${{ github.event.inputs.existing_controller }}"
+#            LAB_CONFIGURATION="${{ secrets.LAB_CONFIGURATION_JSON }}"
+#          else
+#            echo "Existing controller is ${{ github.event.inputs.existing_controller }}"
+#            LAB_CONFIGURATION="${{ secrets.LAB_INFO_JSON }}"
+#          fi
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -137,7 +137,7 @@ jobs:
           namespace: "manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
           testbed: "${{ github.event.inputs.testbed }}"
           marker_expression: "${{ github.event.inputs.marker_expression }}"
-          configuration: "${{ env.LAB_CONFIGURATION }}"
+          configuration: "${{ secrets.LAB_CONFIGURATION_JSON }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ github.event.inputs.firmware }} ${{ github.event.inputs.additional_args }}"
           allure_results_artifact_name: allure-results
