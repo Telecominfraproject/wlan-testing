@@ -124,9 +124,11 @@ jobs:
       - name: prepare configuration
         run: |
           if [ "${{ github.event.inputs.existing_controller }}" == "dev01" ]; then
-            echo "${{ secrets.LAB_CONFIGURATION_JSON }}" > lab_info.json
+            echo "Existing controller is ${{ github.event.inputs.existing_controller }}"
+            LAB_CONFIGURATION="${{ secrets.LAB_CONFIGURATION_JSON }}"
           else
-            echo "${{ secrets.LAB_INFO_JSON }}" > lab_info.json
+            echo "Existing controller is ${{ github.event.inputs.existing_controller }}"
+            LAB_CONFIGURATION="${{ secrets.LAB_INFO_JSON }}"
           fi
 
       - name: run tests
@@ -135,7 +137,7 @@ jobs:
           namespace: "manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}"
           testbed: "${{ github.event.inputs.testbed }}"
           marker_expression: "${{ github.event.inputs.marker_expression }}"
-          configuration_file: "./lab_info.json"
+          configuration: "${{ env.LAB_CONFIGURATION }}"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ github.event.inputs.firmware }} ${{ github.event.inputs.additional_args }}"
           allure_results_artifact_name: allure-results
