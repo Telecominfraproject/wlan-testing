@@ -124,7 +124,7 @@ jobs:
         export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
         export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
         export EXTRA_VALUES='owgw.configProperties.logging\.level=information'
-        ./cleanup.sh
+        # ./cleanup.sh
         ./deploy.sh
 
     - name: Show resource state on deployment failure
