@@ -7,10 +7,12 @@
 import json
 import logging
 import random
+import datetime
 from time import sleep
 
 import allure
 import pytest
+import requests
 
 
 @pytest.mark.uc_sanity
@@ -1048,3 +1050,52 @@ class TestUcentralGatewayService(object):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         resp = get_target_object.controller_library_object.get_radius_sessions(device_name)
         assert resp.status_code == 200
+
+    @pytest.mark.rrmcmd_tx_power
+    @allure.title("Verify Dynamic change of Tx Power using RRM action command")
+    @allure.testcase(name="WIFI-13350",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-13350")
+    def test_rrmcmd_tx_power(self, get_target_object, get_testbed_details):
+        """
+            Test to SEND RRM commands from device present in Gateway UI
+            Unique marker:pytest -m "rrmcmd_tx_power"
+        """
+        action_body = {
+          "actions": [
+            {
+              "action": "tx_power",
+              "bssid": "",
+              "level": 25
+            }
+          ]
+        }
+        serial_number = get_target_object.device_under_tests_info[0]["identifier"]
+        payload = {"configuration": self.configuration, "serialNumber": serial_number, "UUID": 1}
+        uri = get_target_object.controller_library_object.build_uri("device/" + serial_number + "/configure")
+        basic_cfg_str = json.dumps(payload)
+        logging.info("Sending Command: Configure " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                     "Headers: " + str(get_target_object.controller_library_object.make_headers()))
+        allure.attach(name="Sending Command: Configure", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Data: " + str(payload) + "\n" +
+                                                    "Headers: " + str(get_target_object.controller_library_object.make_headers()))
+        resp = requests.post(uri, data=basic_cfg_str, verify=False, timeout=240,
+                             headers=get_target_object.controller_library_object.make_headers())
+        logging.info("iwinfo before applying Tx Power using RRM action command: \n")
+        cmd_response = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
+        logging.info(msg="-------")
+        logging.info(msg=cmd_response)
+        logging.info(msg="-------")
+        allure.attach(body=cmd_response, name="iwinfo before applying Tx Power using RRM action command:")
+        response = get_target_object.controller_library_object.rrm_command(payload=action_body, serial_number=serial_number)
+        logging.info(response.json())
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        logging.info("iwinfo before applying Tx Power using RRM action command: \n")
+        cmd_response1 = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
+        allure.attach(body=cmd_response1, name="iwinfo before applying Tx Power using RRM action command:")
+        assert response.status_code == 200
