@@ -143,7 +143,6 @@ jobs:
           export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
           export OWSUB_VERSION=${{ matrix.owsub_version }}
           export OWRRM_VERSION=${{ matrix.owrrm_version }}
-          ./cleanup.sh
           ./deploy.sh
         else
           export DEPLOY_METHOD=git
@@ -157,7 +156,6 @@ jobs:
           export OWANALYTICS_VERSION=main
           export OWSUB_VERSION=main
           export OWRRM_VERSION=main
-          ./cleanup.sh
           ./deploy.sh
         fi
 
