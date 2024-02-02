@@ -481,8 +481,10 @@ def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_
                 ap_logs = get_target_object.get_dut_library_object().get_logread(
                     start_ref="start testcase: " + instance_name,
                     stop_ref="stop testcase: " + instance_name)
-                allure.attach(name='Logs - ' + get_testbed_details["device_under_tests"][i]["identifier"],
+                allure.attach(name='dut_logs_per_test_case - ' + get_testbed_details["device_under_tests"][i]["identifier"],
                               body=str(ap_logs))
+                ap_logs = get_target_object.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+                allure.attach(body=ap_logs, name="AP logread")
 
         request.addfinalizer(collect_logs)
 
