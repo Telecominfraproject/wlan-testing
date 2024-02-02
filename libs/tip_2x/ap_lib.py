@@ -265,7 +265,7 @@ class APLIBS:
                                                     "Please add valid certificates on AP")
 
     def run_generic_command(self, cmd="", idx=0, print_log=True, attach_allure=False,
-                            expected_attachment_type=allure.attachment_type.TEXT, restrictions=False):
+                            expected_attachment_type=allure.attachment_type.TEXT, restrictions=False, attach_name=None):
         input_command = cmd
         logging.info("Executing Command on AP: " + cmd)
         try:
@@ -300,7 +300,10 @@ class APLIBS:
                     logging.info(cmd)
                     logging.info("Output for command: " + input_command + "\n" + final_output)
                 if attach_allure:
-                    allure.attach(name=input_command, body=output, attachment_type=expected_attachment_type)
+                    if attach_name is None:
+                        allure.attach(name=input_command, body=output, attachment_type=expected_attachment_type)
+                    else:
+                        allure.attach(name=attach_name, body=output, attachment_type=expected_attachment_type)
             client.close()
         except Exception as e:
             logging.error(e)
