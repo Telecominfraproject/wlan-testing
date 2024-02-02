@@ -300,6 +300,32 @@ class tip_2x:
         ret_val = dict()
         for i in range(0, len(self.device_under_tests_info)):
             self.pre_apply_check(idx=i)  # Do check AP before pushing the configuration
+            # Before config push ifconfig up0v0
+            check_iface = self.get_dut_library_object().run_generic_command(cmd="ifconfig up0v0", idx=i,
+                                                                            print_log=True,
+                                                                            attach_allure=True,
+                                                                            attach_name="Before config push ifconfig up0v0",
+                                                                            expected_attachment_type=allure.attachment_type.TEXT)
+            if check_iface.__contains__("error fetching interface information: Device not found"):
+                logging.error(check_iface)
+                pytest.exit("up0v0 interface is not available!!!")
+            # Check internet connectivity in ap
+            is_ping = False
+            for i in range(3):
+                check_ping = self.get_dut_library_object().run_generic_command(cmd="ping -c 3 mi.com", idx=i,
+                                                                               print_log=True,
+                                                                               attach_allure=True,
+                                                                               attach_name="Before config push ping " + str(
+                                                                                   i),
+                                                                               expected_attachment_type=allure.attachment_type.TEXT)
+                if check_ping.__contains__("0% packet loss"):
+                    is_ping = True
+                    break
+                time.sleep(10)
+            if not is_ping:
+                ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+                allure.attach(body=ap_logs, name="AP Log unable to ping internet")
+                pytest.exit("AP unable to ping internet")
 
             S = 9
             instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
@@ -478,6 +504,7 @@ class tip_2x:
                     a["frequency"] = temp[j][2]
                 ret_val[dut]["radio_data"][j] = a
         return ret_val
+
     """
         setup_special_configuration - Method to configure APs in mesh operating modes with multiple SSID's and multiple AP's
                                     This covers, mesh and other roaming scenarios which includes any special type of modes
@@ -1088,8 +1115,9 @@ class tip_2x:
     #     request.addfinalizer(teardown_session)
     #     yield status
 
+
 if __name__ == '__main__':
-    basic_shivam= {
+    basic_shivam = {
         "target": "tip_2x",
         "controller": {
             "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
