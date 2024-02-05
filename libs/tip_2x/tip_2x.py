@@ -318,14 +318,14 @@ class tip_2x:
                                                                                attach_name="Before config push ping " + str(
                                                                                    i),
                                                                                expected_attachment_type=allure.attachment_type.TEXT)
-                if check_ping.__contains__("0% packet loss"):
+                if not check_ping.__contains__("100% packet loss"):
                     is_ping = True
                     break
                 time.sleep(10)
             if not is_ping:
                 ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-                allure.attach(body=ap_logs, name="AP Log unable to ping internet")
-                pytest.exit("AP unable to ping internet")
+                allure.attach(body=ap_logs, name="AP is unable to reach internet: Logs")
+                pytest.exit("AP is unreachable to internet")
 
             S = 9
             instance_name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
