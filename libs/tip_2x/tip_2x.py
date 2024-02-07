@@ -8,7 +8,7 @@ import json
 import random
 import string
 import time
-
+import datetime
 import allure
 import pytest
 import requests
@@ -323,8 +323,11 @@ class tip_2x:
                     break
                 time.sleep(10)
             if not is_ping:
+                timestamp = datetime.datetime.utcnow()
+                logging.info("AP is unable to reach internet Timestamp: " + str(timestamp))
                 ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-                allure.attach(body=ap_logs, name="AP is unable to reach internet: Logs")
+                allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs),
+                              name="AP is unable to reach internet: Logs")
                 pytest.exit("AP is unreachable to internet")
 
             S = 9
@@ -339,16 +342,20 @@ class tip_2x:
             # uuid_before_apply = r_data["latest"]
 
             # attaching ap logs before config push
+            timestamp = datetime.datetime.utcnow()
+            logging.info("AP Log Before config push Timestamp: " + str(timestamp))
             ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-            allure.attach(body=ap_logs, name="AP Log Before config push: ")
+            allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs), name="AP Log Before config push: ")
             resp = object()
             # Apply the Config
             try:
                 resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
                 logging.info("Response" + str(resp))
             except Exception as e:
+                timestamp = datetime.datetime.utcnow()
+                logging.info("Failure while pushing Timestamp: " + str(timestamp))
                 ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-                allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
+                allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs), name="Failure while pushing- AP Logs: ")
                 allure.attach(body=str(e), name="Exception data after config push: ")
                 logging.info("Error in apply config" + str(e))
             logging.info("Response for Config apply: " + str(resp.status_code))
@@ -356,20 +363,29 @@ class tip_2x:
                 logging.info("Failed to apply Configuration to AP. Response Code" +
                              str(resp.status_code) +
                              "Retrying in 5 Seconds... ")
+                timestamp = datetime.datetime.utcnow()
+                logging.info("AP logs during config fails Timestamp: " + str(timestamp))
                 ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-                allure.attach(body=ap_logs, name="AP logs during config fails: ")
+                allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs),
+                              name="AP logs during config fails: ")
                 time.sleep(5)
                 try:
                     resp = profile_object.push_config(serial_number=self.device_under_tests_info[i]["identifier"])
                     logging.info("Response" + str(resp))
                 except Exception as e:
+                    timestamp = datetime.datetime.utcnow()
+                    logging.info("Failure while pushing Timestamp: " + str(timestamp))
                     ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-                    allure.attach(body=ap_logs, name="Failure while pushing- AP Logs: ")
+                    allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs),
+                                  name="Failure while pushing- AP Logs: ")
                     allure.attach(body=str(e), name="Exception data after config push: ")
                     logging.info("Error in apply config" + str(e))
                 if resp.status_code != 200:
+                    timestamp = datetime.datetime.utcnow()
+                    logging.info("AP logs during config fails Timestamp: " + str(timestamp))
                     ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-                    allure.attach(body=ap_logs, name="AP logs during config fails: ")
+                    allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs),
+                                  name="AP logs during config fails: ")
                     logging.error("Failed to apply Config, Response code:" + str(resp.status_code))
                     pytest.fail("Failed to apply Config, Response code :" + str(resp.status_code))
             # Find uuid from response
@@ -693,8 +709,11 @@ class tip_2x:
         self.dut_library_object.setup_serial_environment(idx=idx)
         self.dut_library_object.verify_certificates(idx=idx)
         ret_val = self.dut_library_object.ubus_call_ucentral_status(idx=idx, attach_allure=False, retry=10)
+        timestamp = datetime.datetime.utcnow()
+        logging.info("wifi status before apply Timestamp: " + str(timestamp))
         wifi_status = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
-        allure.attach(name="wifi_status_before_apply: ", body=str(json.dumps(wifi_status, indent=2)))
+        allure.attach(name="wifi_status_before_apply: ", body="TimeStamp: " + str(timestamp) + "\n" +
+                                                              str(json.dumps(wifi_status, indent=2)))
         if not ret_val["connected"] or ret_val["connected"] is None:
             self.dut_library_object.check_connectivity(idx=idx)
             self.dut_library_object.restart_ucentral_service(idx=idx, attach_allure=False)
@@ -732,8 +751,11 @@ class tip_2x:
                 logging.error("Failed the post apply check on: " + self.device_under_tests_info[idx]["identifier"])
                 self.dut_library_object.check_connectivity(idx=idx, attach_allure=False)
         self.dut_library_object.check_connectivity(idx=idx)
+        timestamp = datetime.datetime.utcnow()
+        logging.info("wifi status after apply Timestamp: " + str(timestamp))
         r_data = self.dut_library_object.get_wifi_status(idx=idx, attach_allure=False)
-        allure.attach(name="wifi_status_after_apply: ", body=str(json.dumps(r_data, indent=2)))
+        allure.attach(name="wifi_status_after_apply: ", body="TimeStamp: " + str(timestamp) + "\n" +
+                                                             str(json.dumps(r_data, indent=2)))
         logging.info("Checking Wifi Status after Config Apply...")
         for radio in r_data:
             if not r_data[radio]["up"]:
