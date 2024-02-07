@@ -8,6 +8,8 @@ import json
 import logging
 import random
 import datetime
+import re
+import time
 from time import sleep
 
 import allure
@@ -765,7 +767,6 @@ class TestUcentralGatewayService(object):
         resp = get_target_object.controller_library_object.get_radius_proxy_configuration()
         assert resp.status_code == 200
 
-
     @pytest.mark.gw_country_code_for_ip_address
     @allure.title("Get the country code for an IP address")
     @allure.testcase(name="WIFI-12558",
@@ -1061,13 +1062,13 @@ class TestUcentralGatewayService(object):
             Unique marker:pytest -m "rrmcmd_tx_power"
         """
         action_body = {
-          "actions": [
-            {
-              "action": "tx_power",
-              "bssid": "",
-              "level": 25
-            }
-          ]
+            "actions": [
+                {
+                    "action": "tx_power",
+                    "bssid": "",
+                    "level": 20
+                }
+            ]
         }
         serial_number = get_target_object.device_under_tests_info[0]["identifier"]
         payload = {"configuration": self.configuration, "serialNumber": serial_number, "UUID": 1}
@@ -1079,23 +1080,44 @@ class TestUcentralGatewayService(object):
                      "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
                      "Headers: " + str(get_target_object.controller_library_object.make_headers()))
         allure.attach(name="Sending Command: Configure", body="Sending Command: " + "\n" +
-                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
-                                                    "URI: " + str(uri) + "\n" +
-                                                    "Data: " + str(payload) + "\n" +
-                                                    "Headers: " + str(get_target_object.controller_library_object.make_headers()))
+                                                              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                              "URI: " + str(uri) + "\n" +
+                                                              "Data: " + str(payload) + "\n" +
+                                                              "Headers: " + str(
+            get_target_object.controller_library_object.make_headers()))
+        logging.info("wait until the configuration push get's applied...")
         resp = requests.post(uri, data=basic_cfg_str, verify=False, timeout=240,
                              headers=get_target_object.controller_library_object.make_headers())
+        if resp and resp.status_code == 200:
+            logging.info(f"Status:{resp.status_code} - Configuration push successful")
+            logging.info(resp.json())
+        else:
+            logging.error("Failed to push the config")
+            pytest.exit(f"Reason:{resp.reason} - Error while pushing the configuration")
         logging.info("iwinfo before applying Tx Power using RRM action command: \n")
         cmd_response = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
-        logging.info(msg="-------")
-        logging.info(msg=cmd_response)
-        logging.info(msg="-------")
         allure.attach(body=cmd_response, name="iwinfo before applying Tx Power using RRM action command:")
-        response = get_target_object.controller_library_object.rrm_command(payload=action_body, serial_number=serial_number)
-        logging.info(response.json())
+        interfaces = {}
+        interface_matches = re.finditer(
+            r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response, re.DOTALL)
+        if interface_matches:
+            for match in interface_matches:
+                access_point = match.group(1)
+                tx_power = match.group(2).strip()
+            interfaces[f'wlan{len(interfaces) + 1}'] = {'Access Point': access_point, 'Tx-Power': tx_power}
+            logging.info(interfaces)
+        else:
+            logging.error("Failed to get iwinfo")
+            pytest.exit("Failed to get iwinfo")
+        for i in interfaces:
+            action_body["actions"][0]["bssid"] = interfaces[i]['Access Point']
+            action_body["actions"][0]["level"] = 20
+            response = get_target_object.controller_library_object.rrm_command(payload=action_body, serial_number=serial_number)
+            logging.info(response.json())
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
-        logging.info("iwinfo before applying Tx Power using RRM action command: \n")
+        time.sleep(3)
+        logging.info("iwinfo After applying Tx Power using RRM action command: \n")
         cmd_response1 = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
         allure.attach(body=cmd_response1, name="iwinfo before applying Tx Power using RRM action command:")
         assert response.status_code == 200
