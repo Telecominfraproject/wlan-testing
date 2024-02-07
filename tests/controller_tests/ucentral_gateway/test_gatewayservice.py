@@ -27,13 +27,21 @@ class TestUcentralGatewayService(object):
     """
     """
     configuration = {
-        "uuid": 1,
+        "uuid": 2,
         "radios": [
             {
                 "band": "5G",
-                "country": "CA",
+                "channel": 52,
                 "channel-mode": "HE",
-                "channel-width": 80
+                "channel-width": 80,
+                "country": "CA"
+            },
+            {
+                "band": "2G",
+                "channel": 11,
+                "channel-mode": "HE",
+                "channel-width": 20,
+                "country": "CA"
             }
         ],
 
@@ -56,7 +64,7 @@ class TestUcentralGatewayService(object):
                     {
                         "name": "OpenWifi",
                         "wifi-bands": [
-                            "5G"
+                            "2G", "5G"
                         ],
                         "bss-mode": "ap",
                         "encryption": {
@@ -86,36 +94,24 @@ class TestUcentralGatewayService(object):
                         "lease-count": 100,
                         "lease-time": "6h"
                     }
-                },
-                "ssids": [
-                    {
-                        "name": "OpenWifi",
-                        "wifi-bands": [
-                            "5G"
-                        ],
-                        "bss-mode": "ap",
-                        "encryption": {
-                            "proto": "psk2",
-                            "key": "OpenWifi",
-                            "ieee80211w": "optional"
-                        }
-                    }
-                ]
-
+                }
             }
         ],
         "metrics": {
             "statistics": {
                 "interval": 120,
-                "types": ["ssids", "lldp", "clients"]
+                "types": [ "ssids", "lldp", "clients" ]
             },
             "health": {
                 "interval": 120
+            },
+            "wifi-frames": {
+                "filters": [ "probe", "auth" ]
             }
         },
         "services": {
             "lldp": {
-                "describe": "2.x",
+                "describe": "uCentral",
                 "location": "universe"
             },
             "ssh": {
@@ -1102,9 +1098,10 @@ class TestUcentralGatewayService(object):
             r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response, re.DOTALL)
         if interface_matches:
             for match in interface_matches:
+                interface_name = f'wlan{match.group(0)[4]}'
                 access_point = match.group(1)
                 tx_power = match.group(2).strip()
-            interfaces[f'wlan{len(interfaces) + 1}'] = {'Access Point': access_point, 'Tx-Power': tx_power}
+                interfaces[interface_name] = {'Access Point': access_point, 'Tx-Power': tx_power}
             logging.info(interfaces)
         else:
             logging.error("Failed to get iwinfo")
@@ -1114,10 +1111,30 @@ class TestUcentralGatewayService(object):
             action_body["actions"][0]["level"] = 20
             response = get_target_object.controller_library_object.rrm_command(payload=action_body, serial_number=serial_number)
             logging.info(response.json())
-        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
-                      attachment_type=allure.attachment_type.JSON)
+            time.sleep(2)
+            allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                          attachment_type=allure.attachment_type.JSON)
         time.sleep(3)
         logging.info("iwinfo After applying Tx Power using RRM action command: \n")
         cmd_response1 = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
         allure.attach(body=cmd_response1, name="iwinfo before applying Tx Power using RRM action command:")
-        assert response.status_code == 200
+        interfaces1 = {}
+        interface_matches1 = re.finditer(
+            r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response1,
+            re.DOTALL)
+        if interface_matches1:
+            for match1 in interface_matches1:
+                interface_name1 = f'wlan{match1.group(0)[4]}'
+                access_point1 = match1.group(1)
+                tx_power1 = match1.group(2).strip()
+                interfaces1[interface_name1] = {'Access Point': access_point1, 'Tx-Power': tx_power1}
+            logging.info(interfaces1)
+        else:
+            logging.error("Failed to get iwinfo")
+            pytest.exit("Failed to get iwinfo")
+        key_to_check = ('Tx-Power','20')
+        for key, value in interfaces1.items():
+            if key_to_check in value:
+                assert True
+            else:
+                assert False, "failed to set tx power using RRM CMD"
