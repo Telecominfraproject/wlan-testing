@@ -1151,3 +1151,110 @@ class TestUcentralGatewayService(object):
             assert False, "Empty iwinfo reponse from AP through minicom"
         else:
             assert False, "Failed to get iwinfo from minicom"
+
+    @pytest.mark.rrmcmd_channel_switch
+    @allure.title("Verify Dynamic change of Channel using RRM action command")
+    @allure.testcase(name="WIFI-13348",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-13348")
+    def test_rrmcmd_channel_switch(self, get_target_object, get_testbed_details):
+        """
+            Test to SEND RRM commands from device present in Gateway UI
+            Unique marker:pytest -m "rrmcmd_channel_switch"
+        """
+        action_body = {
+            "actions": [
+                {
+                    "action": "channel_switch",
+                    "bssid": "",
+                    "channel": 0
+                }
+            ]
+        }
+        serial_number = get_target_object.device_under_tests_info[0]["identifier"]
+        for i in range(len(self.configuration['radios'])):
+            if self.configuration['radios'][i]["band"] == "5G":
+                self.configuration['radios'][i]['channel'] = 36
+            if self.configuration['radios'][i]["band"] == "2G":
+                self.configuration['radios'][i]['channel'] = 6
+        payload = {"configuration": self.configuration, "serialNumber": serial_number, "UUID": 1}
+        uri = get_target_object.controller_library_object.build_uri("device/" + serial_number + "/configure")
+        basic_cfg_str = json.dumps(payload)
+        logging.info("Sending Command: Configure " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                     "Headers: " + str(get_target_object.controller_library_object.make_headers()))
+        allure.attach(name="Sending Command: Configure", body="Sending Command: " + "\n" +
+                                                              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                              "URI: " + str(uri) + "\n" +
+                                                              "Data: " + str(payload) + "\n" +
+                                                              "Headers: " + str(
+            get_target_object.controller_library_object.make_headers()))
+        logging.info("wait until the configuration push get's applied...")
+        resp = requests.post(uri, data=basic_cfg_str, verify=False, timeout=240,
+                             headers=get_target_object.controller_library_object.make_headers())
+        if resp and resp.status_code == 200:
+            logging.info(f"Status:{resp.status_code} - Configuration push successful")
+            logging.info(resp.json())
+        else:
+            logging.error("Failed to push the config")
+            pytest.exit(f"Reason:{resp.reason} - Error while pushing the configuration")
+        logging.info("iwinfo before changing Channel using RRM action command: \n")
+        cmd_response = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
+        allure.attach(body=cmd_response, name="iwinfo before changing Channel using RRM action command:")
+        if str(cmd_response) != "pop from empty list":
+            interfaces = {}
+            interface_matches = re.finditer(
+                r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+([\d\s]+)', cmd_response,
+                re.DOTALL)
+            if interface_matches:
+                for match in interface_matches:
+                    interface_name = f'wlan{match.group(0)[4]}'
+                    access_point = match.group(1)
+                    channel = match.group(2).strip()
+                    interfaces[interface_name] = {'Access Point': access_point, 'Channel': channel}
+                logging.info(interfaces)
+            else:
+                logging.error("Failed to get iwinfo")
+                pytest.exit("Failed to get iwinfo")
+            for i in interfaces:
+                action_body["actions"][0]["bssid"] = interfaces[i]['Access Point']
+                action_body["actions"][0]["channel"] = 6
+                response = get_target_object.controller_library_object.rrm_command(payload=action_body,
+                                                                                   serial_number=serial_number)
+                logging.info(response.json())
+                time.sleep(2)
+                allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                              attachment_type=allure.attachment_type.JSON)
+            time.sleep(3)
+            logging.info("iwinfo after changing channel using RRM action command: \n")
+            cmd_response1 = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
+            allure.attach(body=cmd_response1, name="iwinfo after changing channel using RRM action command:")
+            if cmd_response1 == {}:
+                assert False, "Empty iwinfo reponse from AP through minicom"
+            interfaces1 = {}
+            interface_matches1 = re.finditer(
+                r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+([\d\s]+)', cmd_response1,
+                re.DOTALL)
+            if interface_matches1:
+                for match1 in interface_matches1:
+                    interface_name1 = f'wlan{match1.group(0)[4]}'
+                    access_point1 = match1.group(1)
+                    channel1 = match1.group(2).strip()
+                    interfaces1[interface_name1] = {'Access Point': access_point1, 'Channel': channel1}
+                logging.info(interfaces1)
+            else:
+                logging.error("Failed to get iwinfo")
+                pytest.exit("Failed to get iwinfo")
+            key_to_check = ('Channel', '6')
+            logging.info(interfaces1.items())
+            for key, value in interfaces1.items():
+                logging.info(key, value)
+                if key_to_check in value:
+                    assert True
+                else:
+                    assert False, "failed to set channel using RRM CMD"
+        elif cmd_response == {}:
+            assert False, "Empty iwinfo reponse from AP through minicom"
+        else:
+            assert False, "Failed to get iwinfo from minicom"
