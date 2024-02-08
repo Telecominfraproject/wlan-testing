@@ -100,13 +100,13 @@ class TestUcentralGatewayService(object):
         "metrics": {
             "statistics": {
                 "interval": 120,
-                "types": [ "ssids", "lldp", "clients" ]
+                "types": ["ssids", "lldp", "clients"]
             },
             "health": {
                 "interval": 120
             },
             "wifi-frames": {
-                "filters": [ "probe", "auth" ]
+                "filters": ["probe", "auth"]
             }
         },
         "services": {
@@ -1067,6 +1067,8 @@ class TestUcentralGatewayService(object):
             ]
         }
         serial_number = get_target_object.device_under_tests_info[0]["identifier"]
+        for i in range(len(self.configuration['radios'])):
+            self.configuration['radios'][i]["tx-power"] = 23
         payload = {"configuration": self.configuration, "serialNumber": serial_number, "UUID": 1}
         uri = get_target_object.controller_library_object.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
@@ -1093,48 +1095,59 @@ class TestUcentralGatewayService(object):
         logging.info("iwinfo before applying Tx Power using RRM action command: \n")
         cmd_response = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
         allure.attach(body=cmd_response, name="iwinfo before applying Tx Power using RRM action command:")
-        interfaces = {}
-        interface_matches = re.finditer(
-            r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response, re.DOTALL)
-        if interface_matches:
-            for match in interface_matches:
-                interface_name = f'wlan{match.group(0)[4]}'
-                access_point = match.group(1)
-                tx_power = match.group(2).strip()
-                interfaces[interface_name] = {'Access Point': access_point, 'Tx-Power': tx_power}
-            logging.info(interfaces)
-        else:
-            logging.error("Failed to get iwinfo")
-            pytest.exit("Failed to get iwinfo")
-        for i in interfaces:
-            action_body["actions"][0]["bssid"] = interfaces[i]['Access Point']
-            action_body["actions"][0]["level"] = 20
-            response = get_target_object.controller_library_object.rrm_command(payload=action_body, serial_number=serial_number)
-            logging.info(response.json())
-            time.sleep(2)
-            allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
-                          attachment_type=allure.attachment_type.JSON)
-        time.sleep(3)
-        logging.info("iwinfo After applying Tx Power using RRM action command: \n")
-        cmd_response1 = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
-        allure.attach(body=cmd_response1, name="iwinfo before applying Tx Power using RRM action command:")
-        interfaces1 = {}
-        interface_matches1 = re.finditer(
-            r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response1,
-            re.DOTALL)
-        if interface_matches1:
-            for match1 in interface_matches1:
-                interface_name1 = f'wlan{match1.group(0)[4]}'
-                access_point1 = match1.group(1)
-                tx_power1 = match1.group(2).strip()
-                interfaces1[interface_name1] = {'Access Point': access_point1, 'Tx-Power': tx_power1}
-            logging.info(interfaces1)
-        else:
-            logging.error("Failed to get iwinfo")
-            pytest.exit("Failed to get iwinfo")
-        key_to_check = ('Tx-Power','20')
-        for key, value in interfaces1.items():
-            if key_to_check in value:
-                assert True
+        if str(cmd_response) != "pop from empty list":
+            interfaces = {}
+            interface_matches = re.finditer(
+                r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response,
+                re.DOTALL)
+            if interface_matches:
+                for match in interface_matches:
+                    interface_name = f'wlan{match.group(0)[4]}'
+                    access_point = match.group(1)
+                    tx_power = match.group(2).strip()
+                    interfaces[interface_name] = {'Access Point': access_point, 'Tx-Power': tx_power}
+                logging.info(interfaces)
             else:
-                assert False, "failed to set tx power using RRM CMD"
+                logging.error("Failed to get iwinfo")
+                pytest.exit("Failed to get iwinfo")
+            for i in interfaces:
+                action_body["actions"][0]["bssid"] = interfaces[i]['Access Point']
+                action_body["actions"][0]["level"] = 20
+                response = get_target_object.controller_library_object.rrm_command(payload=action_body,
+                                                                                   serial_number=serial_number)
+                logging.info(response.json())
+                time.sleep(2)
+                allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                              attachment_type=allure.attachment_type.JSON)
+            time.sleep(3)
+            logging.info("iwinfo After applying Tx Power using RRM action command: \n")
+            cmd_response1 = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
+            allure.attach(body=cmd_response1, name="iwinfo before applying Tx Power using RRM action command:")
+            if cmd_response1 == {}:
+                assert False, "Empty iwinfo reponse from AP through minicom"
+            interfaces1 = {}
+            interface_matches1 = re.finditer(
+                r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response1,
+                re.DOTALL)
+            if interface_matches1:
+                for match1 in interface_matches1:
+                    interface_name1 = f'wlan{match1.group(0)[4]}'
+                    access_point1 = match1.group(1)
+                    tx_power1 = match1.group(2).strip()
+                    interfaces1[interface_name1] = {'Access Point': access_point1, 'Tx-Power': tx_power1}
+                logging.info(interfaces1)
+            else:
+                logging.error("Failed to get iwinfo")
+                pytest.exit("Failed to get iwinfo")
+            key_to_check = ('Tx-Power', '20')
+            logging.info(interfaces1.items())
+            for key, value in interfaces1.items():
+                logging.info(key, value)
+                if key_to_check in value:
+                    assert True
+                else:
+                    assert False, "failed to set tx power using RRM CMD"
+        elif cmd_response == {}:
+            assert False, "Empty iwinfo reponse from AP through minicom"
+        else:
+            assert False, "Failed to get iwinfo from minicom"
