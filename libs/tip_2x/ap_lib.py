@@ -4,7 +4,7 @@ import logging
 import random
 import string
 import time
-
+import datetime
 import allure
 import paramiko
 import pytest
@@ -191,6 +191,8 @@ class APLIBS:
                 logging.error("ubus call ucentral status has unexpected data")
                 return False
         active_uuid = r_val["active"]
+        timestamp = datetime.datetime.utcnow()
+        logging.info("cat /etc/ucentral/ucentral.cfg Timestamp: " + str(timestamp))
         output = self.run_generic_command(cmd="cat /etc/ucentral/ucentral.cfg." + str(active_uuid), idx=idx,
                                           print_log=print_log,
                                           attach_allure=attach_allure,
@@ -199,7 +201,7 @@ class APLIBS:
             data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
             logging.info("Active config is : " + str(data))
             allure.attach(name="cat /etc/ucentral/ucentral.cfg." + str(active_uuid),
-                          body=str(json.dumps(data, indent=2)),
+                          body="TimeStamp: " + str(timestamp) + "\n" + str(json.dumps(data, indent=2)),
                           attachment_type=allure.attachment_type.JSON)
         except Exception as e:
             data = output
@@ -265,7 +267,7 @@ class APLIBS:
                                                     "Please add valid certificates on AP")
 
     def run_generic_command(self, cmd="", idx=0, print_log=True, attach_allure=False,
-                            expected_attachment_type=allure.attachment_type.TEXT, restrictions=False):
+                            expected_attachment_type=allure.attachment_type.TEXT, restrictions=False, attach_name=None):
         input_command = cmd
         logging.info("Executing Command on AP: " + cmd)
         try:
@@ -289,8 +291,11 @@ class APLIBS:
                           f"cmd --value \'{cmd}\' "
                 if print_log:
                     logging.info(cmd)
+            timestamp = datetime.datetime.utcnow()
+            logging.info(cmd + " Timestamp: " + str(timestamp))
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
+            # data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
             final_output = str(output)
             if not output.__contains__(b"BOOTLOADER-CONSOLE-IPQ6018#"):
                 status = output.decode('utf-8').splitlines()
@@ -300,7 +305,13 @@ class APLIBS:
                     logging.info(cmd)
                     logging.info("Output for command: " + input_command + "\n" + final_output)
                 if attach_allure:
-                    allure.attach(name=input_command, body=output, attachment_type=expected_attachment_type)
+                    if attach_name is None:
+                        allure.attach(name=input_command, body=str("TimeStamp: " + str(timestamp) + "\n").encode() +
+                                                            output, attachment_type=expected_attachment_type)
+                    else:
+                        allure.attach(name=attach_name,
+                                      body=str("TimeStamp: " + str(timestamp) + "\n").encode() + output,
+                                      attachment_type=expected_attachment_type)
             client.close()
         except Exception as e:
             logging.error(e)
