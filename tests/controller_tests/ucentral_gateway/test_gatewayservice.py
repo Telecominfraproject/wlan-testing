@@ -1258,3 +1258,78 @@ class TestUcentralGatewayService(object):
             assert False, "Empty iwinfo reponse from AP through minicom"
         else:
             assert False, "Failed to get iwinfo from minicom"
+
+    @pytest.mark.rrmcmd_kick_and_ban
+    @allure.title("Verify Kick and Ban of a Client using RRM action command")
+    @allure.testcase(name="WIFI-13349",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-13349")
+    def test_rrmcmd_kick_and_ban(self, get_target_object, get_testbed_details, get_test_library):
+        """
+            Test to SEND RRM commands from device present in Gateway UI
+            Unique marker:pytest -m "rrmcmd_kick_and_ban"
+        """
+        action_body = {
+            "actions": [
+                {
+                    "action": "kick",
+                    "addr": "",
+                    "reason": 5,
+                    "ban_time": 10
+                }
+            ]
+        }
+        ssid, passwd = self.configuration["interfaces"][0]["ssids"][0]["name"], \
+            self.configuration["interfaces"][0]["ssids"][0]["encryption"]["key"]
+        serial_number = get_target_object.device_under_tests_info[0]["identifier"]
+        payload = {"configuration": self.configuration, "serialNumber": serial_number, "UUID": 1}
+        uri = get_target_object.controller_library_object.build_uri("device/" + serial_number + "/configure")
+        basic_cfg_str = json.dumps(payload)
+        logging.info("Sending Command: Configure " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                     "Headers: " + str(get_target_object.controller_library_object.make_headers()))
+        allure.attach(name="Sending Command: Configure", body="Sending Command: " + "\n" +
+                                                              "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                              "URI: " + str(uri) + "\n" +
+                                                              "Data: " + str(payload) + "\n" +
+                                                              "Headers: " + str(
+            get_target_object.controller_library_object.make_headers()))
+        logging.info("wait until the configuration push get's applied...")
+        resp = requests.post(uri, data=basic_cfg_str, verify=False, timeout=240,
+                             headers=get_target_object.controller_library_object.make_headers())
+        if resp and resp.status_code == 200:
+            logging.info(f"Status:{resp.status_code} - Configuration push successful")
+            logging.info(resp.json())
+        else:
+            logging.error("Failed to push the config")
+            pytest.exit(f"Reason:{resp.reason} - Error while pushing the configuration")
+        sta_created = get_test_library.client_connect_using_radio(ssid=ssid, passkey=passwd, security="wpa2",
+                                                                  mode="BRIDGE", radio="wiphy0",
+                                                                  station_name=["sta100"],
+                                                                  create_vlan=False)
+        if not sta_created:
+            logging.info("Failed in creation of Station")
+            pytest.fail("Station creation failed")
+        a = get_test_library.json_get("/wifi-msgs/last/1", debug_=True)
+        last_timestamp = a['wifi-messages']['time-stamp']
+        logging.info(f"Last WiFi Message Time Stamp: {last_timestamp}")
+        logging.info("get the client mac address")
+        client_mac = get_test_library.json_get('/ports/sta100')
+        response = get_target_object.controller_library_object.rrm_command(payload=action_body,
+                                                                           serial_number=serial_number)
+        logging.info(response.json())
+        time.sleep(2)
+        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+                      attachment_type=allure.attachment_type.JSON)
+        logging.info("Checking Wifi-Messages to verify Client Disconnection Messages: \n")
+        wifi_messages = get_test_library.json_get("/wifi-msgs/since=time/" + str(last_timestamp), debug_=True)
+
+        if ('Reason 5; disassociated as AP is unable to handle all connected STA' in wifi_messages or
+                f'IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(client_mac)} reason=5'):
+            logging.info("AP kicked off the STA successfully using RRM kick CMD")
+            allure.attach(name=f"wifi-messages:", body=str(wifi_messages),
+                          attachment_type=allure.attachment_type.TEXT)
+            assert True
+        else:
+            assert False, 'AP failed to kick & ban the client using RRM CMD'
