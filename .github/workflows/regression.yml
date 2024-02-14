@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi"
+        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,cig_wf186w"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -73,7 +73,7 @@ jobs:
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,hfcl_ion4xi' }}"
+          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,cig_wf186w' }}"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           ap_models=${AP_MODELS}
@@ -1888,13 +1888,13 @@ jobs:
         run: kubectl -n openwifi-qa01 logs deployment/owsec
 
 
-  test-hfcl-ion4xi:
+  test-cig-wf186w:
     needs: [ "vars", "build", "test-yuncore-ax820"]
     runs-on: [self-hosted, small]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xi')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf186w')"
     env:
-      AP_MODEL: hfcl_ion4xi
+      AP_MODEL: cig_wf186w
     steps:
       - name: Set AP model output
         id: ap_model
@@ -2334,7 +2334,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-yuncore-ax820, test-hfcl-ion4xi, test-cig-wf196]
+    needs: [vars, test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-yuncore-ax820, test-cig-wf186w, test-cig-wf196]
     strategy:
       fail-fast: false
       matrix:
@@ -2387,7 +2387,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-yuncore-ax820, test-hfcl-ion4xi, test-cig-wf196]
+    needs: [test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-yuncore-ax820, test-cig-wf186w, test-cig-wf196]
     runs-on: ubuntu-latest
     if: always()
     steps:
