@@ -30,7 +30,7 @@ on:
         description: "revision of firmware to flash on AP, <branch>-<commit>"
       marker_expressions:
         required: true
-        default: "dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests"
+        default: "dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,strict_forwarding_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests"
         description: "Marker expressions to select tests to execute"
       existing_controller:
         required: true
