@@ -311,7 +311,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -336,7 +336,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -356,7 +356,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -381,12 +381,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -634,7 +634,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -659,7 +659,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -679,7 +679,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -704,12 +704,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -957,7 +957,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -982,7 +982,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1002,7 +1002,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -1027,12 +1027,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1280,7 +1280,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1305,7 +1305,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1325,7 +1325,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -1350,12 +1350,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1603,7 +1603,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1628,7 +1628,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1648,7 +1648,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -1673,12 +1673,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1926,7 +1926,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1951,7 +1951,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1971,7 +1971,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -1996,12 +1996,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2249,7 +2249,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2274,7 +2274,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2294,7 +2294,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -2319,12 +2319,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2572,7 +2572,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2597,7 +2597,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2617,7 +2617,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -2642,12 +2642,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2895,7 +2895,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2920,7 +2920,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2940,7 +2940,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -2965,12 +2965,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3214,7 +3214,7 @@ jobs:
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3239,7 +3239,7 @@ jobs:
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-captive_portal
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3259,7 +3259,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -3284,12 +3284,12 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-asb
           testbed: basic-3a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb-tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
