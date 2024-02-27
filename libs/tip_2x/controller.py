@@ -860,6 +860,21 @@ class Controller(ConfigureController):
         self.check_response("POST", resp, self.make_headers(), payload, uri)
         return resp
 
+    def rrm_command(self, serial_number, payload):
+        uri = self.build_uri("device/" + serial_number + "/rrm")
+        payld = json.dumps(payload)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command: ", body="Sending Command: " + "\n" +
+                                                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                     "URI: " + str(uri) + "\n" +
+                                                     "Headers: " + str(self.make_headers()))
+        resp = requests.post(uri, data=payld, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("POST", resp, self.make_headers(), payld, uri)
+        return resp
+
     def get_rtty_params(self, serial_number):
         uri = self.build_uri("device/" + serial_number + "/rtty")
         logging.info("Sending Command: " + "\n" +
