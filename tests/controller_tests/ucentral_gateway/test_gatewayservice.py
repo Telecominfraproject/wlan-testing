@@ -1048,6 +1048,7 @@ class TestUcentralGatewayService(object):
         resp = get_target_object.controller_library_object.get_radius_sessions(device_name)
         assert resp.status_code == 200
 
+    @pytest.mark.rrmcmd
     @pytest.mark.rrmcmd_tx_power
     @allure.title("Verify Dynamic change of Tx Power using RRM action command")
     @allure.testcase(name="WIFI-13350",
@@ -1152,6 +1153,7 @@ class TestUcentralGatewayService(object):
         else:
             assert False, "Failed to get iwinfo from minicom"
 
+    @pytest.mark.rrmcmd
     @pytest.mark.rrmcmd_channel_switch
     @allure.title("Verify Dynamic change of Channel using RRM action command")
     @allure.testcase(name="WIFI-13348",
@@ -1259,6 +1261,7 @@ class TestUcentralGatewayService(object):
         else:
             assert False, "Failed to get iwinfo from minicom"
 
+    @pytest.mark.rrmcmd
     @pytest.mark.rrmcmd_kick_and_ban
     @allure.title("Verify Kick and Ban of a Client using RRM action command")
     @allure.testcase(name="WIFI-13349",
