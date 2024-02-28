@@ -1084,7 +1084,7 @@ class TestUcentralGatewayService(object):
                                                               "Data: " + str(payload) + "\n" +
                                                               "Headers: " + str(
             get_target_object.controller_library_object.make_headers()))
-        logging.info("wait until the configuration push get's applied...")
+        logging.info("wait until the configuration get's applied...")
         resp = requests.post(uri, data=basic_cfg_str, verify=False, timeout=240,
                              headers=get_target_object.controller_library_object.make_headers())
         if resp and resp.status_code == 200:
@@ -1314,7 +1314,7 @@ class TestUcentralGatewayService(object):
         if not sta_created:
             logging.info("Failed in creation of Station")
             pytest.fail("Station creation failed")
-        a = get_test_library.json_get("/wifi-msgs/last/1", debug_=True)
+        a = get_test_library.json_get("/wifi-msgs/last/1")
         last_timestamp = a['wifi-messages']['time-stamp']
         logging.info(f"Last WiFi Message Time Stamp: {last_timestamp}")
         logging.info("get the client mac address")
@@ -1326,7 +1326,7 @@ class TestUcentralGatewayService(object):
         allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         logging.info("Checking Wifi-Messages to verify Client Disconnection Messages: \n")
-        wifi_messages = get_test_library.json_get("/wifi-msgs/since=time/" + str(last_timestamp), debug_=True)
+        wifi_messages = get_test_library.json_get("/wifi-msgs/since=time/" + str(last_timestamp))
 
         if ('Reason 5; disassociated as AP is unable to handle all connected STA' in wifi_messages or
                 f'IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(client_mac)} reason=5'):
