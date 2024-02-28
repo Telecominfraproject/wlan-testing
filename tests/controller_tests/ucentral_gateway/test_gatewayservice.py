@@ -1314,25 +1314,41 @@ class TestUcentralGatewayService(object):
         if not sta_created:
             logging.info("Failed in creation of Station")
             pytest.fail("Station creation failed")
+        link = 'ports/all'
         a = get_test_library.json_get("/wifi-msgs/last/1")
         last_timestamp = a['wifi-messages']['time-stamp']
         logging.info(f"Last WiFi Message Time Stamp: {last_timestamp}")
+        port_links = get_test_library.json_get('/ports?fields=alias,_links')
+        logging.info(f"port info: {port_links}")
+        if "interfaces" in port_links:
+            for i in range(len(port_links['interfaces'])):
+                for k, v in port_links['interfaces'][i].items():
+                    if v['alias'] == 'sta100':
+                        link = v['_links']
+                        logging.info(f"----link url------: {link}")
+                        break
+        sta_info = get_test_library.json_get(f'{link}')['interface']
+        logging.info(sta_info)
+        allure.attach(name=f"station info:", body=str(sta_info),
+                      attachment_type=allure.attachment_type.TEXT)
         logging.info("get the client mac address")
-        client_mac = get_test_library.json_get('/ports/sta100')
+        client_mac = sta_info['mac']
+        action_body['actions'][0]['addr'] = str(client_mac)
+        logging.info(f'rrm cmd payload: {action_body}')
         response = get_target_object.controller_library_object.rrm_command(payload=action_body,
                                                                            serial_number=serial_number)
         logging.info(response.json())
-        time.sleep(2)
-        allure.attach(name=f"Response: {response.status_code} - {response.reason}", body=str(response.json()),
+        time.sleep(10)
+        allure.attach(name=f"RRM CMD Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         logging.info("Checking Wifi-Messages to verify Client Disconnection Messages: \n")
         wifi_messages = get_test_library.json_get("/wifi-msgs/since=time/" + str(last_timestamp))
-
-        if ('Reason 5; disassociated as AP is unable to handle all connected STA' in wifi_messages or
-                f'IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(client_mac)} reason=5'):
-            logging.info("AP kicked off the STA successfully using RRM kick CMD")
-            allure.attach(name=f"wifi-messages:", body=str(wifi_messages),
-                          attachment_type=allure.attachment_type.TEXT)
+        allure.attach(name=f"wifi-messages:", body=str(wifi_messages),
+                      attachment_type=allure.attachment_type.TEXT)
+        msg_to_check1 = 'Reason 5; disassociated as AP is unable to handle all connected STA'
+        msg_to_check2 = f"IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(client_mac)} reason=5"
+        if msg_to_check1 in wifi_messages or msg_to_check2 in wifi_messages:
+            logging.info("AP kicked off the STA successfully using RRM kick and ban CMD")
             assert True
         else:
             assert False, 'AP failed to kick & ban the client using RRM CMD'
