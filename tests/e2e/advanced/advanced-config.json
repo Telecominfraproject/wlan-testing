@@ -1,0 +1,146 @@
+{
+  "TESTBEDS": {
+    "advanced-3": {
+      "Virtual Sta Radio Settings": {
+        "Group: 0": {"5Ghz": "1.3.2 wiphy0",
+          "2.4Ghz": "1.3.3 wiphy1",
+          "2.4Ghz RSSI 0 Atten": [-19, -19, -19, -19],
+          "5Gh RSSI 0 Atten": [-42, -42, -42, -42],
+          "Attenuator Modules": ["1.1.3312.0", "1.1.3312.1", "1.1.3312.2", "1.1.3312.3"]
+        },
+        "Group: 1": {"5Ghz": "1.3.4 wiphy2",
+          "2.4Ghz": "1.3.5 wiphy3",
+          "2.4Ghz RSSI 0 Atten": [-22, -22, -22, -22],
+          "5Gh RSSI 0 Atten": [-36, -36, -36, -36],
+          "Attenuator Modules": ["1.1.3313.0", "1.1.3313.1", "1.1.3313.2", "1.1.3313.3"]
+        },
+        "Group: 2": {"5Ghz": "1.3.6 wiphy4",
+          "2.4Ghz": "1.3.7 wiphy5",
+          "2.4Ghz RSSI 0 Atten": [-20, -20, -20, -20],
+          "5Gh RSSI 0 Atten": [-32, -32, -32, -32],
+          "Attenuator Modules": ["1.1.3314.0", "1.1.3314.1", "1.1.3314.2", "1.1.3314.3"]
+        }
+      },
+      "802.11AX Settings": {
+        "Group: 0": {"Radios": ["1.1.5 wiphy1", "1.1.4 wiphy0", "1.1.8 wiphy2", "1.1.9 wiphy3"],
+          "2.4Ghz RSSI 0 Atten": [-25, -25, -25, -25],
+          "5Ghz RSSI 0 Atten": [-30, -30, -30, -30],
+          "Attenuator Modules": ["1.1.3315.0", "1.1.3315.1", "", ""]
+        },
+        "Group: 1": {"Radios": ["1.1.10 wiphy4", "1.1.11 wiphy5", "1.1.12 wiphy6", "1.1.13 wiphy7"],
+          "2.4Ghz RSSI 0 Atten": [-25, -25, -25, -25],
+          "5Ghz RSSI 0 Atten": [-30, -30, -30, -30],
+          "Attenuator Modules": ["1.1.3315.2", "1.1.3315.3", "", ""]
+        },
+        "Group: 2": {"Radios": ["1.1.14 wiphy8", "1.1.15 wiphy9", "1.1.6 wiphy10", "1.1.7 wiphy11"],
+          "2.4Ghz RSSI 0 Atten": [-23, -23, -23, -23],
+          "5Ghz RSSI 0 Atten": [-40, -40, -40, -40],
+          "Attenuator Modules": ["1.1.3319.0", "1.1.3319.1", "", ""]
+        },
+        "Group: 3": {"Radios": ["1.2.2 wiphy0", "1.2.14 wiphy2", "1.2.3 wiphy1", "1.2.19 wiphy3"],
+          "2.4Ghz RSSI 0 Atten": [-25, -25],
+          "5Ghz RSSI 0 Atten": [-30, -30],
+          "Attenuator Modules": ["1.1.3319.0", "1.1.3319.1"]
+        },
+        "Group: 4": {"Radios": ["1.2.20 wiphy4", "1.2.22 wiphy6", "1.2.21 wiphy5", "1.2.23 wiphy7"],
+          "2.4Ghz RSSI 0 Atten": [-25, -25],
+          "5Ghz RSSI 0 Atten": [-30, -30],
+          "Attenuator Modules": ["1.1.3319.0", "1.1.3319.1"]
+        },
+        "Group: 5": {"Radios": ["1.2.24 wiphy8", "1.2.4 wiphy10", "1.2.25 wiphy9", "1.2.5 wiphy11"],
+          "2.4Ghz RSSI 0 Atten": [-25, -25],
+          "5Ghz RSSI 0 Atten": [-30, -30],
+          "Attenuator Modules": ["1.1.3319.0", "1.1.3319.1"]
+        },
+        "Group: 6": {"Radios": ["1.2.6 wiphy12", "1.2.8 wiphy14", "1.2.7 wiphy13", "1.2.9 wiphy15"],
+          "2.4Ghz RSSI 0 Atten": [-25, -25],
+          "5Ghz RSSI 0 Atten": [-30, -30],
+          "Attenuator Modules": ["1.1.3319.0", "1.1.3319.1"]
+        },
+        "Group: 7": {"Radios": ["1.2.10 wiphy16", "1.2.12 wiphy18", "1.2.11 wiphy17", "1.2.13 wiphy19"],
+          "2.4Ghz RSSI 0 Atten": [-25, -25],
+          "5Ghz RSSI 0 Atten": [-30, -30],
+          "Attenuator Modules": ["1.1.3319.0", "1.1.3319.1"]
+        }
+      }
+    },
+    "advanced-1": {
+      "Virtual Sta Radio Settings": {
+        "Group: 0": {"5Ghz": "1.2.2 wiphy0",
+          "2.4Ghz": "1.2.3 wiphy1",
+          "2.4Ghz RSSI 0 Atten": [-17, -17, -17, -17],
+          "5Gh RSSI 0 Atten": [-35, -35, -35, -35],
+          "Attenuator Modules": ["1.1.3253.0", "1.1.3253.1", "1.1.3253.2", "1.1.3253.3"]
+        },
+        "Group: 1": {"5Ghz": "1.2.4 wiphy2",
+          "2.4Ghz": "1.2.5 wiphy3",
+          "2.4Ghz RSSI 0 Atten": [-16, -16, -16, -16],
+          "5Gh RSSI 0 Atten": [-37, -37, -37, -37],
+          "Attenuator Modules": ["1.1.3257.0", "1.1.3257.1", "1.1.3257.2", "1.1.3257.3"]
+        },
+        "Group: 2": {"5Ghz": "1.2.6 wiphy4",
+          "2.4Ghz": "1.2.7 wiphy5",
+          "2.4Ghz RSSI 0 Atten": [-19, -19, -19, -19],
+          "5Gh RSSI 0 Atten": [-40, -40, -40, -40],
+          "Attenuator Modules": ["1.1.3264.0", "1.1.3264.1", "1.1.3264.2", "1.1.3264.3"]
+        }
+      },
+      "802.11AX Settings": {
+        "Group: 0": {"Radios": ["1.1.4 wiphy0", "1.1.5 wiphy1", "1.1.8 wiphy2", "1.1.9 wiphy3"],
+          "2.4Ghz RSSI 0 Atten": [-16, -16, -16, -16],
+          "5Ghz RSSI 0 Atten": [-26, -26, -26, -26],
+          "Attenuator Modules": ["1.1.3266.0", "1.1.3266.1", "", ""]
+        },
+        "Group: 1": {"Radios": ["1.1.10 wiphy4", "1.1.11 wiphy5", "1.1.12 wiphy6", "1.1.13 wiphy7"],
+          "2.4Ghz RSSI 0 Atten": [-17, -17, -17, -17],
+          "5Ghz RSSI 0 Atten": [-25, -25, -25, -25],
+          "Attenuator Modules": ["1.1.3266.2", "1.1.3266.3", "", ""]
+        },
+        "Group: 2": {"Radios": ["1.1.14 wiphy8", "1.1.15 wiphy9", "1.1.6 wiphy10", "1.1.7 wiphy11"],
+          "2.4Ghz RSSI 0 Atten": [-12, -12, -12, -12],
+          "5Ghz RSSI 0 Atten": [-24, -24, -24, -24],
+          "Attenuator Modules": ["1.1.3269.0", "1.1.3269.1", "", ""]
+        }
+      }
+    },
+    "advanced-2": {
+      "Virtual Sta Radio Settings": {
+        "Group: 0": {"5Ghz": "1.2.4 wiphy0",
+          "2.4Ghz": "1.2.14 wiphy1",
+          "2.4Ghz RSSI 0 Atten": [-16, -16, -16, -16],
+          "5Gh RSSI 0 Atten": [-37, -37, -37, -37],
+          "Attenuator Modules": ["1.1.3325.0", "1.1.3325.1", "1.1.3325.2", "1.1.3325.3"]
+        },
+        "Group: 1": {"5Ghz": "1.2.15 wiphy2",
+          "2.4Ghz": "1.2.16 wiphy3",
+          "2.4Ghz RSSI 0 Atten": [-17, -17, -17, -17],
+          "5Gh RSSI 0 Atten": [-38, -38, -38, -38],
+          "Attenuator Modules": ["1.1.3248.0", "1.1.3248.1", "1.1.3248.2", "1.1.3248.3"]
+        },
+        "Group: 2": {"5Ghz": "1.2.17 wiphy4",
+          "2.4Ghz": "1.2.18 wiphy5",
+          "2.4Ghz RSSI 0 Atten": [-16, -16, -16, -16],
+          "5Gh RSSI 0 Atten": [-35, -35, -35, -35],
+          "Attenuator Modules": ["1.1.3326.0", "1.1.3326.1", "1.1.3326.2", "1.1.3326.3"]
+        }
+      },
+      "802.11AX Settings": {
+        "Group: 0": {"Radios": ["1.1.4 wiphy0", "1.1.5 wiphy1", "1.1.8 wiphy2", "1.1.9 wiphy3"],
+          "2.4Ghz RSSI 0 Atten": [-36, -36, -36, -36],
+          "5Ghz RSSI 0 Atten": [-59, -59, -59, -59],
+          "Attenuator Modules": ["1.1.3327.0", "1.1.3327.1", "", ""]
+        },
+        "Group: 1": {"Radios": ["1.1.10 wiphy4", "1.1.11 wiphy5", "1.1.12 wiphy6", "1.1.13 wiphy7"],
+          "2.4Ghz RSSI 0 Atten": [-28, -28, -28, -28],
+          "5Ghz RSSI 0 Atten": [-38, -38, -38, -38],
+          "Attenuator Modules": ["1.1.3327.2", "1.1.3327.3", "", ""]
+        },
+        "Group: 2": {"Radios": ["1.1.14 wiphy8", "1.1.15 wiphy9", "1.1.6 wiphy10", "1.1.7 wiphy11"],
+          "2.4Ghz RSSI 0 Atten": [-35, -35, -35, -35],
+          "5Ghz RSSI 0 Atten": [-48, -48, -48, -48],
+          "Attenuator Modules": ["1.1.3328.0", "1.1.3328.1", "", ""]
+        }
+      }
+    }
+  }
+}
