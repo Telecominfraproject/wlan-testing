@@ -8,7 +8,7 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.rx_sensitivity_tests, pytest.mark.bridge, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.advance, pytest.mark.rx_sensitivity_tests, pytest.mark.bridge, pytest.mark.wpa2_personal]
 
 setup_params_general = {
     "mode": "BRIDGE",
