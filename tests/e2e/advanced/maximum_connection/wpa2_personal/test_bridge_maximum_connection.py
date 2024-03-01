@@ -56,7 +56,17 @@ class Test_MaxConnection_Bridge(object):
     @pytest.mark.fiveg
     @allure.title("BRIDGE Mode Maximum Connection Test")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13328", name="WIFI-13328")
-    def test_rvr_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_max_connection_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            The Maximum Connection test intends to verify that the Wi-Fi AP can support 32 STAs simultaneously
+            connected with minimal packet loss and no disassociations taking place.
+
+            Marker:
+            advance and maximum_connection and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
         vlan = 1
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="max_cx",

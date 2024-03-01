@@ -57,6 +57,18 @@ class Test_RatevsRange_Bridge(object):
     @allure.title("BRIDGE Mode Rate vs Range Test")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13335", name="WIFI-13335")
     def test_rvr_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            Range versus rate test intends to measure the rate-control,
+            baseband and RF chain performance of Wi-Fi device at different signal levels.
+            The attenuation of signals due to range increase is achieved by
+            adjusting the attenuator.
+
+            Marker:
+            advance and rate_vs_range and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
         vlan = 1
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="rvr",

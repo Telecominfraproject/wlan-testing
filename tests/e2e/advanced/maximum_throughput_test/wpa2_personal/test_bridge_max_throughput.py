@@ -56,7 +56,20 @@ class Test_MaxThroughput_Bridge(object):
     @pytest.mark.fiveg
     @allure.title("BRIDGE Mode Maximum Throughput Test")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13330", name="WIFI-13330")
-    def test_rvr_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_maximum_throughput_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            The Maximum throughput test intends to measure the maximum throughput performance of the DUT with
+            a single station active. The test uses TCP connections and the attenuation is adjusted to emulate a
+            distance of 2 meters. The 2.4Ghz station is configured for 20Mhz bandwidth and the 5Ghz station is
+            configured for 80Mhz bandwidth. In 6Ghz, the station is configured for 160Mhz bandwidth. In both cases
+            the station is configured for a maximum of two spatial streams.
+
+            Marker:
+            advance and maximum_throughput and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
         vlan = 1
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="max_tput",

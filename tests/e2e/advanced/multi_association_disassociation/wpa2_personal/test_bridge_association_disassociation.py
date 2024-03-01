@@ -54,7 +54,17 @@ class Test_MultiAssoc_Bridge(object):
     @pytest.mark.fiveg
     @allure.title("BRIDGE Mode Multi Association and Disassociation Test")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13339", name="WIFI-13339")
-    def test_rvr_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_multi_assoc_disassoc_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            Multiple association / disassociation stability test intends to measure stability of Wi-Fi device under a
+            dynamic environment with frequent change of connection status.
+
+            Marker:
+            advance and multi_assoc_disassoc_tests and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
         vlan = 1
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="reset",

@@ -44,14 +44,25 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test_RatevsRange_Bridge(object):
+class Test_MultiStaPerf_Bridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
     @allure.title("BRIDGE Mode Multi-Station Performance Test")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13335", name="WIFI-13335")
-    def test_rvr_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13338", name="WIFI-13338")
+    def test_multistaperf_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            Multiple STAs performance test intends to measure the performance of Wi-Fi device connected with multiple
+            STAs at different distances simultaneously. There are three sets of 3 stations, with each group at a
+            different emulated distance.
+
+            Marker:
+            advance and multistaperf and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
         vlan = 1
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="multi_sta",

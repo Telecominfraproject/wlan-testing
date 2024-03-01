@@ -53,7 +53,19 @@ class Test_SpatialConsistency_Bridge(object):
     @pytest.mark.fiveg
     @allure.title("BRIDGE Mode Spatial Consistency Test")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13336", name="WIFI-13336")
-    def test_rvr_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_spatial_consistency_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            Spatial consistency test intends to verify the Wi-Fi signal consistency in spatial
+            domain by testing throughput with DUT at different angles to the Station and at different
+            emulated distance. The angles are changed with a programmable turn-table.
+            The distance is emulated by adjusting attenuation.
+
+            Marker:
+            advance and spatial_consistency and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
         vlan = 1
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="spatial",
