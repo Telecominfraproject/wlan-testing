@@ -5,7 +5,7 @@ import re
 import string
 import sys
 import random
-
+import datetime
 import allure
 import pytest
 import json
@@ -481,8 +481,13 @@ def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_
                 ap_logs = get_target_object.get_dut_library_object().get_logread(
                     start_ref="start testcase: " + instance_name,
                     stop_ref="stop testcase: " + instance_name)
-                allure.attach(name='Logs - ' + get_testbed_details["device_under_tests"][i]["identifier"],
+                allure.attach(name='dut_logs_per_test_case - ' + get_testbed_details["device_under_tests"][i]["identifier"],
                               body=str(ap_logs))
+                ap_logs = get_target_object.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+                allure.attach(body=ap_logs, name="AP logread")
+                uci_show = get_target_object.get_dut_library_object().run_generic_command(idx=i, attach_allure=False,
+                    cmd="uci show", print_log=False)
+                allure.attach(body=uci_show, name="uci show")
 
         request.addfinalizer(collect_logs)
 
@@ -526,9 +531,11 @@ def check_connectivity(request, get_testbed_details, get_target_object, run_lf):
             ret_val = get_target_object.get_dut_library_object().ubus_call_ucentral_status(idx=i, attach_allure=True,
                                                                                            retry=10)
             if not ret_val["connected"] or ret_val["connected"] is None:
+                timestamp = datetime.datetime.utcnow()
+                logging.info("check_connectivity ap logs Timestamp: " + str(timestamp))
                 ap_logs = get_target_object.get_dut_library_object().get_dut_logs()
                 allure.attach(name='Logs - ' + get_testbed_details["device_under_tests"][i]["identifier"],
-                              body=str(ap_logs))
+                              body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs))
 
             allure.attach(name='Device : ' + get_testbed_details["device_under_tests"][i]["identifier"] +
                                " is connected after Test", body="")

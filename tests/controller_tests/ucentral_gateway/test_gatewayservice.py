@@ -510,7 +510,8 @@ class TestUcentralGatewayService(object):
     @pytest.mark.gw_asb_non_restricted
     @allure.title("Asb script on non restricted AP")
     @allure.testcase(name="WIFI-12235", url="https://telecominfraproject.atlassian.net/browse/WIFI-12235")
-    @pytest.mark.ow_sanity_lf
+    @pytest.mark.ow_regression_lf
+    @pytest.mark.asb_tests
     def test_asb_on_non_restricted_ap(self, get_target_object, get_testbed_details):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         payload = {
@@ -546,7 +547,8 @@ class TestUcentralGatewayService(object):
     @pytest.mark.gw_asb_restricted
     @allure.title("Asb script on restricted AP")
     @allure.testcase(name="WIFI-12236", url="https://telecominfraproject.atlassian.net/browse/WIFI-12236")
-    @pytest.mark.ow_sanity_lf
+    @pytest.mark.ow_regression_lf
+    @pytest.mark.asb_tests
     def test_asb_on_restricted_ap(self, get_target_object, get_testbed_details):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         payload = {
