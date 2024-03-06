@@ -52,24 +52,56 @@ class Test_MultiAssoc_Bridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    @allure.title("BRIDGE Mode Multi Association and Disassociation Test")
+    @pytest.mark.advance_ac
+    @allure.title("Multi Association and Disassociation Test for AC Clients in BRIDGE Mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13339", name="WIFI-13339")
-    def test_multi_assoc_disassoc_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_multi_assoc_disassoc_ac_bridge(self, get_test_library, setup_configuration, check_connectivity,
+                                            selected_testbed):
         """
             Test Description:
             Multiple association / disassociation stability test intends to measure stability of Wi-Fi device under a
             dynamic environment with frequent change of connection status.
 
             Marker:
-            advance and multi_assoc_disassoc_tests and wpa2_personal and bridge
+            advance_ac and multi_assoc_disassoc_tests and wpa2_personal and bridge
 
             Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
+        raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="reset",
                                                        dut_data=setup_configuration, move_to_influx=False,
-                                                       testbed=selected_testbed)
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
+        if result:
+            assert True
+        else:
+            assert False, description
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @pytest.mark.advance_ax
+    @allure.title("Multi Association and Disassociation Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13339", name="WIFI-13339")
+    def test_multi_assoc_disassoc_ax_bridge(self, get_test_library, setup_configuration, check_connectivity,
+                                            selected_testbed):
+        """
+            Test Description:
+            Multiple association / disassociation stability test intends to measure stability of Wi-Fi device under a
+            dynamic environment with frequent change of connection status.
+
+            Marker:
+            advance_ax and multi_assoc_disassoc_tests and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
+        mode = "BRIDGE"
+        vlan = 1
+        raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="reset",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:

@@ -54,24 +54,54 @@ class Test_MaxConnection_Bridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    @allure.title("BRIDGE Mode Maximum Connection Test")
+    @pytest.mark.advance_ac
+    @allure.title("Maximum Connection Test for AC Clients in BRIDGE Mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13328", name="WIFI-13328")
-    def test_max_connection_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_max_connection_ac_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
         """
             Test Description:
             The Maximum Connection test intends to verify that the Wi-Fi AP can support 32 STAs simultaneously
             connected with minimal packet loss and no disassociations taking place.
 
             Marker:
-            advance and maximum_connection and wpa2_personal and bridge
+            advance_ac and maximum_connection and wpa2_personal and bridge
 
             Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
+        raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="max_cx",
                                                        dut_data=setup_configuration, move_to_influx=False,
-                                                       testbed=selected_testbed)
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
+        if result:
+            assert True
+        else:
+            assert False, description
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @pytest.mark.advance_ax
+    @allure.title("Maximum Connection Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13328", name="WIFI-13328")
+    def test_max_connection_ax_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            The Maximum Connection test intends to verify that the Wi-Fi AP can support 32 STAs simultaneously
+            connected with minimal packet loss and no disassociations taking place.
+
+            Marker:
+            advance_ax and maximum_connection and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
+        mode = "BRIDGE"
+        vlan = 1
+        raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="max_cx",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:

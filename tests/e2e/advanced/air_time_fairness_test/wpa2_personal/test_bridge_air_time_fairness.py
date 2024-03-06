@@ -55,9 +55,10 @@ class Test_Atf_Bridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    @allure.title("BRIDGE Mode Airtime Fairness Test")
+    @pytest.mark.advance_ac
+    @allure.title("Airtime Fairness Test for AC Clients in BRIDGE Mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13341", name="WIFI-13341")
-    def test_atf_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_atf_ac_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
         """
             Test Description:
             Airtime Fairness Test intends to verify the capability of Wi-Fi device to ensure the fairness of airtime usage.
@@ -70,15 +71,50 @@ class Test_Atf_Bridge(object):
             running the prescribed UDP traffic.
 
             Marker:
-            advance and atf and wpa2_personal and bridge
+            advance_ac and atf and wpa2_personal and bridge
 
             Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
+        raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="atf3",
                                                        dut_data=setup_configuration, move_to_influx=False,
-                                                       testbed=selected_testbed)
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
+        if result:
+            assert True
+        else:
+            assert False, description
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @pytest.mark.advance_ax
+    @allure.title("Airtime Fairness Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13341", name="WIFI-13341")
+    def test_atf_ax_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            Airtime Fairness Test intends to verify the capability of Wi-Fi device to ensure the fairness of airtime usage.
+            This test uses two stations at a time, with one station running in optimum configuration. The second station
+            varies between optimum configuration, weaker signal, and legacy mode configurations. In each setting,
+            TCP traffic is used to determine maximum capacity of each station running by itself. Then, UDP traffic is
+            created on STA1 to run at 75% of the TCP throughput and UDP traffic is created on the second station at
+            50% of the TCP throughput for that station. This overdrives the AP and causes it to drop frames. The
+            pass/fail criteria is that each station gets at least 45% of the TCP throughput when both stations are
+            running the prescribed UDP traffic.
+
+            Marker:
+            advance_ax and atf and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
+        mode = "BRIDGE"
+        vlan = 1
+        raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="atf3",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:

@@ -49,9 +49,10 @@ class Test_MultiStaPerf_Bridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    @allure.title("BRIDGE Mode Multi-Station Performance Test")
+    @pytest.mark.advance_ac
+    @allure.title("Multi-Station Performance Test for AC Clients in BRIDGE Mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13338", name="WIFI-13338")
-    def test_multistaperf_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_multistaperf_ac_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
         """
             Test Description:
             Multiple STAs performance test intends to measure the performance of Wi-Fi device connected with multiple
@@ -59,15 +60,45 @@ class Test_MultiStaPerf_Bridge(object):
             different emulated distance.
 
             Marker:
-            advance and multistaperf and wpa2_personal and bridge
+            advance_ac and multistaperf and wpa2_personal and bridge
 
             Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
+        raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="multi_sta",
                                                        dut_data=setup_configuration, move_to_influx=False,
-                                                       testbed=selected_testbed)
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
+        if result:
+            assert True
+        else:
+            assert False, description
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @pytest.mark.advance_ax
+    @allure.title("Multi-Station Performance Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13338", name="WIFI-13338")
+    def test_multistaperf_ax_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            Multiple STAs performance test intends to measure the performance of Wi-Fi device connected with multiple
+            STAs at different distances simultaneously. There are three sets of 3 stations, with each group at a
+            different emulated distance.
+
+            Marker:
+            advance_ax and multistaperf and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
+        mode = "BRIDGE"
+        vlan = 1
+        raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="multi_sta",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:

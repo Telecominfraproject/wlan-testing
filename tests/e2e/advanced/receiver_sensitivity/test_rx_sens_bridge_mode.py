@@ -52,9 +52,10 @@ class Test_RxSensitivitytests_Bridge(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
-    @allure.title("BRIDGE Mode Receiver Sensitivity Test")
+    @pytest.mark.advance_ac
+    @allure.title("Receiver Sensitivity Test for AC Clients in BRIDGE Mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13329", name="WIFI-13329")
-    def test_rx_sensitivity_tests_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    def test_rx_sensitivity_tests_ac_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
         """
             Test Description:
             Receiver Sensitivity is a receiver's ability to receive and correctly demodulate weak signals.
@@ -68,15 +69,52 @@ class Test_RxSensitivitytests_Bridge(object):
             transition between coding schedules as the attenuation increases in normal operation.
 
             Marker:
-            advance and rx_sensitivity_tests and wpa2_personal and bridge
+            advance_ac and rx_sensitivity_tests and wpa2_personal and bridge
 
             Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
+        raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
         result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="rxsens",
                                                        dut_data=setup_configuration, move_to_influx=False,
-                                                       testbed=selected_testbed)
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
+        if result:
+            assert True
+        else:
+            assert False, description
+
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @pytest.mark.advance_ax
+    @allure.title("Receiver Sensitivity Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13329", name="WIFI-13329")
+    def test_rx_sensitivity_tests_ax_bridge(self, get_test_library, setup_configuration, check_connectivity,
+                                            selected_testbed):
+        """
+            Test Description:
+            Receiver Sensitivity is a receiver's ability to receive and correctly demodulate weak signals.
+            This test provides a simplified measurement of the receiver's sensitivity, relative to the total
+            attenuation inserted between the DUT and the STA. As that attenuation is increased, the STA is
+            limited to a single coding scheme, eventually causing the connection to degrade.
+            The point at which the connection degrades represents the receiver's approximate sensitivity.
+            This is an approximate measurement only, where a detailed receiver sensitivity measurement would
+            typically be performed in a conducted test environment with calibrated transmitter power levels.
+            The test is repeated with multiple coding schemes, ensuring the DUT should smoothly
+            transition between coding schedules as the attenuation increases in normal operation.
+
+            Marker:
+            advance_ax and rx_sensitivity_tests and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
+        mode = "BRIDGE"
+        vlan = 1
+        raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="rxsens",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:
