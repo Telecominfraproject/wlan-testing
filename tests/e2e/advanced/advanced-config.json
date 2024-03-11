@@ -107,20 +107,20 @@
       "Virtual Sta Radio Settings": {
         "Group: 0": {"5Ghz": "1.2.4 wiphy0",
           "2.4Ghz": "1.2.14 wiphy1",
-          "2.4Ghz RSSI 0 Atten": [-16, -16, -16, -16],
-          "5Gh RSSI 0 Atten": [-37, -37, -37, -37],
+          "2.4Ghz RSSI 0 Atten": [-18, -18, -18, -18],
+          "5Gh RSSI 0 Atten": [-35, -35, -35, -35],
           "Attenuator Modules": ["1.1.3325.0", "1.1.3325.1", "1.1.3325.2", "1.1.3325.3"]
         },
         "Group: 1": {"5Ghz": "1.2.15 wiphy2",
           "2.4Ghz": "1.2.16 wiphy3",
-          "2.4Ghz RSSI 0 Atten": [-17, -17, -17, -17],
+          "2.4Ghz RSSI 0 Atten": [-18, -18, -18, -18],
           "5Gh RSSI 0 Atten": [-38, -38, -38, -38],
           "Attenuator Modules": ["1.1.3248.0", "1.1.3248.1", "1.1.3248.2", "1.1.3248.3"]
         },
         "Group: 2": {"5Ghz": "1.2.17 wiphy4",
           "2.4Ghz": "1.2.18 wiphy5",
           "2.4Ghz RSSI 0 Atten": [-16, -16, -16, -16],
-          "5Gh RSSI 0 Atten": [-35, -35, -35, -35],
+          "5Gh RSSI 0 Atten": [-32, -32, -32, -32],
           "Attenuator Modules": ["1.1.3326.0", "1.1.3326.1", "1.1.3326.2", "1.1.3326.3"]
         }
       },
