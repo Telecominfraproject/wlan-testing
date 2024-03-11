@@ -8,7 +8,7 @@
         "OVERVIEW_TESTBEDS": ["pixel-4","galaxy-s9","galaxy-s10","galaxy-s20","iphone-xr","iphone-7","iphone-11","iphone-12"]
     },
 
-    "advance": {
+    "advanced": {
         "OVERVIEW_TITLE": "'OpenWifi advanced results'",
         "OVERVIEW_TESTBEDS": ["edgecore_eap104","edgecore_oap101-6e","cig_wf186h","edgecore_eap101","edgecore_eap102","cig_wf196"]
     },
