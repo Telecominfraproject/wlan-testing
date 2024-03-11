@@ -40,8 +40,8 @@ on:
         required: false
         default: ""
         description: "Tests release branch to use (i.e. 'release/v2.8.0' or 'master'). If left empty, latest release branch is used"
-#  schedule:
-#    - cron: "30 20 * * 5"
+  schedule:
+    - cron: "30 11,18 * * 0,6"
 
 jobs:
   # Set vars
@@ -72,8 +72,31 @@ jobs:
           cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
+          
+          DOW=$(date +%u)
+          TOD=$(date +%H)
+          SLOT=$(( 10#$TOD % 24)) # 11 - slot 1, 18 - slot 2
+          echo "Current date is $(date --iso-8601=s)"
+          echo "Current date of week is $DOW which is $(( 10#$DOW % 7 )) in cron notation"
+          echo "Current time is $TOD hours, which is $(( 10#$TOD % 24)) in cron notation"
+          echo "Current slot is $SLOT"
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,cig_wf186w' }}"
+          if [[ "$SLOT" -eq "11" ]]; then
+            echo "Choosing slot 1 since time of the day is $SLOT hours"
+            if [[ "$DOW" -eq "6" ]]; then
+              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196,edgecore_eap101' }}"
+            else
+              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap101-6e,cig_wf188n,hfcl_ion4xe' }}"
+            fi
+          else
+            echo "Choosing slot 2 since time of the day is $SLOT hours"
+            if [[ "$DOW" -eq "6" ]]; then
+              AP_MODELS="${{ github.event.inputs.ap_models || 'yuncore_fap655,yuncore_ax820' }}"
+            else
+              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,cig_wf186w' }}"
+            fi
+          fi
+          
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           ap_models=${AP_MODELS}

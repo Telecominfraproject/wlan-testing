@@ -40,8 +40,8 @@ on:
         required: false
         default: ""
         description: "Tests release branch to use (i.e. 'release/v2.8.0' or 'master'). If left empty, latest release branch is used"
-#  schedule:
-#    - cron: "30 20 * * 6"
+  schedule:
+    - cron: "30 18 * * 2-5"
 
 jobs:
   # Set vars
@@ -72,8 +72,27 @@ jobs:
           cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
+          
+          DOW=$(date +%u)
+          HOD=$(date +%H)
+          SLOT=$(( 10#$DOW % 7))
+          echo "Current date is $(date --iso-8601=s)"
+          echo "Current date of week is $DOW which is $(( 10#$DOW % 7 )) in cron notation"
+          echo "Current time is $HOD hours, which is $(( 10#$HOD % 24)) in cron notation"
+          echo "Current slot is $SLOT"
 
-          AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,cig_wf186w' }}"
+          if [[ "$SLOT" -eq "2" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap101-6e,cig_wf188n,hfcl_ion4xe' }}"
+          elif [[ "$DOW" -eq "3" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'yuncore_fap655,yuncore_ax820' }}"
+          elif [[ "$DOW" -eq "4" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196,edgecore_eap101' }}"
+          elif [[ "$DOW" -eq "5" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,cig_wf186w' }}"
+          else  
+            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,cig_wf186w' }}"
+          fi
+          echo "List of AP models to test - $AP_MODELS"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           ap_models=${AP_MODELS}
