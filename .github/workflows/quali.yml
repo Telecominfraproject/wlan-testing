@@ -68,7 +68,8 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'release-latest' }})" >> $GITHUB_OUTPUT
           echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'ow_sanity_lf' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
-
+          # Schedule runs in two slots. slot 1 - 11 hours UTC, slot 2 - 18 hours UTC
+          # choose AP models as per the day and slot if the scheduled run gets triggered else provided.
           DOW=$(date +%u)
           TOD=$(date +%H)
           SLOT=$(( 10#$TOD % 24)) # 11 - slot 1, 18 - slot 2

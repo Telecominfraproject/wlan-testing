@@ -72,7 +72,8 @@ jobs:
           cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
-          
+          # Schedule runs in two slots. slot 1 - 11 hours UTC, slot 2 - 18 hours UTC
+          # choose AP models as per the day and slot if the scheduled run gets triggered else provided.
           DOW=$(date +%u)
           TOD=$(date +%H)
           SLOT=$(( 10#$TOD % 24)) # 11 - slot 1, 18 - slot 2

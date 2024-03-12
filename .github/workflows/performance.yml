@@ -80,8 +80,9 @@ jobs:
           echo "Current date of week is $DOW which is $(( 10#$DOW % 7 )) in cron notation"
           echo "Current time is $HOD hours, which is $(( 10#$HOD % 24)) in cron notation"
           echo "Current slot is $SLOT"
-
-          if [[ "$SLOT" -eq "2" ]]; then
+          
+          # choose AP models as per the day and slot if the scheduled run gets triggered else provided.
+          if [[ "$DOW" -eq "2" ]]; then
             AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap101-6e,cig_wf188n,hfcl_ion4xe' }}"
           elif [[ "$DOW" -eq "3" ]]; then
             AP_MODELS="${{ github.event.inputs.ap_models || 'yuncore_fap655,yuncore_ax820' }}"
