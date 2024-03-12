@@ -10,7 +10,7 @@
 
     "advanced": {
         "OVERVIEW_TITLE": "'OpenWifi advanced results'",
-        "OVERVIEW_TESTBEDS": ["advanced-01","advanced-02"]
+        "OVERVIEW_TESTBEDS": ["edgecore_eap104","edgecore_oap101-6e","cig_wf186h","edgecore_eap101","edgecore_eap102","cig_wf196"]
     },
 
     "performance": {
