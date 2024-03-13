@@ -144,7 +144,7 @@ jobs:
     - name: prepare namespace name
       id: namespace
       run: |
-        NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+        NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
         echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
     - name: prepare configuration
@@ -240,7 +240,7 @@ jobs:
       - name: prepare namespace name
         id: namespace
         run: |
-          NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
@@ -335,7 +335,7 @@ jobs:
       - name: prepare namespace name
         id: namespace
         run: |
-          NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
@@ -431,7 +431,7 @@ jobs:
       - name: prepare namespace name
         id: namespace
         run: |
-          NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
@@ -527,7 +527,7 @@ jobs:
       - name: prepare namespace name
         id: namespace
         run: |
-          NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
@@ -623,7 +623,7 @@ jobs:
       - name: prepare namespace name
         id: namespace
         run: |
-          NAMESPACE="testing-${{ github.run_number }}-${{ matrix.testbed }}"
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
           echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
 
       - name: prepare configuration
@@ -703,8 +703,8 @@ jobs:
     - name: download history of previous run
       continue-on-error: true
       run: |
-        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key advance/${{ matrix.model }}/latest/index.html | jq -r .Metadata.latest)
-        aws s3 cp --recursive s3://openwifi-allure-reports/advance/${{ matrix.model }}/$LAST_RUN_ID/history history
+        LAST_RUN_ID=$(aws s3api head-object --bucket openwifi-allure-reports --key advanced/${{ matrix.model }}/latest/index.html | jq -r .Metadata.latest)
+        aws s3 cp --recursive s3://openwifi-allure-reports/advanced/${{ matrix.model }}/$LAST_RUN_ID/history history
 
     - name: generate Allure report
       uses: ./.github/actions/generate-allure-report
@@ -729,7 +729,7 @@ jobs:
       # if: github.ref == 'refs/heads/master' && needs.vars.outputs.marker_expression == 'advance'
       uses: ./.github/actions/allure-report-to-s3
       with:
-        test_type: advance
+        test_type: advanced
         testbed: ${{ matrix.model }}
         report_path: allure-report
         s3_access_key_id: ${{ secrets.ALLURE_S3_ACCESS_KEY_ID }}
