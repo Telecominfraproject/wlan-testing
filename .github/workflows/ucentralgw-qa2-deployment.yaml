@@ -111,7 +111,7 @@ jobs:
         export OWSUB_VERSION=${{ matrix.owsub_version }}
         export OWRRM_VERSION=${{ matrix.owrrm_version }}
         #export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.owls-external.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
