@@ -67,7 +67,7 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
 
-          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests' }}"
+          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,strict_forwarding_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests' }}"
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
