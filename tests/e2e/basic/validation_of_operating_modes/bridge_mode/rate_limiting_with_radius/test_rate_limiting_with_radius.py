@@ -60,10 +60,10 @@ setup_params_general = {
 }
 
 
-@allure.feature("Rate Limiting With Radius Test")
-@allure.parent_suite("Rate Limiting With Radius Test")
-@allure.suite("BRIDGE Mode")
-@allure.sub_suite("WPA2 Enterprise Security")
+@allure.feature("Rate Limiting With Radius")
+@allure.parent_suite("Rate Limiting With Radius Tests")
+@allure.suite("WPA2 Enterprise Security")
+@allure.sub_suite("Bridge Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

@@ -29,7 +29,7 @@ setup_params_enterprise_two_br = {
     "radius": True
 }
 @allure.feature("BRIDGE MODE CLIENT CONNECT")
-@allure.parent_suite("Client Connect Tests")
+@allure.parent_suite("Client Connect Tests : InterOp")
 @allure.suite(suite_name="BRIDGE Mode")
 @allure.sub_suite(sub_suite_name="Enterprise security mode Client Connect")
 @pytest.mark.parametrize(

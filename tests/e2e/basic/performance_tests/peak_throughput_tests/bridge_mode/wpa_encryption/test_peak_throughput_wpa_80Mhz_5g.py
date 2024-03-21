@@ -28,6 +28,9 @@ setup_params_general1 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA Security")
+@allure.suite("80Mhz Bandwidth in 5GHz Band")
+@allure.sub_suite("Channel-36")
 @pytest.mark.channel_36
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -161,6 +164,9 @@ setup_params_general5 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA Security")
+@allure.suite("80Mhz Bandwidth in 5GHz Band")
+@allure.sub_suite("Channel-52")
 @pytest.mark.channel_52
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -294,6 +300,9 @@ setup_params_general9 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA Security")
+@allure.suite("80Mhz Bandwidth in 5GHz Band")
+@allure.sub_suite("Channel-100")
 @pytest.mark.channel_100
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -427,6 +436,9 @@ setup_params_general14 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA Security")
+@allure.suite("80Mhz Bandwidth in 5GHz Band")
+@allure.sub_suite("Channel-132")
 @pytest.mark.channel_132
 @pytest.mark.parametrize(
     'setup_configuration',

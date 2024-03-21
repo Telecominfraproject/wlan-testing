@@ -26,7 +26,8 @@ sdk_expected = True
 
 @allure.feature("Test Connectivity")
 @allure.parent_suite("Test Connectivity")
-# @allure.suite("Test Resources")
+@allure.suite("Test-Connectivity")
+@allure.sub_suite("Test Resources")
 class TestResources(object):
     """Test Case Class: Test cases to cover resource Connectivity"""
 
@@ -274,6 +275,8 @@ class TestResources(object):
 @pytest.mark.firmware
 @allure.feature("Test Connectivity")
 @allure.parent_suite("Test Connectivity")
+@allure.suite("Test-Connectivity")
+@allure.sub_suite("Test Firmware Upgrade")
 class TestFirmwareUpgrade(object):
 
     @pytest.mark.get_firmware_list

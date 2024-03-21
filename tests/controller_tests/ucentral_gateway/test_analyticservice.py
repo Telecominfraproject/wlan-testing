@@ -19,6 +19,7 @@ import logging
 @pytest.mark.ow_analytics_api_tests
 @allure.parent_suite("OpenWifi SDK Tests")
 @allure.suite("OpenWifi Analytics Service Tests")
+@allure.sub_suite("Ucentral Analytic Service Tests")
 class TestUcentralAnalyticService(object):
     boards, clients = [], []
     board_id, entity_id = "", "aefb7254-571f-42c3-be51-39a2b1441234"

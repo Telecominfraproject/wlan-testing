@@ -19,6 +19,9 @@ setup_params_general = {
 
 
 @allure.feature("MESH BASIC")
+@allure.parent_suite("Mesh Tests")
+@allure.suite("WPA2 Personal Security")
+@allure.sub_suite("Mesh Bridge Mode - 2.4GHz")
 # @pytest.mark.parametrize(
 #     'setup_mesh_profile_fix',
 #     [setup_params_general],

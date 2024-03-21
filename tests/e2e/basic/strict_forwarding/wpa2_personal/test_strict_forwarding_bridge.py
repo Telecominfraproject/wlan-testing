@@ -33,8 +33,8 @@ setup_params_general = {
     scope="class"
 )
 @allure.feature("Strict Forwarding")
-@allure.parent_suite("Strict Forwarding")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.parent_suite("Strict Forwarding Tests")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Clients connected to same SSID")
 @pytest.mark.usefixtures("setup_configuration")
 class TestStrictForwardingSameSSID(object):
@@ -108,8 +108,8 @@ setup_params_general1 = {
     scope="class"
 )
 @allure.feature("Strict Forwarding")
-@allure.parent_suite("Strict Forwarding")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.parent_suite("Strict Forwarding Tests")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Clients connected to two different SSID (sf is enabled on both SSIDs)")
 @pytest.mark.usefixtures("setup_configuration")
 class TestStrictForwardingEnabledTwoSSID(object):
@@ -193,8 +193,8 @@ setup_params_general2 = {
     scope="class"
 )
 @allure.feature("Strict Forwarding")
-@allure.parent_suite("Strict Forwarding")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.parent_suite("Strict Forwarding Tests")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Clients connected to two different SSID (SSID with sf enabled and another "
                                  "SSID where sf is disabled")
 @pytest.mark.usefixtures("setup_configuration")

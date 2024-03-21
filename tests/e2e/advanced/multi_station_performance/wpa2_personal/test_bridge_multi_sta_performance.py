@@ -34,9 +34,9 @@ setup_params_general = {
 
 
 @allure.feature("Multi-Station Performance")
-@allure.parent_suite("Multi-Station Performance Test")
-@allure.suite(suite_name="BRIDGE Mode")
-@allure.sub_suite(sub_suite_name="WPA2 Personal")
+@allure.parent_suite("Multi Station Performance Test")
+@allure.suite(suite_name="WPA2 Personal Security")
+@allure.sub_suite(sub_suite_name="Bridge Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -103,3 +103,4 @@ class Test_MultiStaPerf_Bridge(object):
             assert True
         else:
             assert False, description
+

@@ -35,6 +35,9 @@ setup_params_general_20Mhz = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput across channel-width Tests : WPA2 Personal Security")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("20Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_20Mhz],
@@ -147,6 +150,9 @@ setup_params_general_40Mhz = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput across channel-width Tests : WPA2 Personal Security")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("40Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_40Mhz],
@@ -254,6 +260,9 @@ setup_params_general_80Mhz = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput across channel-width Tests : WPA2 Personal Security")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("80Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_80Mhz],
@@ -306,10 +315,6 @@ class TestThroughputAcrossBw80MhzBRIDGE(object):
             assert False
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-9742", name="WIFI-9742")
-    @allure.parent_suite("Throughput Test")
-    @allure.suite("OpenWifi Throughput across channel bandwidth")
-    @allure.title("Single client wifi capacity 80Mhz Bw")
-    @allure.sub_suite("BRIDGE Mode")
     @pytest.mark.bw80Mhz
     @pytest.mark.wpa2_personal
     @pytest.mark.mmm
@@ -360,6 +365,9 @@ setup_params_general_160Mhz = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput across channel-width Tests : WPA2 Personal Security")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("160Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_160Mhz],

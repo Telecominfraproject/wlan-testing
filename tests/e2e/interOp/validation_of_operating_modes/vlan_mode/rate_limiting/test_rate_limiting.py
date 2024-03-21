@@ -88,8 +88,8 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
         setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] = setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_"+ rand_string
 @allure.feature("VLAN MODE RATE LIMITING")
 @allure.parent_suite("Rate Limiting Tests")
-@allure.suite(suite_name="VLAN Mode")
-@allure.sub_suite(sub_suite_name="General security mode Rate Limiting")
+@allure.suite(suite_name="General Security Mode")
+@allure.sub_suite(sub_suite_name="VLAN Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

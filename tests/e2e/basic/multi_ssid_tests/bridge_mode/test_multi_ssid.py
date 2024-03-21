@@ -31,9 +31,9 @@ setup_params_general1 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.feature("Multi SSID Test")
-@allure.parent_suite("MULTI SSID")
-@allure.suite(suite_name="BRIDGE MODE")
+@allure.feature("Multi SSID")
+@allure.parent_suite("Multi SSID Test")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Test Data Path for 1 SSID")
 class TestMultiSsidDataPath1(object):
     """
@@ -161,9 +161,9 @@ setup_params_general2 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.feature("Multi SSID Test")
-@allure.parent_suite("MULTI SSID")
-@allure.suite(suite_name="BRIDGE MODE")
+@allure.feature("Multi SSID")
+@allure.parent_suite("Multi SSID Test")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Test Data Path for 2 SSID's")
 class TestMultiSsidDataPath2(object):
     """
@@ -288,9 +288,9 @@ setup_params_general3 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.feature("Multi SSID Test")
-@allure.parent_suite("MULTI SSID")
-@allure.suite(suite_name="BRIDGE MODE")
+@allure.feature("Multi SSID")
+@allure.parent_suite("Multi SSID Test")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Test Data Path for 3 SSID's")
 class TestMultiSsidDataPath3(object):
 
@@ -412,9 +412,9 @@ setup_params_general4 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.feature("Multi SSID Test")
-@allure.parent_suite("MULTI SSID")
-@allure.suite(suite_name="BRIDGE MODE")
+@allure.feature("Multi SSID")
+@allure.parent_suite("Multi SSID Test")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Test Data Path for 4 SSID's")
 class TestMultiSsidDataPath4(object):
 
@@ -537,9 +537,9 @@ setup_params_general5 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.feature("Multi SSID Test")
-@allure.parent_suite("MULTI SSID")
-@allure.suite(suite_name="BRIDGE MODE")
+@allure.feature("Multi SSID")
+@allure.parent_suite("Multi SSID Test")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Test Data Path for 5 SSID's")
 class TestMultiSsidDataPath5(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
@@ -662,9 +662,9 @@ setup_params_general6 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.feature("Multi SSID Test")
-@allure.parent_suite("MULTI SSID")
-@allure.suite(suite_name="BRIDGE MODE")
+@allure.feature("Multi SSID")
+@allure.parent_suite("Multi SSID Test")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Test Data Path for 6 SSID's")
 class TestMultiSsidDataPath6(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
@@ -788,9 +788,9 @@ setup_params_general7 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.feature("Multi SSID Test")
-@allure.parent_suite("MULTI SSID")
-@allure.suite(suite_name="BRIDGE MODE")
+@allure.feature("Multi SSID")
+@allure.parent_suite("Multi SSID Test")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Test Data Path for 7 SSID's")
 class TestMultiSsidDataPath7(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
@@ -915,9 +915,9 @@ setup_params_general8 = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-@allure.feature("Multi SSID Test")
-@allure.parent_suite("MULTI SSID")
-@allure.suite(suite_name="BRIDGE MODE")
+@allure.feature("Multi SSID")
+@allure.parent_suite("Multi SSID Test")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Test Data Path for 8 SSID's")
 class TestMultiSsidDataPath8(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")

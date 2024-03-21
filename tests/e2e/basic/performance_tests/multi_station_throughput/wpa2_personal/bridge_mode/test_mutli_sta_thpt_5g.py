@@ -24,6 +24,9 @@ setup_params_general = {
 
 @allure.suite("performance")
 @allure.feature("BRIDGE MODE WPA2 PERSONAL Multi_Station_Throughput")
+@allure.parent_suite("Multi Station Throughput Test")
+@allure.suite("WPA2 Personal Security")
+@allure.sub_suite("Bridge Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

@@ -39,6 +39,7 @@ pytestmark = [pytest.mark.master_config_tests, pytest.mark.ow_regression_lf]
 
 @allure.feature("Master Configurations Test")
 @allure.parent_suite("Master Configuration")
+@allure.suite(suite_name="Master Configurations Test")
 @allure.sub_suite(sub_suite_name="Test Master Configurations with Various Services")
 class TestMasterConfig(object):
     """

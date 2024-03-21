@@ -38,7 +38,7 @@ setup_params_general1 = {
 @pytest.mark.usefixtures("setup_configuration")
 @allure.feature("DFS Test")
 @allure.parent_suite("DFS Test")
-@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.suite("Bridge Mode(40 MHz)")
 @allure.sub_suite("Channel-52")
 class TestDFSChannel52Bw40(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6209", name="WIFI-6209")
@@ -91,7 +91,7 @@ setup_params_general2 = {
 @pytest.mark.usefixtures("setup_configuration")
 @allure.feature("DFS Test")
 @allure.parent_suite("DFS Test")
-@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.suite("Bridge Mode(40 MHz)")
 @allure.sub_suite("Channel-100")
 class TestDFSChannel100Bw40(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6310", name="WIFI-6310")
@@ -145,7 +145,7 @@ setup_params_general5 = {
 @pytest.mark.usefixtures("setup_configuration")
 @allure.feature("DFS Test")
 @allure.parent_suite("DFS Test")
-@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.suite("Bridge Mode(40 MHz)")
 @allure.sub_suite("Channel-60")
 class TestDFSChannel60Bw40(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6315", name="WIFI-6315")
@@ -198,7 +198,7 @@ setup_params_general7 = {
 @pytest.mark.usefixtures("setup_configuration")
 @allure.feature("DFS Test")
 @allure.parent_suite("DFS Test")
-@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.suite("Bridge Mode(40 MHz)")
 @allure.sub_suite("Channel-108")
 class TestDFSChannel108Bw40(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6317", name="WIFI-6317")
@@ -252,7 +252,7 @@ setup_params_general11 = {
 @pytest.mark.usefixtures("setup_configuration")
 @allure.feature("DFS Test")
 @allure.parent_suite("DFS Test")
-@allure.suite("BRIDGE Mode(40 MHz)")
+@allure.suite("Bridge Mode(40 MHz)")
 @allure.sub_suite("Channel-132")
 class TestDFSChannel132Bw40(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6321", name="WIFI-6321")

@@ -35,7 +35,7 @@ setup_params_general = {
 
 @allure.feature("Advanced Captive Portal Test")
 @allure.parent_suite("Advanced Captive Portal Tests")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.suite(suite_name="Bridge Mode")
 @allure.sub_suite(sub_suite_name="Radius user/pass mode")
 @pytest.mark.parametrize(
     'setup_configuration',

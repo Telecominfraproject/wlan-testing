@@ -23,6 +23,9 @@ setup_params_general = {
 }
 
 
+@allure.parent_suite("Endurance Tests")
+@allure.suite("AP Stability Tests")
+@allure.sub_suite("Bridge Mode")
 @pytest.mark.regression
 @pytest.mark.wifi5
 @pytest.mark.wifi6

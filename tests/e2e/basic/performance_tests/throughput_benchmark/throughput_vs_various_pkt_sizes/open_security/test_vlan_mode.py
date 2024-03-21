@@ -22,6 +22,9 @@ setup_params_general = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput v/s Varying Packet Sizes Tests : Open Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("2.4GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -332,6 +335,9 @@ setup_params_5g = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput v/s Varying Packet Sizes Tests : Open Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_5g],

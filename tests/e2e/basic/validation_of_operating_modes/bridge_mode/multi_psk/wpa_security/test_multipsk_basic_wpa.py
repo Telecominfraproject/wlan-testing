@@ -38,16 +38,16 @@ setup_params_general = {
 }
 
 
-@allure.feature("MultiPsk Test")
+@allure.feature("Multi-PSK Test")
+@allure.parent_suite("Multi-PSK Tests")
+@allure.suite("WPA Security")
+@allure.sub_suite("Bridge Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@allure.parent_suite("MultiPsk Test")
-@allure.suite("BRIDGE Mode")
-@allure.sub_suite("WPA Security")
 @pytest.mark.usefixtures("setup_configuration")
 class TestMultipskBridgeWPA(object):
 

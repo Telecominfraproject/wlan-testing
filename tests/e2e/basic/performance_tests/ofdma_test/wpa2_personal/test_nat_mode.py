@@ -23,7 +23,9 @@ setup_params_general = {
 }
 
 
-@allure.suite("performance")
+@allure.parent_suite("OFDMA Tests")
+@allure.suite("WPA2 Personal Security")
+@allure.sub_suite("NAT Mode")
 @allure.feature("nat MODE CLIENT CONNECTIVITY")
 @pytest.mark.parametrize(
     'setup_configuration',

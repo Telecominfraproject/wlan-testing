@@ -35,6 +35,10 @@ setup_params_general = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: TCP/UDP Upstream/Downstream/Bidirectional Traffic Tests : "
+                     "WPA2 Personal Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("20Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -597,6 +601,10 @@ setup_params_general = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: TCP/UDP Upstream/Downstream/Bidirectional Traffic Tests : "
+                     "WPA2 Personal Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("80Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -1176,6 +1184,10 @@ setup_params_general = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: TCP/UDP Upstream/Downstream/Bidirectional Traffic Tests : "
+                     "WPA2 Personal Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("160Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

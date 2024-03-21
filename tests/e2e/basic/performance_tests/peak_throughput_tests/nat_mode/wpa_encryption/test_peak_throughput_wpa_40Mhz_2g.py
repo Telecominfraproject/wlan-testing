@@ -1,7 +1,7 @@
 """
 
-    Performance Test: Country code along with Channel and Channel-width Test: Bridge Mode
-    pytest -m "country_code and Bridge"
+    Performance Test: Country code along with Channel and Channel-width Test: NAT Mode
+    pytest -m "country_code and NAT"
 
 """
 
@@ -27,6 +27,9 @@ setup_params_general_1 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-1")
 @pytest.mark.channel_1
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -36,8 +39,8 @@ setup_params_general_1 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel1PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -159,6 +162,9 @@ setup_params_general_2 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-2")
 @pytest.mark.channel_2
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -168,8 +174,8 @@ setup_params_general_2 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel2PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -291,6 +297,9 @@ setup_params_general_3 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-3")
 @pytest.mark.channel_3
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -300,8 +309,8 @@ setup_params_general_3 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel3PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -423,7 +432,10 @@ setup_params_general_4 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
-@pytest.mark.channel_3
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-4")
+@pytest.mark.channel_4
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_4],
@@ -432,8 +444,8 @@ setup_params_general_4 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel4PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -547,7 +559,7 @@ setup_params_general_5 = {
         "2G": {
             'band': '2G',
             'channel-width': 40,
-            "channel": 4
+            "channel": 5
         }
     },
     "radius": False
@@ -555,7 +567,10 @@ setup_params_general_5 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
-@pytest.mark.channel_3
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-5")
+@pytest.mark.channel_5
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_5],
@@ -564,8 +579,8 @@ setup_params_general_5 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel5PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -687,17 +702,20 @@ setup_params_general_6 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-6")
 @pytest.mark.channel_6
 @pytest.mark.parametrize(
     'setup_configuration',
-    [setup_params_general_5],
+    [setup_params_general_6],
     indirect=True,
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel6PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -819,6 +837,9 @@ setup_params_general_7 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-7")
 @pytest.mark.channel_7
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -828,8 +849,8 @@ setup_params_general_7 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel7PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -951,6 +972,9 @@ setup_params_general_8 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-8")
 @pytest.mark.channel_8
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -960,8 +984,8 @@ setup_params_general_8 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel8PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -1084,6 +1108,9 @@ setup_params_general_9 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-9")
 @pytest.mark.channel_9
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1093,8 +1120,8 @@ setup_params_general_9 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel9PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -1216,6 +1243,9 @@ setup_params_general_10 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-10")
 @pytest.mark.channel_10
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1225,8 +1255,8 @@ setup_params_general_10 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel10PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
@@ -1348,6 +1378,9 @@ setup_params_general_11 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: NAT Mode w/ WPA Security")
+@allure.suite("40Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-11")
 @pytest.mark.channel_11
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1357,8 +1390,8 @@ setup_params_general_11 = {
 )
 @pytest.mark.usefixtures("setup_configuration")
 class Test20Mhz2GChannel11PeakThroughput(object):
-    """Country code along with Channel and Channel-width Test Bridge mode
-       pytest -m "country_code and Bridge"
+    """Country code along with Channel and Channel-width Test NAT mode
+       pytest -m "country_code and NAT"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")

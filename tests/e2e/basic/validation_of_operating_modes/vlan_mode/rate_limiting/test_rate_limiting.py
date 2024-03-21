@@ -34,10 +34,10 @@ setup_params_general = {
 }
 
 
-@allure.feature("Rate Limiting Tests")
+@allure.feature("Rate Limiting")
 @allure.parent_suite("Rate Limiting Tests")
-@allure.suite("VLAN Mode")
-@allure.sub_suite("WPA2 Personal Security")
+@allure.suite("WPA2 Personal Security")
+@allure.sub_suite("VLAN Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

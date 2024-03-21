@@ -31,6 +31,9 @@ setup_params_enterprise = {
 
 @pytest.mark.suiteA
 @allure.feature("VLAN MODE ENTERPRISE SETUP")
+@allure.parent_suite("Configuration Tests")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("Enterprise Security Mode : Suite-A")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise],
@@ -121,6 +124,9 @@ setup_params_enterprise_two = {
 
 @pytest.mark.suiteB
 @allure.feature("VLAN MODE ENTERPRISE SETUP")
+@allure.parent_suite("Configuration Tests")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("Enterprise Security Mode : Suite-B")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise_two],

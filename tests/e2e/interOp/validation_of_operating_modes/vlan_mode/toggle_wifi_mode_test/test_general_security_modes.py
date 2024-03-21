@@ -34,6 +34,9 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
 
 @pytest.mark.InteropsuiteA
 @allure.feature("VLAN MODE TOGGLE WIFI MODE")
+@allure.parent_suite("Toggle Wifi Mode Tests")
+@allure.suite("General Security Modes")
+@allure.sub_suite("NAT Mode: Suite-One")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -154,6 +157,9 @@ for sec_modes in setup_params_general_two['ssid_modes'].keys():
 
 @pytest.mark.InteropsuiteB
 @allure.feature("VLAN MODE TOGGLE WIFI MODE")
+@allure.parent_suite("Toggle Wifi Mode Tests")
+@allure.suite("General Security Modes")
+@allure.sub_suite("VLAN Mode: Suite-Two")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_two],

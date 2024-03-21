@@ -16,6 +16,7 @@ import allure
 @pytest.mark.owsec_api_tests
 @allure.parent_suite("SDK Tests")
 @allure.suite("Security Service Tests")
+@allure.sub_suite("Ucentral Security Service Tests")
 class TestUcentralSecService(object):
 
     @allure.title("Get System Endpoints")

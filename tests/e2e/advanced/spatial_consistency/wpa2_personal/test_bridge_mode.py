@@ -36,9 +36,10 @@ setup_params_general = {
 
 
 @allure.feature("Spatial Consistency")
+@allure.feature("Spatial Consistency")
 @allure.parent_suite("Spatial Consistency Test")
-@allure.suite(suite_name="BRIDGE Mode")
-@allure.sub_suite(sub_suite_name="WPA2 Personal")
+@allure.suite(suite_name="WPA2 Personal Security")
+@allure.sub_suite(sub_suite_name="Bridge Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

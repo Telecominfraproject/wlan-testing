@@ -35,6 +35,9 @@ setup_params_general = {
 }
 
 
+@allure.parent_suite("Max-SSID Tests")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("Only 2.4GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -111,6 +114,9 @@ setup_params_general1 = {
 }
 
 
+@allure.parent_suite("Max-SSID Tests")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("Only 5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general1],
@@ -188,6 +194,9 @@ setup_params_general2 = {
 }
 
 
+@allure.parent_suite("Max-SSID Tests")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("Only 2.4GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general2],
@@ -274,6 +283,9 @@ setup_params_general3 = {
 }
 
 
+@allure.parent_suite("Max-SSID Tests")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("Only 5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general3],
@@ -365,6 +377,9 @@ setup_params_general4 = {
 }
 
 
+@allure.parent_suite("Max-SSID Tests")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("Both 2.4GHz and 5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general4],
@@ -457,6 +472,9 @@ setup_params_general5 = {
 }
 
 
+@allure.parent_suite("Max-SSID Tests")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("Both 2.4GHz and 5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general5],

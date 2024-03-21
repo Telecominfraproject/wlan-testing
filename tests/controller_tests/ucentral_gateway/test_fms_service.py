@@ -16,6 +16,7 @@ logging = importlib.import_module("logging")
 @pytest.mark.owfms_api_tests
 @allure.parent_suite("SDK Tests")
 @allure.suite("FMS Service Tests")
+@allure.sub_suite("Ucentral FMS Service Tests")
 class TestUcentralFMSService(object):
 
     @pytest.mark.fms_list_of_firmwares
@@ -149,7 +150,8 @@ class TestUcentralFMSService(object):
 @pytest.mark.firmware_upgrade_downgrade
 @pytest.mark.ow_regression_lf
 @allure.parent_suite("Firmware Tests")
-@allure.suite("Firmware Upgrade/Downgrade Tests")
+@allure.suite("Upgrade/Downgrade Tests")
+@allure.sub_suite("Firmware Upgrade/Downgrade Tests")
 class TestFirmwareUpgradeDowngrade(object):
     @pytest.mark.upgrade_downgrade_test
     @allure.title("Firmware Downgrade and Upgrade test")

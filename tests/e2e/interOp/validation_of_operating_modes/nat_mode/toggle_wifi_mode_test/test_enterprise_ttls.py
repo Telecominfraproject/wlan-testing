@@ -37,6 +37,9 @@ for sec_modes in setup_params_enterprise['ssid_modes'].keys():
 
 @pytest.mark.InteropsuiteA
 @allure.feature("NAT MODE TOGGLE WIFI MODE")
+@allure.parent_suite("Toggle Wifi Mode Tests")
+@allure.suite("Enterprise TTLS")
+@allure.sub_suite("NAT Mode: Suite-One")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise],

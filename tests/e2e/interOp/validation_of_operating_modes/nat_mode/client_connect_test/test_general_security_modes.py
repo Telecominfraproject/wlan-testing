@@ -35,7 +35,7 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
             setup_params_general['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
 
 @allure.feature("NAT MODE CLIENT CONNECT")
-@allure.parent_suite("Client Connect Tests")
+@allure.parent_suite("Client Connect Tests : InterOp")
 @allure.suite(suite_name="NAT Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connect")
 @pytest.mark.parametrize(
@@ -212,7 +212,7 @@ for sec_modes in setup_params_general_two_nat['ssid_modes'].keys():
             setup_params_general_two_nat['ssid_modes'][sec_modes][i]['ssid_name'] + "_" + rand_string
 
 @allure.feature("NAT MODE CLIENT CONNECT")
-@allure.parent_suite("Client Connect Tests")
+@allure.parent_suite("Client Connect Tests : InterOp")
 @allure.suite(suite_name="NAT Mode")
 @allure.sub_suite(sub_suite_name="General security mode Client Connect")
 @pytest.mark.parametrize(

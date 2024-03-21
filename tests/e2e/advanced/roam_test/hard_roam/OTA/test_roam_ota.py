@@ -20,8 +20,11 @@ setup_params_general = {
     "rf": {},
     "radius": False
 }
-@allure.suite("Hard Roam over the air")
+
 @allure.feature("Roam Test")
+@allure.parent_suite("Roam Test")
+@allure.suite("Hard Roam over the air")
+@allure.sub_suite("Roam OTA Tests")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -29,8 +32,6 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-
-
 class TestRoamOTA(object):
 
     @pytest.mark.hard_roam_5g_ota

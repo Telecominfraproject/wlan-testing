@@ -12,6 +12,7 @@ import os
 
 pytestmark = [pytest.mark.advance, pytest.mark.rate_vs_range, pytest.mark.bridge]
 
+
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -37,11 +38,10 @@ setup_params_general = {
     "radius": False
 }
 
-
-@allure.feature("RATE VS RANGE")
-@allure.parent_suite("Rate vs Range Test")
-@allure.suite(suite_name="BRIDGE Mode")
-@allure.sub_suite(sub_suite_name="WPA2 Personal")
+@allure.feature("Rate v/s Range")
+@allure.parent_suite("Rate v/s Range Test")
+@allure.suite(suite_name="WPA2 Personal Security")
+@allure.sub_suite(sub_suite_name="Bridge Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

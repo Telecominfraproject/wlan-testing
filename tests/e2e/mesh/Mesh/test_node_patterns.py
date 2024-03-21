@@ -19,6 +19,9 @@ setup_params_general = {
 
 
 @allure.feature("MESH BASIC")
+@allure.parent_suite("Mesh Tests")
+@allure.suite("WPA2 Personal Security")
+@allure.sub_suite("Mesh Node Patterns Test")
 # @pytest.mark.parametrize(
 #     'setup_mesh_profile_fix',
 #     [setup_params_general],

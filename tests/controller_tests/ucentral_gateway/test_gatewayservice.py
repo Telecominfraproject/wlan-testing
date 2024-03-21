@@ -23,6 +23,7 @@ import requests
 @pytest.mark.owgw_api_tests
 @allure.parent_suite("SDK Tests")
 @allure.suite("Gateway Service Tests")
+@allure.sub_suite("UCentral Gateway Service Tests")
 class TestUcentralGatewayService(object):
     """
     """

@@ -39,8 +39,8 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
 
 @allure.feature("BRIDGE MODE TOGGLE AIRPLANE")
 @allure.parent_suite("Toggle Airplane Tests")
-@allure.suite(suite_name="BRIDGE Mode")
-@allure.sub_suite(sub_suite_name="General security mode Toggle Airplane")
+@allure.suite("General Security Modes")
+@allure.sub_suite("Bridge Mode: Suite-One")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -197,8 +197,8 @@ for sec_modes in setup_params_general_two_br['ssid_modes'].keys():
 
 @allure.feature("BRIDGE MODE TOGGLE AIRPLANE")
 @allure.parent_suite("Toggle Airplane Tests")
-@allure.suite(suite_name="BRIDGE Mode")
-@allure.sub_suite(sub_suite_name="General security mode Toggle Airplane")
+@allure.suite("General Security Modes")
+@allure.sub_suite("Bridge Mode: Suite-Two")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_two_br],

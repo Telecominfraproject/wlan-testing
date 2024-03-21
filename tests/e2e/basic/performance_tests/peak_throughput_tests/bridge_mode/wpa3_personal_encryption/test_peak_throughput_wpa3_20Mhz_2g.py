@@ -27,6 +27,9 @@ setup_params_general_1 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-1")
 @pytest.mark.channel_1
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -159,6 +162,9 @@ setup_params_general_2 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-2")
 @pytest.mark.channel_2
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -291,6 +297,9 @@ setup_params_general_3 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-3")
 @pytest.mark.channel_3
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -423,7 +432,10 @@ setup_params_general_4 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
-@pytest.mark.channel_3
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-4")
+@pytest.mark.channel_4
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_4],
@@ -547,7 +559,7 @@ setup_params_general_5 = {
         "2G": {
             'band': '2G',
             'channel-width': 20,
-            "channel": 4
+            "channel": 5
         }
     },
     "radius": False
@@ -555,7 +567,10 @@ setup_params_general_5 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
-@pytest.mark.channel_3
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-5")
+@pytest.mark.channel_5
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_5],
@@ -687,10 +702,13 @@ setup_params_general_6 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-6")
 @pytest.mark.channel_6
 @pytest.mark.parametrize(
     'setup_configuration',
-    [setup_params_general_5],
+    [setup_params_general_6],
     indirect=True,
     scope="class"
 )
@@ -819,6 +837,9 @@ setup_params_general_7 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-7")
 @pytest.mark.channel_7
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -951,6 +972,9 @@ setup_params_general_8 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-8")
 @pytest.mark.channel_8
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1084,6 +1108,9 @@ setup_params_general_9 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-9")
 @pytest.mark.channel_9
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1216,6 +1243,9 @@ setup_params_general_10 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-10")
 @pytest.mark.channel_10
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -1348,6 +1378,9 @@ setup_params_general_11 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("20Mhz Bandwidth in 2.4GHz Band")
+@allure.sub_suite("Channel-11")
 @pytest.mark.channel_11
 @pytest.mark.parametrize(
     'setup_configuration',

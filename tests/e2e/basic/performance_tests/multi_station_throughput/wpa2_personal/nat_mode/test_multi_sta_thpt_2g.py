@@ -24,6 +24,9 @@ setup_params_general = {
 
 @allure.suite("performance")
 @allure.feature("NAT MODE WPA2 PERSONAL Multi Station Throughput")
+@allure.parent_suite("Multi Station Throughput Test")
+@allure.suite("WPA2 Personal Security")
+@allure.sub_suite("NAT Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],

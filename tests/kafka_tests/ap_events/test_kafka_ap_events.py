@@ -23,8 +23,9 @@ with open(file_path, 'r') as file:
     config_data = json.loads(json_string)
 
 
-@allure.feature("Test Real TIme AP Events using Kafka")
-@allure.title("Real Time AP Events")
+@allure.parent_suite("Kafka Tests")
+@allure.suite("Real Time AP Events")
+@allure.sub_suite("Test Real TIme AP Events using Kafka")
 @pytest.mark.ap_events
 class TestKafkaApEvents(object):
     # Pytest unit test for validating Kafka healthcheck messages

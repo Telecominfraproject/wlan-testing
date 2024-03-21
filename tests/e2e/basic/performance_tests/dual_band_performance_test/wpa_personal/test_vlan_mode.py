@@ -33,7 +33,7 @@ setup_params_general = {
     scope="class"
 )
 @allure.parent_suite("Dual Band Tests")
-@allure.suite("Dual Band Tests: VLAN mode")
+@allure.suite("VLAN Mode")
 @allure.sub_suite("wpa security")
 @allure.feature("Dual band performance test")
 @pytest.mark.usefixtures("setup_configuration")

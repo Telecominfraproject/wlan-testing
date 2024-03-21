@@ -41,8 +41,8 @@ for sec_modes in setup_params_enterprise['ssid_modes'].keys():
 
 @allure.feature("VLAN MODE TOGGLE AIRPLANE")
 @allure.parent_suite("Toggle Airplane Tests")
-@allure.suite(suite_name="VLAN Mode")
-@allure.sub_suite(sub_suite_name="Enterprise ttls Toggle Airplane")
+@allure.suite("Enterprise TTLS")
+@allure.sub_suite("VLAN Mode: Suite-One")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise],
@@ -208,8 +208,8 @@ for sec_modes in setup_params_enterprise_two_vlan['ssid_modes'].keys():
 
 @allure.feature("VLAN MODE TOGGLE AIRPLANE")
 @allure.parent_suite("Toggle Airplane Tests")
-@allure.suite(suite_name="VLAN Mode")
-@allure.sub_suite(sub_suite_name="Enterprise ttls Toggle Airplane")
+@allure.suite("Enterprise TTLS")
+@allure.sub_suite("VLAN Mode: Suite-Two")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise_two_vlan],

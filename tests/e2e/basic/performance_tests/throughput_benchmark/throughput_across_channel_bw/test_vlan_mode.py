@@ -31,6 +31,9 @@ setup_params_general_20Mhz = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput across channel-width Tests : WPA2 Personal Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("20Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_20Mhz],
@@ -140,6 +143,9 @@ setup_params_general_40Mhz = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput across channel-width Tests : WPA2 Personal Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("40Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_40Mhz],
@@ -248,6 +254,9 @@ setup_params_general_80Mhz = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput across channel-width Tests : WPA2 Personal Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("80Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_80Mhz],
@@ -357,6 +366,9 @@ setup_params_general_160Mhz = {
 
 
 @allure.feature("VLAN MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput across channel-width Tests : WPA2 Personal Security")
+@allure.suite("VLAN Mode")
+@allure.sub_suite("160Mhz Channel Bandwidth")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_160Mhz],

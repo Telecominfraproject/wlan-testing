@@ -37,8 +37,8 @@ for sec_modes in setup_params_general['ssid_modes'].keys():
 
 @allure.feature("NAT MODE TOGGLE AIRPLANE")
 @allure.parent_suite("Toggle Airplane Tests")
-@allure.suite(suite_name="NAT Mode")
-@allure.sub_suite(sub_suite_name="General security mode Toggle Airplane")
+@allure.suite("General Security Modes")
+@allure.sub_suite("NAT Mode: Suite-One")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -192,8 +192,8 @@ for sec_modes in setup_params_general_two_nat['ssid_modes'].keys():
 
 @allure.feature("NAT MODE TOGGLE AIRPLANE")
 @allure.parent_suite("Toggle Airplane Tests")
-@allure.suite(suite_name="NAT Mode")
-@allure.sub_suite(sub_suite_name="General security mode Toggle Airplane")
+@allure.suite("General Security Modes")
+@allure.sub_suite("NAT Mode: Suite-Two")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general_two_nat],

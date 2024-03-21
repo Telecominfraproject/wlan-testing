@@ -172,7 +172,7 @@ setup_params_general_5G = {
 
 @allure.feature("Client Scale Tests")
 @allure.parent_suite("Client Scale Tests")
-@allure.suite(suite_name="wpa Personal Security")
+@allure.suite(suite_name="WPA Personal Security")
 @allure.sub_suite(sub_suite_name="BRIDGE Mode")
 @pytest.mark.parametrize(
     'setup_configuration',

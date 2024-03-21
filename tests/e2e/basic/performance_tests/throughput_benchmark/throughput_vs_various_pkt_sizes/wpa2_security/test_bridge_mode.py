@@ -24,6 +24,9 @@ setup_params_general = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput v/s Varying Packet Sizes Tests : WPA2 Personal Security")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("2.4GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -337,6 +340,9 @@ setup_params_5g = {
 
 
 @allure.feature("BRIDGE MODE CLIENT CONNECTIVITY")
+@allure.parent_suite("Throughput Benchmark Test: Throughput v/s Varying Packet Sizes Tests : WPA2 Personal Security")
+@allure.suite("Bridge Mode")
+@allure.sub_suite("5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_5g],

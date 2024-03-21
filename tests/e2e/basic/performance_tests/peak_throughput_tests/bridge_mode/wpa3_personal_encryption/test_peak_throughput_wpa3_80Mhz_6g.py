@@ -26,10 +26,9 @@ setup_params_general = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
-@allure.parent_suite("Throughput Benchmark Test")
-@allure.suite("6 GHz Band")
-@allure.sub_suite("BRIDGE Mode")
-
+@allure.parent_suite("Peak Throughput Tests: Bridge Mode w/ WPA3 Personal Security")
+@allure.suite("80Mhz Bandwidth in 6GHz Band")
+@allure.sub_suite("Channel-AUTO")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
