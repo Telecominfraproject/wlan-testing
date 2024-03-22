@@ -50,10 +50,15 @@ class TestMasterConfig(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12752", name="WIFI-12752")
     @pytest.mark.wpa_personal
     @pytest.mark.master_config1
+    @allure.title("Master Config-One")
     def test_master_config_one(self, get_test_library, check_connectivity, get_target_object):
         """
-            Master Config One
-            pytest -m "master_config1"
+        Combination of all master configurations together covers all Openwifi features.
+        All features are divided into three set of config files.
+        Verification of these 3 master configurations needs to be validated with every RC image,
+        that means all ssids are working fine with every image or not.
+
+        unique marker: master_config1
         """
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
@@ -105,10 +110,15 @@ class TestMasterConfig(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12753", name="WIFI-12753")
     @pytest.mark.wpa_personal
     @pytest.mark.master_config2
+    @allure.title("Master Config-Two")
     def test_master_config_two(self, get_test_library, check_connectivity, get_target_object):
         """
-            Master Config Two
-            pytest -m "master_config2"
+        Combination of all master configurations together covers all Openwifi features.
+        All features are divided into three set of config files.
+        Verification of these 3 master configurations needs to be validated with every RC image,
+        that means all ssids are working fine with every image or not.
+
+        unique marker: master_config2
         """
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
@@ -157,14 +167,18 @@ class TestMasterConfig(object):
 
         assert True
 
-
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12753", name="WIFI-12753")
     @pytest.mark.wpa_personal
     @pytest.mark.master_config3
+    @allure.title("Master Config-Three")
     def test_master_config_three(self, get_test_library, check_connectivity, get_target_object):
         """
-            Master Config Three
-            pytest -m "master_config3"
+        Combination of all master configurations together covers all Openwifi features.
+        All features are divided into three set of config files.
+        Verification of these 3 master configurations needs to be validated with every RC image,
+        that means all ssids are working fine with every image or not.
+
+        unique marker: master_config3
         """
         for ap in range(len(get_target_object.device_under_tests_info)):
             serial_number = get_target_object.device_under_tests_info[ap]['identifier']
