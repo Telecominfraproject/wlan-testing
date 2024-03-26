@@ -45,8 +45,15 @@ class TestMuMimoNat(object):
     @allure.title("Test for Downlink MU-MIMO")
     def test_mu_mimo_wpa_personal_nat_5g(self, get_test_library, setup_configuration, check_connectivity):
         """
-            Downlink MU-MIMO Test: Nat Mode
-            pytest -m mu_mimo_performance_tests and nat and wpa_personal and fiveg
+            Test Description:
+            Downlink MU-MIMO Performance Test intends to verify the performance of Wi-Fi device when Downlink MU-MIMO
+            is applied. This best represents a typical deployment, where stations may only  support 1x1 or 2x2 RF chain
+            configurations. The test is only applicable to the Wi-Fi device supporting the 802.11ac/ax.
+
+            Marker:
+            mu_mimo_performance_tests and nat and wpa_personal and fiveg
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
