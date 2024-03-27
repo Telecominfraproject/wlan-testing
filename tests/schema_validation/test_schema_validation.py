@@ -106,8 +106,7 @@ def generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_
 
 @allure.feature("Schema Validation")
 @allure.parent_suite("Schema Validation")
-@allure.suite(suite_name="Schema Validation")
-@allure.sub_suite(sub_suite_name="Using Github API")
+@allure.suite("Through GitHub")
 class TestSchemaValidation(object):
     @pytest.mark.parametrize("path, filename",
                              [("/ucentral.state.pretty.json", "diff_ucentral_state_pretty.txt"),
@@ -116,6 +115,8 @@ class TestSchemaValidation(object):
                               ("/ucentral.schema.full.json", "diff_ucentral_schema_full.txt")])
     @allure.title("Checking {path}")
     def test_schema(self, path, filename):
+        allure.dynamic.sub_suite("State JSON" if "state" in path else "Schema JSON")
+
         latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap",
                                                   path="/feeds/ucentral/ucentral-schema/Makefile")
         with open("schema_validation/base.txt", "r") as file:
@@ -124,7 +125,7 @@ class TestSchemaValidation(object):
 
         if latest_makefile_commit_id == previous_makefile_commit_id:
             logging.info("No new commits in the Makefile (wlan-ap). Exiting.")
-            exit()
+            return
         logging.info("New commits found in the Makefile (wlan-ap). Proceeding with the schema validation.")
 
         latest_version_id = get_version_id_from_wlan_ap_repo()
@@ -136,19 +137,25 @@ class TestSchemaValidation(object):
 
         if latest_version_id == previous_version_id:
             logging.info("No new Schema-ID found. Exiting.")
-            exit()
+            return
         logging.info("New Schema-ID found. Proceeding with the schema validation.")
 
         wlan_ucentral_schema_url = "https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
         differences = generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_id,
                                     path=path, filename=filename)
-        logging.info(f"Differences: \n{differences}\n")
 
         if differences is not None:
+            logging.info(f"Differences: \n{differences}\n")
             pytest.fail(f"Differences found in the schema: \n{differences}")
-        assert True
+        return
 
-        # with open("schema_validation/base.txt", "w") as file:
-        #     diff += latest_makefile_commit_id)
-        #     logging.info(f"Updated schema_validation/base.txt with the latest Makefile commit-id: {latest_makefile_commit_id}, replacing:"
-        #                  f" {previous_makefile_commit_id}.")
+    @classmethod
+    def teardown_class(cls):
+        latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap",
+                                                  path="/feeds/ucentral/ucentral-schema/Makefile")
+        with open("schema_validation/base.txt", "r") as file:
+            previous_makefile_commit_id = file.read().strip()
+        with open("schema_validation/base.txt", "w") as file:
+            file.write(str(latest_makefile_commit_id))
+            logging.info(f"Updated schema_validation/base.txt with the latest Makefile commit-id: "
+                         f"{latest_makefile_commit_id}, replacing: {previous_makefile_commit_id}.")
