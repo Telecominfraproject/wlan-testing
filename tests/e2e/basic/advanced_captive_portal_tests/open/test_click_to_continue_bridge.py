@@ -57,8 +57,15 @@ class TestBridgeModeadvancedcaptiveportal(object):
                                               get_test_device_logs, num_stations, check_connectivity,
                                               setup_configuration, get_testbed_details, get_target_object):
         """
-            BRIDGE Mode Advanced Captive Portal Test with open encryption 2.4 GHz Band
-            pytest -m "advanced_captive_portal_tests and open and twog and bridge and click_to_continue"
+            Advanced Captive Portal provides a way to authenticate the clients before they get access to the internet.
+            In the Advanced Captive Portal as soon as the clients get connected to the SSID, the client will be
+            redirected to the captive Portal web page to authenticate or to accept the terms of service.
+
+            Click-to-continue mode: In this mode the client will be redirected to the page where the client needs to
+            accept the terms of service before getting internet.
+
+            Unique Marker:
+            advanced_captive_portal_tests and open and twog and bridge and click_to_continue
         """
         profile_data = {"ssid_name": "ssid_captive_portal_open_2g_br", "appliedRadios": ["2G"],
                         "security_key": "something",

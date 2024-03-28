@@ -63,8 +63,15 @@ class TestBridgeModeadvancedcaptiveportal(object):
                                                 get_test_device_logs, num_stations, check_connectivity,
                                                 setup_configuration, get_testbed_details, get_target_object):
         """
-            BRIDGE Mode Advanced Captive Portal Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "advanced_captive_portal_tests and wpa2_personal and twog and bridge and local_user_and_pass"
+            Advanced Captive Portal provides a way to authenticate the clients before they get access to the internet.
+            In the Advanced Captive Portal as soon as the clients get connected to the SSID, the client will be
+            redirected to the captive Portal web page to authenticate or to accept the terms of service.
+
+            Local user/pass mode (Captive-Credentials): In this mode the client needs to enter the valid credentials
+            that are configured in the AP to get the internet access.
+
+            Unique Marker:
+            advanced_captive_portal_tests and wpa2_personal and twog and bridge and local_user_and_pass
         """
         profile_data = {"ssid_name": "ssid_captive_portal_wpa2_2g_br", "appliedRadios": ["2G"],
                         "security_key": "something",
