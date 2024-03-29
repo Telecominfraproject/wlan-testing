@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,cig_wf186w"
+        default: "cig_wf188n,cig_wf196,hfcl_ion4xe,yuncore_fap655,yuncore_ax820,edgecore_oap101-6e,edgecore_eap102,edgecore_eap101,edgecore_eap104,cig_wf186w,edgecore_eap111"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -41,7 +41,7 @@ on:
         default: ""
         description: "Tests release branch to use (i.e. 'release/v2.8.0' or 'master'). If left empty, latest release branch is used"
   schedule:
-    - cron: "30 11,18 * * 0,6"
+    - cron: "30 11 * * 4-7"
 
 jobs:
   # Set vars
@@ -72,11 +72,11 @@ jobs:
           cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
-          # Schedule runs in two slots. slot 1 - 11 hours UTC, slot 2 - 18 hours UTC
+          # Schedule runs in two slots. slot 1 - 11 hours UTC
           # choose AP models as per the day and slot if the scheduled run gets triggered else provided.
           DOW=$(date +%u)
           TOD=$(date +%H)
-          SLOT=$(( 10#$TOD % 24)) # 11 - slot 1, 18 - slot 2
+          SLOT=$(( 10#$TOD % 24)) # 11 - slot 1
           echo "Current date is $(date --iso-8601=s)"
           echo "Current date of week is $DOW which is $(( 10#$DOW % 7 )) in cron notation"
           echo "Current time is $TOD hours, which is $(( 10#$TOD % 24)) in cron notation"
@@ -84,17 +84,14 @@ jobs:
 
           if [[ "$SLOT" -eq "11" ]]; then
             echo "Choosing slot 1 since time of the day is $SLOT hours"
-            if [[ "$DOW" -eq "6" ]]; then
-              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196,edgecore_eap101' }}"
-            else
-              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap101-6e,cig_wf188n,hfcl_ion4xe' }}"
-            fi
-          else
-            echo "Choosing slot 2 since time of the day is $SLOT hours"
-            if [[ "$DOW" -eq "6" ]]; then
-              AP_MODELS="${{ github.event.inputs.ap_models || 'yuncore_fap655,yuncore_ax820' }}"
-            else
-              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,cig_wf186w' }}"
+            if [[ "$DOW" -eq "4" ]]; then
+              AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xe' }}"
+            elif [[ "$DOW" -eq "5" ]]; then
+              AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,edgecore_oap101-6e,edgecore_eap104' }}"
+            elif [[ "$DOW" -eq "6" ]]; then
+              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196,yuncore_fap655' }}"
+            elif [[ "$DOW" -eq "7" ]]; then
+              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap101,yuncore_ax820,edgecore_eap111' }}"
             fi
           fi
           
@@ -3353,12 +3350,334 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-qa01 logs deployment/owsec
 
+  test-edgecore-eap111:
+    needs: [ "vars", "build" ]
+    runs-on: [ self-hosted, small ]
+    timeout-minutes: 1440
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap111')"
+    env:
+      AP_MODEL: edgecore_eap111
+    steps:
+      - name: Set AP model output
+        id: ap_model
+        run: |
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: install aws CLI tool
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+      - name: prepare namespace name
+        id: namespace
+        run: |
+          NAMESPACE="regression-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
+
+      - name: prepare configuration
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
+
+
+      - name: run dfs tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dfs_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-dfs
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and dfs_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-dfs_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dfs --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dfs $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dfs
+
+      - name: run multipsk tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_psk_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-multipsk
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and multi_psk_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-multi_psk_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multipsk --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multipsk $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multipsk
+
+      - name: run rate_limiting tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-rate-limiting
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and rate_limiting_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-rate_limiting_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting
+
+      - name: run rate_limiting_with_radius tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_with_radius_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-rate-limiting-radius
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and rate_limiting_with_radius_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-rate_limiting_with_radius_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting-radius --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting-radius $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting-radius
+
+      - name: run dynamic_vlan tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-dynamic-vlan
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and dynamic_vlan_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-dynamic_vlan_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-dynamic-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-dynamic-vlan $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-dynamic-vlan
+
+      - name: run multi_vlan tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_vlan_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-multi-vlan
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and multi_vlan_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-multi_vlan_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-multi-vlan --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-multi-vlan $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
+
+      - name: run strict forwarding tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+
+      - name: run captive portal tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-captive-portal
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-advanced_captive_portal_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-captive-portal --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-captive-portal $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-captive-portal
+
+      - name: run firmware upgrade & downgrade tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-firmware_upgrade_downgrade
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+
+      - name: run ap support bundle tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-asb
+          testbed: basic-6
+          marker_expression: "ow_regression_lf and asb_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-asb_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+
+      - name: show gw logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owgw
+
+      - name: show fms logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owfms
+
+      - name: show prov logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owprov
+
+      - name: show analytics logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owanalytics
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owsub
+
+      - name: show sec logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owsec
+
 
   # Save reports
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-yuncore-ax820, test-cig-wf186w, test-cig-wf196]
+    needs: [vars, test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-yuncore-ax820, test-cig-wf186w, test-cig-wf196, test-edgecore-eap111]
     strategy:
       fail-fast: false
       matrix:
@@ -3411,7 +3730,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-yuncore-ax820, test-cig-wf186w, test-cig-wf196]
+    needs: [test-hfcl-ion4xe, test-edgecore-eap101, test-yuncore-fap655, test-cig-wf188n, test-edgecore-eap102, test-edgecore-eap104, test-edgecore-oap101-6e, test-yuncore-ax820, test-cig-wf186w, test-cig-wf196, test-edgecore-eap111]
     runs-on: ubuntu-latest
     if: always()
     steps:
