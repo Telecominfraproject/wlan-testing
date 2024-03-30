@@ -651,7 +651,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -676,7 +676,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -701,7 +701,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -726,7 +726,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-3
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -974,7 +974,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -999,7 +999,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1024,7 +1024,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1049,7 +1049,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1297,7 +1297,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-1a
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1322,7 +1322,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-1a
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1347,7 +1347,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-1a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1372,7 +1372,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-1a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1620,7 +1620,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-1
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1645,7 +1645,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-1
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1670,7 +1670,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-1
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1695,7 +1695,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-1
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1943,7 +1943,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-4a
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1968,7 +1968,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-4a
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1993,7 +1993,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-4a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2018,7 +2018,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-4a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2266,7 +2266,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2291,7 +2291,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2316,7 +2316,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2341,7 +2341,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2589,7 +2589,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-5
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2614,7 +2614,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-5
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2639,7 +2639,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-5
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2664,7 +2664,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-5
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2912,7 +2912,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2937,7 +2937,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2962,7 +2962,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2987,7 +2987,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-5a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3231,7 +3231,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3a
+          testbed: basic-2
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3256,7 +3256,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3a
+          testbed: basic-2
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3281,7 +3281,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
-          testbed: basic-3a
+          testbed: basic-2
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3306,7 +3306,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3a
+          testbed: basic-2
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
