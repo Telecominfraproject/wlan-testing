@@ -10,7 +10,8 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.ow_stability_lf,
-              pytest.mark.bridge]
+              pytest.mark.bridge,
+              pytest.mark.ap_stability]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -48,6 +49,16 @@ class TestAPStabilityBridge(object):
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-3035")
     def test_ap_stability_wpa2_personal(self, lf_tools,
                                         create_lanforge_chamberview_dut, lf_test, get_configuration):
+        """
+        Long term stability test intends to measure the stability performance of Wi-Fi device under stresses that
+        would typically been seen under heavy user load, such as watching multiple 4k video streams. Throughput
+        and connection availability are continuously monitored over a period of 4 hours, during which time, the
+        performance must remain steady. Testing is conducted in multiple bands (2.4 GHz and 5 GHz) simultaneously.
+        This testcase evaluates this in Bridge Mode scenario.
+
+        Unique Marker:
+        ap_stability and bridge
+        """
         profile_data = setup_params_general["ssid_modes"]["wpa2_personal"]
         ssid_2G = profile_data[0]["ssid_name"]
         ssid_5G = profile_data[0]["ssid_name"]
