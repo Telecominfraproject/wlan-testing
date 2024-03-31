@@ -48,6 +48,15 @@ class TestDFSChannel52Bw40(object):
     @allure.title("Test for Channel 52 and bandwidth 40")
     def test_dfs_channel_52_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                   num_stations, setup_configuration, check_connectivity, get_target_object):
+        """
+        DFS (Dynamic Frequency Selection) is a function in 5Ghz band. In 5Ghz band few channels are used by the
+        RADAR systems. So, a mechanism called DFS was created to have the WIFI devices listen for radar events
+        and either stop using the channels and automatically move to a non-DFS channel.
+        So, verifying DFS with channel 52 at 40MHz bandwidth.
+
+        Unique Marker:
+        dfs_tests and bandwidth_40MHz and wpa2_personal and fiveg and dfs_channel_52_bw_40
+        """
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -101,6 +110,15 @@ class TestDFSChannel100Bw40(object):
     @allure.title("Test for Channel 100 and bandwidth 40")
     def test_dfs_channel_100_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                    num_stations, setup_configuration, check_connectivity, get_target_object):
+        """
+        DFS (Dynamic Frequency Selection) is a function in 5Ghz band. In 5Ghz band few channels are used by the
+        RADAR systems. So, a mechanism called DFS was created to have the WIFI devices listen for radar events
+        and either stop using the channels and automatically move to a non-DFS channel.
+        So, verifying DFS with channel 100 at 40MHz bandwidth.
+
+        Unique Marker:
+        dfs_tests and bandwidth_40MHz and wpa2_personal and fiveg and dfs_channel_100_bw_40
+        """
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -155,6 +173,15 @@ class TestDFSChannel60Bw40(object):
     @allure.title("Test for Channel 60 and bandwidth 40")
     def test_dfs_channel_60_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                   num_stations, setup_configuration, check_connectivity, get_target_object):
+        """
+        DFS (Dynamic Frequency Selection) is a function in 5Ghz band. In 5Ghz band few channels are used by the
+        RADAR systems. So, a mechanism called DFS was created to have the WIFI devices listen for radar events
+        and either stop using the channels and automatically move to a non-DFS channel.
+        So, verifying DFS with channel 60 at 40MHz bandwidth.
+
+        Unique Marker:
+        dfs_tests and bandwidth_40MHz and wpa2_personal and fiveg and dfs_channel_60_bw_40
+        """
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -208,6 +235,15 @@ class TestDFSChannel108Bw40(object):
     @allure.title("Test for Channel 108 and bandwidth 40")
     def test_dfs_channel_108_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                    num_stations, setup_configuration, check_connectivity, get_target_object):
+        """
+        DFS (Dynamic Frequency Selection) is a function in 5Ghz band. In 5Ghz band few channels are used by the
+        RADAR systems. So, a mechanism called DFS was created to have the WIFI devices listen for radar events
+        and either stop using the channels and automatically move to a non-DFS channel.
+        So, verifying DFS with channel 108 at 40MHz bandwidth.
+
+        Unique Marker:
+        dfs_tests and bandwidth_40MHz and wpa2_personal and fiveg and dfs_channel_108_bw_40
+        """
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -262,6 +298,15 @@ class TestDFSChannel132Bw40(object):
     @allure.title("Test for Channel 132 and bandwidth 40")
     def test_dfs_channel_132_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                    num_stations, setup_configuration, check_connectivity, get_target_object):
+        """
+        DFS (Dynamic Frequency Selection) is a function in 5Ghz band. In 5Ghz band few channels are used by the
+        RADAR systems. So, a mechanism called DFS was created to have the WIFI devices listen for radar events
+        and either stop using the channels and automatically move to a non-DFS channel.
+        So, verifying DFS with channel 132 at 40MHz bandwidth.
+
+        Unique Marker:
+        dfs_tests and bandwidth_40MHz and wpa2_personal and fiveg and dfs_channel_132_bw_40
+        """
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
