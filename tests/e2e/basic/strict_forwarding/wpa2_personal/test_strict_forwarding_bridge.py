@@ -46,10 +46,25 @@ class TestStrictForwardingSameSSID(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
     @pytest.mark.clients_connected_same_ssid_sf_enabled
-    @allure.title("Verify the clients connected to same SSID cannot ping eachother when strict_forwarding is enabled")
+    @allure.title("Verify the clients connected to same SSID cannot ping each other when strict_forwarding is enabled")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12923", name="WIFI-12923")
     def test_sf_enabled_ssid_5g(self, setup_configuration, get_test_library, num_stations,
                                 get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
+        """
+        The Strict Forwarding feature is designed to enhance network security by isolating individual wireless devices
+        (clients) from each other. When enabled on a specific SSID, it prevents wireless clients from communicating
+        directly with each other, even if they are connected to the same access point or different access points.
+
+        With Strict Forwarding enabled, all peer-to-peer communication between wireless clients within the network
+        is disabled. The only traffic allowed is from clients to the gateway or configured servers. Any other traffic
+        not destined for the gateway or configured servers will not be forwarded by the Instant AP.
+
+        This testcase evaluates Strict Forwarding feature in Bridge Mode scenario where 2 clients are connected to the
+        same SSID where strict forwarding is enabled. The clients shouldn't be able to ping each other in such case.
+
+        Unique Marker:
+        strict_forwarding_tests and bridge and wpa2_personal and fiveg and clients_connected_same_ssid_sf_enabled
+        """
 
         profile_data = {
             "ssid_name": "strict_forwarding_wpa2_br",
@@ -126,6 +141,22 @@ class TestStrictForwardingEnabledTwoSSID(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12924", name="WIFI-12924")
     def test_sf_enabled_two_ssid_5g(self, setup_configuration, get_test_library, num_stations,
                                     get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
+        """
+        The Strict Forwarding feature is designed to enhance network security by isolating individual wireless devices
+        (clients) from each other. When enabled on a specific SSID, it prevents wireless clients from communicating
+        directly with each other, even if they are connected to the same access point or different access points.
+
+        With Strict Forwarding enabled, all peer-to-peer communication between wireless clients within the network
+        is disabled. The only traffic allowed is from clients to the gateway or configured servers. Any other traffic
+        not destined for the gateway or configured servers will not be forwarded by the Instant AP.
+
+        This testcase evaluates Strict Forwarding feature in Bridge Mode scenario where 2 clients are connected to the
+        different SSIDs where strict forwarding is enabled on both the SSIDs. The clients shouldn't be able to ping
+        each other in such case.
+
+        Unique Marker:
+        strict_forwarding_tests and bridge and wpa2_personal and fiveg and clients_connected_different_ssid_sf_enabled
+        """
 
         profile_data = {
             "ssid_name": "sf_enabled_ssid1_wpa2_br",
@@ -212,6 +243,23 @@ class TestStrictForwardingEnabledSSIDDisableSSID(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12925", name="WIFI-12925")
     def test_sf_enabled_two_ssid_5g(self, setup_configuration, get_test_library, num_stations,
                                     get_test_device_logs, get_dut_logs_per_test_case, check_connectivity):
+        """
+        The Strict Forwarding feature is designed to enhance network security by isolating individual wireless devices
+        (clients) from each other. When enabled on a specific SSID, it prevents wireless clients from communicating
+        directly with each other, even if they are connected to the same access point or different access points.
+
+        With Strict Forwarding enabled, all peer-to-peer communication between wireless clients within the network
+        is disabled. The only traffic allowed is from clients to the gateway or configured servers. Any other traffic
+        not destined for the gateway or configured servers will not be forwarded by the Instant AP.
+
+        This testcase evaluates Strict Forwarding feature in Bridge Mode scenario where 2 clients are connected to the
+        different SSIDs where strict forwarding is enabled on one and disabled on another. The clients shouldn't be
+        able to ping each other in such case.
+
+        Unique Marker:
+        strict_forwarding_tests and bridge and wpa2_personal and fiveg and
+        clients_connected_ssid_sf_enabled_ssid_sf_disable
+        """
 
         profile_data = {
                 "ssid_name": "sf_enabled_ssid1_wpa2_br",
