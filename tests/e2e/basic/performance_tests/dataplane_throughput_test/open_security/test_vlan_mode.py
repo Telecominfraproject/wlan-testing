@@ -45,8 +45,22 @@ class TestDataplaneThroughputVLAN(object):
                                        get_test_device_logs, client_type,
                                        get_target_object,
                                        num_stations, setup_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_tests and vlan and open and twog"
+        """
+        The WiFi data plane test is designed to conduct on automatic testing of combinations of station types,
+        MIMO types, Channel Bandwidths. Traffic types. Traffic direction, Frame sizes etc. It will run a quick
+        throughput test at every combination of these test variables and plot at the results in a set of
+        charts to compare performance. The user is allowed to define an intended load as a percentage of the
+        max theoretical PHY rate for every test combination.
+        The expected behavior is that for every test combination the achieved throughput should be at least 70% of
+        the theoretical max PHY rate under ideal test conditions.
+        Objective of this test plan is to check the throughput on the single station with different frame sizes
+        in the VLAN mode scenario with Open security.
+
+        Unique Marker:
+        dataplane_tests and vlan and open and twog
+
+        Note:
+        Please refer to the PDF report for detailed observations and analysis of the test results.
         """
         profile_data = {"ssid_name": "open_dataplane_2g", "appliedRadios": ["2G"], "security_key": "something", "vlan": 100}
         ssid_name = profile_data["ssid_name"]
@@ -71,8 +85,22 @@ class TestDataplaneThroughputVLAN(object):
                                        get_test_device_logs, client_type,
                                        get_target_object,
                                        num_stations, setup_configuration):
-        """Dataplane THroughput VLAN Mode
-           pytest -m "dataplane_tests and vlan and open and fiveg"
+        """
+        The WiFi data plane test is designed to conduct on automatic testing of combinations of station types,
+        MIMO types, Channel Bandwidths. Traffic types. Traffic direction, Frame sizes etc. It will run a quick
+        throughput test at every combination of these test variables and plot at the results in a set of
+        charts to compare performance. The user is allowed to define an intended load as a percentage of the
+        max theoretical PHY rate for every test combination.
+        The expected behavior is that for every test combination the achieved throughput should be at least 70% of
+        the theoretical max PHY rate under ideal test conditions.
+        Objective of this test plan is to check the throughput on the single station with different frame sizes
+        in the VLAN mode scenario with Open security.
+
+        Unique Marker:
+        dataplane_tests and vlan and open and fiveg
+
+        Note:
+        Please refer to the PDF report for detailed observations and analysis of the test results.
         """
         profile_data = {"ssid_name": "open_dataplane_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 100}
         ssid_name = profile_data["ssid_name"]
