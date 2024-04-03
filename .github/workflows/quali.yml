@@ -68,6 +68,7 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'release-latest' }})" >> $GITHUB_OUTPUT
           echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'ow_sanity_lf' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
+          
           # Schedule runs at - 11 hours UTC
           
           DOW=$(date +%u)
