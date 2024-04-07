@@ -89,6 +89,8 @@ jobs:
             AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,edgecore_oap101-6e,edgecore_eap104,cig_wf186w,edgecore_eap111' }}"
           elif [[ "$DOW" -eq "5" ]]; then
             AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xe' }}"
+          else
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196,edgecore_eap101,yuncore_fap655,yuncore_ax820,edgecore_eap111' }}"
           fi
 
           echo "List of AP models to test - $AP_MODELS"
