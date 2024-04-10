@@ -90,6 +90,8 @@ jobs:
             AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,cig_wf186w,edgecore_eap111' }}"
           elif [[ "$DOW" -eq "4" ]]; then
             AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196' }}"
+          else
+            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,edgecore_oap101-6e,hfcl_ion4xe' }}"
           fi
           echo "List of AP models to test - $AP_MODELS"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
