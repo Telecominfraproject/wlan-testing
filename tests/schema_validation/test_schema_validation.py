@@ -172,36 +172,68 @@ class TestSchemaValidationThroughAPTerminal(object):
     @allure.title("Schema Validation through AP State Messages")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13567", name="WIFI-13567")
     def test_schema_validation_through_ap_terminal(self, get_target_object):
-        discrepancies = "\n"
+
+        def get_type_missmatch_message(type_in_schema, path, message):
+            type_of_message = "unknown"
+            if isinstance(message, dict):
+                type_of_message = "object"
+            elif isinstance(message, list):
+                type_of_message = "array"
+            elif isinstance(message, int):
+                type_of_message = "integer"
+            elif isinstance(message, float):
+                type_of_message = "number"
+            elif isinstance(message, str):
+                type_of_message = "string"
+
+            return (f"TYPE MISMATCH: type of value at '{path}' is '{type_of_message}', "
+                    f"but should be '{type_in_schema}'.\n")
+
+        def get_key_missing_message(path):
+            return f"MISSING KEY: '{path}' is not present in schema.\n"
+
         def verify_type_of_value(message, schema, path):
-            nonlocal discrepancies
             if '$ref' in schema:
                 return verify_type_of_value(message,
                                             full_schema[schema['$ref'].split('/')[1]][schema['$ref'].split('/')[2]],
                                             path)
 
+            nonlocal discrepancies
             if 'enum' in schema:
                 if message not in schema['enum']:
-                    discrepancies += f"{path} : '{message}' is not in the schema enum: {schema['enum']}.\n"
+                    discrepancies += (f"ENUM MISMATCH: {path} = '{message}' is not in the schema enum: {schema['enum']}"
+                                      f".\n")
+
+            if 'type' not in schema:
+                discrepancies += f"Type not defined in schema for '{path}'. "
+                if 'properties' in schema:
+                    discrepancies += f"Assuming type as 'object' for this path and continuing.\n"
+                    schema['type'] = 'object'
+                elif 'items' in schema:
+                    discrepancies += f"Assuming type as 'array' for this path and continuing.\n"
+                    schema['type'] = 'array'
+                else:
+                    discrepancies += "Can not validate this path further.\n"
+                    return
 
             if schema['type'] == 'integer':
                 if not isinstance(message, int):
-                    discrepancies += f"Value of '{path}' is not of type 'integer', but {type(message)}.\n"
+                    discrepancies += get_type_missmatch_message('integer', path, message)
             elif schema['type'] == 'number':
                 if not isinstance(message, int) and not isinstance(message, float):
-                    discrepancies += f"Value of '{path}' is not of type 'number', but {type(message)}.\n"
+                    discrepancies += get_type_missmatch_message('number', path, message)
             elif schema['type'] == 'string':
                 if not isinstance(message, str):
-                    discrepancies += f"Value of '{path}' is not of type 'string', but {type(message)}.\n"
+                    discrepancies += get_type_missmatch_message('string', path, message)
             elif schema['type'] == 'array':
                 if not isinstance(message, list):
-                    discrepancies += f"Value of '{path}' is not of type 'array', but {type(message)}.\n"
+                    discrepancies += get_type_missmatch_message('array', path, message)
                     return
                 for i in range(len(message)):
-                    verify_type_of_value(message[i], schema['items'], f"{path} > {i}")
+                    verify_type_of_value(message[i], schema['items'], f"{path} > [{i}]")
             elif schema['type'] == 'object':
                 if not isinstance(message, dict):
-                    discrepancies += f"Value of '{path}' is not of type 'object', but {type(message)}.\n"
+                    discrepancies += get_type_missmatch_message('object', path, message)
                     return
                 for key in message:
                     if 'patternProperties' in schema:
@@ -209,17 +241,19 @@ class TestSchemaValidationThroughAPTerminal(object):
                         for key_name in schema['patternProperties']:
                             pattern = key_name
                         if not re.match(pattern, key, re.IGNORECASE):
-                            discrepancies += f"Key name '{path} > \"{key}\"' does not match the pattern '{pattern}' in schema.\n"
+                            discrepancies += (f"PATTERN MISMATCH: Key name '{path} > \"{key}\"' does not match the "
+                                              f"pattern '{pattern}' in schema.\n")
                         return verify_type_of_value(message[key], schema['patternProperties'][pattern],
                                                     f"{path} > {key}")
                     if key == '$ref':
                         if 'ref' not in schema['properties']:
-                            discrepancies += f"Key '{path}.ref' not present in schema.\n"
+                            discrepancies += get_key_missing_message(f'{path}.ref')
                             continue
                         else:
-                            return verify_type_of_value(message['$ref'], schema['properties']['ref'], f"{path}.'$ref'")
+                            return verify_type_of_value(message['$ref'], schema['properties']['ref'],
+                                                        f"{path}.'$ref'")
                     elif key not in schema['properties']:
-                        discrepancies += f"Key '{path} > {key}' not present in schema.\n"
+                        discrepancies += get_key_missing_message(f'{path} > {key}')
                         continue
                     verify_type_of_value(message[key], schema['properties'][key], f"{path} > {key}")
 
@@ -237,12 +271,12 @@ class TestSchemaValidationThroughAPTerminal(object):
         logging.info(f"State Message: \n{full_message}")
         allure.attach(full_message, name=f"State Message:")
         full_message = json.loads(full_message)
-        # Due to inconsistency in the schema, the following line is required until it gets fixed.
-        full_schema['$defs']['interface.ssid.association']['items']['type'] = 'object'
 
         for key in full_message["state"]:
             full_message[key] = full_message["state"][key]
         del full_message["state"]
+
+        discrepancies = "\n"
 
         if full_schema['type'] == 'object':
             if not isinstance(full_message, dict):
@@ -251,7 +285,7 @@ class TestSchemaValidationThroughAPTerminal(object):
                 for key in full_message:
                     if (key == '$ref' and 'ref' not in full_schema['properties']) or (
                             key not in full_schema['properties']):
-                        discrepancies += f"Key '{key}' not present in schema.\n"
+                        discrepancies += get_key_missing_message(key)
                         continue
                     verify_type_of_value(full_message[key], full_schema['properties'][key], key)
         else:
