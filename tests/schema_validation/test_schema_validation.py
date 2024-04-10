@@ -3,6 +3,7 @@ import allure
 import logging
 import json
 import requests
+import re
 
 pytestmark = [pytest.mark.schema_validation]
 
@@ -11,7 +12,7 @@ def make_raw_url(url):
     return url.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
 
 
-def get_github_file(url, path, commit_id=None):
+def get_github_file(url, path=None, commit_id=None):
     if commit_id:
         url = url.replace("main", commit_id)
     if path:
@@ -107,13 +108,14 @@ def generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_
 @allure.feature("Schema Validation")
 @allure.parent_suite("Schema Validation")
 @allure.suite("Through GitHub")
-class TestSchemaValidation(object):
+class TestSchemaValidationThroughGitHub(object):
     @pytest.mark.parametrize("path, filename",
                              [("/ucentral.state.pretty.json", "diff_ucentral_state_pretty.txt"),
                               ("/ucentral.schema.pretty.json", "diff_ucentral_schema_pretty.txt"),
                               ("/ucentral.schema.json", "diff_ucentral_schema.txt"),
                               ("/ucentral.schema.full.json", "diff_ucentral_schema_full.txt")])
     @allure.title("Checking {path}")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13443", name="WIFI-13443")
     def test_schema(self, path, filename):
         allure.dynamic.sub_suite("State JSON" if "state" in path else "Schema JSON")
 
@@ -159,3 +161,107 @@ class TestSchemaValidation(object):
             file.write(str(latest_makefile_commit_id))
             logging.info(f"Updated schema_validation/base.txt with the latest Makefile commit-id: "
                          f"{latest_makefile_commit_id}, replacing: {previous_makefile_commit_id}.")
+
+
+@allure.feature("Schema Validation")
+@allure.parent_suite("Schema Validation")
+@allure.suite("Through AP")
+@allure.sub_suite("Schema Validation through State Messages")
+@pytest.mark.through_ap_terminal
+class TestSchemaValidationThroughAPTerminal(object):
+    @allure.title("Schema Validation through AP State Messages")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13567", name="WIFI-13567")
+    def test_schema_validation_through_ap_terminal(self, get_target_object):
+        discrepancies = "\n"
+        def verify_type_of_value(message, schema, path):
+            nonlocal discrepancies
+            if '$ref' in schema:
+                return verify_type_of_value(message,
+                                            full_schema[schema['$ref'].split('/')[1]][schema['$ref'].split('/')[2]],
+                                            path)
+
+            if 'enum' in schema:
+                if message not in schema['enum']:
+                    discrepancies += f"{path} : '{message}' is not in the schema enum: {schema['enum']}.\n"
+
+            if schema['type'] == 'integer':
+                if not isinstance(message, int):
+                    discrepancies += f"Value of '{path}' is not of type 'integer', but {type(message)}.\n"
+            elif schema['type'] == 'number':
+                if not isinstance(message, int) and not isinstance(message, float):
+                    discrepancies += f"Value of '{path}' is not of type 'number', but {type(message)}.\n"
+            elif schema['type'] == 'string':
+                if not isinstance(message, str):
+                    discrepancies += f"Value of '{path}' is not of type 'string', but {type(message)}.\n"
+            elif schema['type'] == 'array':
+                if not isinstance(message, list):
+                    discrepancies += f"Value of '{path}' is not of type 'array', but {type(message)}.\n"
+                    return
+                for i in range(len(message)):
+                    verify_type_of_value(message[i], schema['items'], f"{path} > {i}")
+            elif schema['type'] == 'object':
+                if not isinstance(message, dict):
+                    discrepancies += f"Value of '{path}' is not of type 'object', but {type(message)}.\n"
+                    return
+                for key in message:
+                    if 'patternProperties' in schema:
+                        pattern = ""
+                        for key_name in schema['patternProperties']:
+                            pattern = key_name
+                        if not re.match(pattern, key, re.IGNORECASE):
+                            discrepancies += f"Key name '{path} > \"{key}\"' does not match the pattern '{pattern}' in schema.\n"
+                        return verify_type_of_value(message[key], schema['patternProperties'][pattern],
+                                                    f"{path} > {key}")
+                    if key == '$ref':
+                        if 'ref' not in schema['properties']:
+                            discrepancies += f"Key '{path}.ref' not present in schema.\n"
+                            continue
+                        else:
+                            return verify_type_of_value(message['$ref'], schema['properties']['ref'], f"{path}.'$ref'")
+                    elif key not in schema['properties']:
+                        discrepancies += f"Key '{path} > {key}' not present in schema.\n"
+                        continue
+                    verify_type_of_value(message[key], schema['properties'][key], f"{path} > {key}")
+
+        # Fetching the schema from GitHub
+        full_schema = get_github_file("https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
+                                      "/ucentral.state.pretty.json")
+        logging.info(f"State Schema: \n{full_schema}")
+        allure.attach(full_schema, name=f"Schema:")
+        full_schema = json.loads(full_schema)
+
+        # Fetching the state message from AP
+        full_message = get_target_object.get_dut_library_object().run_generic_command(cmd="cat /tmp/ucentral.state",
+                                                                                      idx=0, print_log=True)
+        full_message = json.dumps(json.loads(full_message), indent=4)
+        logging.info(f"State Message: \n{full_message}")
+        allure.attach(full_message, name=f"State Message:")
+        full_message = json.loads(full_message)
+        # Due to inconsistency in the schema, the following line is required until it gets fixed.
+        full_schema['$defs']['interface.ssid.association']['items']['type'] = 'object'
+
+        for key in full_message["state"]:
+            full_message[key] = full_message["state"][key]
+        del full_message["state"]
+
+        if full_schema['type'] == 'object':
+            if not isinstance(full_message, dict):
+                discrepancies = f"State Message is not of type 'object', but {type(full_message)}."
+            else:
+                for key in full_message:
+                    if (key == '$ref' and 'ref' not in full_schema['properties']) or (
+                            key not in full_schema['properties']):
+                        discrepancies += f"Key '{key}' not present in schema.\n"
+                        continue
+                    verify_type_of_value(full_message[key], full_schema['properties'][key], key)
+        else:
+            logging.info(
+                f"Did not expect type of state message in the schema to be {full_schema['type']} and not 'object'.")
+            pytest.skip(
+                f"Did not expect type of state message in the schema to be {full_schema['type']} and not 'object'.")
+
+        if discrepancies:
+            logging.info(f"Discrepancies found: {discrepancies}")
+            pytest.fail(discrepancies)
+        else:
+            logging.info("No discrepancies found.")
