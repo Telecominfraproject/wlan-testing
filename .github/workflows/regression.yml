@@ -73,7 +73,7 @@ jobs:
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
           # Schedule runs in two slots. slot 1 - 11 hours UTC
-          # choose AP models as per the day and slot if the scheduled run gets triggered else provided.
+
           DOW=$(date +%u)
           TOD=$(date +%H)
           SLOT=$(( 10#$TOD % 24)) # 11 - slot 1
@@ -82,17 +82,17 @@ jobs:
           echo "Current time is $TOD hours, which is $(( 10#$TOD % 24)) in cron notation"
           echo "Current slot is $SLOT"
 
-          if [[ "$SLOT" -eq "11" ]]; then
-            echo "Choosing slot 1 since time of the day is $SLOT hours"
-            if [[ "$DOW" -eq "4" ]]; then
-              AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xe' }}"
-            elif [[ "$DOW" -eq "5" ]]; then
-              AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,edgecore_oap101-6e,edgecore_eap104' }}"
-            elif [[ "$DOW" -eq "6" ]]; then
-              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196,yuncore_fap655' }}"
-            elif [[ "$DOW" -eq "7" ]]; then
-              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap101,yuncore_ax820,edgecore_eap111' }}"
-            fi
+          # choose AP models as per the day if the scheduled run gets triggered else input provided.
+          if [[ "$DOW" -eq "4" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xe' }}"
+          elif [[ "$DOW" -eq "5" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,edgecore_oap101-6e,edgecore_eap104' }}"
+          elif [[ "$DOW" -eq "6" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196,yuncore_fap655' }}"
+          elif [[ "$DOW" -eq "7" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap101,yuncore_ax820,edgecore_eap111' }}"
+          else
+            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,edgecore_oap101-6e,edgecore_eap104' }}"
           fi
           
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
