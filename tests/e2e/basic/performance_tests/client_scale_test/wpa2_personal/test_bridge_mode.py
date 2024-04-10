@@ -47,8 +47,17 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.title("Test for TCP Download 2.4 GHz")
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and twog and tcp_download"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -66,8 +75,17 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.title("Test for UDP Download 2.4 GHz")
     def test_client_wpa2_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and twog and udp_download"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -86,8 +104,17 @@ class TestWifiCapacityBRIDGEMode2G(object):
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and twog and tcp_bidirectional"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -106,8 +133,17 @@ class TestWifiCapacityBRIDGEMode2G(object):
     def test_client_wpa2_BRIDGE_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and twog and udp_bidirectional"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -126,8 +162,17 @@ class TestWifiCapacityBRIDGEMode2G(object):
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and twog and tcp_upload"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -146,8 +191,17 @@ class TestWifiCapacityBRIDGEMode2G(object):
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and twog and udp_upload"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -198,8 +252,17 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and fiveg and tcp_download"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -219,8 +282,17 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa2_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and fiveg and udp_download"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -239,8 +311,17 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and fiveg and tcp_bidirectional"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -259,8 +340,17 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa2_BRIDGE_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and fiveg and udp_bidirectional"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and fiveg and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -278,8 +368,17 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and fiveg and udp_upload"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -297,8 +396,17 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and fiveg and tcp_upload"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -350,8 +458,17 @@ class TestWifiCapacityBRIDGEModeDual(object):
     @allure.title("Test for TCP Download 2.4 GHz and 5 GHz")
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and dual_band and tcp_download"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and dual_band and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -369,8 +486,17 @@ class TestWifiCapacityBRIDGEModeDual(object):
     @allure.title("Test for UDP Download 2.4 GHz and 5 GHz")
     def test_client_wpa2_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and dual_band and udp_download"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and dual_band and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -389,8 +515,17 @@ class TestWifiCapacityBRIDGEModeDual(object):
     def test_client_wpa2_BRIDGE_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and dual_band and tcp_bidirectional"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and dual_band and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -409,8 +544,17 @@ class TestWifiCapacityBRIDGEModeDual(object):
     def test_client_wpa2_BRIDGE_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,
                                                   max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and dual_band and udp_bidirectional"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and dual_band and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -429,8 +573,17 @@ class TestWifiCapacityBRIDGEModeDual(object):
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and dual_band and tcp_upload"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and dual_band and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -449,8 +602,17 @@ class TestWifiCapacityBRIDGEModeDual(object):
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
                                        max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa2_personal and dual_band and udp_upload"
+        """
+        The WiFi Capacity test is designed to measure the performance of an Access Point when handling different
+        amounts of WiFi Stations. The test allows the user to increase the number of stations in user-defined steps
+        for each test iteration and measure the per station and the overall throughput for each trial. Along with
+        throughput other measurements made are client connection times, Fairness, % packet loss, DHCP times, and more.
+        The expected behavior is for the AP to be able to handle several stations (within the limitations of the AP
+        specs) and make sure all stations get a fair amount of airtime both upstream and downstream. An AP that
+        scales well will not show a significant overall throughput decrease as more stations are added.
+
+        Unique Marker:
+        client_scale_tests and bridge and wpa2_personal and dual_band and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
