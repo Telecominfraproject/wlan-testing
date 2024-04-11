@@ -108,6 +108,7 @@ def generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_
 @allure.feature("Schema Validation")
 @allure.parent_suite("Schema Validation")
 @allure.suite("Through GitHub")
+@pytest.mark.through_github
 class TestSchemaValidationThroughGitHub(object):
     @pytest.mark.parametrize("path, filename",
                              [("/ucentral.state.pretty.json", "diff_ucentral_state_pretty.txt"),
@@ -116,7 +117,17 @@ class TestSchemaValidationThroughGitHub(object):
                               ("/ucentral.schema.full.json", "diff_ucentral_schema_full.txt")])
     @allure.title("Checking {path}")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13443", name="WIFI-13443")
-    def test_schema(self, path, filename):
+    def test_schema_through_github(self, path, filename):
+        """
+        Validating the ucentral schema to ensure consistency and integrity in the system. The validation process
+        involves detecting any changes in the schema YML files and comparing them periodically after any new commits
+        int the wlan-ucentral-schema repo.
+
+        Objective is to identify any modifications, additions, or removals in the schema.
+
+        Unique Marker:
+        schema_validation and through_github
+        """
         allure.dynamic.sub_suite("State JSON" if "state" in path else "Schema JSON")
 
         latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap",
@@ -171,7 +182,17 @@ class TestSchemaValidationThroughGitHub(object):
 class TestSchemaValidationThroughAPTerminal(object):
     @allure.title("Schema Validation through AP State Messages")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13567", name="WIFI-13567")
-    def test_schema_validation_through_ap_terminal(self, get_target_object):
+    def test_schema_through_ap_terminal(self, get_target_object):
+        """
+        Validating the ucentral schema to ensure consistency and integrity in the system. The validation 
+        process involves detecting any changes in the schema YML files and comparing them between the 
+        live current state received from the AP and out ucentral state json output file.
+
+        Objective is to detect discrepancies in data types (e.g., string to integer) and object structures.
+
+        Unique Marker:
+        schema_validation and through_ap_terminal
+        """
 
         def get_type_missmatch_message(type_in_schema, path, message):
             type_of_message = "unknown"
