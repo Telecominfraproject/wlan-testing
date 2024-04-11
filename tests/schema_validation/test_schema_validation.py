@@ -182,7 +182,8 @@ class TestSchemaValidationThroughGitHub(object):
 class TestSchemaValidationThroughAPTerminal(object):
     @allure.title("Schema Validation through AP State Messages")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13567", name="WIFI-13567")
-    def test_schema_through_ap_terminal(self, get_target_object):
+    def test_schema_through_ap_terminal(self, get_target_object, get_dut_logs_per_test_case, get_test_device_logs,
+                                        check_connectivity):
         """
         Validating the ucentral schema to ensure consistency and integrity in the system. The validation 
         process involves detecting any changes in the schema YML files and comparing them between the 
