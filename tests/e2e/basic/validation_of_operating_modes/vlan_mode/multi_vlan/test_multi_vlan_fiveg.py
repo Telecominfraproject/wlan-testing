@@ -50,8 +50,10 @@ class TestMultiVlan(object):
     def test_multi_vlan_open_5g(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration):
         """
-                    Multi VLAN Test with open encryption 5 GHz Band
-                    pytest -m "multi_vlan_tests and open and fiveg"
+        To verify that a client operating with open security will connect or not using multi vlans in 5GHz band.
+
+        Unique Marker:
+        multi_vlan_tests and fiveg and open
         """
         profile_data = {"ssid_name": "ssid_open_5g", "appliedRadios": ["5G"], "vlan": 100}
         ssid_name = profile_data["ssid_name"]
@@ -77,8 +79,10 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa_5g(self, get_test_library, get_dut_logs_per_test_case,
                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            To verify that a client operating with WPA security will connect or not using Multi VLAN's
-            pytest -m "multi_vlan and wpa and fiveg and ow_sanity_lf"
+        To verify that a client operating with open security will connect or not using multi vlans in 5GHz band.
+
+        Unique Marker:
+        multi_vlan_tests and fiveg and wpa
         """
         profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 125}
         ssid_name = profile_data["ssid_name"]
@@ -104,8 +108,10 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa2_personal_5g(self, get_test_library, get_dut_logs_per_test_case,
                                          get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            To verify that a client operating with WPA2(personal) security will connect or not using Multi VLANS
-            pytest -m "multi_vlan and wpa2_personal and fiveg and ow_sanity_lf"
+        To verify that a client operating with open security will connect or not using multi vlans in 5GHz band.
+
+        Unique Marker:
+        multi_vlan_tests and fiveg and wpa2_personal
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
         ssid_name = profile_data["ssid_name"]
@@ -130,8 +136,10 @@ class TestMultiVlan(object):
     def test_multi_vlan_wpa_wpa2_personal_5g(self, get_test_library, get_dut_logs_per_test_case,
                                              get_test_device_logs, num_stations, setup_configuration):
         """
-                    Multi VLAN Test with wpa_wpa2_personal_mixed encryption 5 GHz Band
-                    pytest -m "multi_vlan_tests and wpa_wpa2_personal_mixed and fiveg"
+        To verify that a client operating with open security will connect or not using multi vlans in 5GHz band.
+
+        Unique Marker:
+        multi_vlan_tests and fiveg and wpa_wpa2_personal_mixed
         """
         profile_data = {"ssid_name": "ssid_wpa_wpa2_p_m_5g", "appliedRadios": ["5G"], "security_key": "something",
                         "vlan": 150}
@@ -160,8 +168,11 @@ class TestMultiVlan(object):
     def test_disable_vlan_wpa2_5g(self, get_test_library, get_dut_logs_per_test_case,
                                   get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            To verify that a client operating with WPA2 security will connect or not by disabling the VLAN
-            pytest -m "disable_vlan_fiveg and wpa2_personal and fiveg and ow_sanity_lf"
+        To verify that a client operating with wpa2(personal) security will connect or not by disabling VLAN
+        in 5GHz band.
+
+        Unique Marker:
+        multi_vlan_tests and fiveg and wpa2_personal and disable_vlan_fiveg
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something", "vlan": 200}
         ssid_name = profile_data["ssid_name"]
