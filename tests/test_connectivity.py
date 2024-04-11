@@ -36,8 +36,11 @@ class TestResources(object):
     @allure.title("Cloud Controller Connectivity")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11615", name="11615")
     def test_controller_connectivity(self, get_target_object, get_testbed_details):
-        """Test case to verify cloud Controller Connectivity
-           Unique marker: pytest -m "test_cloud_controller"
+        """
+        Test case to verify cloud Controller Connectivity
+
+        Unique marker:
+        test_cloud_controller
         """
 
         login_response_json = get_target_object.controller_library_object.login_resp.json()
@@ -163,8 +166,11 @@ class TestResources(object):
     @allure.title("Cloud Access Point Connectivity")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11615", name="11615")
     def test_access_points_connectivity(self, get_target_object, get_testbed_details):
-        """Test case to verify Access Points Connectivity
-        Unique marker: pytest -m "test_access_points_connectivity"
+        """
+        Test case to verify Access Points Connectivity
+
+        Unique marker:
+        test_access_points_connectivity
         """
 
         # Logic to Get ubus call ucentral status from AP
@@ -254,6 +260,12 @@ class TestResources(object):
     @allure.title("Check AP is restricted")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12318", name="12318")
     def test_check_restrictions(self, get_target_object, get_testbed_details):
+        """
+        Test case to verify Access Points is not Restricted
+
+        Unique marker:
+        test_ap_restrictions
+        """
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
         if not resp:
@@ -281,6 +293,12 @@ class TestFirmwareUpgrade(object):
 
     @pytest.mark.get_firmware_list
     def test_get_firmware_version_list(self, get_testbed_details, get_target_object):
+        """
+        Test case to get firmware version list
+
+        Unique marker:
+        get_firmware_list
+        """
         PASS = []
         for ap in range(len(get_target_object.device_under_tests_info)):
             # get the latest branch
@@ -394,6 +412,12 @@ class TestFirmwareUpgrade(object):
 
     @pytest.mark.firmware_upgrade
     def test_firmware_upgrade_request(self, get_target_object, get_dut_logs_per_test_case, check_connectivity):
+        """
+        Test case to verify firmware upgrade request
+
+        Unique marker:
+        firmware_upgrade
+        """
         for update in get_target_object.setup_firmware():
             allure.attach(name='serial: ' + update[0], body="")
         assert True
@@ -401,6 +425,12 @@ class TestFirmwareUpgrade(object):
     @pytest.mark.test_firmware_gw
     def test_firmware_upgrade_status_gateway(self, get_testbed_details, get_target_object,
                                              add_firmware_property_after_upgrade):
+        """
+        Test case to verify firmware upgrade status from the gateway
+
+        Unique marker:
+        test_firmware_gw
+        """
         status = []
         for ap in range(len(get_target_object.device_under_tests_info)):
             ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
