@@ -209,10 +209,10 @@ class TestSchemaValidationThroughAPTerminal(object):
                 type_of_message = "string"
 
             return (f"TYPE MISMATCH: type of value at '{path}' is '{type_of_message}', "
-                    f"but should be '{type_in_schema}'.\n")
+                    f"but should be '{type_in_schema}'.")
 
         def get_key_missing_message(path):
-            return f"MISSING KEY: '{path}' is not present in schema.\n"
+            return f"MISSING KEY: '{path}' is not present in schema."
 
         def verify_type_of_value(message, schema, path):
             if '$ref' in schema:
@@ -223,39 +223,41 @@ class TestSchemaValidationThroughAPTerminal(object):
             nonlocal discrepancies
             if 'enum' in schema:
                 if message not in schema['enum']:
-                    discrepancies += (f"ENUM MISMATCH: {path} = '{message}' is not in the schema enum: {schema['enum']}"
-                                      f".\n")
+                    discrepancies.add(f"ENUM MISMATCH: {path} = '{message}' is not in the schema enum: {schema['enum']}"
+                                      f".")
 
             if 'type' not in schema:
-                discrepancies += f"Type not defined in schema for '{path}'. "
+                discrepancy = f"Type not defined in schema for '{path}'. "
                 if 'properties' in schema:
-                    discrepancies += f"Assuming type as 'object' for this path and continuing.\n"
+                    discrepancy += f"Assuming type as 'object' for this path and continuing."
                     schema['type'] = 'object'
                 elif 'items' in schema:
-                    discrepancies += f"Assuming type as 'array' for this path and continuing.\n"
+                    discrepancy += f"Assuming type as 'array' for this path and continuing."
                     schema['type'] = 'array'
                 else:
-                    discrepancies += "Can not validate this path further.\n"
+                    discrepancy += "Can not validate this path further."
+                    discrepancies.add(discrepancy)
                     return
+                discrepancies.add(discrepancy)
 
             if schema['type'] == 'integer':
                 if not isinstance(message, int):
-                    discrepancies += get_type_missmatch_message('integer', path, message)
+                    discrepancies.add(get_type_missmatch_message('integer', path, message))
             elif schema['type'] == 'number':
                 if not isinstance(message, int) and not isinstance(message, float):
-                    discrepancies += get_type_missmatch_message('number', path, message)
+                    discrepancies.add(get_type_missmatch_message('number', path, message))
             elif schema['type'] == 'string':
                 if not isinstance(message, str):
-                    discrepancies += get_type_missmatch_message('string', path, message)
+                    discrepancies.add(get_type_missmatch_message('string', path, message))
             elif schema['type'] == 'array':
                 if not isinstance(message, list):
-                    discrepancies += get_type_missmatch_message('array', path, message)
+                    discrepancies.add(get_type_missmatch_message('array', path, message))
                     return
                 for i in range(len(message)):
-                    verify_type_of_value(message[i], schema['items'], f"{path} > [{i}]")
+                    verify_type_of_value(message[i], schema['items'], f"{path} > [item]")
             elif schema['type'] == 'object':
                 if not isinstance(message, dict):
-                    discrepancies += get_type_missmatch_message('object', path, message)
+                    discrepancies.add(get_type_missmatch_message('object', path, message))
                     return
                 for key in message:
                     if 'patternProperties' in schema:
@@ -263,19 +265,19 @@ class TestSchemaValidationThroughAPTerminal(object):
                         for key_name in schema['patternProperties']:
                             pattern = key_name
                         if not re.match(pattern, key, re.IGNORECASE):
-                            discrepancies += (f"PATTERN MISMATCH: Key name '{path} > \"{key}\"' does not match the "
-                                              f"pattern '{pattern}' in schema.\n")
+                            discrepancies.add(f"PATTERN MISMATCH: Key name '{path} > \"{key}\"' does not match the "
+                                              f"pattern '{pattern}' in schema.")
                         return verify_type_of_value(message[key], schema['patternProperties'][pattern],
                                                     f"{path} > {key}")
                     if key == '$ref':
                         if 'ref' not in schema['properties']:
-                            discrepancies += get_key_missing_message(f'{path}.ref')
+                            discrepancies.add(get_key_missing_message(f'{path}.ref'))
                             continue
                         else:
                             return verify_type_of_value(message['$ref'], schema['properties']['ref'],
                                                         f"{path}.'$ref'")
                     elif key not in schema['properties']:
-                        discrepancies += get_key_missing_message(f'{path} > {key}')
+                        discrepancies.add(get_key_missing_message(f'{path} > {key}'))
                         continue
                     verify_type_of_value(message[key], schema['properties'][key], f"{path} > {key}")
 
@@ -289,7 +291,19 @@ class TestSchemaValidationThroughAPTerminal(object):
         # Fetching the state message from AP
         full_message = get_target_object.get_dut_library_object().run_generic_command(cmd="cat /tmp/ucentral.state",
                                                                                       idx=0, print_log=True)
-        full_message = json.dumps(json.loads(full_message), indent=4)
+        try:
+            full_message = json.dumps(json.loads(full_message), indent=4)
+        except json.JSONDecodeError:
+            logging.info("Extra characters appeared as part of the state message from AP!")
+            allure.attach(full_message, name="Response with extra characters as received from AP:")
+            logging.info("Trying to remove extra characters.")
+            full_message = '{' + re.split(r"{", full_message, maxsplit=1)[1].strip()
+            try:
+                full_message = json.dumps(json.loads(full_message), indent=4)
+            except json.JSONDecodeError:
+                logging.info("Failed to remove the extra unwanted characters.")
+                logging.info(f"State Message after trial: \n{full_message}")
+                pytest.fail("Extra characters appeared as part of the state message from AP!")
         logging.info(f"State Message: \n{full_message}")
         allure.attach(full_message, name=f"State Message:")
         full_message = json.loads(full_message)
@@ -298,16 +312,16 @@ class TestSchemaValidationThroughAPTerminal(object):
             full_message[key] = full_message["state"][key]
         del full_message["state"]
 
-        discrepancies = "\n"
+        discrepancies = set()
 
         if full_schema['type'] == 'object':
             if not isinstance(full_message, dict):
-                discrepancies = f"State Message is not of type 'object', but {type(full_message)}."
+                discrepancies.add(f"State Message is not of type 'object', but {type(full_message)}.")
             else:
                 for key in full_message:
                     if (key == '$ref' and 'ref' not in full_schema['properties']) or (
                             key not in full_schema['properties']):
-                        discrepancies += get_key_missing_message(key)
+                        discrepancies.add(get_key_missing_message(key))
                         continue
                     verify_type_of_value(full_message[key], full_schema['properties'][key], key)
         else:
@@ -317,7 +331,8 @@ class TestSchemaValidationThroughAPTerminal(object):
                 f"Did not expect type of state message in the schema to be {full_schema['type']} and not 'object'.")
 
         if discrepancies:
-            logging.info(f"Discrepancies found: {discrepancies}")
-            pytest.fail(discrepancies)
+            result = "\n" + "\n".join(discrepancies)
+            logging.info(f"Discrepancies found: {result}")
+            pytest.fail(result)
         else:
             logging.info("No discrepancies found.")
