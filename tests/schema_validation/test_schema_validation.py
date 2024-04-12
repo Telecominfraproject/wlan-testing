@@ -229,13 +229,13 @@ class TestSchemaValidationThroughAPTerminal(object):
             if 'type' not in schema:
                 discrepancy = f"Type not defined in schema for '{path}'. "
                 if 'properties' in schema:
-                    discrepancy += f"Assuming type as 'object' for this path and continuing."
+                    discrepancy += f"Assumed type as 'object' for this path to continue."
                     schema['type'] = 'object'
                 elif 'items' in schema:
-                    discrepancy += f"Assuming type as 'array' for this path and continuing."
+                    discrepancy += f"Assumed type as 'array' for this path to continue."
                     schema['type'] = 'array'
                 else:
-                    discrepancy += "Can not validate this path further."
+                    discrepancy += "Could not validate this path any further."
                     discrepancies.add(discrepancy)
                     return
                 discrepancies.add(discrepancy)
@@ -331,8 +331,9 @@ class TestSchemaValidationThroughAPTerminal(object):
                 f"Did not expect type of state message in the schema to be {full_schema['type']} and not 'object'.")
 
         if discrepancies:
-            result = "\n" + "\n".join(discrepancies)
-            logging.info(f"Discrepancies found: {result}")
+            discrepancies = sorted(discrepancies)
+            result = "Detected Discrepancies\n" + "\n".join(discrepancies)
+            logging.info(result)
             pytest.fail(result)
         else:
             logging.info("No discrepancies found.")
