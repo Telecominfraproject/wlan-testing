@@ -7,7 +7,7 @@ pandas
 paramiko
 perfecto-py37
 pyshark
-pytest==8.1.1
+pytest==6.2.2
 requests
 scp
 selenium
