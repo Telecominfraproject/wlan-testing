@@ -73,21 +73,6 @@ def compare_dicts(dict1, dict2, path="", added_keys=set(), removed_keys=set(), c
     return added_keys, removed_keys, changed_items
 
 
-def get_differences(added_keys, removed_keys, changed_items, filename="result.txt"):
-    differences = ""
-    if added_keys:
-        differences += "Added keys:\n"
-        differences += "\n".join(added_keys)
-    if removed_keys:
-        differences += "\n\nRemoved keys:\n"
-        differences += "\n".join(removed_keys)
-    if changed_items:
-        differences += "\n\nChanged items:\n"
-        for path, old_value, new_value in changed_items:
-            differences += f"{path}: {old_value} -> {new_value}\n"
-    return differences
-
-
 def generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_id, path):
     previous_schema_pretty_json = get_github_file(wlan_ucentral_schema_url, path, previous_version_id)
     updated_schema_pretty_json = get_github_file(wlan_ucentral_schema_url, path, latest_version_id)
