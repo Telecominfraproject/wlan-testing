@@ -58,6 +58,9 @@ def extract_pkg_src_version_from_makefile(commit_id=None):
 
 
 def compare_dicts(dict1, dict2, path="", added_keys=None, removed_keys=None, changed_items=None):
+    if dict1 == dict2:
+        return added_keys, removed_keys, changed_items
+
     if changed_items is None:
         changed_items = []
     if removed_keys is None:
@@ -69,15 +72,32 @@ def compare_dicts(dict1, dict2, path="", added_keys=None, removed_keys=None, cha
         new_path = f"{path} > {key}" if path else key
 
         if key not in dict1:
-            added_keys.add(new_path + f" : {dict2[key]}")
+            added_keys.add((new_path, f"{dict2[key]}"))
         elif key not in dict2:
             removed_keys.add(new_path)
-        elif isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
-            added_keys, removed_keys, changed_items = compare_dicts(dict1[key], dict2[key], path=new_path,
-                                                                    added_keys=added_keys, removed_keys=removed_keys,
-                                                                    changed_items=changed_items)
         elif dict1[key] != dict2[key]:
-            changed_items.append((new_path, dict1[key], dict2[key]))
+            if type(dict1[key]) == type(dict2[key]):
+                if isinstance(dict1[key], dict):
+                    added_keys, removed_keys, changed_items = compare_dicts(dict1[key], dict2[key], path=new_path,
+                                                                            added_keys=added_keys,
+                                                                            removed_keys=removed_keys,
+                                                                            changed_items=changed_items)
+                elif isinstance(dict1[key], list):
+                    if len(dict1[key]) != len(dict2[key]):
+                        changed_items.append((f"length of array at {new_path}", f"{len(dict1[key])}",
+                                              f"{len(dict2[key])}"))
+                        changed_items.append((new_path, f"{dict1[key]}", f"{dict2[key]}"))
+                    else:
+                        for index, (val1, val2) in enumerate(zip(dict1[key], dict2[key])):
+                            added_keys, removed_keys, changed_items = compare_dicts(val1, val2,
+                                                                                    path=f"{new_path} > [item {index}]",
+                                                                                    added_keys=added_keys,
+                                                                                    removed_keys=removed_keys,
+                                                                                    changed_items=changed_items)
+                elif isinstance(dict1[key], str) or isinstance(dict1[key], int) or isinstance(dict1[key], float):
+                    changed_items.append((new_path, f"{dict1[key]}", f"{dict2[key]}"))
+            else:
+                changed_items.append((new_path, f"{dict1[key]}", f"{dict2[key]}"))
 
     return added_keys, removed_keys, changed_items
 
@@ -98,6 +118,74 @@ def generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_
         return added_keys, removed_keys, changed_items
 
 
+def validate_schema_through_github(commit_id, path):
+    if commit_id is None:
+        logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
+        pytest.skip("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
+
+    latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap")
+    previous_makefile_commit_id = commit_id
+
+    allure.attach(latest_makefile_commit_id, name="Latest commit-id of wlan-ap:")
+    allure.attach(previous_makefile_commit_id, name="Passed commit-id to CLI:")
+
+    logging.info(f"Latest Commit-ID of wlan-ap/feeds/ucentral/ucentral-schema/'Makefile' is {commit_id}")
+    logging.info(f"Passed Commit-ID through CLI = {previous_makefile_commit_id}")
+
+    if latest_makefile_commit_id == previous_makefile_commit_id:
+        logging.info("No new commits in the Makefile (wlan-ap). Exiting.")
+        return
+    logging.info("New commits found in the Makefile (wlan-ap). Proceeding with the schema validation.")
+
+    latest_version_id = extract_pkg_src_version_from_makefile()
+    logging.info(f"Latest Commit-ID of wlan-ucentral-schema according to latest Makefile = {latest_version_id}")
+    allure.attach(latest_version_id, name="PKG_SOURCE_VERSION (a/c to latest):")
+
+    previous_version_id = extract_pkg_src_version_from_makefile(previous_makefile_commit_id)
+    if previous_version_id is None:
+        logging.info(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
+                     f"telecominfraproject/wlan-ap repo. Skipping the test.")
+        pytest.skip(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
+                    f"telecominfraproject/wlan-ap repo. Skipping the test.")
+    logging.info(f"Commit-ID of wlan-ucentral-schema according to the passed Commit-ID = {previous_version_id}")
+    allure.attach(previous_version_id, name=f"PKG_SOURCE_VERSION (a/c to passed commit-id):")
+
+    if latest_version_id == previous_version_id:
+        logging.info("No new Schema-ID found. Exiting.")
+        return
+    logging.info("New Schema-ID found. Proceeding with the schema validation.")
+
+    wlan_ucentral_schema_url = "https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
+    added_keys, removed_keys, changed_items = (
+        generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_id, path=path))
+
+    if added_keys or removed_keys or changed_items:
+        logging.info(f"Differences found in the schema:")
+        if added_keys:
+            added_keys = [list(key) for key in added_keys]
+            added_keys = sorted(added_keys)
+            message = ("Note: These keys were not present in old schema and have been added in the new schema.\n\n"
+                       + tabulate(added_keys, headers=['Key Paths', 'Values'], tablefmt='fancy_grid'))
+            logging.info("\nAdded keys:\n" + message + "\n")
+            allure.attach(message, name="Added keys:")
+        if removed_keys:
+            removed_keys = [[key] for key in removed_keys]
+            removed_keys = sorted(removed_keys)
+            message = ("Note: These keys were present in the old schema but have been removed in the new schema.\n\n"
+                       + tabulate(removed_keys, headers=['Key Paths'], tablefmt='fancy_grid'))
+            logging.info("\nRemoved keys:\n" + message + "\n")
+            allure.attach(message, name="Removed keys:")
+        if changed_items:
+            changed_items = [list(key) for key in changed_items]
+            changed_items = sorted(changed_items)
+            message = ("Note: The value at these key paths have been modified.\n\n"
+                       + tabulate(changed_items, headers=['Key Paths', 'Old Value', 'New Value'], tablefmt='fancy_grid'))
+            logging.info("\nChanged Items:\n" + message + "\n")
+            allure.attach(message, name="Changed items:")
+        pytest.fail(f"Differences found in the schema, check Test Body for Added/Removed/Changed items")
+    return
+
+
 @allure.feature("Schema Validation")
 @allure.parent_suite("Schema Validation")
 @allure.suite("Through GitHub")
@@ -113,69 +201,13 @@ class TestSchemaValidationThroughGitHub(object):
         involves detecting any changes in the schema YML files and comparing them periodically after any new commits
         int the wlan-ucentral-schema repo.
 
-        Objective is to identify any modifications, additions, or removals in the schema.
+        Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.json.
 
         Unique Marker:
         schema_validation and through_github and schema_json
         """
+        validate_schema_through_github(commit_id, "/ucentral.schema.json")
 
-        if commit_id is None:
-            logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-            pytest.skip("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-
-        latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap")
-        previous_makefile_commit_id = commit_id
-
-        allure.attach(latest_makefile_commit_id, name="Latest commit-id of wlan-ap:")
-        allure.attach(previous_makefile_commit_id, name="Passed commit-id to CLI:")
-
-        logging.info(f"Latest Commit-ID of wlan-ap/feeds/ucentral/ucentral-schema/'Makefile' is {commit_id}")
-        logging.info(f"Passed Commit-ID through CLI = {previous_makefile_commit_id}")
-
-        if latest_makefile_commit_id == previous_makefile_commit_id:
-            logging.info("No new commits in the Makefile (wlan-ap). Exiting.")
-            return
-        logging.info("New commits found in the Makefile (wlan-ap). Proceeding with the schema validation.")
-
-        latest_version_id = extract_pkg_src_version_from_makefile()
-        logging.info(f"Latest Commit-ID of wlan-ucentral-schema according to latest Makefile = {latest_version_id}")
-        allure.attach(latest_version_id, name="PKG_SOURCE_VERSION (a/c to latest):")
-
-        previous_version_id = extract_pkg_src_version_from_makefile(previous_makefile_commit_id)
-        if previous_version_id is None:
-            logging.info(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                        f"telecominfraproject/wlan-ap repo. Skipping the test.")
-            pytest.skip(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                        f"telecominfraproject/wlan-ap repo. Skipping the test.")
-        logging.info(f"Commit-ID of wlan-ucentral-schema according to the passed Commit-ID = {previous_version_id}")
-        allure.attach(previous_version_id, name=f"PKG_SOURCE_VERSION (a/c to passed commit-id):")
-
-        if latest_version_id == previous_version_id:
-            logging.info("No new Schema-ID found. Exiting.")
-            return
-        logging.info("New Schema-ID found. Proceeding with the schema validation.")
-
-        wlan_ucentral_schema_url = "https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
-        added_keys, removed_keys, changed_items = (
-            generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_id,
-                          path="/ucentral.schema.json"))
-
-        if added_keys or removed_keys or changed_items:
-            logging.info(f"Differences found in the schema:")
-            if added_keys:
-                logging.info("\n\nAdded keys:" + "\n" + "\n".join(added_keys))
-                allure.attach("\n".join(added_keys), name="Added keys:")
-            if removed_keys:
-                logging.info("\n\nRemoved keys:" + "\n" + "\n".join(removed_keys))
-                allure.attach("\n".join(removed_keys), name="Removed keys:")
-            if changed_items:
-                message = ""
-                for path, old_value, new_value in changed_items:
-                    message += f"{path}: {old_value} --> {new_value}\n"
-                logging.info("\n\nChanged items:" + "\n" + message)
-                allure.attach(message, name="Changed items:")
-            pytest.fail(f"Differences found in the schema, check Test Body for Added/Removed/Changed items")
-        return
 
     @allure.sub_suite("Schema JSON")
     @pytest.mark.schema_full_json
@@ -187,69 +219,12 @@ class TestSchemaValidationThroughGitHub(object):
         involves detecting any changes in the schema YML files and comparing them periodically after any new commits
         int the wlan-ucentral-schema repo.
 
-        Objective is to identify any modifications, additions, or removals in the schema.
+        Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.full.json.
 
         Unique Marker:
         schema_validation and through_github and schema_full_json
         """
-
-        if commit_id is None:
-            logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-            pytest.skip("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-
-        latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap")
-        previous_makefile_commit_id = commit_id
-
-        allure.attach(latest_makefile_commit_id, name="Latest commit-id of wlan-ap:")
-        allure.attach(previous_makefile_commit_id, name="Passed commit-id to CLI:")
-
-        logging.info(f"Latest Commit-ID of wlan-ap/feeds/ucentral/ucentral-schema/'Makefile' is {commit_id}")
-        logging.info(f"Passed Commit-ID through CLI = {previous_makefile_commit_id}")
-
-        if latest_makefile_commit_id == previous_makefile_commit_id:
-            logging.info("No new commits in the Makefile (wlan-ap). Exiting.")
-            return
-        logging.info("New commits found in the Makefile (wlan-ap). Proceeding with the schema validation.")
-
-        latest_version_id = extract_pkg_src_version_from_makefile()
-        logging.info(f"Latest Commit-ID of wlan-ucentral-schema according to latest Makefile = {latest_version_id}")
-        allure.attach(latest_version_id, name="PKG_SOURCE_VERSION (a/c to latest):")
-
-        previous_version_id = extract_pkg_src_version_from_makefile(previous_makefile_commit_id)
-        if previous_version_id is None:
-            logging.info(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                         f"telecominfraproject/wlan-ap repo. Skipping the test.")
-            pytest.skip(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                        f"telecominfraproject/wlan-ap repo. Skipping the test.")
-        logging.info(f"Commit-ID of wlan-ucentral-schema according to the passed Commit-ID = {previous_version_id}")
-        allure.attach(previous_version_id, name=f"PKG_SOURCE_VERSION (a/c to passed commit-id):")
-
-        if latest_version_id == previous_version_id:
-            logging.info("No new Schema-ID found. Exiting.")
-            return
-        logging.info("New Schema-ID found. Proceeding with the schema validation.")
-
-        wlan_ucentral_schema_url = "https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
-        added_keys, removed_keys, changed_items = (
-            generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_id,
-                          path="/ucentral.schema.full.json"))
-
-        if added_keys or removed_keys or changed_items:
-            logging.info(f"Differences found in the schema:")
-            if added_keys:
-                logging.info("\n\nAdded keys:" + "\n" + "\n".join(added_keys))
-                allure.attach("\n".join(added_keys), name="Added keys:")
-            if removed_keys:
-                logging.info("\n\nRemoved keys:" + "\n" + "\n".join(removed_keys))
-                allure.attach("\n".join(removed_keys), name="Removed keys:")
-            if changed_items:
-                message = ""
-                for path, old_value, new_value in changed_items:
-                    message += f"{path}: {old_value} --> {new_value}\n"
-                logging.info("\n\nChanged items:" + "\n" + message)
-                allure.attach(message, name="Changed items:")
-            pytest.fail(f"Differences found in the schema, check Test Body for Added/Removed/Changed items")
-        return
+        validate_schema_through_github(commit_id, "/ucentral.schema.full.json")
 
     @allure.sub_suite("Schema JSON")
     @pytest.mark.schema_pretty_json
@@ -261,69 +236,12 @@ class TestSchemaValidationThroughGitHub(object):
         involves detecting any changes in the schema YML files and comparing them periodically after any new commits
         int the wlan-ucentral-schema repo.
 
-        Objective is to identify any modifications, additions, or removals in the schema.
+        Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.pretty.json.
 
         Unique Marker:
         schema_validation and through_github and schema_pretty_json
         """
-
-        if commit_id is None:
-            logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-            pytest.skip("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-
-        latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap")
-        previous_makefile_commit_id = commit_id
-
-        allure.attach(latest_makefile_commit_id, name="Latest commit-id of wlan-ap:")
-        allure.attach(previous_makefile_commit_id, name="Passed commit-id to CLI:")
-
-        logging.info(f"Latest Commit-ID of wlan-ap/feeds/ucentral/ucentral-schema/'Makefile' is {commit_id}")
-        logging.info(f"Passed Commit-ID through CLI = {previous_makefile_commit_id}")
-
-        if latest_makefile_commit_id == previous_makefile_commit_id:
-            logging.info("No new commits in the Makefile (wlan-ap). Exiting.")
-            return
-        logging.info("New commits found in the Makefile (wlan-ap). Proceeding with the schema validation.")
-
-        latest_version_id = extract_pkg_src_version_from_makefile()
-        logging.info(f"Latest Commit-ID of wlan-ucentral-schema according to latest Makefile = {latest_version_id}")
-        allure.attach(latest_version_id, name="PKG_SOURCE_VERSION (a/c to latest):")
-
-        previous_version_id = extract_pkg_src_version_from_makefile(previous_makefile_commit_id)
-        if previous_version_id is None:
-            logging.info(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                         f"telecominfraproject/wlan-ap repo. Skipping the test.")
-            pytest.skip(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                        f"telecominfraproject/wlan-ap repo. Skipping the test.")
-        logging.info(f"Commit-ID of wlan-ucentral-schema according to the passed Commit-ID = {previous_version_id}")
-        allure.attach(previous_version_id, name=f"PKG_SOURCE_VERSION (a/c to passed commit-id):")
-
-        if latest_version_id == previous_version_id:
-            logging.info("No new Schema-ID found. Exiting.")
-            return
-        logging.info("New Schema-ID found. Proceeding with the schema validation.")
-
-        wlan_ucentral_schema_url = "https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
-        added_keys, removed_keys, changed_items = (
-            generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_id,
-                          path="/ucentral.schema.pretty.json"))
-
-        if added_keys or removed_keys or changed_items:
-            logging.info(f"Differences found in the schema:")
-            if added_keys:
-                logging.info("\n\nAdded keys:" + "\n" + "\n".join(added_keys))
-                allure.attach("\n".join(added_keys), name="Added keys:")
-            if removed_keys:
-                logging.info("\n\nRemoved keys:" + "\n" + "\n".join(removed_keys))
-                allure.attach("\n".join(removed_keys), name="Removed keys:")
-            if changed_items:
-                message = ""
-                for path, old_value, new_value in changed_items:
-                    message += f"{path}: {old_value} --> {new_value}\n"
-                logging.info("\n\nChanged items:" + "\n" + message)
-                allure.attach(message, name="Changed items:")
-            pytest.fail(f"Differences found in the schema, check Test Body for Added/Removed/Changed items")
-        return
+        validate_schema_through_github(commit_id, "/ucentral.schema.pretty.json")
 
     @allure.sub_suite("State JSON")
     @pytest.mark.state_pretty_json
@@ -335,69 +253,12 @@ class TestSchemaValidationThroughGitHub(object):
         involves detecting any changes in the schema YML files and comparing them periodically after any new commits
         int the wlan-ucentral-schema repo.
 
-        Objective is to identify any modifications, additions, or removals in the schema.
+        Objective is to identify any modifications, additions, or removals in the file: ucentral.state.pretty.json.
 
         Unique Marker:
         schema_validation and through_github and state_pretty_json
         """
-
-        if commit_id is None:
-            logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-            pytest.skip("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-
-        latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap")
-        previous_makefile_commit_id = commit_id
-
-        allure.attach(latest_makefile_commit_id, name="Latest commit-id of wlan-ap:")
-        allure.attach(previous_makefile_commit_id, name="Passed commit-id to CLI:")
-
-        logging.info(f"Latest Commit-ID of wlan-ap/feeds/ucentral/ucentral-schema/'Makefile' is {commit_id}")
-        logging.info(f"Passed Commit-ID through CLI = {previous_makefile_commit_id}")
-
-        if latest_makefile_commit_id == previous_makefile_commit_id:
-            logging.info("No new commits in the Makefile (wlan-ap). Exiting.")
-            return
-        logging.info("New commits found in the Makefile (wlan-ap). Proceeding with the schema validation.")
-
-        latest_version_id = extract_pkg_src_version_from_makefile()
-        logging.info(f"Latest Commit-ID of wlan-ucentral-schema according to latest Makefile = {latest_version_id}")
-        allure.attach(latest_version_id, name="PKG_SOURCE_VERSION (a/c to latest):")
-
-        previous_version_id = extract_pkg_src_version_from_makefile(previous_makefile_commit_id)
-        if previous_version_id is None:
-            logging.info(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                         f"telecominfraproject/wlan-ap repo. Skipping the test.")
-            pytest.skip(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                        f"telecominfraproject/wlan-ap repo. Skipping the test.")
-        logging.info(f"Commit-ID of wlan-ucentral-schema according to the passed Commit-ID = {previous_version_id}")
-        allure.attach(previous_version_id, name=f"PKG_SOURCE_VERSION (a/c to passed commit-id):")
-
-        if latest_version_id == previous_version_id:
-            logging.info("No new Schema-ID found. Exiting.")
-            return
-        logging.info("New Schema-ID found. Proceeding with the schema validation.")
-
-        wlan_ucentral_schema_url = "https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
-        added_keys, removed_keys, changed_items = (
-            generate_diff(wlan_ucentral_schema_url, latest_version_id, previous_version_id,
-                          path="/ucentral.state.pretty.json"))
-
-        if added_keys or removed_keys or changed_items:
-            logging.info(f"Differences found in the schema:")
-            if added_keys:
-                logging.info("\n\nAdded keys:" + "\n" + "\n".join(added_keys))
-                allure.attach("\n".join(added_keys), name="Added keys:")
-            if removed_keys:
-                logging.info("\n\nRemoved keys:" + "\n" + "\n".join(removed_keys))
-                allure.attach("\n".join(removed_keys), name="Removed keys:")
-            if changed_items:
-                message = ""
-                for path, old_value, new_value in changed_items:
-                    message += f"{path}: {old_value} --> {new_value}\n"
-                logging.info("\n\nChanged items:" + "\n" + message)
-                allure.attach(message, name="Changed items:")
-            pytest.fail(f"Differences found in the schema, check Test Body for Added/Removed/Changed items")
-        return
+        validate_schema_through_github(commit_id, "/ucentral.state.pretty.json")
 
 
 @allure.feature("Schema Validation")
