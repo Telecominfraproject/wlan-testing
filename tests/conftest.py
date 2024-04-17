@@ -454,12 +454,17 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
     alluredir = request.config.getoption(ALLUREDIR_OPTION)
 
     if not alluredir or not os.path.isdir(alluredir) or not environment_properties:
+        logging.info("alluredir:- " + str(alluredir))
+        logging.info("os.path.isdir(alluredir):- " + str(os.path.isdir(alluredir)))
+        logging.info("environment_properties:- " + str(environment_properties))
         return
 
     allure_env_path = os.path.join(alluredir, ALLURE_ENVIRONMENT_PROPERTIES_FILE)
+    print("path:- ", allure_env_path)
 
     with open(allure_env_path, 'w') as _f:
         data = '\n'.join([f'{variable}={value}' for variable, value in environment_properties.items()])
+        logging.info("allure_env_path data:- " + str(data))
         _f.write(data)
 
 
@@ -518,6 +523,7 @@ def get_test_device_logs(request, get_testbed_details, get_target_object, skip_l
 @pytest.fixture(scope="session")
 def add_firmware_property_after_upgrade(add_allure_environment_property, get_testbed_details, get_target_object):
     dut_versions = get_target_object.get_dut_version()
+    logging.info("After firmware upgrade DUT versions:- " + str(dut_versions))
     for i in range(len(get_testbed_details["device_under_tests"])):
         add_allure_environment_property(
             "Firmware-Version_" + get_testbed_details["device_under_tests"][i]["identifier"],
