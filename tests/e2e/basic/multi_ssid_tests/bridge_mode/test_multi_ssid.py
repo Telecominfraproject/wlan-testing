@@ -240,35 +240,53 @@ class TestMultiSsidDataPath1(object):
                                            side_b_min_rate=6291456, side_b_max_rate=0,
                                            traffic_type="lf_tcp", sta_list=[stations_list[i]],
                                            side_b=stations_list[i + 1], start_cx=True,
-                                           prefix="cx-{}{}-".format(i, i + 1))
-            time.sleep(5)
-            logging.info(f"CX created between endpoint-a= {stations_list[i]} and endpoint-b= {stations_list[i + 1]}")
+                                           prefix=f"{stations_list[i][4:]}-{stations_list[i + 1][4:]}:t")
+            logging.info(f"CX with TCP traffic created between "
+                         f"endpoint-a = {stations_list[i]} and endpoint-b = {stations_list[i + 1]}.")
+            time.sleep(3)
 
-        logging.info("Run Layer 3 traffic for 60 sec ...")
-        time.sleep(60)
+            get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
+                                           side_b_min_rate=6291456, side_b_max_rate=0,
+                                           traffic_type="lf_udp", sta_list=[stations_list[i]],
+                                           side_b=stations_list[i + 1], start_cx=True,
+                                           prefix=f"{stations_list[i][4:]}-{stations_list[i + 1][4:]}:u")
+            logging.info(f"CX with UDP traffic created between "
+                         f"endpoint-a = {stations_list[i]} and endpoint-b = {stations_list[i + 1]}.")
+            time.sleep(3)
+
+        logging.info("Running Layer3 traffic for 40 sec ...")
+        time.sleep(40)
 
         cx_list = get_test_library.get_cx_list()
-        dict_table_cx = {}
+        dict_table_cx_tcp = {}
+        dict_table_cx_udp = {}
         pass_fail_data = []
         for i in range(len(cx_list)):
             cx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[i]}")
-            if "L3 CX Column" not in dict_table_cx:
-                dict_table_cx["L3 CX Column"] = list(cx_data[f"{cx_list[i]}"].keys())
-            dict_table_cx[f"L3 CX values ({cx_list[i]})"] = list(cx_data[f"{cx_list[i]}"].values())
+            cx_name = f"sta_{cx_list[i].split(':')[0].split('-')[0]} <==> sta_{cx_list[i].split(':')[0].split('-')[1]}"
+
+            if "L3 CX Column" not in dict_table_cx_tcp:
+                dict_table_cx_tcp["L3 CX Column"] = list(cx_data[f"{cx_list[i]}"].keys())
+                dict_table_cx_udp["L3 CX Column"] = list(cx_data[f"{cx_list[i]}"].keys())
+            if "TCP" in cx_data[f"{cx_list[i]}"]['type']:
+                dict_table_cx_tcp[f"values ({cx_name})"] = list(cx_data[f"{cx_list[i]}"].values())
+            else:
+                dict_table_cx_udp[f"values ({cx_name})"] = list(cx_data[f"{cx_list[i]}"].values())
 
             if cx_data[cx_list[i]]['bps rx a'] != 0 and cx_data[cx_list[i]]['bps rx a'] != 0:
                 res = True
             else:
                 res = False
             pass_fail_data.append(
-                [f"{cx_data[cx_list[i]]['endpoints'][0]}<->{cx_data[cx_list[i]]['endpoints'][1]}",
-                 f"{cx_data[cx_list[i]]['bps rx a']}",
-                 f"{cx_data[cx_list[i]]['bps rx b']}", res])
+                [f"{cx_list[i]}", f"{cx_data[cx_list[i]]['bps rx a']}", f"{cx_data[cx_list[i]]['bps rx b']}", res])
 
         # attach l3 cx data to allure
-        data_table_cx = tabulate.tabulate(dict_table_cx, headers='keys', tablefmt='fancy_grid')
-        logging.info(f"L3 cross-connects Data: \n{data_table_cx}\n")
-        allure.attach(name="L3 cross-connects Data", body=str(data_table_cx))
+        data_table_cx_tcp = tabulate.tabulate(dict_table_cx_tcp, headers='keys', tablefmt='fancy_grid')
+        data_table_cx_udp = tabulate.tabulate(dict_table_cx_udp, headers='keys', tablefmt='fancy_grid')
+        logging.info(f"L3 cross-connects Data (TCP): \n{data_table_cx_tcp}\n")
+        logging.info(f"L3 cross-connects Data (UDP): \n{data_table_cx_udp}\n")
+        allure.attach(name="L3 cross-connects Data (TCP)", body=str(data_table_cx_tcp))
+        allure.attach(name="L3 cross-connects Data (UDP)", body=str(data_table_cx_udp))
 
         # attach pass fail data to allure
         result_table = tabulate.tabulate(pass_fail_data,
