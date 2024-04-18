@@ -8,7 +8,7 @@ import allure
 import pytest
 import tabulate
 
-pytestmark = [pytest.mark.multi_ssid, pytest.mark.bridge]
+pytestmark = [pytest.mark.multi_ssid, pytest.mark.bridge, pytest.mark.twog, pytest.mark.fiveg]
 
 
 def get_radio_availabilities(num_stations_2g, num_stations_5g, test_lib):
@@ -143,8 +143,6 @@ class TestMultiSsidDataPath1(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12227")
     @pytest.mark.wpa2_personal
     @pytest.mark.one_ssid
-    @pytest.mark.twog
-    @pytest.mark.fiveg
     def test_one_ssid(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs, setup_configuration,
                       check_connectivity):
         """
@@ -322,15 +320,17 @@ class TestMultiSsidDataPath2(object):
         pytest -m multi_ssid and two_ssid
     """
 
+    @allure.title("2-SSIDs")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12228")
     @pytest.mark.wpa2_personal
     @pytest.mark.two_ssid
-    @pytest.mark.fiveg
     def test_two_ssids(self, get_test_library, get_dut_logs_per_test_case,
                        get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Multi-SSID Bridge Mode
-            pytest -m "multi_ssid and two_ssid"
+            Multiple number of SSIDs Test: Bridge Mode
+
+            Unique Marker:
+            multi_ssid and bridge and two_ssid
         """
         mode = "BRIDGE"
         security_key = "something"
@@ -445,15 +445,17 @@ setup_params_general3 = {
 @allure.sub_suite(sub_suite_name="Test Data Path for 3 SSID's")
 class TestMultiSsidDataPath3(object):
 
+    @allure.title("3-SSIDs")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
     @pytest.mark.three_ssid
     def test_three_ssids(self, get_test_library, get_dut_logs_per_test_case,
                          get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Multi-SSID Bridge Mode
-            pytest -m "multi_ssid and three_ssid"
+            Multiple number of SSIDs Test: Bridge Mode
+
+            Unique Marker:
+            multi_ssid and bridge and three_ssid
         """
         mode = "BRIDGE"
         security_key = "something"
@@ -569,15 +571,17 @@ setup_params_general4 = {
 @allure.sub_suite(sub_suite_name="Test Data Path for 4 SSID's")
 class TestMultiSsidDataPath4(object):
 
+    @allure.title("4-SSIDs")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
     @pytest.mark.four_ssid
     def test_four_ssids(self, get_test_library, get_dut_logs_per_test_case,
                         get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Multi-SSID Bridge Mode
-            pytest -m "multi_ssid and four_ssid"
+            Multiple number of SSIDs Test: Bridge Mode
+
+            Unique Marker:
+            multi_ssid and bridge and four_ssid
         """
         mode = "BRIDGE"
         security_key = "something"
@@ -693,15 +697,18 @@ setup_params_general5 = {
 @allure.suite(suite_name="Bridge")
 @allure.sub_suite(sub_suite_name="Test Data Path for 5 SSID's")
 class TestMultiSsidDataPath5(object):
+
+    @allure.title("5-SSIDs")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
     @pytest.mark.five_ssid
     def test_five_ssids(self, get_test_library, get_dut_logs_per_test_case,
                         get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Multi-SSID Bridge Mode
-            pytest -m "multi_ssid and five_ssid"
+            Multiple number of SSIDs Test: Bridge Mode
+
+            Unique Marker:
+            multi_ssid and bridge and five_ssid
         """
         mode = "BRIDGE"
         security_key = "something"
@@ -818,15 +825,18 @@ setup_params_general6 = {
 @allure.suite(suite_name="Bridge")
 @allure.sub_suite(sub_suite_name="Test Data Path for 6 SSID's")
 class TestMultiSsidDataPath6(object):
+
+    @allure.title("6-SSIDs")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
     @pytest.mark.six_ssid
     def test_six_ssids(self, get_test_library, get_dut_logs_per_test_case,
                        get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Multi-SSID Bridge Mode
-            pytest -m "multi_ssid and six_ssid"
+            Multiple number of SSIDs Test: Bridge Mode
+
+            Unique Marker:
+            multi_ssid and bridge and six_ssid
         """
         mode = "BRIDGE"
         security_key = "something"
@@ -944,15 +954,18 @@ setup_params_general7 = {
 @allure.suite(suite_name="Bridge")
 @allure.sub_suite(sub_suite_name="Test Data Path for 7 SSID's")
 class TestMultiSsidDataPath7(object):
+
+    @allure.title("7-SSIDs")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
     @pytest.mark.seven_ssid
     def test_seven_ssids(self, get_test_library, get_dut_logs_per_test_case,
                          get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Multi-SSID Bridge Mode
-            pytest -m "multi_ssid and seven_ssid"
+            Multiple number of SSIDs Test: Bridge Mode
+
+            Unique Marker:
+            multi_ssid and bridge and seven_ssid
         """
         mode = "BRIDGE"
         security_key = "something"
@@ -1071,15 +1084,18 @@ setup_params_general8 = {
 @allure.suite(suite_name="Bridge")
 @allure.sub_suite(sub_suite_name="Test Data Path for 8 SSID's")
 class TestMultiSsidDataPath8(object):
+
+    @allure.title("8-SSIDs")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12227", name="WIFI-12229")
     @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
     @pytest.mark.eight_ssid
     def test_eight_ssids(self, get_test_library, get_dut_logs_per_test_case,
                          get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-            Multi-SSID Bridge Mode
-            pytest -m "multi_ssid and eight_ssid"
+            Multiple number of SSIDs Test: Bridge Mode
+
+            Unique Marker:
+            multi_ssid and bridge and eight_ssid
         """
         mode = "BRIDGE"
         security_key = "something"
