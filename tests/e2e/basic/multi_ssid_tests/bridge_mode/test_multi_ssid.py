@@ -109,11 +109,9 @@ def get_radio_availabilities(num_stations_2g, num_stations_5g, test_lib):
 setup_params_general1 = {
     "mode": "BRIDGE",
     "ssid_modes": {
-
         "wpa2_personal": [
-            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid1_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}],
-
+            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        ],
     },
     "rf": {},
     "radius": False
@@ -155,8 +153,8 @@ class TestMultiSsidDataPath1(object):
         security_key = "something"
         security = "wpa2"
         stations_list = ["sta_2g_1", "sta_2g_2", "sta_5g_1", "sta_5g_2"]
-        sta_names_2g = {stations_list[0], stations_list[1]}
-        sta_names_5g = {stations_list[2], stations_list[3]}
+        sta_names_2g = [stations_list[0], stations_list[1]]
+        sta_names_5g = [stations_list[2], stations_list[3]]
 
         radio_dict_2g, radio_dict_5g = get_radio_availabilities(num_stations_2g=len(sta_names_2g),
                                                                 num_stations_5g=len(sta_names_5g),
@@ -170,41 +168,28 @@ class TestMultiSsidDataPath1(object):
         get_test_library.pre_cleanup()
 
         for i in range(len(setup_params_general1["ssid_modes"]["wpa2_personal"])):
-            profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][i]
-            ssid_name = profile_data["ssid_name"]
-            if str(profile_data["appliedRadios"][0]) == "2G":
-                while len(sta_names_2g) > 0:
-                    radio = num_stations = None
-                    for _radio in radio_dict_2g:
-                        radio = _radio
-                        num_stations = radio_dict_2g[_radio]
-                        del radio_dict_2g[_radio]
-                        break
-                    station_name_list = []
-                    for _ in range(num_stations):
-                        station_name_list.append(sta_names_2g.pop())
-                    sta_got_ip.append(get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                                  passkey=security_key, mode=mode,
-                                                                                  radio=radio,
-                                                                                  station_name=station_name_list,
-                                                                                  attach_station_data=False))
-            elif str(profile_data["appliedRadios"][0]) == "5G":
-                while len(sta_names_5g) > 0:
-                    radio = num_stations = None
-                    for _radio in radio_dict_5g:
-                        radio = _radio
-                        num_stations = radio_dict_5g[_radio]
-                        del radio_dict_5g[_radio]
-                        break
-                    station_name_list = []
-                    for _ in range(num_stations):
-                        station_name_list.append(sta_names_5g.pop())
-                    sta_got_ip.append(get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                                  passkey=security_key, mode=mode,
-                                                                                  radio=radio,
-                                                                                  station_name=station_name_list,
-                                                                                  attach_station_data=False,
-                                                                                  attach_port_info=False))
+            ssid_name = setup_params_general1["ssid_modes"]["wpa2_personal"][i]["ssid_name"]
+            logging.info(f"Creating two 2G and two 5G stations on {ssid_name} ssid...")
+            radio = None
+            for _radio in radio_dict_2g:
+                radio = _radio
+                del radio_dict_2g[_radio]
+                break
+            sta_got_ip.append(get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
+                                                                          passkey=security_key, mode=mode,
+                                                                          radio=radio,
+                                                                          station_name=sta_names_2g,
+                                                                          attach_station_data=False))
+            for _radio in radio_dict_5g:
+                radio = _radio
+                del radio_dict_5g[_radio]
+                break
+            sta_got_ip.append(get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
+                                                                          passkey=security_key, mode=mode,
+                                                                          radio=radio,
+                                                                          station_name=sta_names_5g,
+                                                                          attach_station_data=False,
+                                                                          attach_port_info=False))
 
         port_data = get_test_library.json_get(_req_url="port?fields=ip")
         port_info = {key: value for d in port_data["interfaces"] for key, value in d.items()}
@@ -233,6 +218,7 @@ class TestMultiSsidDataPath1(object):
         if False in sta_got_ip:
             logging.info("Some/All Stations didn't get IP address")
             pytest.fail("Some/All Stations didn't get IP address")
+        logging.info("All 2G/5G Stations got IP address")
 
         # create Layer 3 and check data path
         for i in range(3):
@@ -311,10 +297,9 @@ setup_params_general2 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid1_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "multi_ssid1_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid2_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        ],
     },
     "rf": {},
     "radius": False
@@ -441,9 +426,10 @@ setup_params_general3 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid1_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}],
+            {"ssid_name": "multi_ssid1_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid2_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid3_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        ],
     },
     "rf": {},
     "radius": False
@@ -566,10 +552,11 @@ setup_params_general4 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid1_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "multi_ssid1_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid2_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid3_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid4_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        ],
     },
     "rf": {},
     "radius": False
@@ -692,11 +679,12 @@ setup_params_general5 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid1_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid3_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}],
+            {"ssid_name": "multi_ssid1_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid2_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid3_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid4_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid5_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        ],
     },
     "rf": {},
     "radius": False
@@ -819,12 +807,13 @@ setup_params_general6 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid1_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid3_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid3_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "multi_ssid1_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid2_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid3_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid4_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid5_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid6_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        ],
     },
     "rf": {},
     "radius": False
@@ -947,13 +936,14 @@ setup_params_general7 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid1_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid3_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid3_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid4_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}],
+            {"ssid_name": "multi_ssid1_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid2_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid3_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid4_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid5_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid6_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid7_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        ],
     },
     "rf": {},
     "radius": False
@@ -1076,14 +1066,15 @@ setup_params_general8 = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "multi_ssid1_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid1_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid2_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid3_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid3_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid4_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "multi_ssid4_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}],
+            {"ssid_name": "multi_ssid1_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid2_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid3_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid4_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid5_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid6_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid7_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"},
+            {"ssid_name": "multi_ssid8_wpa2", "appliedRadios": ["2G", "5G"], "security_key": "something"}
+        ],
     },
     "rf": {},
     "radius": False
