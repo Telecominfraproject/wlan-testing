@@ -128,8 +128,8 @@ def multi_ssid_test(test_lib, setup_params_general, no_of_2g_and_5g_stations=2):
 
     test_lib.pre_cleanup()
     no_of_ssids = len(setup_params_general["ssid_modes"]["wpa2_personal"])
-    logging.info(f"A total of {no_of_2g_and_5g_stations} 2G and 5G stations will be created for {no_of_ssids} SSIDs, "
-                 f"i.e., a 2G and a 5G stations on each SSID.")
+    logging.info(f"A total of {no_of_2g_and_5g_stations} 2G and {no_of_2g_and_5g_stations} 5G stations will be "
+                 f"created for {no_of_ssids} SSIDs, i.e., a 2G and a 5G stations on each SSID.")
 
     for i in range(no_of_2g_and_5g_stations):
         ssid_name = setup_params_general["ssid_modes"]["wpa2_personal"][i % no_of_ssids]["ssid_name"]
@@ -168,24 +168,44 @@ def multi_ssid_test(test_lib, setup_params_general, no_of_2g_and_5g_stations=2):
     test_lib.allure_report_table_format(dict_data=port_info, key="Port Names", value="ip",
                                                 name="Port info after creating all stations")
 
-    dict_table_2g = {}
-    dict_table_5g = {}
+    dict_table_2g_1st = {}
+    dict_table_2g_2nd = {}
+    dict_table_5g_1st = {}
+    dict_table_5g_2nd = {}
     for sta in sta_names_2g + sta_names_5g:
         result = test_lib.json_get(_req_url="port/1/1/%s" % sta)
-        if "Key" not in dict_table_2g:
-            dict_table_2g["Key"] = list(result["interface"].keys())
-            dict_table_5g["Key"] = list(result["interface"].keys())
+        if "Key" not in dict_table_2g_1st:
+            dict_table_2g_1st["Key"] = list(result["interface"].keys())
+            dict_table_2g_2nd["Key"] = list(result["interface"].keys())
+            dict_table_5g_1st["Key"] = list(result["interface"].keys())
+            dict_table_5g_2nd["Key"] = list(result["interface"].keys())
         if '_2g_' in sta:
-            dict_table_2g[f"Value ({sta})"] = list(result["interface"].values())
+            if len(dict_table_2g_1st) < 5:
+                dict_table_2g_1st[f"Value ({sta})"] = list(result["interface"].values())
+            else:
+                dict_table_2g_2nd[f"Value ({sta})"] = list(result["interface"].values())
         else:
-            dict_table_5g[f"Value ({sta})"] = list(result["interface"].values())
+            if len(dict_table_5g_1st) < 5:
+                dict_table_5g_1st[f"Value ({sta})"] = list(result["interface"].values())
+            else:
+                dict_table_5g_2nd[f"Value ({sta})"] = list(result["interface"].values())
 
-    data_table_2g = tabulate.tabulate(dict_table_2g, headers='keys', tablefmt='fancy_grid')
-    data_table_5g = tabulate.tabulate(dict_table_5g, headers='keys', tablefmt='fancy_grid')
-    logging.info(f"2G Stations Data: \n{data_table_2g}\n")
-    logging.info(f"5G Stations Data: \n{data_table_5g}\n")
-    allure.attach(name="2G Stations Data", body=str(data_table_2g))
-    allure.attach(name="5G Stations Data", body=str(data_table_5g))
+    data_table_2g_1st = tabulate.tabulate(dict_table_2g_1st, headers='keys', tablefmt='fancy_grid')
+    data_table_2g_2nd = tabulate.tabulate(dict_table_2g_2nd, headers='keys', tablefmt='fancy_grid')
+    data_table_5g_1st = tabulate.tabulate(dict_table_5g_1st, headers='keys', tablefmt='fancy_grid')
+    data_table_5g_2nd = tabulate.tabulate(dict_table_5g_2nd, headers='keys', tablefmt='fancy_grid')
+
+    logging.info(f"2G Stations Data (1-{min(4, no_of_2g_and_5g_stations)}): \n{data_table_2g_1st}\n")
+    allure.attach(name=f"2G Stations Data (1-{min(4, no_of_2g_and_5g_stations)})", body=str(data_table_2g_1st))
+    if no_of_2g_and_5g_stations > 4:
+        logging.info(f"2G Stations Data (5-{no_of_2g_and_5g_stations}): \n{data_table_2g_2nd}\n")
+        allure.attach(name=f"2G Stations Data (5-{no_of_2g_and_5g_stations})", body=str(data_table_2g_2nd))
+
+    logging.info(f"5G Stations Data (1-{min(4, no_of_2g_and_5g_stations)}): \n{data_table_5g_1st}\n")
+    allure.attach(name=f"5G Stations Data (1-{min(4, no_of_2g_and_5g_stations)})", body=str(data_table_5g_1st))
+    if no_of_2g_and_5g_stations > 4:
+        logging.info(f"5G Stations Data (5-{no_of_2g_and_5g_stations}): \n{data_table_5g_2nd}\n")
+        allure.attach(name=f"5G Stations Data (5-{no_of_2g_and_5g_stations})", body=str(data_table_5g_2nd))
 
     if False in sta_got_ip:
         logging.info("Some/All Stations didn't get IP address")
