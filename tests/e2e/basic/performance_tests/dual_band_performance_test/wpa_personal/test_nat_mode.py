@@ -48,8 +48,17 @@ class TestWpaDualbandPerformanceNat(object):
     @allure.title("Test Dual Band with ApAuto test of NAT mode")
     def test_client_wpa_personal_nat(self, get_test_library, setup_configuration, check_connectivity):
         """
-                            Dual Band Test with wpa encryption
-                            pytest -m "dual_band_tests and wpa"
+        The Dual-band Throughput Test is intended to measure the throughput the DUT can support when concurrently
+        connected to multiple stations on both the 2.4 and 5 GHz bands, each operating with two spatial streams.
+        The purpose of these additional test cases is to detect cross band interference of the DUT's transmitter
+        on the receiver. The weak link is needed to ensure DUT and STA are transmitting at the highest power and
+        causing the most potential interference when the receiver is more susceptible to noise (low SNR). Note,
+        each station is connected using either the 2.4 or 5 GHz band, but not both bands simultaneously. This test
+        requires at least 2 stations, located 2m from the DUT. The DUT will need to support at least 4 independent
+        radio chains for this test case, two operating in the 2.4 GHz band and two operating in the 5 GHz band.
+
+        Unique Marker:
+        dual_band_tests and nat and wpa
         """
         profile_data = setup_params_general["ssid_modes"]["wpa"]
         ssid_2G, ssid_5G = profile_data[0]["ssid_name"], profile_data[0]["ssid_name"]
