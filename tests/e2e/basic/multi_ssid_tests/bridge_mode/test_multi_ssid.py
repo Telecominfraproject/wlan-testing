@@ -106,7 +106,12 @@ def get_radio_availabilities(num_stations_2g, num_stations_5g, test_lib):
     return radio_dict_2g, radio_dict_5g
 
 
-def multi_ssid_test(sta_names_2g, sta_names_5g, setup_params_general, test_lib):
+def multi_ssid_test(test_lib, setup_params_general, no_of_2g_and_5g_stations=2):
+    sta_names_2g, sta_names_5g = [], []
+    for i in range(no_of_2g_and_5g_stations):
+        sta_names_2g.append(f"sta_2g_{i + 1}")
+        sta_names_5g.append(f"sta_5g_{i + 1}")
+
     mode = "BRIDGE"
     security_key = "something"
     security = "wpa2"
@@ -122,10 +127,13 @@ def multi_ssid_test(sta_names_2g, sta_names_5g, setup_params_general, test_lib):
     allure.attach(name="ssid info", body=str(setup_params_general["ssid_modes"]["wpa2_personal"]))
 
     test_lib.pre_cleanup()
+    no_of_ssids = len(setup_params_general["ssid_modes"]["wpa2_personal"])
+    logging.info(f"A total of {no_of_2g_and_5g_stations} 2G and 5G stations will be created for {no_of_ssids} SSIDs, "
+                 f"i.e., a 2G and a 5G stations on each SSID.")
 
-    for i in range(len(setup_params_general["ssid_modes"]["wpa2_personal"])):
-        ssid_name = setup_params_general["ssid_modes"]["wpa2_personal"][i]["ssid_name"]
-        logging.info(f"Creating a 2G and a 5G stations on {ssid_name} ssid...")
+    for i in range(no_of_2g_and_5g_stations):
+        ssid_name = setup_params_general["ssid_modes"]["wpa2_personal"][i % no_of_ssids]["ssid_name"]
+        logging.info(f"Creating a 2G station on {ssid_name} ssid...")
         radio = None
         for _radio in radio_dict_2g:
             radio = _radio
@@ -140,6 +148,7 @@ def multi_ssid_test(sta_names_2g, sta_names_5g, setup_params_general, test_lib):
                                                               station_name=[sta_names_2g[i]],
                                                               attach_station_data=False,
                                                               attach_port_info=False))
+        logging.info(f"Creating a 5G station on {ssid_name} ssid...")
         for _radio in radio_dict_5g:
             radio = _radio
             if radio_dict_5g[radio] == 1:
@@ -299,149 +308,8 @@ class TestMultiSsidDataPath1(object):
             Unique Marker:
             multi_ssid and bridge and one_ssid
         """
-        mode = "BRIDGE"
-        security_key = "something"
-        security = "wpa2"
-        stations_list = ["sta_2g_1", "sta_2g_2", "sta_5g_1", "sta_5g_2"]
-        sta_names_2g = [stations_list[0], stations_list[1]]
-        sta_names_5g = [stations_list[2], stations_list[3]]
-
-        radio_dict_2g, radio_dict_5g = get_radio_availabilities(num_stations_2g=len(sta_names_2g),
-                                                                num_stations_5g=len(sta_names_5g),
-                                                                test_lib=get_test_library)
-        logging.info(f"Radio-2G-Stations dict : {radio_dict_2g}")
-        logging.info(f"Radio-5G-Stations dict : {radio_dict_5g}")
-
-        sta_got_ip = []
-        allure.attach(name="ssid info", body=str(setup_params_general1["ssid_modes"]["wpa2_personal"]))
-
-        get_test_library.pre_cleanup()
-
-        for i in range(len(setup_params_general1["ssid_modes"]["wpa2_personal"])):
-            ssid_name = setup_params_general1["ssid_modes"]["wpa2_personal"][i]["ssid_name"]
-            logging.info(f"Creating two 2G and two 5G stations on {ssid_name} ssid...")
-            radio = None
-            for _radio in radio_dict_2g:
-                radio = _radio
-                del radio_dict_2g[_radio]
-                break
-            sta_got_ip.append(get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                          passkey=security_key, mode=mode,
-                                                                          radio=radio,
-                                                                          station_name=sta_names_2g,
-                                                                          attach_station_data=False,
-                                                                          attach_port_info=False))
-            for _radio in radio_dict_5g:
-                radio = _radio
-                del radio_dict_5g[_radio]
-                break
-            sta_got_ip.append(get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                          passkey=security_key, mode=mode,
-                                                                          radio=radio,
-                                                                          station_name=sta_names_5g,
-                                                                          attach_station_data=False,
-                                                                          attach_port_info=False))
-
-        port_data = get_test_library.json_get(_req_url="port?fields=ip")
-        port_info = {key: value for d in port_data["interfaces"] for key, value in d.items()}
-        get_test_library.allure_report_table_format(dict_data=port_info, key="Port Names", value="ip",
-                                                    name="Port info after creating all stations")
-
-        dict_table_2g = {}
-        dict_table_5g = {}
-        for sta in stations_list:
-            result = get_test_library.json_get(_req_url="port/1/1/%s" % sta)
-            if "Key" not in dict_table_2g:
-                dict_table_2g["Key"] = list(result["interface"].keys())
-                dict_table_5g["Key"] = list(result["interface"].keys())
-            if '_2g_' in sta:
-                dict_table_2g[f"Value ({sta})"] = list(result["interface"].values())
-            else:
-                dict_table_5g[f"Value ({sta})"] = list(result["interface"].values())
-
-        data_table_2g = tabulate.tabulate(dict_table_2g, headers='keys', tablefmt='fancy_grid')
-        data_table_5g = tabulate.tabulate(dict_table_5g, headers='keys', tablefmt='fancy_grid')
-        logging.info(f"2G Stations Data: \n{data_table_2g}\n")
-        logging.info(f"5G Stations Data: \n{data_table_5g}\n")
-        allure.attach(name="2G Stations Data", body=str(data_table_2g))
-        allure.attach(name="5G Stations Data", body=str(data_table_5g))
-
-        if False in sta_got_ip:
-            logging.info("Some/All Stations didn't get IP address")
-            pytest.fail("Some/All Stations didn't get IP address")
-        logging.info("All 2G/5G Stations got IP address")
-
-        # create Layer 3 and check data path
-        for i in range(3):
-            get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                           side_b_min_rate=6291456, side_b_max_rate=0,
-                                           traffic_type="lf_tcp", sta_list=[stations_list[i]],
-                                           side_b=stations_list[i + 1], start_cx=True,
-                                           prefix=f"{stations_list[i][4:]}-{stations_list[i + 1][4:]}:t")
-            logging.info(f"CX with TCP traffic created between "
-                         f"endpoint-a = {stations_list[i]} and endpoint-b = {stations_list[i + 1]}.")
-            time.sleep(3)
-
-            get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                           side_b_min_rate=6291456, side_b_max_rate=0,
-                                           traffic_type="lf_udp", sta_list=[stations_list[i]],
-                                           side_b=stations_list[i + 1], start_cx=True,
-                                           prefix=f"{stations_list[i][4:]}-{stations_list[i + 1][4:]}:u")
-            logging.info(f"CX with UDP traffic created between "
-                         f"endpoint-a = {stations_list[i]} and endpoint-b = {stations_list[i + 1]}.")
-            time.sleep(3)
-
-        logging.info("Running Layer3 traffic for 40 sec ...")
-        time.sleep(40)
-
-        cx_list = get_test_library.get_cx_list()
-        dict_table_cx_tcp = {}
-        dict_table_cx_udp = {}
-        pass_fail_data = []
-        for i in range(len(cx_list)):
-            cx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[i]}")
-            cx_name = f"sta_{cx_list[i].split(':')[0].split('-')[0]} <==> sta_{cx_list[i].split(':')[0].split('-')[1]}"
-
-            if "L3 CX Column" not in dict_table_cx_tcp:
-                dict_table_cx_tcp["L3 CX Column"] = list(cx_data[f"{cx_list[i]}"].keys())
-                dict_table_cx_udp["L3 CX Column"] = list(cx_data[f"{cx_list[i]}"].keys())
-            if "TCP" in cx_data[f"{cx_list[i]}"]['type']:
-                dict_table_cx_tcp[f"values ({cx_name})"] = list(cx_data[f"{cx_list[i]}"].values())
-            else:
-                dict_table_cx_udp[f"values ({cx_name})"] = list(cx_data[f"{cx_list[i]}"].values())
-
-            if cx_data[cx_list[i]]['bps rx a'] != 0 and cx_data[cx_list[i]]['bps rx a'] != 0:
-                res = True
-            else:
-                res = False
-            pass_fail_data.append(
-                [f"{cx_list[i]}", f"{cx_data[cx_list[i]]['bps rx a']}", f"{cx_data[cx_list[i]]['bps rx b']}", res])
-
-        # attach l3 cx data to allure
-        data_table_cx_tcp = tabulate.tabulate(dict_table_cx_tcp, headers='keys', tablefmt='fancy_grid')
-        data_table_cx_udp = tabulate.tabulate(dict_table_cx_udp, headers='keys', tablefmt='fancy_grid')
-        logging.info(f"L3 cross-connects Data (TCP): \n{data_table_cx_tcp}\n")
-        logging.info(f"L3 cross-connects Data (UDP): \n{data_table_cx_udp}\n")
-        allure.attach(name="L3 cross-connects Data (TCP)", body=str(data_table_cx_tcp))
-        allure.attach(name="L3 cross-connects Data (UDP)", body=str(data_table_cx_udp))
-
-        # attach pass fail data to allure
-        result_table = tabulate.tabulate(pass_fail_data,
-                                         headers=["Data Path", "Tx Rate (bps)", "Rx Rate (bps)", "Pass/Fail"],
-                                         tablefmt='fancy_grid')
-        logging.info(f"Test Result Table: \n{result_table}\n")
-        allure.attach(name="Test Result Table", body=str(result_table))
-
-        # cleanup Layer3 data
-        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
-
-        test_result = True
-        for pf in pass_fail_data:
-            if pf[3] is False:
-                test_result = False
-
-        if not test_result:
-            pytest.fail("DataPath check failed, Traffic didn't reported on some endpoints")
+        multi_ssid_test(test_lib=get_test_library, setup_params_general=setup_params_general1,
+                        no_of_2g_and_5g_stations=2)
 
 
 setup_params_general2 = {
@@ -486,9 +354,8 @@ class TestMultiSsidDataPath2(object):
             Unique Marker:
             multi_ssid and bridge and two_ssid
         """
-        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2"],
-                        sta_names_5g=["sta_5g_1", "sta_5g_2"],
-                        setup_params_general=setup_params_general2, test_lib=get_test_library)
+        multi_ssid_test(test_lib=get_test_library, setup_params_general=setup_params_general2,
+                        no_of_2g_and_5g_stations=2)
 
 
 setup_params_general3 = {
@@ -530,9 +397,8 @@ class TestMultiSsidDataPath3(object):
             Unique Marker:
             multi_ssid and bridge and three_ssid
         """
-        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3"],
-                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3"],
-                        setup_params_general=setup_params_general3, test_lib=get_test_library)
+        multi_ssid_test(test_lib=get_test_library, setup_params_general=setup_params_general3,
+                        no_of_2g_and_5g_stations=3)
 
 
 setup_params_general4 = {
@@ -575,9 +441,8 @@ class TestMultiSsidDataPath4(object):
             Unique Marker:
             multi_ssid and bridge and four_ssid
         """
-        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4"],
-                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4"],
-                        setup_params_general=setup_params_general4, test_lib=get_test_library)
+        multi_ssid_test(test_lib=get_test_library, setup_params_general=setup_params_general4,
+                        no_of_2g_and_5g_stations=4)
 
 
 setup_params_general5 = {
@@ -622,9 +487,8 @@ class TestMultiSsidDataPath5(object):
             multi_ssid and bridge and five_ssid
         """
 
-        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4", "sta_2g_5"],
-                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4", "sta_5g_5"],
-                        setup_params_general=setup_params_general5, test_lib=get_test_library)
+        multi_ssid_test(test_lib=get_test_library, setup_params_general=setup_params_general5,
+                        no_of_2g_and_5g_stations=5)
 
 
 setup_params_general6 = {
@@ -669,9 +533,8 @@ class TestMultiSsidDataPath6(object):
             Unique Marker:
             multi_ssid and bridge and six_ssid
         """
-        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4", "sta_2g_5", "sta_2g_6"],
-                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4", "sta_5g_5", "sta_5g_6"],
-                        setup_params_general=setup_params_general6, test_lib=get_test_library)
+        multi_ssid_test(test_lib=get_test_library, setup_params_general=setup_params_general6,
+                        no_of_2g_and_5g_stations=6)
 
 
 setup_params_general7 = {
@@ -717,11 +580,8 @@ class TestMultiSsidDataPath7(object):
             Unique Marker:
             multi_ssid and bridge and seven_ssid
         """
-        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4",
-                                      "sta_2g_5", "sta_2g_6", "sta_2g_7"],
-                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4",
-                                      "sta_5g_5", "sta_5g_6", "sta_5g_7"],
-                        setup_params_general=setup_params_general7, test_lib=get_test_library)
+        multi_ssid_test(test_lib=get_test_library, setup_params_general=setup_params_general7,
+                        no_of_2g_and_5g_stations=7)
 
 
 setup_params_general8 = {
@@ -768,8 +628,5 @@ class TestMultiSsidDataPath8(object):
             Unique Marker:
             multi_ssid and bridge and eight_ssid
         """
-        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4",
-                                      "sta_2g_5", "sta_2g_6", "sta_2g_7", "sta_2g_8"],
-                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4",
-                                      "sta_5g_5", "sta_5g_6", "sta_5g_7", "sta_5g_8"],
-                        setup_params_general=setup_params_general8, test_lib=get_test_library)
+        multi_ssid_test(test_lib=get_test_library, setup_params_general=setup_params_general8,
+                        no_of_2g_and_5g_stations=8)
