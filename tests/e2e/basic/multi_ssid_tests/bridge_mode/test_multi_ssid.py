@@ -135,11 +135,11 @@ def multi_ssid_test(sta_names_2g, sta_names_5g, setup_params_general, test_lib):
                 radio_dict_2g[radio] -= 1
             break
         sta_got_ip.append(test_lib.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key, mode=mode,
-                                                                      radio=radio,
-                                                                      station_name=[sta_names_2g[i]],
-                                                                      attach_station_data=False,
-                                                                      attach_port_info=False))
+                                                              passkey=security_key, mode=mode,
+                                                              radio=radio,
+                                                              station_name=[sta_names_2g[i]],
+                                                              attach_station_data=False,
+                                                              attach_port_info=False))
         for _radio in radio_dict_5g:
             radio = _radio
             if radio_dict_5g[radio] == 1:
@@ -148,11 +148,11 @@ def multi_ssid_test(sta_names_2g, sta_names_5g, setup_params_general, test_lib):
                 radio_dict_5g[radio] -= 1
             break
         sta_got_ip.append(test_lib.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key, mode=mode,
-                                                                      radio=radio,
-                                                                      station_name=[sta_names_5g[i]],
-                                                                      attach_station_data=False,
-                                                                      attach_port_info=False))
+                                                              passkey=security_key, mode=mode,
+                                                              radio=radio,
+                                                              station_name=[sta_names_5g[i]],
+                                                              attach_station_data=False,
+                                                              attach_port_info=False))
 
     port_data = test_lib.json_get(_req_url="port?fields=ip")
     port_info = {key: value for d in port_data["interfaces"] for key, value in d.items()}
@@ -186,22 +186,21 @@ def multi_ssid_test(sta_names_2g, sta_names_5g, setup_params_general, test_lib):
     # create Layer 3 and check data path
     for i in range(3):
         test_lib.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                       side_b_min_rate=6291456, side_b_max_rate=0,
-                                       traffic_type="lf_tcp", sta_list=[cx_sta_list[i]],
-                                       side_b=cx_sta_list[i + 1], start_cx=True,
-                                       prefix=f"{cx_sta_list[i][4:]}-{cx_sta_list[i + 1][4:]}:t")
+                               side_b_min_rate=6291456, side_b_max_rate=0,
+                               traffic_type="lf_tcp", sta_list=[cx_sta_list[i]],
+                               side_b=cx_sta_list[i + 1], start_cx=True,
+                               prefix=f"{cx_sta_list[i][4:]}-{cx_sta_list[i + 1][4:]}:t")
         logging.info(f"CX with TCP traffic created between "
                      f"endpoint-a = {cx_sta_list[i]} and endpoint-b = {cx_sta_list[i + 1]}.")
-        time.sleep(3)
-
+        time.sleep(2)
         test_lib.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                       side_b_min_rate=6291456, side_b_max_rate=0,
-                                       traffic_type="lf_udp", sta_list=[cx_sta_list[i]],
-                                       side_b=cx_sta_list[i + 1], start_cx=True,
-                                       prefix=f"{cx_sta_list[i][4:]}-{cx_sta_list[i + 1][4:]}:u")
+                               side_b_min_rate=6291456, side_b_max_rate=0,
+                               traffic_type="lf_udp", sta_list=[cx_sta_list[i]],
+                               side_b=cx_sta_list[i + 1], start_cx=True,
+                               prefix=f"{cx_sta_list[i][4:]}-{cx_sta_list[i + 1][4:]}:u")
         logging.info(f"CX with UDP traffic created between "
                      f"endpoint-a = {cx_sta_list[i]} and endpoint-b = {cx_sta_list[i + 1]}.")
-        time.sleep(3)
+        time.sleep(2)
 
     logging.info("Running Layer3 traffic for 40 sec ...")
     time.sleep(40)
@@ -576,91 +575,9 @@ class TestMultiSsidDataPath4(object):
             Unique Marker:
             multi_ssid and bridge and four_ssid
         """
-        mode = "BRIDGE"
-        security_key = "something"
-        security = "wpa2"
-        sta_list1 = ["sta0001", "sta0002"]
-        sta_list2 = ["sta0003", "sta0004"]
-        stations_list = sta_list1 + sta_list2
-        pass_fail, l3_data = [], {}
-        pass_fail_data = []
-        allure.attach(name="ssid info", body=str(setup_params_general4["ssid_modes"]["wpa2_personal"]))
-        for i in range(len(setup_params_general4["ssid_modes"]["wpa2_personal"])):
-            profile_data = setup_params_general4["ssid_modes"]["wpa2_personal"][i]
-            ssid_name = profile_data["ssid_name"]
-            if str(profile_data["appliedRadios"][0]) == "2G":
-                passes1 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_2g_radios[0],
-                                                                      station_name=sta_list1)
-                pass_fail.append(passes1)
-            elif str(profile_data["appliedRadios"][0]) == "5G":
-                passes2 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_5g_radios[0],
-                                                                      station_name=sta_list2)
-                pass_fail.append(passes2)
-
-        for sta in stations_list:
-            result = get_test_library.json_get(_req_url="port/1/1/%s" % sta)
-            get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station Data",
-                                                        value="Value", name="%s info" % sta)
-        if False in pass_fail:
-            assert False, "Test Failed, Station's didn't get IP address"
-
-        # create Layer 3 and check data path
-        for i in range(len(stations_list)):
-            for j in range(i + 1, len(stations_list)):
-                get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                               side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_tcp", sta_list=[stations_list[i]],
-                                               side_b=stations_list[j], start_cx=True,
-                                               prefix="cx-{}{}-".format(i, j))
-                time.sleep(5)
-                logging.info(
-                    "cx created between endpint a {} and endpoint b {}".format(stations_list[i], stations_list[j]))
-
-        # start layer3
-        logging.info("Run Layer 3 traffic for 30 sec ...")
-        time.sleep(30)
-        cx_list = get_test_library.get_cx_list()
-        for i in range(len(cx_list)):
-            cx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[i]}")
-            get_test_library.allure_report_table_format(dict_data=cx_data[f"{cx_list[i]}"], key="L3 CX Column",
-                                                        value="L3 CX values", name=f"cx {cx_list[i]} info")
-            l3_data.update({f"{cx_list[i]}": cx_data[f"{cx_list[i]}"]})
-            if cx_data[cx_list[i]]['bps rx a'] != 0 and cx_data[cx_list[i]]['bps rx a'] != 0:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     f"{cx_data[cx_list[i]]['bps rx a']}",
-                     f"{cx_data[cx_list[i]]['bps rx b']}", True])
-            else:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     cx_data[cx_list[i]]['bps rx a'],
-                     f"{cx_data[cx_list[i]]['bps rx b']}", False])
-
-        print("L3 Data \n", l3_data)
-        print("Pass Fail Data: \n", pass_fail_data)
-
-        # attach pass fail data to allure
-        result_table = tabulate.tabulate(pass_fail_data,
-                                         headers=["Data Path", "Tx Rate (bps)", "Rx Rate (bps)", "Pass/Fail"],
-                                         tablefmt='fancy_grid')
-        allure.attach(name="Test Result Table", body=str(result_table))
-        # cleanup Layer3 data
-        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
-        test_result = True
-        for pf in pass_fail_data:
-            if pf[3] is False:
-                test_result = False
-
-        if test_result:
-            assert True
-        else:
-            assert False, "DataPath check failed, Traffic didn't reported on some endpoints"
+        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4"],
+                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4"],
+                        setup_params_general=setup_params_general4, test_lib=get_test_library)
 
 
 setup_params_general5 = {
@@ -704,91 +621,10 @@ class TestMultiSsidDataPath5(object):
             Unique Marker:
             multi_ssid and bridge and five_ssid
         """
-        mode = "BRIDGE"
-        security_key = "something"
-        security = "wpa2"
-        sta_list1 = ["sta0001", "sta0002"]
-        sta_list2 = ["sta0003", "sta0004"]
-        stations_list = sta_list1 + sta_list2
-        pass_fail, l3_data = [], {}
-        pass_fail_data = []
-        allure.attach(name="ssid info", body=str(setup_params_general5["ssid_modes"]["wpa2_personal"]))
-        for i in range(len(setup_params_general5["ssid_modes"]["wpa2_personal"])):
-            profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][i]
-            ssid_name = profile_data["ssid_name"]
-            if str(profile_data["appliedRadios"][0]) == "2G":
-                passes1 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_2g_radios[0],
-                                                                      station_name=sta_list1)
-                pass_fail.append(passes1)
-            elif str(profile_data["appliedRadios"][0]) == "5G":
-                passes2 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_5g_radios[0],
-                                                                      station_name=sta_list2)
-                pass_fail.append(passes2)
 
-        for sta in stations_list:
-            result = get_test_library.json_get(_req_url="port/1/1/%s" % sta)
-            get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station Data",
-                                                        value="Value", name="%s info" % sta)
-        if False in pass_fail:
-            assert False, "Test Failed, Station's didn't get IP address"
-
-        # create Layer 3 and check data path
-        for i in range(len(stations_list)):
-            for j in range(i + 1, len(stations_list)):
-                get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                               side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_tcp", sta_list=[stations_list[i]],
-                                               side_b=stations_list[j], start_cx=True,
-                                               prefix="cx-{}{}-".format(i, j))
-                time.sleep(5)
-                logging.info(
-                    "cx created between endpint a {} and endpoint b {}".format(stations_list[i], stations_list[j]))
-
-        # start layer3
-        logging.info("Run Layer 3 traffic for 30 sec ...")
-        time.sleep(30)
-        cx_list = get_test_library.get_cx_list()
-        for i in range(len(cx_list)):
-            cx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[i]}")
-            get_test_library.allure_report_table_format(dict_data=cx_data[f"{cx_list[i]}"], key="L3 CX Column",
-                                                        value="L3 CX values", name=f"cx {cx_list[i]} info")
-            l3_data.update({f"{cx_list[i]}": cx_data[f"{cx_list[i]}"]})
-            if cx_data[cx_list[i]]['bps rx a'] != 0 and cx_data[cx_list[i]]['bps rx a'] != 0:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     f"{cx_data[cx_list[i]]['bps rx a']}",
-                     f"{cx_data[cx_list[i]]['bps rx b']}", True])
-            else:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     cx_data[cx_list[i]]['bps rx a'],
-                     f"{cx_data[cx_list[i]]['bps rx b']}", False])
-
-        print("L3 Data \n", l3_data)
-        print("Pass Fail Data: \n", pass_fail_data)
-
-        # attach pass fail data to allure
-        result_table = tabulate.tabulate(pass_fail_data,
-                                         headers=["Data Path", "Tx Rate (bps)", "Rx Rate (bps)", "Pass/Fail"],
-                                         tablefmt='fancy_grid')
-        allure.attach(name="Test Result Table", body=str(result_table))
-        # cleanup Layer3 data
-        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
-        test_result = True
-        for pf in pass_fail_data:
-            if pf[3] is False:
-                test_result = False
-
-        if test_result:
-            assert True
-        else:
-            assert False, "DataPath check failed, Traffic didn't reported on some endpoints"
+        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4", "sta_2g_5"],
+                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4", "sta_5g_5"],
+                        setup_params_general=setup_params_general5, test_lib=get_test_library)
 
 
 setup_params_general6 = {
@@ -833,91 +669,9 @@ class TestMultiSsidDataPath6(object):
             Unique Marker:
             multi_ssid and bridge and six_ssid
         """
-        mode = "BRIDGE"
-        security_key = "something"
-        security = "wpa2"
-        sta_list1 = ["sta0001", "sta0002"]
-        sta_list2 = ["sta0003", "sta0004"]
-        stations_list = sta_list1 + sta_list2
-        pass_fail, l3_data = [], {}
-        pass_fail_data = []
-        allure.attach(name="ssid info", body=str(setup_params_general6["ssid_modes"]["wpa2_personal"]))
-        for i in range(len(setup_params_general6["ssid_modes"]["wpa2_personal"])):
-            profile_data = setup_params_general6["ssid_modes"]["wpa2_personal"][i]
-            ssid_name = profile_data["ssid_name"]
-            if str(profile_data["appliedRadios"][0]) == "2G":
-                passes1 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_2g_radios[0],
-                                                                      station_name=sta_list1)
-                pass_fail.append(passes1)
-            elif str(profile_data["appliedRadios"][0]) == "5G":
-                passes2 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_5g_radios[0],
-                                                                      station_name=sta_list2)
-                pass_fail.append(passes2)
-
-        for sta in stations_list:
-            result = get_test_library.json_get(_req_url="port/1/1/%s" % sta)
-            get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station Data",
-                                                        value="Value", name="%s info" % sta)
-        if False in pass_fail:
-            assert False, "Test Failed, Station's didn't get IP address"
-
-        # create Layer 3 and check data path
-        for i in range(len(stations_list)):
-            for j in range(i + 1, len(stations_list)):
-                get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                               side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_tcp", sta_list=[stations_list[i]],
-                                               side_b=stations_list[j], start_cx=True,
-                                               prefix="cx-{}{}-".format(i, j))
-                time.sleep(5)
-                logging.info(
-                    "cx created between endpint a {} and endpoint b {}".format(stations_list[i], stations_list[j]))
-
-        # start layer3
-        logging.info("Run Layer 3 traffic for 30 sec ...")
-        time.sleep(30)
-        cx_list = get_test_library.get_cx_list()
-        for i in range(len(cx_list)):
-            cx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[i]}")
-            get_test_library.allure_report_table_format(dict_data=cx_data[f"{cx_list[i]}"], key="L3 CX Column",
-                                                        value="L3 CX values", name=f"cx {cx_list[i]} info")
-            l3_data.update({f"{cx_list[i]}": cx_data[f"{cx_list[i]}"]})
-            if cx_data[cx_list[i]]['bps rx a'] != 0 and cx_data[cx_list[i]]['bps rx a'] != 0:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     f"{cx_data[cx_list[i]]['bps rx a']}",
-                     f"{cx_data[cx_list[i]]['bps rx b']}", True])
-            else:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     cx_data[cx_list[i]]['bps rx a'],
-                     f"{cx_data[cx_list[i]]['bps rx b']}", False])
-
-        print("L3 Data \n", l3_data)
-        print("Pass Fail Data: \n", pass_fail_data)
-
-        # attach pass fail data to allure
-        result_table = tabulate.tabulate(pass_fail_data,
-                                         headers=["Data Path", "Tx Rate (bps)", "Rx Rate (bps)", "Pass/Fail"],
-                                         tablefmt='fancy_grid')
-        allure.attach(name="Test Result Table", body=str(result_table))
-        # cleanup Layer3 data
-        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
-        test_result = True
-        for pf in pass_fail_data:
-            if pf[3] is False:
-                test_result = False
-
-        if test_result:
-            assert True
-        else:
-            assert False, "DataPath check failed, Traffic didn't reported on some endpoints"
+        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4", "sta_2g_5", "sta_2g_6"],
+                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4", "sta_5g_5", "sta_5g_6"],
+                        setup_params_general=setup_params_general6, test_lib=get_test_library)
 
 
 setup_params_general7 = {
@@ -963,91 +717,11 @@ class TestMultiSsidDataPath7(object):
             Unique Marker:
             multi_ssid and bridge and seven_ssid
         """
-        mode = "BRIDGE"
-        security_key = "something"
-        security = "wpa2"
-        sta_list1 = ["sta0001", "sta0002"]
-        sta_list2 = ["sta0003", "sta0004"]
-        stations_list = sta_list1 + sta_list2
-        pass_fail, l3_data = [], {}
-        pass_fail_data = []
-        allure.attach(name="ssid info", body=str(setup_params_general7["ssid_modes"]["wpa2_personal"]))
-        for i in range(len(setup_params_general7["ssid_modes"]["wpa2_personal"])):
-            profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][i]
-            ssid_name = profile_data["ssid_name"]
-            if str(profile_data["appliedRadios"][0]) == "2G":
-                passes1 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_2g_radios[0],
-                                                                      station_name=sta_list1)
-                pass_fail.append(passes1)
-            elif str(profile_data["appliedRadios"][0]) == "5G":
-                passes2 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_5g_radios[0],
-                                                                      station_name=sta_list2)
-                pass_fail.append(passes2)
-
-        for sta in stations_list:
-            result = get_test_library.json_get(_req_url="port/1/1/%s" % sta)
-            get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station Data",
-                                                        value="Value", name="%s info" % sta)
-        if False in pass_fail:
-            assert False, "Test Failed, Station's didn't get IP address"
-
-        # create Layer 3 and check data path
-        for i in range(len(stations_list)):
-            for j in range(i + 1, len(stations_list)):
-                get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                               side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_tcp", sta_list=[stations_list[i]],
-                                               side_b=stations_list[j], start_cx=True,
-                                               prefix="cx-{}{}-".format(i, j))
-                time.sleep(5)
-                logging.info(
-                    "cx created between endpint a {} and endpoint b {}".format(stations_list[i], stations_list[j]))
-
-        # start layer3
-        logging.info("Run Layer 3 traffic for 30 sec ...")
-        time.sleep(30)
-        cx_list = get_test_library.get_cx_list()
-        for i in range(len(cx_list)):
-            cx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[i]}")
-            get_test_library.allure_report_table_format(dict_data=cx_data[f"{cx_list[i]}"], key="L3 CX Column",
-                                                        value="L3 CX values", name=f"cx {cx_list[i]} info")
-            l3_data.update({f"{cx_list[i]}": cx_data[f"{cx_list[i]}"]})
-            if cx_data[cx_list[i]]['bps rx a'] != 0 and cx_data[cx_list[i]]['bps rx a'] != 0:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     f"{cx_data[cx_list[i]]['bps rx a']}",
-                     f"{cx_data[cx_list[i]]['bps rx b']}", True])
-            else:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     cx_data[cx_list[i]]['bps rx a'],
-                     f"{cx_data[cx_list[i]]['bps rx b']}", False])
-
-        print("L3 Data \n", l3_data)
-        print("Pass Fail Data: \n", pass_fail_data)
-
-        # attach pass fail data to allure
-        result_table = tabulate.tabulate(pass_fail_data,
-                                         headers=["Data Path", "Tx Rate (bps)", "Rx Rate (bps)", "Pass/Fail"],
-                                         tablefmt='fancy_grid')
-        allure.attach(name="Test Result Table", body=str(result_table))
-        # cleanup Layer3 data
-        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
-        test_result = True
-        for pf in pass_fail_data:
-            if pf[3] is False:
-                test_result = False
-
-        if test_result:
-            assert True
-        else:
-            assert False, "DataPath check failed, Traffic didn't reported on some endpoints"
+        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4",
+                                      "sta_2g_5", "sta_2g_6", "sta_2g_7"],
+                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4",
+                                      "sta_5g_5", "sta_5g_6", "sta_5g_7"],
+                        setup_params_general=setup_params_general7, test_lib=get_test_library)
 
 
 setup_params_general8 = {
@@ -1094,88 +768,8 @@ class TestMultiSsidDataPath8(object):
             Unique Marker:
             multi_ssid and bridge and eight_ssid
         """
-        mode = "BRIDGE"
-        security_key = "something"
-        security = "wpa2"
-        sta_list1 = ["sta0001", "sta0002"]
-        sta_list2 = ["sta0003", "sta0004"]
-        stations_list = sta_list1 + sta_list2
-        pass_fail, l3_data = [], {}
-        pass_fail_data = []
-        allure.attach(name="ssid info", body=str(setup_params_general8["ssid_modes"]["wpa2_personal"]))
-        for i in range(len(setup_params_general8["ssid_modes"]["wpa2_personal"])):
-            profile_data = setup_params_general8["ssid_modes"]["wpa2_personal"][i]
-            ssid_name = profile_data["ssid_name"]
-            if str(profile_data["appliedRadios"][0]) == "2G":
-                passes1 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_2g_radios[0],
-                                                                      station_name=sta_list1)
-                pass_fail.append(passes1)
-            elif str(profile_data["appliedRadios"][0]) == "5G":
-                passes2 = get_test_library.client_connect_using_radio(ssid=ssid_name, security=security,
-                                                                      passkey=security_key,
-                                                                      mode=mode,
-                                                                      radio=get_test_library.wave2_5g_radios[0],
-                                                                      station_name=sta_list2)
-                pass_fail.append(passes2)
-
-        for sta in stations_list:
-            result = get_test_library.json_get(_req_url="port/1/1/%s" % sta)
-            get_test_library.allure_report_table_format(dict_data=result["interface"], key="Station Data",
-                                                        value="Value", name="%s info" % sta)
-        if False in pass_fail:
-            assert False, "Test Failed, Station's didn't get IP address"
-
-        # create Layer 3 and check data path
-        for i in range(len(stations_list)):
-            for j in range(i + 1, len(stations_list)):
-                get_test_library.create_layer3(side_a_min_rate=6291456, side_a_max_rate=0,
-                                               side_b_min_rate=6291456, side_b_max_rate=0,
-                                               traffic_type="lf_tcp", sta_list=[stations_list[i]],
-                                               side_b=stations_list[j], start_cx=True,
-                                               prefix="cx-{}{}-".format(i, j))
-                time.sleep(5)
-                logging.info(
-                    "cx created between endpint a {} and endpoint b {}".format(stations_list[i], stations_list[j]))
-
-        # start layer3
-        logging.info("Run Layer 3 traffic for 30 sec ...")
-        time.sleep(30)
-        cx_list = get_test_library.get_cx_list()
-        for i in range(len(cx_list)):
-            cx_data = get_test_library.json_get(_req_url=f"cx/{cx_list[i]}")
-            get_test_library.allure_report_table_format(dict_data=cx_data[f"{cx_list[i]}"], key="L3 CX Column",
-                                                        value="L3 CX values", name=f"cx {cx_list[i]} info")
-            l3_data.update({f"{cx_list[i]}": cx_data[f"{cx_list[i]}"]})
-            if cx_data[cx_list[i]]['bps rx a'] != 0 and cx_data[cx_list[i]]['bps rx a'] != 0:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     f"{cx_data[cx_list[i]]['bps rx a']}",
-                     f"{cx_data[cx_list[i]]['bps rx b']}", True])
-            else:
-                pass_fail_data.append(
-                    ["{}<->{}".format(cx_data[cx_list[i]]['endpoints'][0], cx_data[cx_list[i]]['endpoints'][1]),
-                     cx_data[cx_list[i]]['bps rx a'],
-                     f"{cx_data[cx_list[i]]['bps rx b']}", False])
-
-        print("L3 Data \n", l3_data)
-        print("Pass Fail Data: \n", pass_fail_data)
-
-        # attach pass fail data to allure
-        result_table = tabulate.tabulate(pass_fail_data,
-                                         headers=["Data Path", "Tx Rate (bps)", "Rx Rate (bps)", "Pass/Fail"],
-                                         tablefmt='fancy_grid')
-        allure.attach(name="Test Result Table", body=str(result_table))
-        # cleanup Layer3 data
-        get_test_library.client_disconnect(station_name=stations_list, clean_l3_traffic=True, clear_all_sta=True)
-        test_result = True
-        for pf in pass_fail_data:
-            if pf[3] is False:
-                test_result = False
-
-        if test_result:
-            assert True
-        else:
-            assert False, "DataPath check failed, Traffic didn't reported on some endpoints"
+        multi_ssid_test(sta_names_2g=["sta_2g_1", "sta_2g_2", "sta_2g_3", "sta_2g_4",
+                                      "sta_2g_5", "sta_2g_6", "sta_2g_7", "sta_2g_8"],
+                        sta_names_5g=["sta_5g_1", "sta_5g_2", "sta_5g_3", "sta_5g_4",
+                                      "sta_5g_5", "sta_5g_6", "sta_5g_7", "sta_5g_8"],
+                        setup_params_general=setup_params_general8, test_lib=get_test_library)
