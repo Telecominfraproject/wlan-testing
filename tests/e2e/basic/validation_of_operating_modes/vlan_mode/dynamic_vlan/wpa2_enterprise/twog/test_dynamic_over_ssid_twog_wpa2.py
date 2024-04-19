@@ -54,9 +54,13 @@ class TestDynamicVlanOverSsid2GWpa2(object):
     def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                To Verify that Dynamic VLAN takes precedence over configured SSID VLAN
-              Unique Marker:  pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
 
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and dynamic_precedence_over_ssid
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]

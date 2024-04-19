@@ -56,10 +56,13 @@ class TestDynamicVlan2GWpa2(object):
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
 
-        To verify that SSID VLAN is used in the absence of radius VLAN tunnel type identifiers
-               Unique Marker:  pytest -m " absence_of_radius_vlan_identifier and wpa2_enterprise and vlan"
-
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and absence_of_radius_vlan_identifier
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -115,7 +118,13 @@ class TestDynamicVlan2GWpa2(object):
     def test_dynamic_invalid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "invalidradiusvlan and wpa2_enterprise and vlan and twog"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and invalidradiusvlan
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -168,7 +177,13 @@ class TestDynamicVlan2GWpa2(object):
     def test_radius_vlan_info_retained_after_periodic_reauthentication_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "periodic_reauthentication and wpa2_enterprise and vlan and twog"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and periodic_reauthentication
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -237,7 +252,13 @@ class TestDynamicVlan2GWpa2(object):
     def test_ssid_vlan_used_in_absence_of_radius_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "absenceofvlanid and wpa2_enterprise and vlan and twog"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and absenceofvlanid
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -290,7 +311,13 @@ class TestDynamicVlan2GWpa2(object):
     def test_out_of_bound_vlanid_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "outofboundvlanid and wpa2_enterprise and vlan and twog"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and outofboundvlanid
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -330,7 +357,13 @@ class TestDynamicVlan2GWpa2(object):
     def test_client_association_ap_with_dynamic_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "client_association_ap_with_dynamic_vlan and wpa2_enterprise and vlan and twog"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and client_association_ap_with_dynamic_vlan
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -388,7 +421,13 @@ class TestDynamicVlan2GWpa2(object):
     def test_subsequent_user_for_same_user_account_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "subsequent_user_for_same_user_account and wpa2_enterprise and vlan and twog"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and subsequent_user_for_same_user_account
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]
@@ -441,7 +480,13 @@ class TestDynamicVlan2GWpa2(object):
     def test_subsequent_user_for_different_user_account_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "subsequent_user_for_different_user_account and wpa2_enterprise and vlan and twog"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa2_enterprise and twog and subsequent_user_for_different_user_account
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa2_enterprise"]

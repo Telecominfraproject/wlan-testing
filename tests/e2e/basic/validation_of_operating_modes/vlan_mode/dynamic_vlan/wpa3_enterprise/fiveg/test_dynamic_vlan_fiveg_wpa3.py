@@ -55,7 +55,13 @@ class TestDynamicVlan5GWpa3(object):
     def test_ssid_vlan_in_the_absence_of_radius_vlan_identifier_5g_wpa3(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m " absence_of_radius_vlan_identifier and wpa3_enterprise and vlan and fiveg"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa3_enterprise and fiveg and absence_of_radius_vlan_identifier
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
@@ -110,7 +116,13 @@ class TestDynamicVlan5GWpa3(object):
     def test_dynamic_invalid_vlan_5g_wpa3(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "invalidradiusvlan and wpa3_enterprise and vlan and fiveg"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa3_enterprise and fiveg and invalidradiusvlan
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
@@ -163,7 +175,13 @@ class TestDynamicVlan5GWpa3(object):
     def test_radius_vlan_info_retained_after_periodic_reauthentication_5g_wpa3(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "periodic_reauthentication and wpa3_enterprise and vlan and fiveg"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa3_enterprise and fiveg and periodic_reauthentication
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
@@ -231,7 +249,13 @@ class TestDynamicVlan5GWpa3(object):
     def test_ssid_vlan_used_in_absence_of_radius_vlan_5g_wpa3(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "absenceofvlanid and wpa3_enterprise and vlan and fiveg"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa3_enterprise and fiveg and absenceofvlanid
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
@@ -284,7 +308,13 @@ class TestDynamicVlan5GWpa3(object):
     def test_out_of_bound_vlanid_5g_wpa3(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "outofboundvlanid and wpa3_enterprise and vlan and fiveg"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa3_enterprise and fiveg and outofboundvlanid
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
@@ -323,7 +353,13 @@ class TestDynamicVlan5GWpa3(object):
     def test_client_association_ap_with_dynamic_vlan_5g_wpa3(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "client_association_ap_with_dynamic_vlan and wpa3_enterprise and vlan and fiveg"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa3_enterprise and fiveg and client_association_ap_with_dynamic_vlan
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
@@ -381,7 +417,13 @@ class TestDynamicVlan5GWpa3(object):
     def test_subsequent_user_for_same_user_account_5g_wpa3(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "subsequent_user_for_same_user_account and wpa3_enterprise and vlan and fiveg"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa3_enterprise and fiveg and subsequent_user_for_same_user_account
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
@@ -434,7 +476,13 @@ class TestDynamicVlan5GWpa3(object):
     def test_subsequent_user_for_different_user_account_5g_wpa3(self, get_test_library, get_dut_logs_per_test_case,
                                 get_test_device_logs, num_stations, setup_configuration, check_connectivity):
         """
-                pytest -m "subsequent_user_for_different_user_account and wpa3_enterprise and vlan and fiveg"
+        Dynamic VLAN does network segmentation of users with the implementation of RADIUS server. The users will be
+        associated to the respective VLAN networks using RADIUS according to the identity and passphrase provided in
+        the enterprise authentication.
+        Objective is to Verify that client associates to AP with Radius assigned dynamic VLAN.
+
+        Unique Marker:
+        dynamic_vlan_tests and wpa3_enterprise and fiveg and subsequent_user_for_different_user_account
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
