@@ -6,6 +6,8 @@ import string
 import sys
 import random
 import datetime
+import time
+
 import allure
 import pytest
 import json
@@ -460,12 +462,19 @@ def add_allure_environment_property(request: SubRequest) -> Optional[Callable]:
         return
 
     allure_env_path = os.path.join(alluredir, ALLURE_ENVIRONMENT_PROPERTIES_FILE)
-    print("path:- ", allure_env_path)
+    print("allure_env_path:- ", allure_env_path)
 
     with open(allure_env_path, 'w') as _f:
         data = '\n'.join([f'{variable}={value}' for variable, value in environment_properties.items()])
         logging.info("allure_env_path data:- " + str(data))
         _f.write(data)
+    time.sleep(2)
+    # Check environment.properties file available or not
+    print("Checking environment.properties file available or not")
+    if os.path.isfile(allure_env_path):
+        logging.info(f"The file '{allure_env_path}' is available.")
+    else:
+        logging.info(f"The file '{allure_env_path}' is not available.")
 
 
 @pytest.fixture(scope="function")
