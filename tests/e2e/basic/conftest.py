@@ -5,18 +5,11 @@ import logging
 
 def separate_band_and_encryption(markers: list, target_object) -> list:
     """
-    examples:
-    1> if markers = ['2G', 'wpa2_personal']
-          return -> [['2G', 'wpa2_personal']]
-    2> if markers = ['2G', 'wpa3_personal', 'wpa2_personal', 'wpa', 'open']
-          return -> [['2G', 'open'], ['2G', 'wpa'], ['2G', 'wpa2_personal'], ['2G', 'wpa3_personal']]
-    3> if markers = ['5G', 'wpa3_personal', 'wpa2_personal', 'wpa', 'open']
-          return -> [['5G', 'open'], ['5G', 'wpa'], ['5G', 'wpa2_personal'], ['5G', 'wpa3_personal']]
-    4> if markers = ['5G', 'wpa3_personal', 'wpa2_personal', '2G', 'wpa', 'open']
-          return -> [['2G', 'open'], ['2G', 'wpa'], ['2G', 'wpa2_personal'], ['2G', 'wpa3_personal'],
-                     ['5G', 'open'], ['5G', 'wpa'], ['5G', 'wpa2_personal'], ['5G', 'wpa3_personal']]
+            ['2G', 'wpa2_personal']         -> [['2G', 'wpa2_personal']]
+        ['2G', 'wpa2_personal', 'open']     -> [['2G', 'open'], ['2G', 'wpa2_personal']]
+    ['5G', 'wpa2_personal', '2G', 'open']   -> [['2G', 'open'], ['2G', 'wpa2_personal'],
+                                                ['5G', 'open'], ['5G', 'wpa2_personal']]
     """
-
     bands = []
     encryption = []
     for marker in markers:
