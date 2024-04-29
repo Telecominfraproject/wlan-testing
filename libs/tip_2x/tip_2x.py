@@ -509,7 +509,8 @@ class tip_2x:
                 a["encryption"] = temp_data[dut][j][1]
                 a["password"] = temp_data[dut][j][2]
                 a["band"] = temp_data[dut][j][3]
-                a["bssid"] = temp_data[dut][j][4]
+                if len(temp_data[dut][j]) == 5:
+                    a["bssid"] = temp_data[dut][j][4]
                 ret_val[dut]["ssid_data"][j] = a
             temp = ret_val[dut]["radio_data"].copy()
             for j in temp:

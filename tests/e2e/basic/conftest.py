@@ -2,6 +2,30 @@ import allure
 import pytest
 import logging
 
+
+def separate_band_and_encryption(markers: list, target_object) -> list:
+    """
+            ['2G', 'wpa2_personal']         -> [['2G', 'wpa2_personal']]
+        ['2G', 'wpa2_personal', 'open']     -> [['2G', 'open'], ['2G', 'wpa2_personal']]
+    ['5G', 'wpa2_personal', '2G', 'open']   -> [['2G', 'open'], ['2G', 'wpa2_personal'],
+                                                ['5G', 'open'], ['5G', 'wpa2_personal']]
+    """
+    bands = []
+    encryption = []
+    for marker in markers:
+        if marker in target_object.supported_bands:
+            bands.append(marker)
+        elif marker in target_object.supported_encryption:
+            encryption.append(marker)
+
+    combinations = []
+    for band in bands:
+        for enc in encryption:
+            combinations.append([band, enc])
+
+    return combinations
+
+
 @pytest.fixture(scope="class")
 def setup_configuration(request, get_markers, get_target_object, run_lf):
     # Predefined selected markers and selected configuration
@@ -11,7 +35,9 @@ def setup_configuration(request, get_markers, get_target_object, run_lf):
     requested_combination = []
     for key in get_markers:
         if get_markers[key]:
-            requested_combination.append(get_markers[key])
+            combinations = separate_band_and_encryption(markers=get_markers[key], target_object=get_target_object)
+            for comb in combinations:
+                requested_combination.append(comb)
 
     # Method to setup the basic configuration
     data = {}
