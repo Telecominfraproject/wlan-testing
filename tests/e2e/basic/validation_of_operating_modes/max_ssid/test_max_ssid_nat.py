@@ -1,16 +1,16 @@
 """
-    Config AP with maximum no.of SSIDs Test: Bridge Mode
+    Config AP with maximum no. of SSIDs Test: NAT Mode
     pytest -m max_ssid
 """
 import allure
 import pytest
 
-pytestmark = [pytest.mark.max_ssid, pytest.mark.bridge, pytest.mark.open, pytest.mark.wpa, pytest.mark.wpa2_personal,
+pytestmark = [pytest.mark.max_ssid, pytest.mark.nat, pytest.mark.open, pytest.mark.wpa, pytest.mark.wpa2_personal,
               pytest.mark.wpa3_personal]
 
 
 setup_params_general0 = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [
             {"ssid_name": "ssid1_open_2g", "appliedRadios": ["2G"]},
@@ -34,7 +34,7 @@ setup_params_general0 = {
 
 
 @allure.parent_suite("Max-SSID Tests")
-@allure.suite("Bridge Mode")
+@allure.suite("NAT Mode")
 @allure.sub_suite("Only 2.4GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -51,14 +51,14 @@ class TestMaxEightSsid2G(object):
     def test_max_eight_ssid_2g(self, get_test_library, get_dut_logs_per_test_case, setup_configuration,
                                get_test_device_logs, check_connectivity):
         """
-        Unique Marker: max_ssid and bridge and eight_ssid_2g
+        Unique Marker: max_ssid and nat and eight_ssid_2g
         """
 
-        get_test_library.max_ssid(setup_params_general=setup_params_general0)
+        get_test_library.max_ssid(setup_params_general=setup_params_general0, mode='NAT-WAN')
 
 
 setup_params_general1 = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [
             {"ssid_name": "ssid1_open_5g", "appliedRadios": ["5G"]},
@@ -82,7 +82,7 @@ setup_params_general1 = {
 
 
 @allure.parent_suite("Max-SSID Tests")
-@allure.suite("Bridge Mode")
+@allure.suite("NAT Mode")
 @allure.sub_suite("Only 5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -99,14 +99,14 @@ class TestMaxEightSsid5G(object):
     def test_max_eight_ssid_5g(self, get_test_library, get_dut_logs_per_test_case, setup_configuration,
                                get_test_device_logs, check_connectivity):
         """
-        Unique Marker: max_ssid and bridge and eight_ssid_5g
+        Unique Marker: max_ssid and nat and eight_ssid_5g
         """
 
-        get_test_library.max_ssid(setup_params_general=setup_params_general1)
+        get_test_library.max_ssid(setup_params_general=setup_params_general1, mode='NAT-WAN')
 
 
 setup_params_general2 = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [
             {"ssid_name": "ssid1_open_2g", "appliedRadios": ["2G"]},
@@ -131,7 +131,7 @@ setup_params_general2 = {
 
 
 @allure.parent_suite("Max-SSID Tests")
-@allure.suite("Bridge Mode")
+@allure.suite("NAT Mode")
 @allure.sub_suite("Only 2.4GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -148,14 +148,14 @@ class TestMoreThanEightSsid2G(object):
     def test_more_than_eight_ssid_2g(self, get_test_library, get_dut_logs_per_test_case, setup_configuration,
                                      get_test_device_logs, check_connectivity):
         """
-        Unique Marker: max_ssid and bridge and more_than_eight_ssid_2g
+        Unique Marker: max_ssid and nat and more_than_eight_ssid_2g
         """
 
-        get_test_library.max_ssid(setup_params_general=setup_params_general2)
+        get_test_library.max_ssid(setup_params_general=setup_params_general2, mode='NAT-WAN')
 
 
 setup_params_general3 = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [
             {"ssid_name": "ssid1_open_5g", "appliedRadios": ["5G"]},
@@ -180,7 +180,7 @@ setup_params_general3 = {
 
 
 @allure.parent_suite("Max-SSID Tests")
-@allure.suite("Bridge Mode")
+@allure.suite("NAT Mode")
 @allure.sub_suite("Only 5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -197,14 +197,14 @@ class TestMoreThanEightSsid5G(object):
     def test_more_than_eight_ssid_5g(self, get_test_library, get_dut_logs_per_test_case, setup_configuration,
                                      get_test_device_logs, check_connectivity):
         """
-        Unique Marker: max_ssid and bridge and more_than_eight_ssid_5g
+        Unique Marker: max_ssid and nat and more_than_eight_ssid_5g
         """
 
-        get_test_library.max_ssid(setup_params_general=setup_params_general3)
+        get_test_library.max_ssid(setup_params_general=setup_params_general3, mode='NAT-WAN')
 
 
 setup_params_general4 = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid1_open_2g", "appliedRadios": ["2G"]},
                  {"ssid_name": "ssid2_open_2g", "appliedRadios": ["2G"]},
@@ -234,7 +234,7 @@ setup_params_general4 = {
 
 
 @allure.parent_suite("Max-SSID Tests")
-@allure.suite("Bridge Mode")
+@allure.suite("NAT Mode")
 @allure.sub_suite("Both 2.4GHz and 5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -250,16 +250,16 @@ class TestMaxSixteenSsid(object):
     @pytest.mark.fiveg
     @pytest.mark.sixteen_ssid_2g_5g
     def test_max_sixteen_2g_5g(self, get_test_library, get_dut_logs_per_test_case, setup_configuration,
-                                     get_test_device_logs, check_connectivity):
+                               get_test_device_logs, check_connectivity):
         """
-        Unique Marker: max_ssid and bridge and sixteen_ssid_2g_5g
+        Unique Marker: max_ssid and nat and sixteen_ssid_2g_5g
         """
 
-        get_test_library.max_ssid(setup_params_general=setup_params_general4)
+        get_test_library.max_ssid(setup_params_general=setup_params_general4, mode='NAT-WAN')
 
 
 setup_params_general5 = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [{"ssid_name": "ssid1_open_2g", "appliedRadios": ["2G"]},
                  {"ssid_name": "ssid2_open_2g", "appliedRadios": ["2G"]},
@@ -291,7 +291,7 @@ setup_params_general5 = {
 
 
 @allure.parent_suite("Max-SSID Tests")
-@allure.suite("Bridge Mode")
+@allure.suite("NAT Mode")
 @allure.sub_suite("Both 2.4GHz and 5GHz Band")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -309,7 +309,7 @@ class TestMoreThanSixteenSsid(object):
     def test_more_than_sixteen_2g_5g(self, get_test_library, get_dut_logs_per_test_case, setup_configuration,
                                      get_test_device_logs, check_connectivity):
         """
-        Unique Marker: max_ssid and bridge and more_than_sixteen_ssid_2g_5g
+        Unique Marker: max_ssid and nat and more_than_sixteen_ssid_2g_5g
         """
 
-        get_test_library.max_ssid(setup_params_general=setup_params_general5)
+        get_test_library.max_ssid(setup_params_general=setup_params_general5, mode='NAT-WAN')
