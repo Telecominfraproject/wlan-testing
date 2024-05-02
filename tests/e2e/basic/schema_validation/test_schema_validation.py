@@ -9,7 +9,7 @@ import time
 from tabulate import tabulate
 from datetime import datetime
 
-pytestmark = [pytest.mark.schema_validation]
+pytestmark = [pytest.mark.schema_validation, pytest.mark.ow_sanity_lf]
 
 
 # Get the directory of the current test config file
