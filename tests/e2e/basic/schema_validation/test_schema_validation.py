@@ -234,7 +234,7 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
             if not isinstance(message, dict):
                 type_mismatch.add((path, get_type_of_message(message), 'object'))
                 return
-            if 'properties' not in schema:
+            if 'properties' not in schema and 'patternProperties' not in schema and '$ref' not in schema:
                 other_discrepancies.add(f"Properties not defined in schema for object at '{path}'.")
                 return
             for key in message:
@@ -254,7 +254,7 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
                     else:
                         return verify_type_of_value(message['$ref'], schema['properties']['ref'],
                                                     f"{path}.'$ref'")
-                elif key not in schema['properties']:
+                elif 'properties' in schema and key not in schema['properties']:
                     missing_keys.add(f'{path} > {key}')
                     continue
                 verify_type_of_value(message[key], schema['properties'][key], f"{path} > {key}")
