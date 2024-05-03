@@ -225,6 +225,8 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
             if not isinstance(message, list):
                 type_mismatch.add((path, get_type_of_message(message), 'array'))
                 return
+            if 'properties' in schema:
+                other_discrepancies.add(f"An array can't have properties, at '{path}'.")
             if 'items' not in schema:
                 other_discrepancies.add(f"Items not defined in schema for array at '{path}'.")
                 return
@@ -234,6 +236,8 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
             if not isinstance(message, dict):
                 type_mismatch.add((path, get_type_of_message(message), 'object'))
                 return
+            if 'items' in schema:
+                other_discrepancies.add(f"An object can't have items, at '{path}'.")
             if 'properties' not in schema and 'patternProperties' not in schema and '$ref' not in schema:
                 other_discrepancies.add(f"Properties not defined in schema for object at '{path}'.")
                 return
@@ -322,8 +326,8 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
             logging.info("Station did not get IP address")
             pytest.fail("Station did not get IP address")
 
-        logging.info("Waiting for 20 seconds before fetching state message...")
-        time.sleep(20)
+        logging.info("Waiting for 30 seconds before fetching state message...")
+        time.sleep(30)
 
         # Fetching the schema from GitHub
         full_schema = get_github_file("https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
