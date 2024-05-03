@@ -45,7 +45,9 @@ def get_github_file(url, path=None, commit_id=None):
     logging.info(f"Fetching {url}")
     response = requests.get(url)
     if response.status_code != 200:
-        logging.info(f"Failed to fetch {path}. Status code: {response.status_code}")
+        logging.info(f"Failed to fetch {url}. Status code: {response.status_code}")
+        pytest.skip("Failed to fetch the schema file from GitHub. Make sure the commit-id is one from "
+                    "wlan-ucentral-schema repo.")
     return response.text
 
 
@@ -62,23 +64,6 @@ def validate_schema_through_github(commit_id, path):
             return commit_id
         else:
             logging.info(f"Failed to fetch commit-id. Status code: {response.status_code}")
-
-    def extract_pkg_src_version_from_makefile(commit_id=None):
-        wlan_ap_url = make_raw_url(
-            "https://github.com/Telecominfraproject/wlan-ap/blob/main/feeds/ucentral/ucentral-schema"
-            "/Makefile")
-        if commit_id:
-            wlan_ap_url = wlan_ap_url.replace("main", commit_id)
-        response = requests.get(wlan_ap_url)
-        if response.status_code == 200:
-            lines = response.text.split('\n')
-            for line in lines:
-                if line.startswith("PKG_SOURCE_VERSION:="):
-                    return line.split(":=")[1].strip()
-            logging.info("Line containing PKG_SOURCE_VERSION not found in Makefile.")
-            pytest.fail("Line containing PKG_SOURCE_VERSION not found in Makefile.")
-        else:
-            logging.info(f"Failed to fetch file content. Status code: {response.status_code}")
 
     def compare_dicts(dict1, dict2, path="", added_keys=None, removed_keys=None, changed_items=None):
         if dict1 == dict2:
@@ -139,42 +124,22 @@ def validate_schema_through_github(commit_id, path):
                                                                     json.loads(updated_schema_pretty_json))
             return added_keys, removed_keys, changed_items
 
-
     if commit_id is None:
-        logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
-        pytest.skip("Use --commit-id to the pass an old commit-id of tip/wlan-ap repo. Skipping the test.")
+        logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ucentral-schema repo. Skipping the test.")
+        pytest.skip("Use --commit-id to the pass an old commit-id of tip/wlan-ucentral-schema repo. Skipping the test.")
 
-    latest_makefile_commit_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ap")
-    previous_makefile_commit_id = commit_id
+    latest_version_id = get_commit_id(owner="Telecominfraproject", repo="wlan-ucentral-schema")
+    logging.info(f"Latest Commit-ID of wlan-ucentral-schema = {latest_version_id}")
+    allure.attach(latest_version_id, name="Latest commit-id of wlan-ucentral-schema:")
 
-    allure.attach(latest_makefile_commit_id, name="Latest commit-id of wlan-ap:")
-    allure.attach(previous_makefile_commit_id, name="Passed commit-id to CLI:")
-
-    logging.info(f"Latest Commit-ID of wlan-ap/feeds/ucentral/ucentral-schema/'Makefile' is {commit_id}")
-    logging.info(f"Passed Commit-ID through CLI = {previous_makefile_commit_id}")
-
-    if latest_makefile_commit_id == previous_makefile_commit_id:
-        logging.info("No new commits in the Makefile (wlan-ap). Exiting.")
-        return
-    logging.info("New commits found in the Makefile (wlan-ap). Proceeding with the schema validation.")
-
-    latest_version_id = extract_pkg_src_version_from_makefile()
-    logging.info(f"Latest Commit-ID of wlan-ucentral-schema according to latest Makefile = {latest_version_id}")
-    allure.attach(latest_version_id, name="PKG_SOURCE_VERSION (a/c to latest):")
-
-    previous_version_id = extract_pkg_src_version_from_makefile(previous_makefile_commit_id)
-    if previous_version_id is None:
-        logging.info(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                     f"telecominfraproject/wlan-ap repo. Skipping the test.")
-        pytest.skip(f"Invalid Commit-ID passed through CLI. Commit-ID must be one from "
-                    f"telecominfraproject/wlan-ap repo. Skipping the test.")
-    logging.info(f"Commit-ID of wlan-ucentral-schema according to the passed Commit-ID = {previous_version_id}")
-    allure.attach(previous_version_id, name=f"PKG_SOURCE_VERSION (a/c to passed commit-id):")
+    previous_version_id = commit_id
+    logging.info(f"Passed Commit-ID of wlan-ucentral-schema: {previous_version_id}")
+    allure.attach(previous_version_id, name=f"Passed Commit-ID of wlan-ucentral-schema:")
 
     if latest_version_id == previous_version_id:
-        logging.info("No new Schema-ID found. Exiting.")
+        logging.info("No new commit-id found in wlan-ucentral-schema. Exiting.")
         return
-    logging.info("New Schema-ID found. Proceeding with the schema validation.")
+    logging.info("New commit found. Proceeding with the schema validation.")
 
     wlan_ucentral_schema_url = "https://github.com/Telecominfraproject/wlan-ucentral-schema/blob/main"
     added_keys, removed_keys, changed_items = (
