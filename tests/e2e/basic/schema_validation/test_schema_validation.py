@@ -260,11 +260,17 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
             if not isinstance(message, list):
                 type_mismatch.add((path, get_type_of_message(message), 'array'))
                 return
+            if 'items' not in schema:
+                other_discrepancies.add(f"Items not defined in schema for array at '{path}'.")
+                return
             for i in range(len(message)):
                 verify_type_of_value(message[i], schema['items'], f"{path} > [item]")
         elif schema['type'] == 'object':
             if not isinstance(message, dict):
                 type_mismatch.add((path, get_type_of_message(message), 'object'))
+                return
+            if 'properties' not in schema:
+                other_discrepancies.add(f"Properties not defined in schema for object at '{path}'.")
                 return
             for key in message:
                 if 'patternProperties' in schema:
@@ -444,7 +450,8 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
             if other_discrepancies:
                 other_discrepancies = [[key] for key in other_discrepancies]
                 other_discrepancies = sorted(other_discrepancies)
-                message = tabulate(other_discrepancies, tablefmt='fancy_grid')
+                message = ("Note: These are possible problems with the schema itself.\n\n" +
+                           tabulate(other_discrepancies, tablefmt='fancy_grid'))
                 logging.info("\nOther Discrepancies:\n" + message + "\n")
                 allure.attach(message, name="Other Discrepancies:")
 
