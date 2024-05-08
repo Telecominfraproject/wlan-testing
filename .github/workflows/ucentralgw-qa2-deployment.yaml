@@ -34,7 +34,7 @@ env:
     {
       "namespace": "qa02",
       "deploy_method": "git",
-      "chart_version": "main",
+      "chart_version": "v3.0.2-RC1",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
@@ -110,8 +110,7 @@ jobs:
         export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
         export OWSUB_VERSION=${{ matrix.owsub_version }}
         export OWRRM_VERSION=${{ matrix.owrrm_version }}
-        #export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.owls-external.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}

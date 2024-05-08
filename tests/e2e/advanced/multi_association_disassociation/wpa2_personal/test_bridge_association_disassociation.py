@@ -8,7 +8,7 @@
 import pytest
 import allure
 
-pytestmark = [pytest.mark.advance, pytest.mark.multi_assoc_disassoc_tests, pytest.mark.bridge, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.advance, pytest.mark.multi_assoc_disassoc_tests, pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -18,93 +18,91 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "rf": {},
+    "rf": {
+        "5G": {
+            'band': '5G',
+            "channel": 36,
+            "channel-width": 80
+        },
+        "2G": {
+            'band': '2G',
+            "channel": 6,
+            "channel-width": 20
+
+        }
+
+    },
     "radius": False
 }
+
+
+@allure.feature("Multi Association and Disassociation")
+@allure.parent_suite("Multi Association and Disassociation Test")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="WPA2 Personal")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@allure.parent_suite("Multi Association and Disassociation Tests")
-@allure.suite("WPA2 Personal Security")
-@allure.sub_suite("Bridge Mode")
-@allure.feature("UDP upload")
 @pytest.mark.usefixtures("setup_configuration")
-class TestMultiAssoDisassoBridge(object):
+class Test_MultiAssoc_Bridge(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5691", name="WIFI-5691")
+    @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.udp_upload_2g
-    @allure.title("Test for Multi Association and Disassociation for UDP (NSS-2) upload 2.4G")
-    def test_multi_asso_disasso_udp_upload_nss2_2g(self, get_test_library, setup_configuration, check_connectivity):
+    @pytest.mark.fiveg
+    @pytest.mark.advance_ac
+    @allure.title("Multi Association and Disassociation Test for AC Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13339", name="WIFI-13339")
+    def test_multi_assoc_disassoc_ac_bridge(self, get_test_library, setup_configuration, check_connectivity,
+                                            selected_testbed):
         """
-                pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge and twog and udp_upload_2g"
+            Test Description:
+            Multiple association / disassociation stability test intends to measure stability of Wi-Fi device under a
+            dynamic environment with frequent change of connection status.
+
+            Marker:
+            advance_ac and multi_assoc_disassoc_tests and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
-        result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16, dut_data=setup_configuration,
-                                                            mode = mode, vlan=vlan, instance_name="udp_upload_2g",
-                                                            traffic_direction="upload", traffic_rate="4Mbps")
+        raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="reset",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:
-            assert False, discription
+            assert False, description
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5692", name="WIFI-5692")
+    @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.udp_download_2g
-    @allure.title("Test for Multi Association and Disassociation for UDP (NSS-2) download 2.4G")
-    def test_multi_asso_disasso_udp_download_nss2_2g(self, get_test_library, setup_configuration, check_connectivity):
-        """
-                pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge and twog and udp_download_2g"
-        """
-        mode = "BRIDGE"
-        vlan = 1
-        result, discription = get_test_library.multi_asso_disasso(band="2G", num_stations=16,
-                                                                  dut_data=setup_configuration,
-                                                                  mode=mode, vlan=vlan, instance_name="udp_download_2g",
-                                                                  traffic_direction="download", traffic_rate="4Mbps")
-        if result:
-            assert True
-        else:
-            assert False, discription
-
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5693", name="WIFI-5693")
     @pytest.mark.fiveg
-    @pytest.mark.udp_upload_5g
-    @allure.title("Test for Multi Association and Disassociation for UDP (NSS-2) upload 5G")
-    def test_multi_asso_disasso_udp_upload_nss2_5g(self, get_test_library, setup_configuration, check_connectivity):
+    @pytest.mark.advance_ax
+    @allure.title("Multi Association and Disassociation Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13339", name="WIFI-13339")
+    def test_multi_assoc_disassoc_ax_bridge(self, get_test_library, setup_configuration, check_connectivity,
+                                            selected_testbed):
         """
-                pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge and fiveg and udp_upload_5g"
-        """
-        mode = "BRIDGE"
-        vlan = 1
-        result, discription = get_test_library.multi_asso_disasso(band="5G", num_stations=16,
-                                                                  dut_data=setup_configuration,
-                                                                  mode=mode, vlan=vlan, instance_name="udp_upload_5g",
-                                                                  traffic_direction="upload", traffic_rate="8Mbps")
-        if result:
-            assert True
-        else:
-            assert False, discription
+            Test Description:
+            Multiple association / disassociation stability test intends to measure stability of Wi-Fi device under a
+            dynamic environment with frequent change of connection status.
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5694", name="WIFI-5694")
-    @pytest.mark.fiveg
-    @pytest.mark.udp_download_5g
-    @allure.title("Test for Multi Association and Disassociation for UDP (NSS-2) download 5G")
-    def test_multi_asso_disasso_udp_download_nss2_5g(self, get_test_library, setup_configuration,check_connectivity):
-        """
-                pytest -m "multi_assoc_disassoc_tests and wpa2_personal and bridge and fiveg and udp_download_5g"
+            Marker:
+            advance_ax and multi_assoc_disassoc_tests and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
-        result, discription = get_test_library.multi_asso_disasso(band="5G", num_stations=16,
-                                                                  dut_data=setup_configuration,
-                                                                  mode=mode, vlan=vlan, instance_name="udp_download_5g",
-                                                                  traffic_direction="download", traffic_rate="8Mbps")
+        raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="reset",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:
-            assert False, discription
+            assert False, description

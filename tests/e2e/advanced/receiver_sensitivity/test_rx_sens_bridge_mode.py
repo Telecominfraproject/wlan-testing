@@ -8,143 +8,113 @@ import os
 import pytest
 import allure
 
-pytestmark = [pytest.mark.rx_sensitivity_tests, pytest.mark.bridge, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.advance, pytest.mark.rx_sensitivity_tests, pytest.mark.bridge, pytest.mark.wpa2_personal]
 
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
-            ]},
-        "rf": {
-            "2G": {"channel-width": 20},
-            "5G": {"channel-width": 80},
+            {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"},
+            {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
+        ]
+    },
+    "rf": {
+        "5G": {
+            'band': '5G',
+            "channel": 36,
+            "channel-width": 80
         },
-    "radius": False,
+        "2G": {
+            'band': '2G',
+            "channel": 6,
+            "channel-width": 20
+
+        }
+
+    },
+    "radius": False
 }
 
 
+@allure.feature("Receiver Sensitivity")
+@allure.parent_suite("Receiver Sensitivity Test")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="WPA2 Personal")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
     indirect=True,
     scope="class"
 )
-@allure.parent_suite("Receiver Sensitivity Tests")
-@allure.suite("WPA2 Personal Security")
-@allure.sub_suite("Bridge Mode")
-@allure.feature("TR-398 Issue 2")
 @pytest.mark.usefixtures("setup_configuration")
-class TestRxSensitivityBridge(object):
+class Test_RxSensitivitytests_Bridge(object):
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2446", name="WIFI-2446")
+    @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @allure.title("Test for Receiver Sensitivity for 2.4G band")
-    def test_client_wpa2_personal_bridge_2g(self, get_test_library, setup_configuration, check_connectivity):
-        """Receiver Sensitivity Bridge Mode
-           pytest -m "rx_sensitivity_tests and bridge and wpa2_personal and twog"
+    @pytest.mark.fiveg
+    @pytest.mark.advance_ac
+    @allure.title("Receiver Sensitivity Test for AC Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13329", name="WIFI-13329")
+    def test_rx_sensitivity_tests_ac_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
         """
-        profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
+            Test Description:
+            Receiver Sensitivity is a receiver's ability to receive and correctly demodulate weak signals.
+            This test provides a simplified measurement of the receiver's sensitivity, relative to the total
+            attenuation inserted between the DUT and the STA. As that attenuation is increased, the STA is
+            limited to a single coding scheme, eventually causing the connection to degrade.
+            The point at which the connection degrades represents the receiver's approximate sensitivity.
+            This is an approximate measurement only, where a detailed receiver sensitivity measurement would
+            typically be performed in a conducted test environment with calibrated transmitter power levels.
+            The test is repeated with multiple coding schemes, ensuring the DUT should smoothly
+            transition between coding schedules as the attenuation increases in normal operation.
+
+            Marker:
+            advance_ac and rx_sensitivity_tests and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
-        band = "twog"
         vlan = 1
-        dut_name = list(setup_configuration.keys())[0]
-        dut_5g, dut_2g = "", ""
-        radios_2g, radios_5g, radios_ax = [], [], []
-        data = get_test_library.json_get(_req_url="/port?fields=alias,port,mode")
-        data = data['interfaces']
-        port, port_data = "", []
-        for i in data:
-            for j in i:
-                if i[j]['mode'] != '':
-                    port_data.append(i)
-
-        for item in range(len(port_data)):
-            for p in port_data[item]:
-                temp = port_data[item][p]['port'].split('.')
-                temp = list(map(int, temp))
-                temp = list(map(str, temp))
-                port = ".".join(temp)
-                if port_data[item][p]['mode'] == '802.11bgn-AC':
-                    radios_2g.append(port + " " + port_data[item][p]['alias'])
-                if port_data[item][p]['mode'] == '802.11an-AC':
-                    radios_5g.append(port + " " + port_data[item][p]['alias'])
-                if port_data[item][p]['mode'] == '802.11abgn-AX':
-                    radios_ax.append(port + " " + port_data[item][p]['alias'])
-        for i in setup_configuration[dut_name]['ssid_data']:
-            get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
-            if get_test_library.dut_idx_mapping[str(i)][3] == "2G":
-                dut_2g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' \
-                       '' + get_test_library.dut_idx_mapping[str(i)][4] + f' (1)'
-
-        instance_name = "rx_sens_TR398"
-        result, description = get_test_library.tr398(radios_2g=radios_2g, radios_5g=radios_5g, radios_ax=radios_ax,dut_name=dut_name,
-                                           dut_5g=dut_5g, dut_2g=dut_2g, mode=mode, vlan_id=vlan, skip_2g=False,
-                                           skip_5g=True, instance_name=instance_name, test="rxsens", ssid_name=ssid_name,
-                                           security_key=security_key, security=security,
-                                           move_to_influx=False, dut_data=setup_configuration, tr398v2=True)
-
+        raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="rxsens",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:
             assert False, description
 
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-2446", name="WIFI-2446")
+    @pytest.mark.wpa2_personal
+    @pytest.mark.twog
     @pytest.mark.fiveg
-    @allure.title("Test for Receiver Sensitivity for 5G band")
-    def test_client_wpa2_personal_bridge_5g(self, get_test_library, setup_configuration, check_connectivity):
-        """Receiver Sensitivity Bridge Mode
-           pytest -m "rx_sensitivity_tests and bridge and wpa2_personal and fiveg"
+    @pytest.mark.advance_ax
+    @allure.title("Receiver Sensitivity Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13329", name="WIFI-13329")
+    def test_rx_sensitivity_tests_ax_bridge(self, get_test_library, setup_configuration, check_connectivity,
+                                            selected_testbed):
         """
-        profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
+            Test Description:
+            Receiver Sensitivity is a receiver's ability to receive and correctly demodulate weak signals.
+            This test provides a simplified measurement of the receiver's sensitivity, relative to the total
+            attenuation inserted between the DUT and the STA. As that attenuation is increased, the STA is
+            limited to a single coding scheme, eventually causing the connection to degrade.
+            The point at which the connection degrades represents the receiver's approximate sensitivity.
+            This is an approximate measurement only, where a detailed receiver sensitivity measurement would
+            typically be performed in a conducted test environment with calibrated transmitter power levels.
+            The test is repeated with multiple coding schemes, ensuring the DUT should smoothly
+            transition between coding schedules as the attenuation increases in normal operation.
+
+            Marker:
+            advance_ax and rx_sensitivity_tests and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
-        band = "fiveg"
         vlan = 1
-        dut_name = list(setup_configuration.keys())[0]
-        dut_5g, dut_2g = "", ""
-        radios_2g, radios_5g, radios_ax = [], [], []
-        data = get_test_library.json_get(_req_url="/port?fields=alias,port,mode")
-        data = data['interfaces']
-        port, port_data = "", []
-        for i in data:
-            for j in i:
-                if i[j]['mode'] != '':
-                    port_data.append(i)
-
-        for item in range(len(port_data)):
-            for p in port_data[item]:
-                temp = port_data[item][p]['port'].split('.')
-                temp = list(map(int, temp))
-                temp = list(map(str, temp))
-                port = ".".join(temp)
-                if port_data[item][p]['mode'] == '802.11bgn-AC':
-                    radios_2g.append(port + " " + port_data[item][p]['alias'])
-                if port_data[item][p]['mode'] == '802.11an-AC':
-                    radios_5g.append(port + " " + port_data[item][p]['alias'])
-                if port_data[item][p]['mode'] == '802.11abgn-AX':
-                    radios_ax.append(port + " " + port_data[item][p]['alias'])
-        for i in setup_configuration[dut_name]['ssid_data']:
-            get_test_library.dut_idx_mapping[str(i)] = list(setup_configuration[dut_name]['ssid_data'][i].values())
-            if get_test_library.dut_idx_mapping[str(i)][3] == "5G":
-                dut_5g = dut_name + ' ' + get_test_library.dut_idx_mapping[str(i)][0] + ' ' \
-                                                                                        '' + \
-                         get_test_library.dut_idx_mapping[str(i)][4] + f' (1)'
-
-
-        instance_name = "rx_sens_TR398"
-        result, description = get_test_library.tr398(radios_2g=radios_2g, radios_5g=radios_5g, radios_ax=radios_ax,
-                                                     dut_name=dut_name, dut_5g=dut_5g, dut_2g=dut_2g, mode=mode,
-                                                     vlan_id=vlan, skip_2g=True, skip_5g=False, instance_name=instance_name,
-                                                     test="rxsens", ssid_name=ssid_name, security_key=security_key,
-                                                     security=security, move_to_influx=False, dut_data=setup_configuration,
-                                                     tr398v2=True)
+        raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="rxsens",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:
