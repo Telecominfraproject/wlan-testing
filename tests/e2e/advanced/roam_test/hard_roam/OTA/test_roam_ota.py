@@ -620,8 +620,8 @@ class TestRoamOTA(object):
         for i in range(len(config_data["radios"])):
             if config_data['radios'][i]["band"] == "5G":
                 config_data['radios'].pop(i)
-            # change ssid security type to sae
-            config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
+        # change ssid security type to sae
+        config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
         if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
             config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
         if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
@@ -690,7 +690,7 @@ class TestRoamOTA(object):
             bssid_list.append(ap_data[serial]['Access Point'])
         ssid = config_data['interfaces'][0]["ssids"][0]["name"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
-              band="twog", num_sta=1, security="wpa2",  ssid=ssid, upstream="1.1.eth1", eap_method="TLS",
+              band="twog", num_sta=1, security="wpa3",  ssid=ssid, upstream="1.1.eth1", eap_method="TLS",
               eap_identity=radius_info["user"], eap_password=radius_info["password"], private_key="1234567890",
               pk_passwd=radius_info["pk_password"], ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
               iteration=1, channel="11", option="ota", dut_name=dut_names, traffic_type="lf_udp")
