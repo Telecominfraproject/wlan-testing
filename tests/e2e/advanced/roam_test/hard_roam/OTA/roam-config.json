@@ -1,0 +1,113 @@
+{
+  "uuid": 2,
+  "radios": [
+    {
+      "band": "2G",
+      "channel": 11,
+      "channel-mode": "HE",
+      "channel-width": 40,
+      "country": "CA"
+    },
+    {
+      "band": "5G",
+      "channel": 36,
+      "channel-mode": "HE",
+      "channel-width": 80,
+      "country": "CA"
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "WAN",
+      "role": "upstream",
+      "services": [
+        "lldp"
+      ],
+      "ethernet": [
+        {
+          "select-ports": [
+            "WAN*"
+          ]
+        }
+      ],
+      "ipv4": {
+        "addressing": "dynamic"
+      },
+      "ssids": [
+        {
+          "name": "OpenWifi",
+          "wifi-bands": [
+            "2G","5G"
+          ],
+          "bss-mode": "ap",
+          "encryption": {
+            "proto": "psk2",
+            "key": "Openwifi",
+            "ieee80211w": "optional"
+          },
+          "roaming": true,
+          "services": [
+            "wifi-steering"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "LAN",
+      "role": "downstream",
+      "services": [
+        "ssh",
+        "lldp"
+      ],
+      "ethernet": [
+        {
+          "select-ports": [
+            "LAN*"
+          ]
+        }
+      ],
+      "ipv4": {
+        "addressing": "static",
+        "subnet": "192.168.1.1/24",
+        "dhcp": {
+          "lease-first": 10,
+          "lease-count": 100,
+          "lease-time": "6h"
+        }
+      }
+    }
+  ],
+  "metrics": {
+    "statistics": {
+      "interval": 120,
+      "types": [
+        "ssids",
+        "lldp",
+        "clients"
+      ]
+    },
+    "health": {
+      "interval": 120
+    },
+    "wifi-frames": {
+      "filters": [
+        "probe",
+        "auth"
+      ]
+    }
+  },
+  "services": {
+    "wifi-steering": {
+      "mode": "local",
+      "network": "upstream",
+      "assoc-steering": true,
+      "required-snr": -85,
+      "required-probe-snr": -80,
+      "required-roam-snr": -80,
+      "load-kick-threshold": 90
+    },
+    "ssh": {
+      "port": 22
+    }
+  }
+}
