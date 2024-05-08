@@ -422,22 +422,7 @@ class TestRoamOTA(object):
             if config_data['radios'][i]["band"] == "5G":
                 config_data['radios'].pop(i)
         # change ssid config data to sae
-        config_data['interfaces'][0]["ssids"] = [
-            {
-                "name": "OpenWifi",
-                "wifi-bands": [
-                    "2G"
-                ],
-                "bss-mode": "ap",
-                "encryption": {
-                    "proto": "sae",
-                    "key": "Openwifi",
-                    "ieee80211w": "optional"
-                },
-                "roaming": True,
-                "services": ["wifi-steering"]
-            }
-        ]
+        config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
         if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
             config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
         if len(dut_list) < 2:
