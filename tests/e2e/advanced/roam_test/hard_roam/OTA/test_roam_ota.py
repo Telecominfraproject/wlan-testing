@@ -588,14 +588,14 @@ class TestRoamOTA(object):
               iteration=1, channel="36", option="ota", dut_name=dut_names, traffic_type="lf_udp", sta_type="11r-sae")
         assert pass_fail, message
 
-    @pytest.mark.different_channel
-    @pytest.mark.wpa2_enterprise
+    @pytest.mark.same_channel
+    @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @pytest.mark.roam
-    def test_roam_2g_to_2g_dc_eap_wpa2(self, get_target_object, get_test_library, get_lab_info, selected_testbed, radius_info):
+    def test_roam_2g_to_2g_sc_eap_wpa3(self, get_target_object, get_test_library, get_lab_info, selected_testbed, radius_info):
         """
-            Test Roaming between two APs, Different channel, 2G, WPA2 Enterprise
-            pytest -m "roam and twog and different_channel and wpa2_enterprise"
+            Test Roaming between two APs, Same channel, 2G, WPA3 Enterprise
+            pytest -m "roam and twog and same_channel and wpa3_enterprise"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -620,6 +620,8 @@ class TestRoamOTA(object):
         for i in range(len(config_data["radios"])):
             if config_data['radios'][i]["band"] == "5G":
                 config_data['radios'].pop(i)
+            # change ssid security type to sae
+            config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
         if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
             config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
         if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
@@ -630,10 +632,6 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            if ap == 1:
-                if ap == 1:
-                    config_data['radios'] = [
-                        {"band": "2G", "channel": 1, "channel-mode": "HE", "channel-width": 20, "country": "CA"}]
             logging.info(config_data)
             payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
