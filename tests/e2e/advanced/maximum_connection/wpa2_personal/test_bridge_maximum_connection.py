@@ -1,11 +1,16 @@
 """
-    Test Multi-Station Performance: Bridge Mode
-    pytest -m multistaperf
+
+    Test Maximum Connection : Bridge Mode
+    pytest -m "maximum_connection"
 """
+import sys
+
 import pytest
 import allure
+import json
+import os
 
-pytestmark = [pytest.mark.advance, pytest.mark.multistaperf, pytest.mark.bridge]
+pytestmark = [pytest.mark.advance, pytest.mark.maximum_connection, pytest.mark.bridge]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -33,8 +38,8 @@ setup_params_general = {
 }
 
 
-@allure.feature("Multi-Station Performance")
-@allure.parent_suite("Multi-Station Performance Test")
+@allure.feature("Maximum Connection")
+@allure.parent_suite("Maximum Connection Test")
 @allure.suite(suite_name="BRIDGE Mode")
 @allure.sub_suite(sub_suite_name="WPA2 Personal")
 @pytest.mark.parametrize(
@@ -44,30 +49,29 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class Test_MultiStaPerf_Bridge(object):
+class Test_MaxConnection_Bridge(object):
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.fiveg
     @pytest.mark.advance_ac
-    @allure.title("Multi-Station Performance Test for AC Clients in BRIDGE Mode")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13338", name="WIFI-13338")
-    def test_multistaperf_ac_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    @allure.title("Maximum Connection Test for AC Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13328", name="WIFI-13328")
+    def test_max_connection_ac_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
         """
             Test Description:
-            Multiple STAs performance test intends to measure the performance of Wi-Fi device connected with multiple
-            STAs at different distances simultaneously. There are three sets of 3 stations, with each group at a
-            different emulated distance.
+            The Maximum Connection test intends to verify that the Wi-Fi AP can support 32 STAs simultaneously
+            connected with minimal packet loss and no disassociations taking place.
 
             Marker:
-            advance_ac and multistaperf and wpa2_personal and bridge
+            advance_ac and maximum_connection and wpa2_personal and bridge
 
             Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
         raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
-        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="multi_sta",
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="max_cx",
                                                        dut_data=setup_configuration, move_to_influx=False,
                                                        testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
@@ -79,27 +83,27 @@ class Test_MultiStaPerf_Bridge(object):
     @pytest.mark.twog
     @pytest.mark.fiveg
     @pytest.mark.advance_ax
-    @allure.title("Multi-Station Performance Test for AX Clients in BRIDGE Mode")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13338", name="WIFI-13338")
-    def test_multistaperf_ax_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+    @allure.title("Maximum Connection Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13328", name="WIFI-13328")
+    def test_max_connection_ax_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
         """
             Test Description:
-            Multiple STAs performance test intends to measure the performance of Wi-Fi device connected with multiple
-            STAs at different distances simultaneously. There are three sets of 3 stations, with each group at a
-            different emulated distance.
+            The Maximum Connection test intends to verify that the Wi-Fi AP can support 32 STAs simultaneously
+            connected with minimal packet loss and no disassociations taking place.
 
             Marker:
-            advance_ax and multistaperf and wpa2_personal and bridge
+            advance_ax and maximum_connection and wpa2_personal and bridge
 
             Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
         """
         mode = "BRIDGE"
         vlan = 1
         raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
-        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="multi_sta",
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="max_cx",
                                                        dut_data=setup_configuration, move_to_influx=False,
                                                        testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:
             assert False, description
+
