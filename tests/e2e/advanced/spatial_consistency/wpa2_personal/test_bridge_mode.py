@@ -18,14 +18,24 @@ setup_params_general = {
         ]
     },
     "rf": {
-        "5G":{
-            "channel-width": 80},
-        "2G":{
-            "channel-width": 20}
+        "5G": {
+            'band': '5G',
+            "channel": 36,
+            "channel-width": 80
+        },
+        "2G": {
+            'band': '2G',
+            "channel": 6,
+            "channel-width": 20
+
+        }
+
     },
     "radius": False
 }
-@allure.feature("SPATIAL CONSISTENCY")
+
+
+@allure.feature("Spatial Consistency")
 @allure.parent_suite("Spatial Consistency Test")
 @allure.suite(suite_name="BRIDGE Mode")
 @allure.sub_suite(sub_suite_name="WPA2 Personal")
@@ -38,107 +48,62 @@ setup_params_general = {
 @pytest.mark.usefixtures("setup_configuration")
 class Test_SpatialConsistency_Bridge(object):
 
-    @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Spatial Consistency Test (NSS-1) UDP-Download 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5052", name="WIFI-5052")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.nss1
-    def test_udp_download_nss1_wpa2_personal_2g(self, get_test_library, setup_configuration, check_connectivity):
-        profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "BRIDGE"
-        band = "twog"
-        vlan = 1
+    @pytest.mark.fiveg
+    @pytest.mark.advance_ac
+    @allure.title("Spatial Consistency Test for AC Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13336", name="WIFI-13336")
+    def test_spatial_consistency_ac_bridge(self, get_test_library, setup_configuration, check_connectivity, selected_testbed):
+        """
+            Test Description:
+            Spatial consistency test intends to verify the Wi-Fi signal consistency in spatial
+            domain by testing throughput with DUT at different angles to the Station and at different
+            emulated distance. The angles are changed with a programmable turn-table.
+            The distance is emulated by adjusting attenuation.
 
-        result, description = get_test_library.spatial_consistency(ssid_name=ssid_name, security_key=security_key,
-                                                                   security=security,mode=mode, band=band,vlan=vlan,
-                                                                   dut_data=setup_configuration,num_sta=1, spatial_streams=1,
-                                                                   instance_name="SPATIAL_NSS1_TWOG",
-                                                                   pass_value={"strong": 45, "medium": 35, "weak": 17},
-                                                                   attenuations=[10, 38, 48])
+            Marker:
+            advance_ac and spatial_consistency and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
+        mode = "BRIDGE"
+        vlan = 1
+        raw_line = [["skip_ac: 0"], ["skip_ax: 1"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="spatial",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:
             assert False, description
 
-    @allure.story('wpa2_personal 2.4 GHZ Band')
-    @allure.title("BRIDGE Mode Spatial Consistency Test (NSS-2) UDP-Download 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5068", name="WIFI-5068")
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.nss2
-    def test_udp_download_nss2_wpa2_personal_2g(self,get_test_library, setup_configuration, check_connectivity):
-        profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "BRIDGE"
-        band = "twog"
-        vlan = 1
-
-        result, description = get_test_library.spatial_consistency(ssid_name=ssid_name, security_key=security_key,
-                                                                   security=security,mode=mode, band=band, vlan=vlan,
-                                                                   dut_data=setup_configuration,num_sta=1, spatial_streams=2,
-                                                                   instance_name="SPATIAL_NSS2_TWOG",
-                                                                   pass_value={"strong": 90, "medium": 70, "weak": 35},
-                                                                   attenuations=[10, 38, 48])
-        if result:
-            assert True
-        else:
-            assert False, description
-
-    @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Spatial Consistency Test (NSS-1) UDP-Download 5 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5067", name="WIFI-5067")
-    @pytest.mark.wpa2_personal
     @pytest.mark.fiveg
-    @pytest.mark.nss1
-    def test_udp_download_nss1_wpa2_personal_5g(self, get_test_library, setup_configuration, check_connectivity):
-        profile_data =  {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
+    @pytest.mark.advance_ax
+    @allure.title("Spatial Consistency Test for AX Clients in BRIDGE Mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13336", name="WIFI-13336")
+    def test_spatial_consistency_ax_bridge(self, get_test_library, setup_configuration, check_connectivity,
+                                           selected_testbed):
+        """
+            Test Description:
+            Spatial consistency test intends to verify the Wi-Fi signal consistency in spatial
+            domain by testing throughput with DUT at different angles to the Station and at different
+            emulated distance. The angles are changed with a programmable turn-table.
+            The distance is emulated by adjusting attenuation.
+
+            Marker:
+            advance_ax and spatial_consistency and wpa2_personal and bridge
+
+            Note: Please refer to the PDF report for the Test Procedure, Pass/Fail Criteria, and Candela Score.
+        """
         mode = "BRIDGE"
-        band = "fiveg"
         vlan = 1
-
-        result, description = get_test_library.spatial_consistency(ssid_name=ssid_name, security_key=security_key,
-                                                                   security=security, mode=mode, band=band, vlan=vlan,
-                                                                   dut_data=setup_configuration, num_sta=1,
-                                                                   spatial_streams=1,
-                                                                   instance_name="SPATIAL_NSS1_FIVEG",
-                                                                   pass_value={"strong": 250, "medium": 150, "weak": 75},
-                                                                   attenuations=[10, 25, 35])
-        if result:
-            assert True
-        else:
-            assert False, description
-
-    @allure.story('wpa2_personal 5 GHZ Band')
-    @allure.title("BRIDGE Mode Spatial Consistency Test (NSS-2) UDP-Download 5 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5066", name="WIFI-5066")
-    @pytest.mark.wpa2_personal
-    @pytest.mark.fiveg
-    @pytest.mark.nss2
-    def test_udp_download_nss2_wpa2_personal_5g(self, get_test_library, setup_configuration, check_connectivity):
-        profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
-        ssid_name = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
-        security = "wpa2"
-        mode = "BRIDGE"
-        band = "fiveg"
-        vlan = 1
-
-        result, description = get_test_library.spatial_consistency(ssid_name=ssid_name, security_key=security_key,
-                                                                   security=security, mode=mode, band=band, vlan=vlan,
-                                                                   dut_data=setup_configuration, num_sta=1,
-                                                                   spatial_streams=2,
-                                                                   instance_name="SPATIAL_NSS2_FIVEG",
-                                                                   pass_value={"strong": 500, "medium": 300,"weak": 150},
-                                                                   attenuations=[10, 25, 35])
+        raw_line = [["skip_ac: 1"], ["skip_ax: 0"]]
+        result, description = get_test_library.tr398v2(mode=mode, vlan_id=vlan, test="spatial",
+                                                       dut_data=setup_configuration, move_to_influx=False,
+                                                       testbed=selected_testbed, extra_raw_lines=raw_line)
         if result:
             assert True
         else:
