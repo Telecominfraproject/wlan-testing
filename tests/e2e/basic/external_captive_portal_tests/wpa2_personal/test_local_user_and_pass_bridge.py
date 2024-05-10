@@ -60,7 +60,6 @@ class TestBridgeModeExternalCaptivePortal(object):
             pytest -m "external_captive_portal_tests and bridge"
     """
 
-    @pytest.mark.anubhav_ecp_ip
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.local_user_and_pass
@@ -220,3 +219,34 @@ class TestBridgeModeExternalCaptivePortal(object):
                 pytest.fail(f"Error occurred: {e}")
             finally:
                 client.close()
+
+            logging.info("Checking throughput speed...")
+            wifi_capacity_obj_list = get_test_library.wifi_capacity(mode="BRIDGE",
+                                                                    download_rate="10Gbps",
+                                                                    upload_rate="56Kbps",
+                                                                    protocol="UDP-IPv4",
+                                                                    duration="60000",
+                                                                    batch_size="1",
+                                                                    stations=radio_port_name[:4] + station,
+                                                                    add_stations=False,
+                                                                    create_stations=False)
+
+            report = wifi_capacity_obj_list[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+            numeric_score = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report)
+            expected_throughput = 1
+            throughput = {
+                "unit": ["Mbps"],
+                "download": [numeric_score[0][0]],
+                "upload": [numeric_score[1][0]],
+                "total": [numeric_score[2][0]],
+                "expected": [f"<= {expected_throughput}"],
+                "PASS": [numeric_score[2][0] <= expected_throughput]
+            }
+            data_table = tabulate(throughput, headers='keys', tablefmt='fancy_grid')
+            allure.attach(name='Throughput Data', body=data_table)
+            logging.info(f"\n{data_table}")
+
+            if not throughput["PASS"][0]:
+                logging.info("Throughput exceeded than set threshold")
+                pytest.fail("Throughput exceeded than set threshold")
+            logging.info("Throughput is within the set threshold")
