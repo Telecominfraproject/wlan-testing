@@ -11,6 +11,7 @@ import allure
 import paramiko
 import pytest
 from tabulate import tabulate
+from bs4 import BeautifulSoup
 
 pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.bridge]
 
@@ -18,13 +19,13 @@ setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa2_personal": [
-            {"ssid_name": "ssid_ext_captive_portal_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something",
+            {"ssid_name": "ssid_ext_cap_portal_wpa2_2g_id_p", "appliedRadios": ["2G"], "security_key": "something",
              "captive": {
                  "auth-mode": "uam",
                  "uam-port": 3990,
                  "uam-secret": "hotsys123",
                  "uam-server": "https://customer.hotspotsystem.com/customer/hotspotlogin.php",
-                 "nasid": "AlmondLabs",
+                 "nasid": "AlmondLabs_6",
                  "auth-server": "radius.hotspotsystem.com",
                  "auth-port": 1812,
                  "auth-secret": "hotsys123",
@@ -45,7 +46,7 @@ setup_params_general = {
 @allure.feature("External Captive Portal Test")
 @allure.parent_suite("External Captive Portal Tests")
 @allure.suite(suite_name="Bridge Mode")
-@allure.sub_suite(sub_suite_name="Click-to-continue mode")
+@allure.sub_suite(sub_suite_name="Local user/pass mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -59,17 +60,18 @@ class TestBridgeModeExternalCaptivePortal(object):
             pytest -m "external_captive_portal_tests and bridge"
     """
 
+    @pytest.mark.anubhav_ecp_ip
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
-    @pytest.mark.click_to_continue
-    @allure.title("Click-to-continue mode with WPA2 encryption 2.4 GHz Band")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11148", name="WIFI-11148")
-    def test_bridge_wpa2_2g_click_to_continue(self, get_test_library, get_dut_logs_per_test_case,
-                                              get_test_device_logs, check_connectivity, setup_configuration,
-                                              get_testbed_details, get_target_object):
+    @pytest.mark.local_user_and_pass
+    @allure.title("Local user/pass mode with WPA2 encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13683", name="WIFI-13683")
+    def test_bridge_wpa2_2g_local_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
+                                                get_test_device_logs, check_connectivity, setup_configuration,
+                                                get_testbed_details, get_target_object):
         """
             BRIDGE Mode External Captive Portal Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "external_captive_portal_tests and wpa2_personal and twog and bridge and click_to_continue"
+            pytest -m "external_captive_portal_tests and wpa2_personal and twog and bridge and local_user_and_pass"
         """
         def run_command_using_ssh(ssh_client, command: str):
             output = ""
@@ -174,24 +176,25 @@ class TestBridgeModeExternalCaptivePortal(object):
                 station_mac = url_info['mac']
                 uamport = url_info['uamport']
 
-                link = (
-                    f"https://customer.hotspotsystem.com/customer/hotspotlogin.php?name=&email=&company=&address="
-                    f"&city=&state=&country=&zip=&phone=&capture_custom_1=&capture_custom_2=&capture_custom_3="
-                    f"&capture_custom_4=&capture_custom_5=&ssl-login=&chal={challenge}&uamip={inet_ip_addr}"
-                    f"&uamport={uamport}&nasid={nasid}&mac={station_mac}&userurl=&login=login&skin_id="
-                    f"&uid={station_mac}&pwd=password&operator={nasid}&location_id=1&lang=en&agree=1"
-                )
-                expected_302 = f'/home/lanforge/vrf_exec.bash {station} curl -I "{link}"'
-                response_302 = run_command_using_ssh(client, expected_302)
+                link = (f'https://customer.hotspotsystem.com/customer/hotspotlogin.php?ssl-login=&chal={challenge}'
+                        f'&uamip={inet_ip_addr}&uamport={uamport}&nasid={nasid}&mac={station_mac}'
+                        f'&userurl=ct522-7481%2F&login=login&skin_id=&uid=userr1&pwd=password1')
+                html_request = f'/home/lanforge/vrf_exec.bash {station} curl "{link}"'
+                html_response = run_command_using_ssh(client, html_request)
 
-                logging.info(f"\n{response_302}")
-                allure.attach(name="Expected 302 response: ", body=str(response_302),
+                logging.info(f"HTML response containing authentication url:\n{html_response}")
+                allure.attach(name="HTML response containing authentication url:", body=str(html_response),
                               attachment_type=allure.attachment_type.TEXT)
 
-                link_to_hit = re.findall(r'^Location:\s+(.*?)\s*$', response_302, re.MULTILINE)[0]
-                logging.info(f"Link to hit: {link_to_hit}")
+                soup = BeautifulSoup(html_response, 'html.parser')
+                meta_tag = soup.find('meta', attrs={'http-equiv': 'refresh'})
+                content = meta_tag['content']
+                authentication_url = "=".join(content.split('=')[1:])
 
-                cmd_to_authenticate = f'/home/lanforge/vrf_exec.bash {station} curl "{link_to_hit}"'
+                logging.info(f"Authentication URL extracted from HTML:\n{authentication_url}\n")
+                allure.attach(name="Authentication URL extracted from HTML:", body=str(authentication_url))
+
+                cmd_to_authenticate = f'/home/lanforge/vrf_exec.bash {station} curl "{authentication_url}"'
                 authentication_response = run_command_using_ssh(client, cmd_to_authenticate)
 
                 logging.info(f"\n{authentication_response}\n")
