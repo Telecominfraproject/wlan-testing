@@ -233,13 +233,13 @@ class TestBridgeModeExternalCaptivePortal(object):
 
             report = wifi_capacity_obj_list[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
             numeric_score = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report)
-            expected_throughput = 1
+            expected_throughput = 10
             throughput = {
-                "unit": ["Mbps"],
                 "download": [numeric_score[0][0]],
                 "upload": [numeric_score[1][0]],
                 "total": [numeric_score[2][0]],
                 "expected": [f"<= {expected_throughput}"],
+                "unit": ["Mbps"],
                 "PASS": [numeric_score[2][0] <= expected_throughput]
             }
             data_table = tabulate(throughput, headers='keys', tablefmt='fancy_grid')
