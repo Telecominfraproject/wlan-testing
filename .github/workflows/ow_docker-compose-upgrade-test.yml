@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_OUTPUT: json
-      AWS_DEFAULT_REGION: us-east-2
+      AWS_DEFAULT_REGION: ap-south-1
     outputs:
       gateway_url: ${{ steps.deploy-sdk-docker-compose.outputs.gateway_url }}
       sec_url: ${{ steps.deploy-sdk-docker-compose.outputs.sec_url }}
@@ -66,7 +66,7 @@ jobs:
     needs: [deploy-controller]
     runs-on: ubuntu-latest
     env:
-      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_REGION: ap-south-1
     outputs:
       serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
       instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
@@ -119,7 +119,7 @@ jobs:
   upgrade-controller-deployment:
     name: Upgrade OpenWiFi Cloud SDK
     env:
-      AWS_DEFAULT_REGION: us-east-2
+      AWS_DEFAULT_REGION: ap-south-1
     needs: [deploy-controller, test]
     runs-on: ubuntu-latest
     steps:
@@ -198,7 +198,7 @@ jobs:
     needs: [deploy-controller, test-after-upgrade]
     runs-on: ubuntu-latest
     env:
-      AWS_DEFAULT_REGION: us-east-2
+      AWS_DEFAULT_REGION: ap-south-1
     if: always()
     steps:
       - name: Delete EC2 instance
@@ -212,7 +212,7 @@ jobs:
     needs: [deploy-virtual-ap-instance, test-after-upgrade]
     runs-on: ubuntu-latest
     env:
-      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_REGION: ap-south-1
     if: always()
     steps:
       - name: Terminate virtual AP EC2 instance
