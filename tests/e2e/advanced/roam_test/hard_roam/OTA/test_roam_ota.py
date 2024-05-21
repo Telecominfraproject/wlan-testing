@@ -7,7 +7,7 @@ import re
 import pytest
 import allure
 import time
-
+import copy
 import requests
 
 pytestmark = [pytest.mark.roam_test, pytest.mark.bridge, pytest.mark.roam_ota]
@@ -40,16 +40,13 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "5G":
-                config['radios'].pop(i)
-                break
-        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        config['radios'] = [
+                        {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -146,16 +143,13 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "5G":
-                config['radios'].pop(i)
-                break
-        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        config['radios'] = [
+                        {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -164,9 +158,8 @@ class TestRoamOTA(object):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             if ap == 1:
-                if ap == 1:
-                    config['radios'] = [
-                        {"band": "2G", "channel": 1, "channel-mode": "HE", "channel-width": 20, "country": "CA"}]
+                config['radios'] = [
+                    {"band": "2G", "channel": 1, "channel-mode": "HE", "channel-width": 20, "country": "CA"}]
             logging.info(config_data)
             payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
@@ -256,16 +249,13 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "2G":
-                config['radios'].pop(i)
-                break
-        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        config['radios'] = [
+                        {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -362,16 +352,13 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "2G":
-                config['radios'].pop(i)
-                break
-        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        config['radios'] = [
+                        {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -472,18 +459,15 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "5G":
-                config['radios'].pop(i)
-                break
+        config['radios'] = [
+                        {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
         # change ssid config data to sae
         config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
-        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -581,18 +565,15 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "2G":
-                config['radios'].pop(i)
-                break
+        config['radios'] = [
+                        {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
         # change ssid security type to sae
         config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
-        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -690,7 +671,7 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
@@ -803,7 +784,7 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
@@ -819,12 +800,9 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "5G":
-                config['radios'].pop(i)
-                break
-        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        config['radios'] = [
+                        {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
         if "proto" in config['interfaces'][0]["ssids"][0]["encryption"]:
             config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa2"
         if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
@@ -929,7 +907,7 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
@@ -945,12 +923,9 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "2G":
-                config['radios'].pop(i)
-                break
-        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        config['radios'] = [
+                        {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
         if "proto" in config['interfaces'][0]["ssids"][0]["encryption"]:
             config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa2"
         if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
@@ -1055,7 +1030,7 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
@@ -1071,14 +1046,11 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "5G":
-                config['radios'].pop(i)
-                break
+        config['radios'] = [
+                        {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
         # change ssid security type to sae
         config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
-        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
         if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
             config['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
@@ -1181,7 +1153,7 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
@@ -1197,14 +1169,11 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        for i in range(len(config["radios"])):
-            if config['radios'][i]["band"] == "2G":
-                config['radios'].pop(i)
-                break
+        config['radios'] = [
+                        {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
         # change ssid security type to sae
         config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
-        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
         if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
             config['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
@@ -1307,7 +1276,7 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
-        config = config_data.copy()
+        config = copy.deepcopy(config_data)
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
