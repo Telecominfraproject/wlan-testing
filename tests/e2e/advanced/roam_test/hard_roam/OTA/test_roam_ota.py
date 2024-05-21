@@ -40,14 +40,16 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "5G":
-                config_data['radios'].pop(i)
-        if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "5G":
+                config['radios'].pop(i)
+                break
+        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -55,8 +57,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -90,7 +92,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -120,8 +122,8 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
-        key = config_data['interfaces'][0]["ssids"][0]["encryption"]["key"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
+        key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="twog", num_sta=1, security="wpa2", security_key=key,
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
@@ -144,14 +146,16 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "5G":
-                config_data['radios'].pop(i)
-        if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "5G":
+                config['radios'].pop(i)
+                break
+        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -161,7 +165,7 @@ class TestRoamOTA(object):
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             if ap == 1:
                 if ap == 1:
-                    config_data['radios'] = [
+                    config['radios'] = [
                         {"band": "2G", "channel": 1, "channel-mode": "HE", "channel-width": 20, "country": "CA"}]
             logging.info(config_data)
             payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
@@ -198,7 +202,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -228,8 +232,8 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
-        key = config_data['interfaces'][0]["ssids"][0]["encryption"]["key"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
+        key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="twog", num_sta=1, security="wpa2", security_key=key,
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
@@ -252,15 +256,16 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "2G":
-                config_data['radios'].pop(i)
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "2G":
+                config['radios'].pop(i)
                 break
-        if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -303,7 +308,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -333,8 +338,8 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
-        key = config_data['interfaces'][0]["ssids"][0]["encryption"]["key"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
+        key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="fiveg", num_sta=1, security="wpa2", security_key=key,
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
@@ -357,15 +362,16 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "2G":
-                config_data['radios'].pop(i)
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "2G":
+                config['radios'].pop(i)
                 break
-        if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -374,7 +380,7 @@ class TestRoamOTA(object):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             if ap == 1:
-                config_data['radios'] = [
+                config['radios'] = [
                     {"band": "5G", "channel": 149, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
             logging.info(config_data)
             payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
@@ -411,7 +417,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -441,8 +447,8 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
-        key = config_data['interfaces'][0]["ssids"][0]["encryption"]["key"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
+        key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="fiveg", num_sta=1, security="wpa2", security_key=key,
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
@@ -466,16 +472,18 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "5G":
-                config_data['radios'].pop(i)
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "5G":
+                config['radios'].pop(i)
+                break
         # change ssid config data to sae
-        config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
-        if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
+        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -518,7 +526,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -548,8 +556,8 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
-        key = config_data['interfaces'][0]["ssids"][0]["encryption"]["key"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
+        key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="twog", num_sta=1, security="wpa3", security_key=key,
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
@@ -573,17 +581,18 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "2G":
-                config_data['radios'].pop(i)
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "2G":
+                config['radios'].pop(i)
                 break
         # change ssid security type to sae
-        config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
-        if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
+        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -626,7 +635,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -656,8 +665,8 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
-        key = config_data['interfaces'][0]["ssids"][0]["encryption"]["key"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
+        key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="fiveg", num_sta=1, security="wpa3", security_key=key,
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
@@ -681,10 +690,11 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        config_data['radios'] = [
+        config['radios'] = [
             {
                 "band": "6G",
                 "channel": 161,
@@ -694,8 +704,8 @@ class TestRoamOTA(object):
             }
         ]
         # change wifi-band and security type to sae
-        config_data['interfaces'][0]["ssids"][0]["wifi-bands"] = ["6G"]
-        config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["6G"]
+        config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -738,7 +748,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -768,8 +778,8 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
-        key = config_data['interfaces'][0]["ssids"][0]["encryption"]["key"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
+        key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="sixg", num_sta=1, security="wpa3", security_key=key,
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
@@ -793,10 +803,11 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        config_data['interfaces'][0]["ssids"][0]["radius"] = {
+        config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
                 "port": radius_info["port"],
@@ -808,15 +819,16 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "5G":
-                config_data['radios'].pop(i)
-        if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
-        if "proto" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
-            config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa2"
-        if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
-            config_data['interfaces'][0]["ssids"][0]["encryption"].pop("key")
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "5G":
+                config['radios'].pop(i)
+                break
+        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        if "proto" in config['interfaces'][0]["ssids"][0]["encryption"]:
+            config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa2"
+        if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
+            config['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -859,7 +871,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -889,7 +901,7 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="twog", num_sta=1, security="wpa2", ssid=ssid,
                                                         upstream="1.1.eth1", eap_method="TLS",
@@ -917,10 +929,11 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        config_data['interfaces'][0]["ssids"][0]["radius"] = {
+        config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
                 "port": radius_info["port"],
@@ -932,16 +945,16 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "2G":
-                config_data['radios'].pop(i)
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "2G":
+                config['radios'].pop(i)
                 break
-        if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
-        if "proto" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
-            config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa2"
-        if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
-            config_data['interfaces'][0]["ssids"][0]["encryption"].pop("key")
+        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        if "proto" in config['interfaces'][0]["ssids"][0]["encryption"]:
+            config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa2"
+        if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
+            config['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -984,7 +997,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -1014,7 +1027,7 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="fiveg", num_sta=1, security="wpa2", ssid=ssid,
                                                         upstream="1.1.eth1", eap_method="TLS",
@@ -1042,10 +1055,11 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        config_data['interfaces'][0]["ssids"][0]["radius"] = {
+        config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
                 "port": radius_info["port"],
@@ -1057,15 +1071,16 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "5G":
-                config_data['radios'].pop(i)
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "5G":
+                config['radios'].pop(i)
+                break
         # change ssid security type to sae
-        config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
-        if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
-        if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
-            config_data['interfaces'][0]["ssids"][0]["encryption"].pop("key")
+        config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
+        if "5G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
+            config['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -1108,7 +1123,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -1138,7 +1153,7 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="twog", num_sta=1, security="wpa3", ssid=ssid,
                                                         upstream="1.1.eth1", eap_method="TLS",
@@ -1166,10 +1181,11 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        config_data['interfaces'][0]["ssids"][0]["radius"] = {
+        config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
                 "port": radius_info["port"],
@@ -1181,16 +1197,16 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        for i in range(len(config_data["radios"])):
-            if config_data['radios'][i]["band"] == "2G":
-                config_data['radios'].pop(i)
+        for i in range(len(config["radios"])):
+            if config['radios'][i]["band"] == "2G":
+                config['radios'].pop(i)
                 break
         # change ssid security type to sae
-        config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
-        if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
-            config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
-        if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
-            config_data['interfaces'][0]["ssids"][0]["encryption"].pop("key")
+        config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
+        if "2G" in config['interfaces'][0]["ssids"][0]["wifi-bands"]:
+            config['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
+            config['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -1233,7 +1249,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -1263,7 +1279,7 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="fiveg", num_sta=1, security="wpa3", ssid=ssid,
                                                         upstream="1.1.eth1", eap_method="TLS",
@@ -1291,10 +1307,11 @@ class TestRoamOTA(object):
         bssid_list = list()
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
+        config = config_data.copy()
         if str(selected_testbed + 'a') in testbed_info:
             dut_list.append(str(selected_testbed + 'a'))
         logging.info(f"dut list: {dut_list}--")
-        config_data['interfaces'][0]["ssids"][0]["radius"] = {
+        config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
                 "port": radius_info["port"],
@@ -1306,7 +1323,7 @@ class TestRoamOTA(object):
                 "secret": radius_info["secret"]
             }
         }
-        config_data['radios'] = [
+        config['radios'] = [
             {
                 "band": "6G",
                 "channel": 161,
@@ -1316,10 +1333,10 @@ class TestRoamOTA(object):
             }
         ]
         # change wifi-band and security type to wpa3
-        config_data['interfaces'][0]["ssids"][0]["wifi-bands"] = ["6G"]
-        config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
-        if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
-            config_data['interfaces'][0]["ssids"][0]["encryption"].pop("key")
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["6G"]
+        config['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
+        if "key" in config['interfaces'][0]["ssids"][0]["encryption"]:
+            config['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -1362,7 +1379,7 @@ class TestRoamOTA(object):
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
             if str(ap_iwinfo) != "Error: pop from empty list":
-                include_essid = config_data['interfaces'][0]["ssids"][0]["name"]
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
                 re_obj = re.compile(
                     rf'(wlan\d(?:-\d)?)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
                     r'\d+)\s+\(([\d.]+) GHz\)',
@@ -1392,7 +1409,7 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
-        ssid = config_data['interfaces'][0]["ssids"][0]["name"]
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
         pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
                                                         band="sixg", num_sta=1, security="wpa3", ssid=ssid,
                                                         upstream="1.1.eth1", eap_method="TLS",
