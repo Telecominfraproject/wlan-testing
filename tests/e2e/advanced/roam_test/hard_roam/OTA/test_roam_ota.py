@@ -258,6 +258,7 @@ class TestRoamOTA(object):
         for i in range(len(config_data["radios"])):
             if config_data['radios'][i]["band"] == "2G":
                 config_data['radios'].pop(i)
+                break
         if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
             config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
         if len(dut_list) < 2:
@@ -362,6 +363,7 @@ class TestRoamOTA(object):
         for i in range(len(config_data["radios"])):
             if config_data['radios'][i]["band"] == "2G":
                 config_data['radios'].pop(i)
+                break
         if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
             config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
         if len(dut_list) < 2:
@@ -577,6 +579,7 @@ class TestRoamOTA(object):
         for i in range(len(config_data["radios"])):
             if config_data['radios'][i]["band"] == "2G":
                 config_data['radios'].pop(i)
+                break
         # change ssid security type to sae
         config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "sae"
         if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
@@ -810,6 +813,8 @@ class TestRoamOTA(object):
                 config_data['radios'].pop(i)
         if "5G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
             config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("5G")
+        if "proto" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
+            config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa2"
         if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
             config_data['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
@@ -930,8 +935,11 @@ class TestRoamOTA(object):
         for i in range(len(config_data["radios"])):
             if config_data['radios'][i]["band"] == "2G":
                 config_data['radios'].pop(i)
+                break
         if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
             config_data['interfaces'][0]["ssids"][0]["wifi-bands"].remove("2G")
+        if "proto" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
+            config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa2"
         if "key" in config_data['interfaces'][0]["ssids"][0]["encryption"]:
             config_data['interfaces'][0]["ssids"][0]["encryption"].pop("key")
         if len(dut_list) < 2:
@@ -1176,6 +1184,7 @@ class TestRoamOTA(object):
         for i in range(len(config_data["radios"])):
             if config_data['radios'][i]["band"] == "2G":
                 config_data['radios'].pop(i)
+                break
         # change ssid security type to sae
         config_data['interfaces'][0]["ssids"][0]["encryption"]["proto"] = "wpa3"
         if "2G" in config_data['interfaces'][0]["ssids"][0]["wifi-bands"]:
