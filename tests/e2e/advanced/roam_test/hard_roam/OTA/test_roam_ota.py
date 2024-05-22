@@ -160,8 +160,8 @@ class TestRoamOTA(object):
             if ap == 1:
                 config['radios'] = [
                     {"band": "2G", "channel": 1, "channel-mode": "HE", "channel-width": 20, "country": "CA"}]
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -263,8 +263,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -369,8 +369,8 @@ class TestRoamOTA(object):
             if ap == 1:
                 config['radios'] = [
                     {"band": "5G", "channel": 149, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -475,8 +475,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -581,8 +581,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -694,8 +694,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -814,8 +814,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -937,8 +937,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -1060,8 +1060,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -1183,8 +1183,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
@@ -1313,8 +1313,8 @@ class TestRoamOTA(object):
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
-            logging.info(config_data)
-            payload = {"configuration": json.dumps(config_data), "serialNumber": serial_number, "UUID": 2}
+            logging.info(config)
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
             uri = get_target_object.controller_library_object.build_uri(
                 "device/" + serial_number + "/configure")
             logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
