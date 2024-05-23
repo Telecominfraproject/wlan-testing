@@ -1451,7 +1451,7 @@ class FMSUtils:
         # Find out List of least 3 release Image
         # Logic for least 3 release Images
         for i in release_images_all:
-            if "." + str(latest_3_releases_list_num[count]) + "." in str(i['image']):
+            if "." + str(latest_3_releases_list_num[count]) + ".0" in str(i['image']):
                 least_3_release_images.append(i)
                 count = count + 1
             if len(least_3_release_images) == 3:

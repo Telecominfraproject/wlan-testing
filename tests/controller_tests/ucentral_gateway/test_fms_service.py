@@ -156,23 +156,6 @@ class TestFirmwareUpgradeDowngrade(object):
     @allure.testcase(name="WIFI-13007",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-13012")
     def test_upgrade_downgrade_tests(self, get_target_object, get_testbed_details):
-        """
-                    To validate the reliability and correctness of the firmware downgrade and upgrade process
-                    on Access Points (APs) for three consecutive releases, ensuring no functionality issues.
-                    Unique marker: pytest -m "upgrade_downgrade_test"
-                    F1 - Current AP firmware
-                    F2 - One lower release image
-                    F3 - Two lower release image
-                    F4 - Three lower release image
-                    Flow:
-                    AP is on F1 (If F1 is current AP image)
-                    AP downgrade to F2
-                    AP upgrade from F2 to F1
-                    AP downgrade from F1 to F3
-                    AP upgrade from F3 to F1
-                    AP downgrade from F1 to F4
-                    AP upgrade from F4 to F1
-        """
         for ap in range(len(get_target_object.device_under_tests_info)):
             firmware_list = get_target_object.firmware_library_object.get_firmwares(
                 model=get_target_object.device_under_tests_info[ap]['model'],
@@ -192,166 +175,114 @@ class TestFirmwareUpgradeDowngrade(object):
                     break
             latest_3_release_images = get_target_object.firmware_library_object.get_least_three_release_images_from_current_image(
                 firmware_list=firmware_list, current_image=current_version)
-            if len(latest_3_release_images) < 3:
-                pytest.fail("Least 3 release images from current image are not available on GW")
+            if len(latest_3_release_images) == 0:
+                pytest.skip("Least 1 release image from current image is not available on GW")
+            # Dynamic description for the testcase
+            if len(latest_3_release_images) == 1:
+                description = """
+                To validate the reliability and correctness of the firmware downgrade and upgrade process
+                on Access Points (APs) for One consecutive release, ensuring no functionality issues.
+                Unique marker: pytest -m "upgrade_downgrade_test"
+                F1 - Current AP firmware
+                F2 - One lower release image
+                Flow:
+                AP is on F1 (If F1 is current AP image)
+                AP downgrade to F2
+                AP upgrade from F2 to F1
+                """
+                allure.dynamic.description = description
+            elif len(latest_3_release_images) == 2:
+                description = """
+                To validate the reliability and correctness of the firmware downgrade and upgrade process
+                on Access Points (APs) for Two consecutive releases, ensuring no functionality issues.
+                Unique marker: pytest -m "upgrade_downgrade_test"
+                F1 - Current AP firmware
+                F2 - One lower release image
+                F3 - Two lower release image
+                Flow:
+                AP is on F1 (If F1 is current AP image)
+                AP downgrade to F2
+                AP upgrade from F2 to F1
+                AP downgrade from F1 to F3
+                AP upgrade from F3 to F1
+                """
+                allure.dynamic.description = description
+            elif len(latest_3_release_images) == 3:
+                description = """
+                To validate the reliability and correctness of the firmware downgrade and upgrade process
+                on Access Points (APs) for Three consecutive releases, ensuring no functionality issues.
+                Unique marker: pytest -m "upgrade_downgrade_test"
+                F1 - Current AP firmware
+                F2 - One lower release image
+                F3 - Two lower release image
+                F4 - Three lower release image
+                Flow:
+                AP is on F1 (If F1 is current AP image)
+                AP downgrade to F2
+                AP upgrade from F2 to F1
+                AP downgrade from F1 to F3
+                AP upgrade from F3 to F1
+                AP downgrade from F1 to F4
+                AP upgrade from F4 to F1
+                """
+                allure.dynamic.description = description
+
             allure.attach(name="Current Firmware Image(F1): ",
                           body=str(ap_version_f1))
             logging.info("Current Firmware Image(F1): " + str(ap_version_f1))
-            allure.attach(name="F2 Firmware Image: ",
-                          body=str(latest_3_release_images[0]))
-            logging.info("F2 Firmware Image: " + str(latest_3_release_images[0]))
-            allure.attach(name="F3 Firmware Image: ",
-                          body=str(latest_3_release_images[1]))
-            logging.info("F3 Firmware Image: " + str(latest_3_release_images[1]))
-            allure.attach(name="F4 Firmware Image: ",
-                          body=str(latest_3_release_images[2]))
-            logging.info("F4 Firmware Image: " + str(latest_3_release_images[2]))
+            for i in latest_3_release_images:
+                allure.attach(name=f"F{str(latest_3_release_images.index(i)+2)} Firmware Image: ",
+                              body=str(i))
+                logging.info(f"F{str(latest_3_release_images.index(i)+2)} Firmware Image: " + str(i))
             f1_version = current_version
-            f2_version = latest_3_release_images[0]['revision'].split("/")[1].replace(" ", "")
-            f3_version = latest_3_release_images[1]['revision'].split("/")[1].replace(" ", "")
-            f4_version = latest_3_release_images[2]['revision'].split("/")[1].replace(" ", "")
-            # Downgrade F1 to F2
-            logging.info("---------- Downgrading F1 to F2----------")
-            get_target_object.firmware_library_object.upgrade_firmware(
-                serial=get_target_object.device_under_tests_info[ap]['identifier'],
-                url=str(latest_3_release_images[0]['uri']))
-            # wait for 300 seconds after firmware upgrade
-            logging.info("Waiting for 300 Sec for Firmware Downgrade")
-            time.sleep(300)
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Downgrade Request to F2 from F1: ",
-                          body="Current revision: " + current_version + "\nF2 revision: " + f2_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF2 revision: " + str(f2_version))
+            for i in latest_3_release_images:
+                release_version = i['revision'].split("/")[1].replace(" ", "")
+                # Downgrade
+                logging.info(f"---------- Downgrading F1 to F{str(latest_3_release_images.index(i)+2)}----------")
+                get_target_object.firmware_library_object.upgrade_firmware(
+                    serial=get_target_object.device_under_tests_info[ap]['identifier'],
+                    url=str(i['uri']))
+                # wait for 300 seconds after firmware upgrade
+                logging.info("Waiting for 300 Sec for Firmware Downgrade")
+                time.sleep(300)
+                # check the current AP Revision again
+                ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                # print and report the Firmware versions after upgrade
+                allure.attach(name=f"After Firmware Downgrade Request to F{str(latest_3_release_images.index(i)+2)} from F1: ",
+                              body="Current revision: " + current_version + f"\nF{str(latest_3_release_images.index(i)+2)} revision: " + release_version)
+                logging.info("current revision: " + str(current_version) +
+                             f"\nF{str(latest_3_release_images.index(i)+2)} revision: " + str(release_version))
 
-            if current_version == f2_version:
-                logging.info("firmware Downgrade successfully to F2: " + f2_version)
-            else:
-                logging.info("firmware Downgrade failed to F2: " + f2_version)
-                pytest.fail("firmware Downgrade failed to F2: " + f2_version)
+                if current_version == release_version:
+                    logging.info(f"firmware Downgrade successfully to F{str(latest_3_release_images.index(i)+2)}: " + release_version)
+                else:
+                    logging.info(f"firmware Downgrade failed to F{str(latest_3_release_images.index(i)+2)}: " + release_version)
+                    pytest.fail(f"firmware Downgrade failed to F{str(latest_3_release_images.index(i)+2)}: " + release_version)
 
-            # Upgrade F2 to F1
-            logging.info("---------- Upgrading F2 to F1----------")
-            get_target_object.firmware_library_object.upgrade_firmware(
-                serial=get_target_object.device_under_tests_info[ap]['identifier'],
-                url=str(ap_version_f1['uri']))
-            # wait for 300 seconds after firmware upgrade
-            logging.info("Waiting for 300 Sec for Firmware Downgrade")
-            time.sleep(300)
+                # Upgrade
+                logging.info(f"---------- Upgrading F{str(latest_3_release_images.index(i)+2)} to F1----------")
+                get_target_object.firmware_library_object.upgrade_firmware(
+                    serial=get_target_object.device_under_tests_info[ap]['identifier'],
+                    url=str(ap_version_f1['uri']))
+                # wait for 300 seconds after firmware upgrade
+                logging.info("Waiting for 300 Sec for Firmware Downgrade")
+                time.sleep(300)
 
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F1 from F2: ",
-                          body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF1 revision: " + str(f1_version))
+                # check the current AP Revision again
+                ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
+                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                # print and report the Firmware versions after upgrade
+                allure.attach(name=f"After Firmware Upgrade Request to F1 from F{str(latest_3_release_images.index(i)+2)}: ",
+                              body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
+                logging.info("current revision: " + str(current_version) +
+                             "\nF1 revision: " + str(f1_version))
 
-            if current_version == f1_version:
-                logging.info("firmware Upgrade successfully to F1: " + f1_version)
-            else:
-                logging.info("firmware Upgrade failed to F1: " + f1_version)
-                pytest.fail("firmware Upgrade failed to F1: " + f1_version)
-
-            # Downgrade F1 to F3
-            logging.info("---------- Downgrading F1 to F3----------")
-            get_target_object.firmware_library_object.upgrade_firmware(
-                serial=get_target_object.device_under_tests_info[ap]['identifier'],
-                url=str(latest_3_release_images[1]['uri']))
-            # wait for 300 seconds after firmware upgrade
-            logging.info("Waiting for 300 Sec for Firmware Downgrade")
-            time.sleep(300)
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Downgrade Request to F3 from F1: ",
-                          body="Current revision: " + current_version + "\nF3 revision: " + f3_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF3 revision: " + str(f3_version))
-
-            if current_version == f3_version:
-                logging.info("firmware Downgrade successfully to F3: " + f3_version)
-            else:
-                logging.info("firmware Downgrade failed to F3: " + f3_version)
-                pytest.fail("firmware Downgrade failed to F3: " + f3_version)
-
-            # Upgrade F3 to F1
-            logging.info("---------- Upgrading F3 to F1----------")
-            get_target_object.firmware_library_object.upgrade_firmware(
-                serial=get_target_object.device_under_tests_info[ap]['identifier'],
-                url=str(ap_version_f1['uri']))
-            # wait for 300 seconds after firmware upgrade
-            logging.info("Waiting for 300 Sec for Firmware Downgrade")
-            time.sleep(300)
-
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F1 from F3: ",
-                          body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF1 revision: " + str(f1_version))
-
-            if current_version == f1_version:
-                logging.info("firmware Upgrade successfully to F1: " + f1_version)
-            else:
-                logging.info("firmware Upgrade failed to F1: " + f1_version)
-                pytest.fail("firmware Upgrade failed to F1: " + f1_version)
-
-            # Downgrade F1 to F4
-            logging.info("---------- Downgrading F1 to F4----------")
-            get_target_object.firmware_library_object.upgrade_firmware(
-                serial=get_target_object.device_under_tests_info[ap]['identifier'],
-                url=str(latest_3_release_images[2]['uri']))
-            # wait for 300 seconds after firmware upgrade
-            logging.info("Waiting for 300 Sec for Firmware Downgrade")
-            time.sleep(300)
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Downgrade Request to F4 from F1: ",
-                          body="Current revision: " + current_version + "\nF4 revision: " + f4_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF4 revision: " + str(f4_version))
-
-            if current_version == f4_version:
-                logging.info("firmware Downgrade successfully to F4: " + f4_version)
-            else:
-                logging.info("firmware Downgrade failed to F4: " + f4_version)
-                pytest.fail("firmware Downgrade failed to F4: " + f4_version)
-
-            # Upgrade F4 to F1
-            logging.info("---------- Upgrading F4 to F1----------")
-            get_target_object.firmware_library_object.upgrade_firmware(
-                serial=get_target_object.device_under_tests_info[ap]['identifier'],
-                url=str(ap_version_f1['uri']))
-            # wait for 300 seconds after firmware upgrade
-            logging.info("Waiting for 300 Sec for Firmware Downgrade")
-            time.sleep(300)
-
-            # check the current AP Revision again
-            ap_version = get_target_object.dut_library_object.get_ap_version(idx=ap)
-            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
-            # print and report the Firmware versions after upgrade
-            allure.attach(name="After Firmware Upgrade Request to F1 from F4: ",
-                          body="Current revision: " + current_version + "\nF1 revision: " + f1_version)
-            logging.info("current revision: " + str(current_version) +
-                         "\nF1 revision: " + str(f1_version))
-
-            if current_version == f1_version:
-                logging.info("firmware Upgrade successfully to F1: " + f1_version)
-            else:
-                logging.info("firmware Upgrade failed to F1: " + f1_version)
-                pytest.fail("firmware Upgrade failed to F1: " + f1_version)
-
-
+                if current_version == f1_version:
+                    logging.info("firmware Upgrade successfully to F1: " + f1_version)
+                else:
+                    logging.info("firmware Upgrade failed to F1: " + f1_version)
+                    pytest.fail("firmware Upgrade failed to F1: " + f1_version)
 
 
 
