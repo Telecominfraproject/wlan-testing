@@ -126,7 +126,7 @@ class TestRoamOTA(object):
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
                                                         iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.different_channel
@@ -233,7 +233,7 @@ class TestRoamOTA(object):
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
                                                         iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -337,7 +337,7 @@ class TestRoamOTA(object):
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
                                                         iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.different_channel
@@ -444,7 +444,7 @@ class TestRoamOTA(object):
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
                                                         iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -551,7 +551,7 @@ class TestRoamOTA(object):
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
                                                         iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp", sta_type="11r-sae")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -658,7 +658,7 @@ class TestRoamOTA(object):
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
                                                         iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp", sta_type="11r-sae")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -772,7 +772,7 @@ class TestRoamOTA(object):
                                                         ssid=ssid, upstream="1.1.eth1", duration=None,
                                                         iteration=1, channel="161", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp", sta_type="11r-sae")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -896,7 +896,7 @@ class TestRoamOTA(object):
                                                         ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                         iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -1020,7 +1020,7 @@ class TestRoamOTA(object):
                                                         ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                         iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -1144,7 +1144,7 @@ class TestRoamOTA(object):
                                                         ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                         iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -1268,7 +1268,7 @@ class TestRoamOTA(object):
                                                         ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                         iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
 
     @pytest.mark.same_channel
@@ -1399,5 +1399,5 @@ class TestRoamOTA(object):
                                                         ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                         iteration=1, channel="161", option="ota", dut_name=dut_names,
                                                         traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dutlogs(print_log=False)
+        get_target_object.dut_library_object.get_dut_logs(print_log=False)
         assert pass_fail, message
