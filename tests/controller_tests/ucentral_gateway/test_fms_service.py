@@ -179,7 +179,7 @@ class TestFirmwareUpgradeDowngrade(object):
                 pytest.skip("Least 1 release image from current image is not available on GW")
             # Dynamic description for the testcase
             if len(latest_3_release_images) == 1:
-                description = """
+                description_ = """
                 To validate the reliability and correctness of the firmware downgrade and upgrade process
                 on Access Points (APs) for One consecutive release, ensuring no functionality issues.
                 Unique marker: pytest -m "upgrade_downgrade_test"
@@ -190,9 +190,9 @@ class TestFirmwareUpgradeDowngrade(object):
                 AP downgrade to F2
                 AP upgrade from F2 to F1
                 """
-                allure.dynamic.description = description
+                allure.dynamic.description(description_)
             elif len(latest_3_release_images) == 2:
-                description = """
+                description_ = """
                 To validate the reliability and correctness of the firmware downgrade and upgrade process
                 on Access Points (APs) for Two consecutive releases, ensuring no functionality issues.
                 Unique marker: pytest -m "upgrade_downgrade_test"
@@ -206,9 +206,9 @@ class TestFirmwareUpgradeDowngrade(object):
                 AP downgrade from F1 to F3
                 AP upgrade from F3 to F1
                 """
-                allure.dynamic.description = description
+                allure.dynamic.description(description_)
             elif len(latest_3_release_images) == 3:
-                description = """
+                description_ = """
                 To validate the reliability and correctness of the firmware downgrade and upgrade process
                 on Access Points (APs) for Three consecutive releases, ensuring no functionality issues.
                 Unique marker: pytest -m "upgrade_downgrade_test"
@@ -225,7 +225,7 @@ class TestFirmwareUpgradeDowngrade(object):
                 AP downgrade from F1 to F4
                 AP upgrade from F4 to F1
                 """
-                allure.dynamic.description = description
+                allure.dynamic.description(description_)
 
             allure.attach(name="Current Firmware Image(F1): ",
                           body=str(ap_version_f1))
