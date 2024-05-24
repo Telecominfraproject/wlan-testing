@@ -41,9 +41,14 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
+        logging.info(f"---dut list: {dut_list}---")
         config['radios'] = [
                         {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
@@ -145,9 +150,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['radios'] = [
                         {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
@@ -252,9 +261,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['radios'] = [
                         {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
@@ -356,9 +369,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['radios'] = [
                         {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
@@ -464,9 +481,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['radios'] = [
                         {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
         # change ssid config data to sae
@@ -571,9 +592,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['radios'] = [
                         {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
         # change ssid security type to sae
@@ -678,9 +703,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['radios'] = [
             {
                 "band": "6G",
@@ -792,9 +821,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -916,9 +949,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -1040,9 +1077,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -1164,9 +1205,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -1288,9 +1333,13 @@ class TestRoamOTA(object):
         freqs_ = ""
         testbed_info = get_lab_info.CONFIGURATION
         config = copy.deepcopy(config_data)
-        if str(selected_testbed + 'a') in testbed_info:
-            dut_list.append(str(selected_testbed + 'a'))
-        logging.info(f"dut list: {dut_list}--")
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
