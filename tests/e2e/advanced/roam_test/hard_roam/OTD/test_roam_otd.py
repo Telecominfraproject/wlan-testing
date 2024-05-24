@@ -22,14 +22,15 @@ with open(file_path, 'r') as file:
     config_data = json.loads(json_string)
 
 
-@allure.suite("11r Roaming over the air")
+@allure.suite("11r Roaming Over the DS")
 @allure.feature("Roam Test")
-class TestRoamOTA(object):
+class TestRoamOTD(object):
     @pytest.mark.same_channel
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.roam
-    def test_roam_2g_to_2g_sc_psk_wpa2(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
+    @pytest.mark.otd
+    def test_roam_2g_to_2g_sc_wpa2_psk(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
         """
             Test Roaming between two APs, Same channel, 2G, WPA2 Personal
             pytest -m "roam and twog and same_channel and wpa2_personal"
