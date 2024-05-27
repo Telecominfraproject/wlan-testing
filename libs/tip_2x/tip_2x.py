@@ -766,6 +766,7 @@ class tip_2x:
 
     def setup_environment_properties(self, add_allure_environment_property=None):
         if add_allure_environment_property is None:
+            logging.info("add_allure_environment_property is None" + str(add_allure_environment_property))
             return
         add_allure_environment_property('Cloud-Controller-SDK-URL', self.controller_data.get("url"))
         sdk_version_data = self.get_controller_version()
@@ -773,6 +774,7 @@ class tip_2x:
             add_allure_environment_property(microservice + '-version',
                                             str(sdk_version_data.get(microservice)))
         dut_versions = self.get_dut_version()
+        logging.info("setup_environment_properties dut_versions:- " + str(dut_versions))
         for i in range(len(self.device_under_tests_info)):
             add_allure_environment_property("Firmware-Version_" + self.device_under_tests_info[i]["identifier"],
                                             str(dut_versions[i]))
@@ -784,6 +786,7 @@ class tip_2x:
             identifiers.append(dut["identifier"])
         add_allure_environment_property('DUT-Model/s', ", ".join(models))
         add_allure_environment_property('Serial-Number/s', ", ".join(identifiers))
+        logging.info("setup_environment_properties:- " + str(add_allure_environment_property))
 
     def setup_firmware(self):
         # Query AP Firmware
