@@ -34,7 +34,7 @@ env:
     {
       "namespace": "qa02",
       "deploy_method": "git",
-      "chart_version": "v3.0.2-RC1",
+      "chart_version": "main",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
@@ -74,7 +74,7 @@ jobs:
     steps:
 
     - name: Checkout repo with Helm values
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -90,9 +90,9 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    - name: install kubectl
+    - name: Install kubectl
       run: |
-        curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v1.27.14/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Deploy OpenWIFI Cloud SDK

@@ -27,10 +27,9 @@ jobs:
     - name: Fetch kubeconfig
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
-    - name: install kubectl
+    - name: Install kubectl
       run: |
-        curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v1.27.14/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Restart OWGW in defined namespace
