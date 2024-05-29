@@ -127,10 +127,19 @@ class TestRoamOTD(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="twog", num_sta=1, security="wpa2", security_key=key,
-                                                        ssid=ssid, upstream="1.1.eth1", duration=None,
-                                                        iteration=1, channel="11", option="otd", dut_name=dut_names,
-                                                        traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
+                                                            band="twog", num_sta=1, security="wpa2", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="11", option="otd", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
