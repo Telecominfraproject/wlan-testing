@@ -1,0 +1,57 @@
+name: Cleanup OpenWIFI Cloud SDK Namespace
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  AWS_EKS_NAME: tip-wlan-main
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: ap-south-1
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        default: 'none'
+        description: 'Namespace to clean up eg. dev01'
+        required: true
+      full:
+        default: 'false'
+        description: 'Remove namespace if set to true'
+        required: false
+
+jobs:
+  undeploy:
+    name: Cleanup OpenWIFI Cloud SDK Namespace
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout repo with Helm values
+      uses: actions/checkout@v4
+      with:
+        repository: Telecominfraproject/wlan-cloud-ucentral-deploy
+        path: wlan-cloud-ucentral-deploy
+        ref: main
+
+    - name: Fetch kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Install kubectl
+      run: |
+        curl -s -LO "https://dl.k8s.io/release/v1.27.14/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Undeploy OpenWIFI Cloud SDK
+      working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
+      run: |
+        export NAMESPACE=${{ inputs.namespace }}
+        opts=""
+        if [[ "${{ inputs.full }}" == "true" ]] ; then
+            opts="full"
+        fi
+        ./cleanup.sh $opts
