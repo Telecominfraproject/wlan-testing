@@ -1440,22 +1440,23 @@ class FMSUtils:
                 if "rc" not in firmware['image']:
                     release_images_all.append(firmware)
         logging.info("release_images_all" + str(release_images_all))
-        latest_release_image_number = int(release_images_all[0]['image'].split(".")[1])
-        logging.info("latest_release_image_number: " + str(latest_release_image_number))
-        all_releases_num_list = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 11, 10]
-        index_latest_release = all_releases_num_list.index(latest_release_image_number)
-        latest_3_releases_list_num = [all_releases_num_list[index_latest_release], all_releases_num_list[index_latest_release+1],
-                                      all_releases_num_list[index_latest_release+2]]
-        logging.info("latest_3_releases_list_num: " + str(latest_3_releases_list_num))
-        count = 0
-        # Find out List of least 3 release Image
-        # Logic for least 3 release Images
-        for i in release_images_all:
-            if "." + str(latest_3_releases_list_num[count]) + ".0" in str(i['image']):
-                least_3_release_images.append(i)
-                count = count + 1
-            if len(least_3_release_images) == 3:
-                break
+        # latest_release_image_number = int(release_images_all[0]['image'].split(".")[1])
+        # logging.info("latest_release_image_number: " + str(latest_release_image_number))
+        # all_releases_num_list = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 11, 10]
+        # index_latest_release = all_releases_num_list.index(latest_release_image_number)
+        # latest_3_releases_list_num = [all_releases_num_list[index_latest_release], all_releases_num_list[index_latest_release+1],
+        #                               all_releases_num_list[index_latest_release+2]]
+        # logging.info("latest_3_releases_list_num: " + str(latest_3_releases_list_num))
+        # count = 0
+        # # Find out List of least 3 release Image
+        # # Logic for least 3 release Images
+        # for i in release_images_all:
+        #     if "." + str(latest_3_releases_list_num[count]) + ".0" in str(i['image']):
+        #         least_3_release_images.append(i)
+        #         count = count + 1
+        #     if len(least_3_release_images) == 3:
+        #         break
+        least_3_release_images = release_images_all[:3]
         logging.info("least three release images from current image: " + str(least_3_release_images))
         return least_3_release_images
 
