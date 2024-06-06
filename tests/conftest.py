@@ -141,6 +141,11 @@ def pytest_addoption(parser):
         default=False,
         help="Select the port for AP Up Down tests"
     )
+    parser.addoption(
+        "--commit-id",
+        default=None,
+        help="Used to pass the full SHA of a commit-id."
+    )
 
 
 @pytest.fixture(scope="session")
@@ -174,6 +179,13 @@ def selected_port(request):
     """yields the port option selection"""
     current_port = request.config.getoption("--port")
     yield current_port
+
+
+@pytest.fixture(scope="session")
+def commit_id(request):
+    """yields the commit-id option selection"""
+    commit_id = request.config.getoption("--commit-id")
+    yield commit_id
 
 
 @pytest.fixture(scope="session")
