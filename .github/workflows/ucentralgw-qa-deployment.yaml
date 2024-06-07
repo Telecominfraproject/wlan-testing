@@ -32,7 +32,7 @@ env:
   # - owprovui_version - OpenWIFI Provisioning Web UI version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   testbeds: '[
     {
-      "namespace": "qa01",
+      "namespace": "qa02",
       "deploy_method": "git",
       "chart_version": "main",
       "owgw_version": "master",
