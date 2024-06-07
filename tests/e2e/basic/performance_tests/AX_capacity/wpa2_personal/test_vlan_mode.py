@@ -5,7 +5,7 @@
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.vlan, pytest.mark.wifi_capacity_ax, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.vlan, pytest.mark.wifi_capacity_ax, pytest.mark.wpa2_personal]
 setup_params_general_5G = {
     "mode": "VLAN",
     "ssid_modes": {

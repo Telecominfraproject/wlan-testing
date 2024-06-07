@@ -46,7 +46,6 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    @pytest.mark.performance
     @allure.title("Single client TCP Download wifi capacity 80Mhz Bw")
     def test_client_wpa2_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
@@ -65,7 +64,6 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
-    @pytest.mark.performance
     @allure.title("Single client UDP Download wifi capacity 80Mhz Bw")
     def test_client_wpa2_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
@@ -84,7 +82,6 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
-    @pytest.mark.performance
     @allure.title("Single client TCP Bidirectional wifi capacity 80Mhz Bw")
     def test_client_wpa2_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
@@ -103,7 +100,6 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    @pytest.mark.performance
     @allure.title("Single client UDP Bidirectional wifi capacity 80Mhz Bw")
     def test_client_wpa2_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration):
@@ -122,7 +118,6 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
-    @pytest.mark.performance
     @allure.title("Single client TCP Upload wifi capacity 80Mhz Bw")
     def test_client_wpa2_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
@@ -141,7 +136,6 @@ class Test80Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
-    @pytest.mark.performance
     @allure.title("Single client UDP Upload wifi capacity 80Mhz Bw")
     def test_client_wpa2_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
