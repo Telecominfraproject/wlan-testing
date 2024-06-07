@@ -9,7 +9,7 @@ import time
 from tabulate import tabulate
 from datetime import datetime
 
-pytestmark = [pytest.mark.schema_validation]
+pytestmark = [pytest.mark.schema_validation_tests, pytest.mark.ow_regression_lf]
 
 
 # Get the directory of the current test config file
@@ -447,7 +447,7 @@ class TestSchemaValidationThroughGitHub(object):
         Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.json.
 
         Unique Marker:
-        schema_validation and through_github and schema_json
+        schema_validation_tests and through_github and schema_json
         """
         validate_schema_through_github(commit_id, "/ucentral.schema.json")
 
@@ -465,7 +465,7 @@ class TestSchemaValidationThroughGitHub(object):
         Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.full.json.
 
         Unique Marker:
-        schema_validation and through_github and schema_full_json
+        schema_validation_tests and through_github and schema_full_json
         """
         validate_schema_through_github(commit_id, "/ucentral.schema.full.json")
 
@@ -482,7 +482,7 @@ class TestSchemaValidationThroughGitHub(object):
         Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.pretty.json.
 
         Unique Marker:
-        schema_validation and through_github and schema_pretty_json
+        schema_validation_tests and through_github and schema_pretty_json
         """
         validate_schema_through_github(commit_id, "/ucentral.schema.pretty.json")
 
@@ -499,7 +499,7 @@ class TestSchemaValidationThroughGitHub(object):
         Objective is to identify any modifications, additions, or removals in the file: ucentral.state.pretty.json.
 
         Unique Marker:
-        schema_validation and through_github and state_pretty_json
+        schema_validation_tests and through_github and state_pretty_json
         """
         validate_schema_through_github(commit_id, "/ucentral.state.pretty.json")
 
@@ -523,7 +523,7 @@ class TestSchemaValidationThroughAPTerminal(object):
         Objective is to detect discrepancies in data types (e.g., string to integer) and object structures.
 
         Unique Marker:
-        schema_validation and through_ap_terminal and master_config_1
+        schema_validation_tests and through_ap_terminal and master_config_1
         """
         validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_1)
 
@@ -540,7 +540,7 @@ class TestSchemaValidationThroughAPTerminal(object):
         Objective is to detect discrepancies in data types (e.g., string to integer) and object structures.
 
         Unique Marker:
-        schema_validation and through_ap_terminal and master_config_2
+        schema_validation_tests and through_ap_terminal and master_config_2
         """
         validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_2)
 
@@ -557,6 +557,6 @@ class TestSchemaValidationThroughAPTerminal(object):
         Objective is to detect discrepancies in data types (e.g., string to integer) and object structures.
 
         Unique Marker:
-        schema_validation and through_ap_terminal and master_config_3
+        schema_validation_tests and through_ap_terminal and master_config_3
         """
         validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_3)
