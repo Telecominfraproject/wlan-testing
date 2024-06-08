@@ -7,6 +7,7 @@
 
 import allure
 import pytest
+import time
 
 pytestmark = [pytest.mark.performance, pytest.mark.dual_band_tests, pytest.mark.bridge,
               pytest.mark.single_station_dual_band_throughput]
@@ -70,5 +71,5 @@ class TestWpa2DualbandPerformanceBridge(object):
         get_test_library.dual_band_performance_test(mode=mode, ssid_2G=ssid_2G, ssid_5G=ssid_5G, vlan_id=vlan,
                                                     dut_5g=dut_5g, dut_2g=dut_2g, influx_tags=influx_tags,
                                                     move_to_influx=False, dut_data=setup_configuration)
-
+        time.sleep(120)
         assert True
