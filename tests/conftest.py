@@ -549,6 +549,8 @@ def add_firmware_property_after_upgrade(add_allure_environment_property, get_tes
         add_allure_environment_property(
             "Firmware-Version_" + get_testbed_details["device_under_tests"][i]["identifier"],
             str(dut_versions[i]))
+    time.sleep(4)
+
 
 
 @pytest.fixture(scope="function")
