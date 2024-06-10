@@ -59,7 +59,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12401", name="WIFI-12401")
@@ -78,7 +78,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12403", name="WIFI-12403")
@@ -97,7 +97,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12402", name="WIFI-12402")
@@ -116,7 +116,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12399", name="WIFI-12399")
@@ -135,7 +135,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
                                        download_rate="56Kbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12398", name="WIFI-12398")
@@ -154,5 +154,5 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
                                        download_rate="56Kbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
