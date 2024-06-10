@@ -24,6 +24,7 @@ with open(file_path, 'r') as file:
 
 @allure.suite("11r Roaming over the air")
 @allure.feature("Roam Test")
+@pytest.mark.ota
 class TestRoamOTA(object):
     @pytest.mark.same_channel
     @pytest.mark.wpa2_personal
@@ -32,7 +33,7 @@ class TestRoamOTA(object):
     def test_roam_2g_to_2g_sc_psk_wpa2(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
         """
             Test Roaming between two APs, Same channel, 2G, WPA2 Personal
-            pytest -m "roam and twog and same_channel and wpa2_personal"
+            pytest -m "roam and twog and same_channel and wpa2_personal and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -50,7 +51,7 @@ class TestRoamOTA(object):
         dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
         config['radios'] = [
-                        {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
+            {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
         if len(dut_list) < 2:
             logging.error(
@@ -126,13 +127,23 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="twog", num_sta=1, security="wpa2", security_key=key,
-                                                        ssid=ssid, upstream="1.1.eth1", duration=None,
-                                                        iteration=1, channel="11", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
+                                                            band="twog", num_sta=1, security="wpa2", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="11", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.different_channel
     @pytest.mark.wpa2_personal
@@ -141,7 +152,7 @@ class TestRoamOTA(object):
     def test_roam_2g_to_2g_dc_psk_wpa2(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
         """
             Test Roaming between two APs, Different channel, 2G, WPA2 Personal
-            pytest -m "roam and twog and same_channel and wpa2_personal"
+            pytest -m "roam and twog and different_channel and wpa2_personal and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -237,13 +248,22 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="twog", num_sta=1, security="wpa2", security_key=key,
-                                                        ssid=ssid, upstream="1.1.eth1", duration=None,
-                                                        iteration=1, channel="11", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
+                                                            band="twog", num_sta=1, security="wpa2", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="1", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa2_personal
@@ -252,7 +272,7 @@ class TestRoamOTA(object):
     def test_roam_5g_to_5g_sc_psk_wpa2(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
         """
             Test Roaming between two APs, Same channel, 5G, WPA2 Personal
-            pytest -m "roam and fiveg and same_channel and wpa2_personal"
+            pytest -m "roam and fiveg and same_channel and wpa2_personal and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -345,13 +365,23 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="fiveg", num_sta=1, security="wpa2", security_key=key,
-                                                        ssid=ssid, upstream="1.1.eth1", duration=None,
-                                                        iteration=1, channel="36", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
+                                                            band="fiveg", num_sta=1, security="wpa2", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="36", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.different_channel
     @pytest.mark.wpa2_personal
@@ -360,7 +390,7 @@ class TestRoamOTA(object):
     def test_roam_5g_to_5g_dc_psk_wpa2(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
         """
             Test Roaming between two APs, Different channel, 5G, WPA2 Personal
-            pytest -m "roam and fiveg and different_channel and wpa2_personal"
+            pytest -m "roam and fiveg and different_channel and wpa2_personal and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -456,13 +486,22 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="fiveg", num_sta=1, security="wpa2", security_key=key,
-                                                        ssid=ssid, upstream="1.1.eth1", duration=None,
-                                                        iteration=1, channel="36", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp", sta_type="11r")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
+                                                            band="fiveg", num_sta=1, security="wpa2", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="36", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa3_personal
@@ -472,7 +511,7 @@ class TestRoamOTA(object):
     def test_roam_2g_to_2g_sc_psk_wpa3(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
         """
             Test Roaming between two APs, Same channel, 2G, WPA3 Personal
-            pytest -m "roam and twog and same_channel and wpa3_personal"
+            pytest -m "roam and twog and same_channel and wpa3_personal and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -567,13 +606,23 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="twog", num_sta=1, security="wpa3", security_key=key,
-                                                        ssid=ssid, upstream="1.1.eth1", duration=None,
-                                                        iteration=1, channel="11", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp", sta_type="11r-sae")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
+                                                            band="twog", num_sta=1, security="wpa3", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="11", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r-sae")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa3_personal
@@ -583,7 +632,7 @@ class TestRoamOTA(object):
     def test_roam_5g_to_5g_sc_psk_wpa3(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
         """
             Test Roaming between two APs, Same channel, 5G, WPA3 Personal
-            pytest -m "roam and fiveg and same_channel and wpa3_personal"
+            pytest -m "roam and fiveg and same_channel and wpa3_personal and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -678,13 +727,23 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="fiveg", num_sta=1, security="wpa3", security_key=key,
-                                                        ssid=ssid, upstream="1.1.eth1", duration=None,
-                                                        iteration=1, channel="36", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp", sta_type="11r-sae")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
+                                                            band="fiveg", num_sta=1, security="wpa3", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="11", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r-sae")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa3_personal
@@ -694,7 +753,7 @@ class TestRoamOTA(object):
     def test_roam_6g_to_6g_sc_psk_wpa3(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
         """
             Test Roaming between two APs, Same channel, 6G, WPA3 Personal
-            pytest -m "roam and sixg and same_channel and wpa3_personal"
+            pytest -m "roam and sixg and same_channel and wpa3_personal and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -780,12 +839,10 @@ class TestRoamOTA(object):
                         frequency = match.group(4).replace('.', '')
                         ap_data.update(
                             {serial_number: {'Access Point': access_point, 'Channel': channel, 'frequency': frequency}})
-                    logging.info(f"AP Data from iwinfo: {ap_data}")
-                else:
-                    logging.error("Failed to get iwinfo")
-                    pytest.exit("Failed to get iwinfo")
-            elif ap_iwinfo == {}:
-                pytest.fail("Empty iwinfo reponse from AP through minicom")
+                    logging.info(f"Extracted AP Data from iwinfo: {ap_data}")
+                if ap_data == {}:
+                    logging.error("Failed to get required iwinfo from minicom")
+                    pytest.fail("Failed to get required iwinfo from minicom")
             else:
                 pytest.fail("Failed to get iwinfo from minicom")
         for serial in ap_data:
@@ -796,13 +853,23 @@ class TestRoamOTA(object):
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="sixg", num_sta=1, security="wpa3", security_key=key,
-                                                        ssid=ssid, upstream="1.1.eth1", duration=None,
-                                                        iteration=1, channel="161", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp", sta_type="11r-sae")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
+                                                            band="sixg", num_sta=1, security="wpa3", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="161", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r-sae")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa2_enterprise
@@ -812,7 +879,7 @@ class TestRoamOTA(object):
                                        radius_info):
         """
             Test Roaming between two APs, Same channel, 2G, WPA2 Enterprise
-            pytest -m "roam and twog and same_channel and wpa2_enterprise"
+            pytest -m "roam and twog and same_channel and wpa2_enterprise and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -906,11 +973,9 @@ class TestRoamOTA(object):
                         ap_data.update(
                             {serial_number: {'Access Point': access_point, 'Channel': channel, 'frequency': frequency}})
                     logging.info(f"AP Data from iwinfo: {ap_data}")
-                else:
-                    logging.error("Failed to get iwinfo")
-                    pytest.exit("Failed to get iwinfo")
-            elif ap_iwinfo == {}:
-                pytest.fail("Empty iwinfo reponse from AP through minicom")
+                if ap_data == {}:
+                    logging.error("Failed to get required iwinfo from minicom")
+                    pytest.fail("Failed to get required iwinfo from minicom")
             else:
                 pytest.fail("Failed to get iwinfo from minicom")
         for serial in ap_data:
@@ -920,17 +985,29 @@ class TestRoamOTA(object):
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="twog", num_sta=1, security="wpa2", ssid=ssid,
-                                                        upstream="1.1.eth1", eap_method="TLS",
-                                                        eap_identity=radius_info["user"],
-                                                        eap_password=radius_info["password"], private_key="1234567890",
-                                                        pk_passwd=radius_info["pk_password"],
-                                                        ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
-                                                        iteration=1, channel="11", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            band="twog", num_sta=1, security="wpa2", ssid=ssid,
+                                                            upstream="1.1.eth1", eap_method="TLS",
+                                                            pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
+                                                            eap_identity=radius_info["user"],
+                                                            eap_password=radius_info["password"],
+                                                            private_key="/home/lanforge/client.p12",
+                                                            pk_passwd=radius_info["pk_password"],
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
+                                                            iteration=1, channel="11", option="otd", dut_name=dut_names,
+                                                            traffic_type="lf_udp")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa2_enterprise
@@ -940,7 +1017,7 @@ class TestRoamOTA(object):
                                        radius_info):
         """
             Test Roaming between two APs, Same channel, 5G, WPA2 Enterprise
-            pytest -m "roam and fiveg and same_channel and wpa2_enterprise"
+            pytest -m "roam and fiveg and same_channel and wpa2_enterprise and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -1034,11 +1111,9 @@ class TestRoamOTA(object):
                         ap_data.update(
                             {serial_number: {'Access Point': access_point, 'Channel': channel, 'frequency': frequency}})
                     logging.info(f"AP Data from iwinfo: {ap_data}")
-                else:
-                    logging.error("Failed to get iwinfo")
-                    pytest.exit("Failed to get iwinfo")
-            elif ap_iwinfo == {}:
-                pytest.fail("Empty iwinfo reponse from AP through minicom")
+                if ap_data == {}:
+                    logging.error("Failed to get required iwinfo from minicom")
+                    pytest.fail("Failed to get required iwinfo from minicom")
             else:
                 pytest.fail("Failed to get iwinfo from minicom")
         for serial in ap_data:
@@ -1048,17 +1123,29 @@ class TestRoamOTA(object):
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="fiveg", num_sta=1, security="wpa2", ssid=ssid,
-                                                        upstream="1.1.eth1", eap_method="TLS",
-                                                        eap_identity=radius_info["user"],
-                                                        eap_password=radius_info["password"], private_key="1234567890",
-                                                        pk_passwd=radius_info["pk_password"],
-                                                        ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
-                                                        iteration=1, channel="11", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            band="fiveg", num_sta=1, security="wpa2", ssid=ssid,
+                                                            upstream="1.1.eth1", eap_method="TLS",
+                                                            pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
+                                                            eap_identity=radius_info["user"],
+                                                            eap_password=radius_info["password"],
+                                                            private_key="/home/lanforge/client.p12",
+                                                            pk_passwd=radius_info["pk_password"],
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
+                                                            iteration=1, channel="11", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa3_enterprise
@@ -1068,7 +1155,7 @@ class TestRoamOTA(object):
                                        radius_info):
         """
             Test Roaming between two APs, Same channel, 2G, WPA3 Enterprise
-            pytest -m "roam and twog and same_channel and wpa3_enterprise"
+            pytest -m "roam and twog and same_channel and wpa3_enterprise and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -1162,11 +1249,9 @@ class TestRoamOTA(object):
                         ap_data.update(
                             {serial_number: {'Access Point': access_point, 'Channel': channel, 'frequency': frequency}})
                     logging.info(f"AP Data from iwinfo: {ap_data}")
-                else:
-                    logging.error("Failed to get iwinfo")
-                    pytest.exit("Failed to get iwinfo")
-            elif ap_iwinfo == {}:
-                pytest.fail("Empty iwinfo reponse from AP through minicom")
+                if ap_data == {}:
+                    logging.error("Failed to get required iwinfo from minicom")
+                    pytest.fail("Failed to get required iwinfo from minicom")
             else:
                 pytest.fail("Failed to get iwinfo from minicom")
         for serial in ap_data:
@@ -1176,17 +1261,29 @@ class TestRoamOTA(object):
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="twog", num_sta=1, security="wpa3", ssid=ssid,
-                                                        upstream="1.1.eth1", eap_method="TLS",
-                                                        eap_identity=radius_info["user"],
-                                                        eap_password=radius_info["password"], private_key="1234567890",
-                                                        pk_passwd=radius_info["pk_password"],
-                                                        ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
-                                                        iteration=1, channel="11", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            band="twog", num_sta=1, security="wpa3", ssid=ssid,
+                                                            upstream="1.1.eth1", eap_method="TLS",
+                                                            pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
+                                                            eap_identity=radius_info["user"],
+                                                            eap_password=radius_info["password"],
+                                                            private_key="/home/lanforge/client.p12",
+                                                            pk_passwd=radius_info["pk_password"],
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            iteration=1, channel="11", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa3_enterprise
@@ -1196,7 +1293,7 @@ class TestRoamOTA(object):
                                        radius_info):
         """
             Test Roaming between two APs, Same channel, 5G, WPA3 Enterprise
-            pytest -m "roam and fiveg and same_channel and wpa3_enterprise"
+            pytest -m "roam and fiveg and same_channel and wpa3_enterprise and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -1290,11 +1387,9 @@ class TestRoamOTA(object):
                         ap_data.update(
                             {serial_number: {'Access Point': access_point, 'Channel': channel, 'frequency': frequency}})
                     logging.info(f"AP Data from iwinfo: {ap_data}")
-                else:
-                    logging.error("Failed to get iwinfo")
-                    pytest.exit("Failed to get iwinfo")
-            elif ap_iwinfo == {}:
-                pytest.fail("Empty iwinfo reponse from AP through minicom")
+                if ap_data == {}:
+                    logging.error("Failed to get required iwinfo from minicom")
+                    pytest.fail("Failed to get required iwinfo from minicom")
             else:
                 pytest.fail("Failed to get iwinfo from minicom")
         for serial in ap_data:
@@ -1304,17 +1399,30 @@ class TestRoamOTA(object):
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="fiveg", num_sta=1, security="wpa3", ssid=ssid,
-                                                        upstream="1.1.eth1", eap_method="TLS",
-                                                        eap_identity=radius_info["user"],
-                                                        eap_password=radius_info["password"], private_key="1234567890",
-                                                        pk_passwd=radius_info["pk_password"],
-                                                        ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
-                                                        iteration=1, channel="11", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            band="fiveg", num_sta=1, security="wpa3", ssid=ssid,
+                                                            upstream="1.1.eth1", eap_method="TLS",
+                                                            pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
+                                                            eap_identity=radius_info["user"],
+                                                            eap_password=radius_info["password"],
+                                                            private_key="/home/lanforge/client.p12",
+                                                            pk_passwd=radius_info["pk_password"],
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            iteration=1, channel="36", option="ota",
+                                                            dut_name=dut_names,
+                                                            traffic_type="lf_udp")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
 
     @pytest.mark.same_channel
     @pytest.mark.wpa3_enterprise
@@ -1324,7 +1432,7 @@ class TestRoamOTA(object):
                                        radius_info):
         """
             Test Roaming between two APs, Same channel, 6G, WPA3 Enterprise
-            pytest -m "roam and sixg and same_channel and wpa3_enterprise"
+            pytest -m "roam and sixg and same_channel and wpa3_enterprise and ota"
         """
         ap_data = dict()
         dut_list = [str(selected_testbed)]
@@ -1425,11 +1533,9 @@ class TestRoamOTA(object):
                         ap_data.update(
                             {serial_number: {'Access Point': access_point, 'Channel': channel, 'frequency': frequency}})
                     logging.info(f"AP Data from iwinfo: {ap_data}")
-                else:
-                    logging.error("Failed to get iwinfo")
-                    pytest.exit("Failed to get iwinfo")
-            elif ap_iwinfo == {}:
-                pytest.fail("Empty iwinfo reponse from AP through minicom")
+                if ap_data == {}:
+                    logging.error("Failed to get required iwinfo from minicom")
+                    pytest.fail("Failed to get required iwinfo from minicom")
             else:
                 pytest.fail("Failed to get iwinfo from minicom")
         for serial in ap_data:
@@ -1439,14 +1545,26 @@ class TestRoamOTA(object):
             else:
                 freqs_ = freqs_ + ap_data[serial]['frequency']
         ssid = config['interfaces'][0]["ssids"][0]["name"]
-        pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1], scan_freq=freqs_,
-                                                        band="sixg", num_sta=1, security="wpa3", ssid=ssid,
-                                                        upstream="1.1.eth1", eap_method="TLS",
-                                                        eap_identity=radius_info["user"],
-                                                        eap_password=radius_info["password"], private_key="1234567890",
-                                                        pk_passwd=radius_info["pk_password"],
-                                                        ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
-                                                        iteration=1, channel="161", option="ota", dut_name=dut_names,
-                                                        traffic_type="lf_udp")
-        get_target_object.dut_library_object.get_dut_logs(print_log=False)
-        assert pass_fail, message
+        pass_fail, message = True, "Test Passed"
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            band="fiveg", num_sta=1, security="wpa3", ssid=ssid,
+                                                            upstream="1.1.eth1", eap_method="TLS",
+                                                            pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
+                                                            eap_identity=radius_info["user"],
+                                                            eap_password=radius_info["password"],
+                                                            private_key="/home/lanforge/client.p12",
+                                                            pk_passwd=radius_info["pk_password"],
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            iteration=1, channel="161", option="ota", dut_name=dut_names,
+                                                            traffic_type="lf_udp")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
