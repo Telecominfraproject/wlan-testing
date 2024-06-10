@@ -4,6 +4,7 @@ Rate LImiting VLAN Mode Scenario
 
 import allure
 import pytest
+import time
 
 pytestmark = [pytest.mark.vlan, pytest.mark.rate_limiting_tests]
 
@@ -160,6 +161,8 @@ class TestRateLimitingVLAN(object):
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
+        print("Sleep time:- 10 sec")
+        time.sleep(10)
 
         assert True
 
