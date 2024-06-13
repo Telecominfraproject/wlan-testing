@@ -5,7 +5,7 @@
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.nat, pytest.mark.wifi_capacity_ax, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.nat, pytest.mark.wifi_capacity_ax, pytest.mark.wpa2_personal]
 setup_params_general_5G = {
     "mode": "NAT",
     "ssid_modes": {
@@ -39,6 +39,7 @@ setup_params_general_5G = {
 class TestWifiCapacityNATModeAX5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6947", name="WIFI-6947")
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Download wifi capacity")
     def test_client_wpa2_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -65,6 +66,7 @@ class TestWifiCapacityNATModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6950", name="WIFI-6950")
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Download wifi capacity")
     def test_client_wpa2_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -143,6 +145,7 @@ class TestWifiCapacityNATModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6948", name="WIFI-6948")
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Upload wifi capacity")
     def test_client_wpa2_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -169,6 +172,7 @@ class TestWifiCapacityNATModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6951", name="WIFI-6951")
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Upload wifi capacity")
     def test_client_wpa2_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -227,6 +231,7 @@ setup_params_general_2G = {
 class TestWifiCapacityNATModeAX2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13290", name="WIFI-13290")
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Download wifi capacity")
     def test_client_wpa2_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -253,6 +258,7 @@ class TestWifiCapacityNATModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13293", name="WIFI-13293")
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Download wifi capacity")
     def test_client_wpa2_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -331,6 +337,7 @@ class TestWifiCapacityNATModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13291", name="WIFI-13291")
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Upload wifi capacity")
     def test_client_wpa2_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -357,6 +364,7 @@ class TestWifiCapacityNATModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13294", name="WIFI-13294")
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Upload wifi capacity")
     def test_client_wpa2_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
