@@ -1678,7 +1678,7 @@ class TestRoamOTA(object):
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             scan_freq=freqs_,
-                                                            band="both", num_sta=2, security="wpa2", security_key=key,
+                                                            band="both", num_sta=2, security="wpa3", security_key=key,
                                                             ssid=ssid, upstream="1.1.eth1", duration=None,
                                                             iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp", sta_type="11r")
