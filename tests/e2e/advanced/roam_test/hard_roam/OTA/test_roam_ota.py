@@ -1603,6 +1603,7 @@ class TestRoamOTA(object):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             if ap == 1:
+                config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
                 config['radios'] = [
                     {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 20, "country": "CA"}]
             logging.info(config)
