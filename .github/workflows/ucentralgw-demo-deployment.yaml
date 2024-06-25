@@ -118,7 +118,6 @@ jobs:
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
         export NAMESPACE=${{ matrix.namespace }}
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
@@ -130,6 +129,7 @@ jobs:
         export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
         export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
         export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
         if [[ "${{ github.event.inputs.force_latest }}" == "false" ]]; then
           export DEPLOY_METHOD=${{ matrix.deploy_method }}
           export CHART_VERSION=${{ matrix.chart_version }}
