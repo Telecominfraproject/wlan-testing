@@ -81,6 +81,7 @@ jobs:
       - name: Fetch kubeconfig
         run: |
           aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+||||||| a5762cec
 
       - name: Install kubectl, helmfile and plugins
         run: |
