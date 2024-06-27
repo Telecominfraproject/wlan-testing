@@ -85,6 +85,9 @@ jobs:
       run: |
         curl -s -LO "https://dl.k8s.io/release/v1.27.14/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+        # Download the binary
+        curl -s -LO "https://github.com/getsops/sops/releases/download/v3.8.1/sops-v3.8.1.linux.amd64"
+        sudo install -o root -g root -m 0755 sops-v3.8.1.linux.amd64 /usr/local/bin/sops
         curl -s -LO "https://github.com/helmfile/helmfile/releases/download/v0.165.0/helmfile_0.165.0_linux_amd64.tar.gz"
         tar xvzf helmfile_0.165.0_linux_amd64.tar.gz helmfile
         sudo install -o root -g root -m 0755 helmfile /usr/local/bin/helmfile
@@ -96,7 +99,13 @@ jobs:
       if: ${{ github.event.inputs.just_component }} == "false"
       working-directory: wlan-cloud-ucentral-deploy/cgw
       run: |
-        helmfile --environment ${{ matrix.namespace }} apply
+        # service components can't be reinstalled easily
+        helm ls -n ${{ matrix.namespace }}
+        if ! helm ls -n ${{ matrix.namespace }} | grep "^kafka" >/dev/null ; then
+          helmfile --environment ${{ matrix.namespace }} apply
+        else
+          helmfile --environment ${{ matrix.namespace }} -l app=cgw apply
+        fi
 
     - name: Deploy OpenLAN Cloud Gateway only
       if: ${{ github.event.inputs.just_component }} == "true"
