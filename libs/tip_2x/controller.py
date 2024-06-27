@@ -918,8 +918,10 @@ class Controller(ConfigureController):
 
     def asb_script(self, serial_number, payload):
         uri = self.build_uri("device/" + serial_number + "/script")
+        logging.info("uri:- " + str(uri))
         payload = json.dumps(payload)
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
+        logging.info("resp:- " + str(resp))
         resp = resp.json()
         resp = resp['UUID']
         return resp
