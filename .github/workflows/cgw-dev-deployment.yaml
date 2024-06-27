@@ -20,7 +20,7 @@ env:
   testbeds: '[
     {
       "namespace": "cgw01",
-      "chart_version": "next",
+      "chart_version": "main",
       "cgw_version": "main",
       "just_component": "false"
     }
