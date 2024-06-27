@@ -93,13 +93,13 @@ jobs:
         helm plugin install https://github.com/jkroepke/helm-secrets
 
     - name: Deploy OpenLAN Cloud Gateway and services
-      if: {{ github.event.inputs.just_component }} == "false"
+      if: ${{ github.event.inputs.just_component }} == "false"
       working-directory: wlan-cloud-ucentral-deploy/cgw
       run: |
         helmfile --environment ${{ matrix.namespace }} apply
 
     - name: Deploy OpenLAN Cloud Gateway only
-      if: {{ github.event.inputs.just_component }} == "true"
+      if: ${{ github.event.inputs.just_component }} == "true"
       working-directory: wlan-cloud-ucentral-deploy/cgw
       run: |
         helmfile --environment ${{ matrix.namespace }} -l app=cgw apply
