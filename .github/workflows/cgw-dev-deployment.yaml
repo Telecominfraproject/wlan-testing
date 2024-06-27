@@ -20,6 +20,7 @@ env:
   testbeds: '[
     {
       "namespace": "cgw01",
+      "chart_version": "next",
       "cgw_version": "main",
       "just_component": "false"
     }
@@ -69,7 +70,6 @@ jobs:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
       fail-fast: false
     steps:
-
     - name: Checkout repo with Helm values
       uses: actions/checkout@v4
       with:
