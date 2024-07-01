@@ -130,7 +130,9 @@ runs:
         done
         echo "tests completed"
         echo "downloading allure results..."
-        kubectl cp $podname:/tmp/allure-results allure-results >/dev/null 2>&1
+        echo "list files in the pod /tmp/allure-results directory"
+        kubectl exec $podname -- ls -la /tmp/allure-results
+        kubectl cp --v=10 --retries=3 $podname:/tmp/allure-results allure-results
         echo "waiting for pod to exit"
         kubectl logs -f $podname >/dev/null 2>&1
 
