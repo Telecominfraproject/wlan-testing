@@ -579,7 +579,7 @@ class APLIBS:
                                           expected_attachment_type=allure.attachment_type.TEXT,
                                           restrictions=True)
         self.factory_reset(print_log=False)
-        time.sleep(120)
+        time.sleep(300)
         return output
 
 
