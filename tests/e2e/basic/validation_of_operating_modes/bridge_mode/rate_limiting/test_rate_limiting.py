@@ -125,8 +125,8 @@ class TestRateLimitingBridge(object):
     @pytest.mark.rate_limiting_tests
     @pytest.mark.bridge
     @pytest.mark.ow_regression_lf
-    @allure.testcase(name="WIFI-3385",
-                     url="https://telecominfraproject.atlassian.net/browse/WIFI-3385")
+    @allure.testcase(name="WIFI-3379",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-3379")
     @allure.title("Test for Upload and Download batch size 1,2,5 2.4 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_125_2g(self, get_test_library, get_dut_logs_per_test_case,
                                                         get_test_device_logs, num_stations, setup_configuration,
@@ -381,13 +381,16 @@ class TestRateLimitingBridge(object):
     @pytest.mark.fiveg
     @pytest.mark.upload_download
     @pytest.mark.batch_size_125
-    @allure.story('Rate Limiting Open SSID 2.4 GHZ Band')
-    @allure.title("Test for Upload and Download per client batch size 1,2,5 5 GHz")
+    @pytest.mark.ow_sanity_lf
+    @pytest.mark.rate_limiting_tests
+    @allure.testcase(name="WIFI-13905",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-13905")
+    @allure.title("Test for Upload and Download batch size 1,2,5 5 GHz")
     def test_wpa2_personal_ssid_up_dw_batch_size_125_5g(self, get_test_library, get_dut_logs_per_test_case,
                                                         get_test_device_logs, num_stations, setup_configuration):
         """
             Test Rate Limiting Scenario
-            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and upload_download and batch_size_125"
+            pytest -m "rate_limiting_tests and bridge and wpa2_personal and fiveg and upload_download and batch_size_125 and ow_sanity_lf"
         """
         # run wifi capacity test here
         profile_data = {"ssid_name": "ssid_wpa2_5g_br",
