@@ -1,0 +1,240 @@
+{
+  "AP Models": {
+    "edgecore_eap101":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    },
+    "edgecore_eap102":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": 400,
+        "UDP": 440
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    },
+    "edgecore_eap104":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      }
+    },
+    "edgecore_oap101-6e":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "6G 2x2 160MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      },
+      "6G 4x4 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    },
+    "cig_wf188n":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    },
+    "cig_wf196":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": 400,
+        "UDP": 440
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "6G 2x2 160MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      },
+      "6G 4x4 160MHz": {
+        "TCP": 3200,
+        "UDP": 3600
+      }
+    },
+    "cig_wf186w":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      }
+    },
+    "hfcl_ion4xe":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    },
+    "yuncore_fap655":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    },
+    "yuncore_ax820":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    }
+  }
+}
