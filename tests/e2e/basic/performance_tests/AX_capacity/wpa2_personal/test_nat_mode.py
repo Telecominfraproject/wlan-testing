@@ -1,11 +1,11 @@
 """
     Performance Test: AX Capacity Test : NAT Mode
-    pytest -m "wifi_capacity_ax and wpa2_personal and nat"
+    pytest -m "wifi_capacity_ax_tests and wpa2_personal and nat"
 """
 import pytest
 import allure
 
-pytestmark = [pytest.mark.nat, pytest.mark.wifi_capacity_ax, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.nat, pytest.mark.wifi_capacity_ax_tests, pytest.mark.wpa2_personal]
 setup_params_general_5G = {
     "mode": "NAT",
     "ssid_modes": {
@@ -51,7 +51,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and tcp_download
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and tcp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -78,7 +78,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and udp_download
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and udp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -104,7 +104,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and tcp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and tcp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -130,7 +130,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and udp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and udp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -157,7 +157,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and tcp_upload
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and tcp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -184,7 +184,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and udp_upload
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and udp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -243,7 +243,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and tcp_download
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and tcp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -270,7 +270,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and udp_download
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and udp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -296,7 +296,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and tcp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and tcp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -322,7 +322,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and udp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and udp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -349,7 +349,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and tcp_upload
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and tcp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -376,7 +376,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and udp_upload
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and udp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
