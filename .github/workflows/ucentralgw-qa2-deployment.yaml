@@ -110,7 +110,7 @@ jobs:
         export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
         export OWSUB_VERSION=${{ matrix.owsub_version }}
         export OWRRM_VERSION=${{ matrix.owrrm_version }}
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
@@ -123,7 +123,6 @@ jobs:
         export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
         export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
         export EXTRA_VALUES='owgw.configProperties.logging\.level=information'
-        echo "key=${AWS_SECRET_ACCESS_KEY}" | base64
         ./deploy.sh
 
     - name: Show resource state on deployment failure
