@@ -126,7 +126,6 @@ class TestRateLimitingVLAN(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.upload_download
-    @pytest.mark.ow_sanity_lf
     @pytest.mark.batch_size_125
     @pytest.mark.rate_limiting_tests
     @pytest.mark.ow_regression_lf
