@@ -120,7 +120,6 @@ class TestRateLimitingNAT(object):
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.upload_download
-    @pytest.mark.ow_sanity_lf
     @pytest.mark.batch_size_125
     @pytest.mark.rate_limiting_tests
     @pytest.mark.ow_regression_lf
@@ -132,7 +131,7 @@ class TestRateLimitingNAT(object):
                                                         check_connectivity):
         """
             To verfiy a client operating with WPA2 Personal security can limit the UP & DW traffic or not.
-            Unique marker:pytest -m "rate_limiting_tests and wpa2_personal and nat and ow_sanity_lf and twog and upload_download and batch_size_125"
+            Unique marker:pytest -m "rate_limiting_tests and wpa2_personal and nat and twog and upload_download and batch_size_125"
 
         """
         # run wifi capacity test here
