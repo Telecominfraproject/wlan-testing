@@ -989,6 +989,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="twog", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
@@ -998,7 +999,7 @@ class TestRoamOTA(object):
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
                                                             ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
-                                                            iteration=1, channel="11", option="otd", dut_name=dut_names,
+                                                            iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
             logging.error(f"Exception in roam test : {e}")
@@ -1127,6 +1128,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="fiveg", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
@@ -1265,6 +1267,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="twog", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
@@ -1273,7 +1276,7 @@ class TestRoamOTA(object):
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -1403,6 +1406,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="fiveg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
@@ -1411,7 +1415,7 @@ class TestRoamOTA(object):
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="36", option="ota",
                                                             dut_name=dut_names,
                                                             traffic_type="lf_udp")
@@ -1549,6 +1553,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="fiveg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
@@ -1557,9 +1562,8 @@ class TestRoamOTA(object):
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
-                                                            iteration=1, channel="161", option="ota",
-                                                            dut_name=dut_names,
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
+                                                            iteration=1, channel="161", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
             logging.error(f"Exception in roam test : {e}")
@@ -1937,6 +1941,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="both", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
@@ -2079,6 +2084,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="both", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
@@ -2345,6 +2351,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="both", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
@@ -2610,6 +2617,7 @@ class TestRoamOTA(object):
         pass_fail, message = True, "Test Passed"
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_,
                                                             band="both", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
                                                             pairwise_cipher="DEFAULT   ",
