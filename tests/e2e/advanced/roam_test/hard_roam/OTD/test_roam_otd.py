@@ -1283,7 +1283,7 @@ class TestRoamOTD(object):
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="11", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -1422,7 +1422,7 @@ class TestRoamOTD(object):
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="11", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
