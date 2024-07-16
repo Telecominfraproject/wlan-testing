@@ -464,6 +464,20 @@ class APLIBS:
                         cmd = f'cd  && cd /sys/kernel/debug/ieee80211/phy1/mt76/ && ls && echo 1 > radar_trigger'
                     else:
                         cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
+        elif type_.lower() == "wifi7":
+            cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath12k/dfs_simulate_radar ] && echo "True" || echo "False"'
+            output = self.run_generic_command(cmd=cmd1, idx=idx,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
+                                              expected_attachment_type=allure.attachment_type.JSON)
+
+            ret = output.split("\n")
+            status_count = int(ret.count("True"))
+            logging.info("Status count: " + str(status_count))
+            if status_count == 1:
+                cmd = "cd && cd /sys/kernel/debug/ieee80211/phy1/ath12k/ && echo 1 > dfs_simulate_radar"
+            else:
+                cmd = f'cd  && cd /sys/kernel/debug/ath12k/ && cd qcn* && cd mac1 && ls && echo 1 > dfs_simulate_radar'
         output = self.run_generic_command(cmd=cmd, idx=idx,
                                           print_log=print_log,
                                           attach_allure=attach_allure,
@@ -522,6 +536,18 @@ class APLIBS:
                         cmd = f'cd  && cd /sys/kernel/debug/ieee80211/phy1/mt76/ && logread | grep DFS'
                     else:
                         cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
+        elif type_.lower() == "wifi7":
+            cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy1/ath12k/dfs_simulate_radar ] && echo "True" || echo "False"'
+            output = self.run_generic_command(cmd=cmd1, idx=idx,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
+                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info("DFS logread output: " + str(output))
+            if output.__contains__("False"):
+                cmd = f'cd && cd /sys/kernel/debug/ieee80211/phy1/ath12k/ && logread | grep DFS'
+            else:
+                cmd = f'cd  && cd /sys/kernel/debug/ath12k/ && cd qcn* && cd mac1 && logread | grep DFS'
+
         try:
             output = self.run_generic_command(cmd=cmd, idx=idx,
                                               print_log=print_log,
