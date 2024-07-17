@@ -32,6 +32,10 @@ on:
         required: true
         default: "client_scale_tests,dataplane_tests,peak_throughput_tests,dual_band_tests"
         description: "Marker expressions to select tests to execute"
+      additional_args:
+        default: ""
+        description: "additional arguments that will be passed to the pytest execution"
+        required: false
       existing_controller:
         required: true
         default: "qa01"
@@ -52,6 +56,7 @@ jobs:
       ap_models: ${{ steps.vars.outputs.ap_models }}
       ap_version: ${{ steps.vars.outputs.ap_version }}
       marker_expressions: ${{ steps.vars.outputs.marker_expressions }}
+      additional_arguments: ${{ steps.vars.outputs.additional_arguments }}
       existing_controller: ${{ steps.vars.outputs.existing_controller }}
       tests_release: ${{ steps.vars.outputs.tests_release }}
 
@@ -69,6 +74,7 @@ jobs:
 
           MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'client_scale_tests,dataplane_tests,peak_throughput_tests,dual_band_tests' }}"
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+          echo "additional_arguments=$(echo ${{ github.event.inputs.additional_arguments || ''}})" >> $GITHUB_OUTPUT
           cat >> $GITHUB_OUTPUT << EOF
           marker_expressions=${MARKER_EXPRESSIONS}
           EOF
@@ -181,7 +187,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -207,7 +213,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -233,7 +239,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -259,7 +265,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -358,7 +364,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -384,7 +390,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -410,7 +416,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -436,7 +442,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -535,7 +541,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -561,7 +567,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -587,7 +593,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -613,7 +619,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -712,7 +718,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -738,7 +744,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -764,7 +770,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -790,7 +796,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -889,7 +895,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -915,7 +921,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -941,7 +947,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -967,7 +973,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1066,7 +1072,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1092,7 +1098,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1118,7 +1124,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1144,7 +1150,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1243,7 +1249,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1269,7 +1275,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1295,7 +1301,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1321,7 +1327,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1420,7 +1426,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1446,7 +1452,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1472,7 +1478,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1498,7 +1504,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1599,7 +1605,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1625,7 +1631,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1651,7 +1657,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1677,7 +1683,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1776,7 +1782,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1802,7 +1808,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1828,7 +1834,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1854,7 +1860,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1954,7 +1960,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -1980,7 +1986,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2006,7 +2012,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2032,7 +2038,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2131,7 +2137,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2157,7 +2163,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2183,7 +2189,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2209,7 +2215,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2308,7 +2314,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2334,7 +2340,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2360,7 +2366,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2386,7 +2392,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2485,7 +2491,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2511,7 +2517,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2537,7 +2543,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2563,7 +2569,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2662,7 +2668,7 @@ jobs:
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dataplane_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2688,7 +2694,7 @@ jobs:
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-peak_throughput_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2714,7 +2720,7 @@ jobs:
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-client_scale_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
@@ -2740,7 +2746,7 @@ jobs:
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}""
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}-dual_band_tests"
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
