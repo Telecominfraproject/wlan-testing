@@ -309,6 +309,7 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
                               "wave1_radios": test_object.wave1_radios,
                               "mtk_radios": test_object.mtk_radios,
                               "ax200_radios": test_object.ax200_radios,
+                              "be200_radios": test_object.be200_radios,
                               "ax210_radios": test_object.ax210_radios}
         for radio in dict_all_radios_5g:
             if len(dict_all_radios_5g[radio]) > 0:
