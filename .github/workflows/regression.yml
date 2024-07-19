@@ -640,6 +640,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting-radius
 
+      - name: run schema_validation tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-schema-validation
+          testbed: basic-3b
+          marker_expression: "ow_regression_lf and schema_validation_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-schema-validation --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-schema-validation $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-schema-validation
+
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
@@ -2768,7 +2793,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
-          testbed: basic-2a
+          testbed: basic-6a
           marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3840,7 +3865,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
-          testbed: basic-2
+          testbed: basic-6
           marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -4195,7 +4220,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
-          testbed: basic-6
+          testbed: basic-2
           marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -4547,6 +4572,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting-radius
 
+      - name: run schema_validation tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-schema-validation
+          testbed: basic-2a
+          marker_expression: "ow_regression_lf and schema_validation_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-schema-validation --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-schema-validation $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-schema-validation
+
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
@@ -4879,6 +4929,31 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting-radius
 
+      - name: run schema_validation tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-schema-validation
+          testbed: basic-6b
+          marker_expression: "ow_regression_lf and schema_validation_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-schema-validation --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-schema-validation $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-schema-validation
+
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
@@ -5210,6 +5285,31 @@ jobs:
         if: always()
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting-radius
+
+      - name: run schema_validation tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-schema-validation
+          testbed: basic-6c
+          marker_expression: "ow_regression_lf and schema_validation_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-schema-validation --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-schema-validation $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-schema-validation
 
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
