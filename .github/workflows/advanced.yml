@@ -10,7 +10,7 @@ env:
   # Cloud SDK certs
   CACERT: ${{ secrets.CACERT }}
   CAKEY: ${{ secrets.CAKEY }}
-  ALLURE_CLI_VERSION: 2.14.0
+  ALLURE_CLI_VERSION: 2.25.0
 
 on:
   workflow_dispatch:
