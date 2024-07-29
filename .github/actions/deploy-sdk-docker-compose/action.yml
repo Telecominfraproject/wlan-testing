@@ -77,8 +77,12 @@ runs:
     - name: Create EC2 instance for CloudSDK
       env:
         EC2_INSTANCE_TYPE: t2.small
-        EC2_SECURITY_GROUP_ID: sg-012299a8201a0761c
         EC2_KEY_NAME: loadsim
+        # for ap-south-1
+        #EC2_SECURITY_GROUP_ID: sg-0dd922b7bc38c0045
+        #VPC_SUBNET_ID: subnet-0d1a2e5efbec9709c
+        # for us-east-2
+        EC2_SECURITY_GROUP_ID: sg-012299a8201a0761c
         VPC_SUBNET_ID: subnet-08ef4ccda4af94c38
       shell: bash
       id: ec2_instance
@@ -163,8 +167,6 @@ runs:
           export OWPROV_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16005";
           export OWANALYTICS_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16009";
           export OWSUB_SYSTEM_URI_PUBLIC="https://${{ steps.set_outputs.outputs.gateway_url }}:16006";
-          export OWRRM_SERVICECONFIG_PRIVATEENDPOINT="http://owrrm.wlan.local:17007";
-          export OWRRM_SERVICECONFIG_PUBLICENDPOINT="http://${{ steps.set_outputs.outputs.gateway_url }}:16789";
           export CERTIFICATES_ALLOWMISMATCH="true";
           ./deploy.sh
         EOF

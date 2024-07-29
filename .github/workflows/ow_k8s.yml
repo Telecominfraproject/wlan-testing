@@ -1,4 +1,4 @@
-name: 2.x testing with Kubernetes deployment
+name: 3.x testing with Kubernetes deployment
 
 env:
   AWS_EKS_NAME: tip-wlan-main
@@ -36,10 +36,6 @@ on:
       owsub_version:
         default: 'main'
         description: 'OpenWIFI Subscription (Userportal) version to be deployed'
-        required: false
-      owrrm_version:
-        default: 'main'
-        description: 'OpenWIFI radio resource management service version to be deployed'
         required: false
       id:
         description: 'run identifier'
@@ -79,7 +75,7 @@ jobs:
       namespace: ${{ steps.namespace.outputs.value }}
     steps:
     - name: Checkout repo with Helm values
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -95,10 +91,9 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-    # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
     - name: install kubectl
       run: |
-        curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v1.27.14/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Set namespace output
@@ -127,8 +122,7 @@ jobs:
         export OWPROVUI_VERSION=main
         export OWANALYTICS_VERSION=${{ github.event.inputs.owanalytics_version }}
         export OWSUB_VERSION=${{ github.event.inputs.owsub_version }}
-        export OWRRM_VERSION=${{ github.event.inputs.owrrm_version }}
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
@@ -145,17 +139,11 @@ jobs:
         kubectl get pods --namespace openwifi-${{ steps.namespace.outputs.value }}
         kubectl get services --namespace openwifi-${{ steps.namespace.outputs.value }}
         kubectl get persistentvolumeclaims --namespace openwifi-${{ steps.namespace.outputs.value }}
-    - name: Describe pods on deployment failure
+    - name: Describe resources on deployment failure
       if: failure()
       run: |
         kubectl describe pods --namespace openwifi-${{ steps.namespace.outputs.value }}
-    - name: Describe services on deployment failure
-      if: failure()
-      run: |
         kubectl describe services --namespace openwifi-${{ steps.namespace.outputs.value }}
-    - name: Describe persistentvolumeclaims on deployment failure
-      if: failure()
-      run: |
         kubectl describe persistentvolumeclaims --namespace ${{ steps.namespace.outputs.value }}
 
   deploy-virtual-ap-instance:
@@ -168,7 +156,7 @@ jobs:
       serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
       instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use deploy-virtual-ap-instance composite action
         id: deploy-virtual-ap-instance
@@ -222,10 +210,9 @@ jobs:
         run: |
           aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v1.27.14/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: Delete Cloud SDK
