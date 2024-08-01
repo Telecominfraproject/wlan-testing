@@ -1,11 +1,11 @@
 """
     Performance Test: AX Capacity Test : BRIDGE Mode
-    pytest -m "wifi_capacity_ax and wpa2_personal and bridge"
+    pytest -m "wifi_capacity_ax_tests and wpa2_personal and bridge"
 """
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.bridge, pytest.mark.wifi_capacity_ax, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.bridge, pytest.mark.wifi_capacity_ax_tests, pytest.mark.wpa2_personal]
 setup_params_general_5G = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -39,6 +39,7 @@ setup_params_general_5G = {
 class TestWifiCapacityBRIDGEModeAX5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Download wifi capacity")
     def test_client_wpa2_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -50,7 +51,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and fiveg and tcp_download
+        wifi_capacity_ax_tests and wpa2_personal and bridge and fiveg and tcp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -64,6 +65,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Download wifi capacity")
     def test_client_wpa2_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -75,7 +77,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and fiveg and udp_download
+        wifi_capacity_ax_tests and wpa2_personal and bridge and fiveg and udp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -100,7 +102,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and fiveg and tcp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and bridge and fiveg and tcp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -126,7 +128,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and fiveg and udp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and bridge and fiveg and udp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -141,6 +143,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Upload wifi capacity")
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -152,7 +155,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and fiveg and tcp_upload
+        wifi_capacity_ax_tests and wpa2_personal and bridge and fiveg and tcp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -167,6 +170,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Upload wifi capacity")
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -178,7 +182,7 @@ class TestWifiCapacityBRIDGEModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and fiveg and udp_upload
+        wifi_capacity_ax_tests and wpa2_personal and bridge and fiveg and udp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -225,6 +229,7 @@ setup_params_general_2G = {
 class TestWifiCapacityBRIDGEModeAX2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13284", name="WIFI-13284")
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Download wifi capacity")
     def test_client_wpa2_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -236,7 +241,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and twog and tcp_download
+        wifi_capacity_ax_tests and wpa2_personal and bridge and twog and tcp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -251,6 +256,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13287", name="WIFI-13287")
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Download wifi capacity")
     def test_client_wpa2_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -262,7 +268,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and twog and udp_download
+        wifi_capacity_ax_tests and wpa2_personal and bridge and twog and udp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -288,7 +294,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and twog and tcp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and bridge and twog and tcp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -315,7 +321,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and twog and udp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and bridge and twog and udp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -331,6 +337,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13285", name="WIFI-13285")
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Upload wifi capacity")
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -342,7 +349,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and twog and tcp_upload
+        wifi_capacity_ax_tests and wpa2_personal and bridge and twog and tcp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -357,6 +364,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13288", name="WIFI-13288")
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Upload wifi capacity")
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -368,7 +376,7 @@ class TestWifiCapacityBRIDGEModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and bridge and twog and udp_upload
+        wifi_capacity_ax_tests and wpa2_personal and bridge and twog and udp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
