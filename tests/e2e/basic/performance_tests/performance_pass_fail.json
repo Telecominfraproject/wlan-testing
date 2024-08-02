@@ -296,6 +296,36 @@
         "UDP": null
       }
     },
+    "cig_wf189":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "6G 2x2 160MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      },
+      "6G 4x4 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    },
     "udaya_a6-id2":{
       "2G 2x2 20MHz": {
         "TCP": 200,
