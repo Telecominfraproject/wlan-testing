@@ -34,7 +34,7 @@ env:
     {
       "namespace": "qa01",
       "deploy_method": "git",
-      "chart_version": "v3.1.0",
+      "chart_version": "${{ github.event.inputs.chart_version }}",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
@@ -48,7 +48,13 @@ env:
   ]'
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      chart_version:
+        description: 'Chart version to deploy eg: v3.1.0'
+        required: true
+        default: 'main'
+
 
 jobs:
   generate-matrix:
