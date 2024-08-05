@@ -10,7 +10,7 @@
 
     "advanced": {
         "OVERVIEW_TITLE": "'OpenWifi advanced results'",
-        "OVERVIEW_TESTBEDS": ["edgecore_eap104","edgecore_oap101-6e","cig_wf186h","edgecore_eap101","edgecore_eap102","cig_wf196"]
+        "OVERVIEW_TESTBEDS": ["edgecore_eap104","edgecore_eap101","edgecore_eap111","edgecore_eap105","sercomm_ap72tip","cig_wf196","yuncore_ax820","yuncore_fap655","cig_wf189"]
     },
 
     "performance": {
