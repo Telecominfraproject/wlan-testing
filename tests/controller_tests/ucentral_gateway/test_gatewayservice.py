@@ -380,8 +380,8 @@ class TestUcentralGatewayService(object):
             "when": 0,
             "duration": 1,
             "numberOfPackets": 0,
-            "network": "string",
-            "interface": "string"
+            "network": "up",
+            "interface": "up"
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.trace_device(device_name, payload)
