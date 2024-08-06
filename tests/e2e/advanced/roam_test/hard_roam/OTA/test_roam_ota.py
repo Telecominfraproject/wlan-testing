@@ -876,6 +876,7 @@ class TestRoamOTA(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
     @pytest.mark.roam
+    @pytest.mark.enterprise
     def test_roam_2g_to_2g_sc_eap_wpa2(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                        radius_info):
         """
@@ -1015,6 +1016,7 @@ class TestRoamOTA(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.roam
+    @pytest.mark.enterprise
     def test_roam_5g_to_5g_sc_eap_wpa2(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                        radius_info):
         """
@@ -1154,6 +1156,7 @@ class TestRoamOTA(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.twog
     @pytest.mark.roam
+    @pytest.mark.enterprise
     def test_roam_2g_to_2g_sc_eap_wpa3(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                        radius_info):
         """
@@ -1293,6 +1296,7 @@ class TestRoamOTA(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.fiveg
     @pytest.mark.roam
+    @pytest.mark.enterprise
     def test_roam_5g_to_5g_sc_eap_wpa3(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                        radius_info):
         """
@@ -1433,6 +1437,7 @@ class TestRoamOTA(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.sixg
     @pytest.mark.roam
+    @pytest.mark.enterprise
     def test_roam_6g_to_6g_sc_eap_wpa3(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                        radius_info):
         """
@@ -1824,6 +1829,7 @@ class TestRoamOTA(object):
     @pytest.mark.twog
     @pytest.mark.fiveg
     @pytest.mark.wpa2_enterprise
+    @pytest.mark.enterprise
     def test_roam_5g_and_2g_wpa2eap(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                     radius_info):
         """
@@ -1967,6 +1973,7 @@ class TestRoamOTA(object):
     @pytest.mark.twog
     @pytest.mark.fiveg
     @pytest.mark.wpa3_enterprise
+    @pytest.mark.enterprise
     def test_roam_5g_and_2g_wpa3eap(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                     radius_info):
         """
@@ -2234,6 +2241,7 @@ class TestRoamOTA(object):
     @pytest.mark.sixg
     @pytest.mark.fiveg
     @pytest.mark.wpa3_enterprise
+    @pytest.mark.enterprise
     def test_roam_5g_and_6g_wpa3eap(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                     radius_info):
         """
@@ -2498,8 +2506,9 @@ class TestRoamOTA(object):
 
     @pytest.mark.roam
     @pytest.mark.twog
-    @pytest.mark.fiveg
+    @pytest.mark.sixg
     @pytest.mark.wpa3_enterprise
+    @pytest.mark.enterprise
     def test_roam_2g_and_6g_wpa3eap(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                        radius_info):
         """
