@@ -18,7 +18,7 @@ setup_params_general1 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -73,7 +73,7 @@ setup_params_general2 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -127,7 +127,7 @@ setup_params_general3 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -182,7 +182,7 @@ setup_params_general4 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -236,7 +236,7 @@ setup_params_general5 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -290,7 +290,7 @@ setup_params_general6 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -344,7 +344,7 @@ setup_params_general7 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -398,7 +398,7 @@ setup_params_general8 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -452,7 +452,7 @@ setup_params_general10 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -506,7 +506,7 @@ setup_params_general11 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -560,7 +560,7 @@ setup_params_general12 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
@@ -613,7 +613,7 @@ setup_params_general13 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 20,
