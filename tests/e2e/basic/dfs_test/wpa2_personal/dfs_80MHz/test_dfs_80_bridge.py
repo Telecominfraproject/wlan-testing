@@ -19,7 +19,7 @@ setup_params_general1 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 80,
@@ -76,7 +76,7 @@ setup_params_general2 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 80,
@@ -133,7 +133,7 @@ setup_params_general11 = {
     "rf": {
         "5G": {
             "band": "5G",
-            "country": "CA",
+            "country": "US",
             "allow-dfs": True,
             "channel-mode": "VHT",
             "channel-width": 80,
