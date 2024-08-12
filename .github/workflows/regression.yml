@@ -44,8 +44,8 @@ on:
         required: false
         default: ""
         description: "Tests release branch to use (i.e. 'release/v2.8.0' or 'master'). If left empty, latest release branch is used"
-  # schedule:
-  #  - cron: "30 11 * * 0,4,5,6"
+  schedule:
+    - cron: "30 11 * * 0,5,6"
 
 jobs:
   # Set vars
@@ -89,16 +89,14 @@ jobs:
           echo "Current slot is $SLOT"
 
           # choose AP models as per the day if the scheduled run gets triggered else input provided.
-          if [[ "$DOW" -eq "4" ]]; then
-            AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xe' }}"
-          elif [[ "$DOW" -eq "5" ]]; then
-            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,edgecore_oap101-6e,edgecore_eap104' }}"
+          if [[ "$DOW" -eq "5" ]]; then
+            AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xe,cig_wf196,cig_wf189,edgecore_eap105' }}"
           elif [[ "$DOW" -eq "6" ]]; then
-            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap102,cig_wf196,yuncore_fap655' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,yuncore_ax820,sercomm_ap72tip,edgecore_eap111' }}"
           elif [[ "$DOW" -eq "7" ]]; then
-            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap101,yuncore_ax820,edgecore_eap111' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'udaya_a6-id2,yuncore_fap655,edgecore_eap101' }}"
           else
-            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf188n,edgecore_oap101-6e,edgecore_eap104' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xi,edgecore_eap104,cig_wf196,udaya_a6-id2,yuncore_ax820,yuncore_fap655,cig_wf189,edgecore_eap105,sercomm_ap72tip,edgecore_eap101,edgecore_eap111' }}"
           fi
           
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
