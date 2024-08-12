@@ -96,7 +96,7 @@ jobs:
           elif [[ "$DOW" -eq "7" ]]; then
             AP_MODELS="${{ github.event.inputs.ap_models || 'udaya_a6-id2,yuncore_fap655,edgecore_eap101' }}"
           else
-            AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xi,edgecore_eap104,cig_wf196,udaya_a6-id2,yuncore_ax820,yuncore_fap655,cig_wf189,edgecore_eap105,sercomm_ap72tip,edgecore_eap101,edgecore_eap111' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'hfcl_ion4xi,cig_wf196,yuncore_ax820,yuncore_fap655,sercomm_ap72tip,edgecore_eap101' }}"
           fi
           
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
