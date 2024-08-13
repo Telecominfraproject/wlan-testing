@@ -1389,7 +1389,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
           testbed: basic-4
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -1415,7 +1415,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-asb
+          namespace: ${{ steps.namespace.outputs.name }}-asb-tests
           testbed: basic-4
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
