@@ -21,7 +21,7 @@ env:
   testbeds: '[
     {
       "namespace": "cgw01",
-      "chart_version": "next",
+      "chart_version": "main",
       "cgw_version": "main",
       "just_component": "false"
     }
@@ -62,7 +62,7 @@ jobs:
           EOF
 
   deploy:
-    name: Update OpenLAN Cloud SDK instances
+    name: Update OpenLAN Cloud Gateway instances
     runs-on: ubuntu-latest
     needs:
       - id
@@ -81,7 +81,6 @@ jobs:
       - name: Fetch kubeconfig
         run: |
           aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-||||||| a5762cec
 
       - name: Install kubectl, helmfile and plugins
         run: |
@@ -94,11 +93,27 @@ jobs:
           helm plugin install https://github.com/databus23/helm-diff
           helm plugin install https://github.com/jkroepke/helm-secrets
 
+      - name: Create certificate file
+        working-directory: wlan-cloud-ucentral-deploy/cgw
+        run: |
+          echo "${{ env.DIGICERT_CERT }}" | base64 -d > websocket-cert.pem
+          echo "${{ env.DIGICERT_KEY }}" | base64 -d > websocket-key.pem
+          ./mkcertconfig websocket-cert.pem websocket-key.pem > values/certs.device.yaml
+          kubectl create secret generic certs --dry-run=client -o yaml \
+            --from-file=websocket-key.pem --from-file=websocket-cert.pem \
+            | grep websocket- >> values/certs.device.yaml
+
       - name: Deploy OpenLAN Cloud Gateway and services
         if: ${{ github.event.inputs.just_component }} == "false"
         working-directory: wlan-cloud-ucentral-deploy/cgw
         run: |
-          helmfile --environment ${{ matrix.namespace }} apply
+          # service components can't be reinstalled easily
+          helm ls -n ${{ matrix.namespace }}
+          if ! helm ls -n ${{ matrix.namespace }} | grep "^kafka" >/dev/null ; then
+            helmfile --environment ${{ matrix.namespace }} apply
+          else
+            helmfile --environment ${{ matrix.namespace }} -l app=cgw apply
+          fi
 
       - name: Deploy OpenLAN Cloud Gateway only
         if: ${{ github.event.inputs.just_component }} == "true"
@@ -121,8 +136,3 @@ jobs:
           kubectl get persistentvolumeclaims --namespace openlan-${{ matrix.namespace }}
           echo "PVC Descriptions:"
           kubectl describe persistentvolumeclaims --namespace openlan-${{ matrix.namespace }}
-
-#    - name: Rollback Cloud SDK
-#      if: failure()
-#      run: |
-#        helm rollback tip-openlan --namespace openlan-${{ matrix.namespace }} --wait --timeout 20m

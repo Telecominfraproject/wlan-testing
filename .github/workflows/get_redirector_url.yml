@@ -36,13 +36,13 @@ jobs:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
     steps:
     - name: checkout testing repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-testing
         path: wlan-testing
 
     - name: checkout pki cert scripts repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-pki-cert-scripts
         path: wlan-pki-cert-scripts
