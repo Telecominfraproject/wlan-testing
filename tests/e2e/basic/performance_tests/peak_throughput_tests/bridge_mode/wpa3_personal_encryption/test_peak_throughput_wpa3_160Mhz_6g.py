@@ -46,13 +46,17 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12394", name="WIFI-12394")
     @pytest.mark.sixg
+    @allure.feature("Performance Test")
+    @allure.parent_suite("AX Capacity Test")
+    @allure.suite("6 GHz Band")
+    @allure.sub_suite("BRIDGE Mode")
     @pytest.mark.tcp_download
-    @pytest.mark.performance
+    @pytest.mark.ow_sanity_lf
     @allure.title("Single client TCP Download wifi capacity 160Mhz Bw")
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration):
         """ Single client Wifi Capacity Test BRIDGE mode
-            pytest -m "peak_throughput_tests and sixg and tcp_download and bridge and channel_width_160"
+            pytest -m "ow_sanity_lf and sixg and tcp_download and bridge and channel_width_160"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
