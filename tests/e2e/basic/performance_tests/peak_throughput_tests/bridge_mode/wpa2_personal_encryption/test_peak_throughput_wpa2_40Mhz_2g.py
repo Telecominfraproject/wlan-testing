@@ -1377,7 +1377,6 @@ class Test40Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10674", name="WIFI-10674")
     @pytest.mark.tcp_download
-    @pytest.mark.ow_sanity_lf
     @pytest.mark.channel_11
     @allure.title("Single client TCP Download wifi capacity 40Mhz Bw")
     def test_client_wpa2_personal_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,

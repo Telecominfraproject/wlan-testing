@@ -421,7 +421,6 @@ class TestUcentralGatewayService(object):
     @allure.title("Request Message Device")
     @allure.testcase(name="WIFI-11448",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11448")
-    @pytest.mark.ow_sanity_lf
     def test_gw_service_request_msg_device(self, get_target_object, get_testbed_details):
         """
             Test to Request specific msg from device present in Gateway UI
