@@ -389,7 +389,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-3a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -403,13 +403,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -429,13 +429,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -721,7 +721,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-1
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -735,13 +735,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -761,13 +761,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -1054,7 +1054,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-6
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -1068,13 +1068,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -1094,13 +1094,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -1387,7 +1387,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-4
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -1401,13 +1401,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -1427,13 +1427,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -1720,7 +1720,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-4a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -1734,13 +1734,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -1760,13 +1760,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -2052,7 +2052,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-1a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -2066,13 +2066,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -2092,13 +2092,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -2385,7 +2385,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-3
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -2399,13 +2399,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -2425,13 +2425,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -2712,7 +2712,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-2
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -2726,13 +2726,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -2752,13 +2752,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -3044,7 +3044,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-6a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -3058,13 +3058,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -3084,13 +3084,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -3376,7 +3376,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-2a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -3390,13 +3390,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -3416,13 +3416,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -3708,7 +3708,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-5
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -3722,13 +3722,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -3748,13 +3748,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
@@ -4040,7 +4040,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-fw-upgrade-downgrade
+          namespace: ${{ steps.namespace.outputs.name }}-fwd
           testbed: basic-5a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
@@ -4054,13 +4054,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-fwd --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-fwd $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-firmware-upgrade-downgrade
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-fwd
 
       - name: run ap support bundle tests
         uses: ./.github/actions/run-tests
@@ -4080,13 +4080,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb-tests --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb-tests $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-asb --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-asb $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb-tests
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-asb
 
       - name: show gw logs
         if: failure()
