@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf186w,edgecore_eap104,cig_wf196,udaya_a6-id2,yuncore_ax820,edgecore_eap102,yuncore_fap655,cig_wf189,edgecore_eap105,sercomm_ap72tip,edgecore_eap101,edgecore_eap111"
+        default: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,yuncore_ax820,edgecore_eap102,yuncore_fap655,cig_wf189,edgecore_eap105,sercomm_ap72tip,edgecore_eap101,edgecore_eap111"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -95,9 +95,9 @@ jobs:
           elif [[ "$DOW" -eq "3" ]]; then
             AP_MODELS="${{ github.event.inputs.ap_models || 'yuncore_fap655,sercomm_ap72tip,edgecore_eap101' }}"
           elif [[ "$DOW" -eq "4" ]]; then
-            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf186w,cig_wf196,yuncore_ax820' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf186h,cig_wf196,yuncore_ax820' }}"
           else
-            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf186w,cig_wf196,yuncore_ax820,yuncore_fap655,sercomm_ap72tip,edgecore_eap101' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf186h,cig_wf196,yuncore_ax820,yuncore_fap655,sercomm_ap72tip,edgecore_eap101' }}"
           fi
           echo "List of AP models to test - $AP_MODELS"
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
@@ -536,13 +536,13 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
 
-  test-cig-wf186w:
+  test-cig-wf186h:
     needs: [ "vars", "build"]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf186w')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf186h')"
     env:
-      AP_MODEL: cig_wf186w
+      AP_MODEL: cig_wf186h
     steps:
       - name: Set AP model output
         id: ap_model
@@ -1146,7 +1146,7 @@ jobs:
 
 
   test-edgecore-eap104:
-    needs: ["vars", "build", "test-cig-wf186w" ]
+    needs: ["vars", "build", "test-cig-wf186h" ]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
@@ -2573,7 +2573,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-cig-wf186w, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-yuncore-ax820, test-edgecore-eap102, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
+    needs: [vars, test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-yuncore-ax820, test-edgecore-eap102, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
     strategy:
       fail-fast: false
       matrix:
@@ -2654,7 +2654,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-cig-wf186w, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-yuncore-ax820, test-edgecore-eap102, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
+    needs: [test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-yuncore-ax820, test-edgecore-eap102, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
     runs-on: ubuntu-latest
     if: always()
     steps:
