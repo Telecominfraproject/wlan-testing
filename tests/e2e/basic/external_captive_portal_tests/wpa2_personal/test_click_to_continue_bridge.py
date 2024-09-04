@@ -12,7 +12,7 @@ import paramiko
 import pytest
 from tabulate import tabulate
 
-pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.bridge]
+pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.bridge, pytest.mark.advanced_captive_portal_tests]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -42,9 +42,9 @@ setup_params_general = {
 }
 
 
-@allure.feature("External Captive Portal Test")
-@allure.parent_suite("External Captive Portal Tests")
-@allure.suite(suite_name="Bridge Mode")
+@allure.feature("Advanced Captive Portal Test")
+@allure.parent_suite("Advanced Captive Portal Tests")
+@allure.suite(suite_name="External Captive Portal")
 @allure.sub_suite(sub_suite_name="Click-to-continue mode")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -56,20 +56,20 @@ setup_params_general = {
 class TestBridgeModeExternalCaptivePortal(object):
     """
             External Captive Portal Test: BRIDGE Mode
-            pytest -m "external_captive_portal_tests and bridge"
+            pytest -m "advanced_captive_portal_tests and bridge and external_captive_portal_tests"
     """
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.click_to_continue
-    @allure.title("Click-to-continue mode with WPA2 encryption 2.4 GHz Band")
+    @allure.title("Click-to-continue mode with WPA2 encryption 2.4 GHz Band Bridge mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11148", name="WIFI-11148")
     def test_bridge_wpa2_2g_click_to_continue(self, get_test_library, get_dut_logs_per_test_case,
                                               get_test_device_logs, check_connectivity, setup_configuration,
                                               get_testbed_details, get_target_object):
         """
             BRIDGE Mode External Captive Portal Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "external_captive_portal_tests and wpa2_personal and twog and bridge and click_to_continue"
+            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and wpa2_personal and twog and bridge and click_to_continue"
         """
         def run_command_using_ssh(ssh_client, command: str):
             output = ""

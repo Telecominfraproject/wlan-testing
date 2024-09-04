@@ -13,7 +13,7 @@ import pytest
 from tabulate import tabulate
 from bs4 import BeautifulSoup
 
-pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.bridge]
+pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.bridge, pytest.mark.advanced_captive_portal_tests]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -43,9 +43,9 @@ setup_params_general = {
 }
 
 
-@allure.feature("External Captive Portal Test")
-@allure.parent_suite("External Captive Portal Tests")
-@allure.suite(suite_name="Bridge Mode")
+@allure.feature("Advanced Captive Portal Test")
+@allure.parent_suite("Advanced Captive Portal Tests")
+@allure.suite(suite_name="External Captive Portal")
 @allure.sub_suite(sub_suite_name="Local user/pass mode")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -57,20 +57,20 @@ setup_params_general = {
 class TestBridgeModeExternalCaptivePortal(object):
     """
             External Captive Portal Test: BRIDGE Mode
-            pytest -m "external_captive_portal_tests and bridge"
+            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and bridge"
     """
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.local_user_and_pass
-    @allure.title("Local user/pass mode with WPA2 encryption 2.4 GHz Band")
+    @allure.title("Local user/pass mode with WPA2 encryption 2.4 GHz Band Bridge mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13683", name="WIFI-13683")
     def test_bridge_wpa2_2g_local_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs, check_connectivity, setup_configuration,
                                                 get_testbed_details, get_target_object):
         """
             BRIDGE Mode External Captive Portal Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "external_captive_portal_tests and wpa2_personal and twog and bridge and local_user_and_pass"
+            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and wpa2_personal and twog and bridge and local_user_and_pass"
         """
         def run_command_using_ssh(ssh_client, command: str):
             output = ""
