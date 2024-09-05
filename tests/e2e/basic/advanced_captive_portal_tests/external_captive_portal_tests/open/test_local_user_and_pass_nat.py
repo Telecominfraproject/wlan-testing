@@ -63,6 +63,7 @@ class TestNatModeExternalCaptivePortal(object):
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.local_user_and_pass
+    @pytest.mark.ow_regression_lf
     @allure.title("Local user/pass mode with open encryption 2.4 GHz Band NAT mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13683", name="WIFI-13683")
     def test_nat_open_2g_local_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
