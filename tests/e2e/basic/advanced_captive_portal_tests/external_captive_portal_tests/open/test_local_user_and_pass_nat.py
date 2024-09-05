@@ -1,7 +1,7 @@
 """
 
-    External Captive Portal Test: BRIDGE Mode
-    pytest -m "external_captive_portal_tests and bridge"
+    External Captive Portal Test: NAT Mode
+    pytest -m "external_captive_portal_tests and nat"
 
 """
 import logging
@@ -13,10 +13,10 @@ import pytest
 from tabulate import tabulate
 from bs4 import BeautifulSoup
 
-pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.bridge, pytest.mark.advanced_captive_portal_tests]
+pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.nat, pytest.mark.advanced_captive_portal_tests]
 
 setup_params_general = {
-    "mode": "BRIDGE",
+    "mode": "NAT",
     "ssid_modes": {
         "open": [
             {"ssid_name": "ssid_ext_cap_portal_open_2g_id_p", "appliedRadios": ["2G"], "security_key": "something",
@@ -46,7 +46,7 @@ setup_params_general = {
 @allure.feature("Advanced Captive Portal Test")
 @allure.parent_suite("Advanced Captive Portal Tests")
 @allure.suite(suite_name="External Captive Portal")
-@allure.sub_suite(sub_suite_name="Local user/pass mode")
+@allure.sub_suite(sub_suite_name="NAT Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -54,23 +54,24 @@ setup_params_general = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestBridgeModeExternalCaptivePortal(object):
+class TestNatModeExternalCaptivePortal(object):
     """
-            External Captive Portal Test: BRIDGE Mode
-            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and bridge"
+            External Captive Portal Test: NAT Mode
+            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and nat"
     """
 
     @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.local_user_and_pass
-    @allure.title("Local user/pass mode with open encryption 2.4 GHz Band Bridge mode")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13683", name="WIFI-13683")
-    def test_bridge_open_2g_local_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
+    @pytest.mark.ow_regression_lf
+    @allure.title("Local user/pass mode with open encryption 2.4 GHz Band NAT mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14125", name="WIFI-14125")
+    def test_nat_open_2g_local_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs, check_connectivity, setup_configuration,
                                                 get_testbed_details, get_target_object):
         """
-            BRIDGE Mode External Captive Portal Test with open encryption 2.4 GHz Band
-            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and open and twog and bridge and local_user_and_pass"
+            NAT Mode External Captive Portal Test with open encryption 2.4 GHz Band
+            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and open and twog and nat and local_user_and_pass"
         """
         def run_command_using_ssh(ssh_client, command: str):
             output = ""
@@ -101,7 +102,7 @@ class TestBridgeModeExternalCaptivePortal(object):
                 ssid=setup_params_general["ssid_modes"][security][0]["ssid_name"],
                 passkey="[BLANK]",
                 security="open",
-                mode=setup_params_general["mode"],
+                mode="NAT-WAN",
                 radio=radio_port_name,
                 station_name=[station],
                 attach_port_info=False
@@ -221,7 +222,7 @@ class TestBridgeModeExternalCaptivePortal(object):
                 client.close()
 
             logging.info("Checking throughput speed...")
-            wifi_capacity_obj_list = get_test_library.wifi_capacity(mode="BRIDGE",
+            wifi_capacity_obj_list = get_test_library.wifi_capacity(mode="NAT-WAN",
                                                                     download_rate="10Gbps",
                                                                     upload_rate="56Kbps",
                                                                     protocol="UDP-IPv4",

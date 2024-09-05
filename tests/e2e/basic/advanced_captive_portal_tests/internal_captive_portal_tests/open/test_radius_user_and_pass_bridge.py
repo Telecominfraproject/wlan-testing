@@ -17,7 +17,10 @@ setup_params_general = {
         "open": [
             {"ssid_name": "ssid_captive_portal_open_2g_br", "appliedRadios": ["2G"], "security_key": "something",
              "captive": {
-                 "auth-mode": "click-to-continue",
+                 "auth-mode": "radius",
+                 "auth-server": "10.28.3.21",
+                 "auth-port": 1812,
+                 "auth-secret": "testing123",
                  "walled-garden-fqdn": [
                      "*.google.com",
                      "telecominfraproject.com"
@@ -33,7 +36,7 @@ setup_params_general = {
 @allure.feature("Advanced Captive Portal Test")
 @allure.parent_suite("Advanced Captive Portal Tests")
 @allure.suite(suite_name="Internal Captive Portal")
-@allure.sub_suite(sub_suite_name="Click-to-continue mode")
+@allure.sub_suite(sub_suite_name="BRIDGE Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -49,21 +52,25 @@ class TestBridgeModeadvancedcaptiveportal(object):
 
     @pytest.mark.open
     @pytest.mark.twog
-    @pytest.mark.click_to_continue
+    @pytest.mark.radius_user_and_pass
     @pytest.mark.ow_regression_lf
-    @allure.title("Click-to-continue mode with open encryption 2.4 GHz Band Bridge mode")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10977", name="WIFI-10977")
-    def test_bridge_open_2g_click_to_continue(self, get_test_library, get_dut_logs_per_test_case,
-                                              get_test_device_logs, num_stations, check_connectivity,
-                                              setup_configuration, get_testbed_details, get_target_object):
+    @allure.title("Radius user/pass mode with open encryption 2.4 GHz Band Bridge mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10996", name="WIFI-10996")
+    def test_bridge_open_2g_radius_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
+                                                 get_test_device_logs, num_stations, check_connectivity,
+                                                 setup_configuration, get_testbed_details, get_target_object,
+                                                 radius_info):
         """
             BRIDGE Mode Advanced Captive Portal Test with open encryption 2.4 GHz Band
-            pytest -m "advanced_captive_portal_tests and internal_captive_portal_tests and open and twog and bridge and click_to_continue"
+            pytest -m "advanced_captive_portal_tests and internal_captive_portal_tests and open and twog and bridge and radius_user_and_pass"
         """
         profile_data = {"ssid_name": "ssid_captive_portal_open_2g_br", "appliedRadios": ["2G"],
                         "security_key": "something",
                         "captive": {
-                            "auth-mode": "click-to-continue",
+                            "auth-mode": "radius",
+                            "auth-server": "10.28.3.21",
+                            "auth-port": 1812,
+                            "auth-secret": "testing123",
                             "walled-garden-fqdn": [
                                 "*.google.com",
                                 "telecominfraproject.com"
@@ -75,11 +82,15 @@ class TestBridgeModeadvancedcaptiveportal(object):
         security = "open"
         mode = "BRIDGE"
         band = "twog"
+        identity = radius_info['user']
+        passwd = radius_info["password"]
         # json post data for API
-        json_post_data = 'action=click&accept_terms=clicked'
+        json_post_data = f"username={identity}&password={passwd}&action=radius"
+        print("json_post_data", json_post_data)
         allure.attach(name="Definition",
-                      body="Click-to-continue mode: In this mode the client will be redirected to the page where "
-                           "the client needs to accept the terms of service before getting internet.")
+                      body="Radius user/pass mode (Captive-Radius): In this mode the client needs to enter"
+                           " the valid credentials that are configured in the radius server being used to get "
+                           "the internet access.")
         passes, result = get_test_library.advanced_captive_portal(ssid=ssid_name, security=security,
                                                                   dut_data=setup_configuration,
                                                                   passkey=security_key, mode=mode, band=band,

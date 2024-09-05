@@ -11,6 +11,7 @@ import allure
 import paramiko
 import pytest
 from tabulate import tabulate
+from bs4 import BeautifulSoup
 
 pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.bridge, pytest.mark.advanced_captive_portal_tests]
 
@@ -18,13 +19,13 @@ setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
         "open": [
-            {"ssid_name": "ssid_ext_cap_portal_open_2g_ctc", "appliedRadios": ["2G"], "security_key": "something",
+            {"ssid_name": "ssid_ext_cap_portal_open_2g_id_p", "appliedRadios": ["2G"], "security_key": "something",
              "captive": {
                  "auth-mode": "uam",
                  "uam-port": 3990,
                  "uam-secret": "hotsys123",
                  "uam-server": "https://customer.hotspotsystem.com/customer/hotspotlogin.php",
-                 "nasid": "AlmondLabs",
+                 "nasid": "AlmondLabs_6",
                  "auth-server": "radius.hotspotsystem.com",
                  "auth-port": 1812,
                  "auth-secret": "hotsys123",
@@ -45,7 +46,7 @@ setup_params_general = {
 @allure.feature("Advanced Captive Portal Test")
 @allure.parent_suite("Advanced Captive Portal Tests")
 @allure.suite(suite_name="External Captive Portal")
-@allure.sub_suite(sub_suite_name="Click-to-continue mode")
+@allure.sub_suite(sub_suite_name="BRIDGE Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general],
@@ -56,20 +57,21 @@ setup_params_general = {
 class TestBridgeModeExternalCaptivePortal(object):
     """
             External Captive Portal Test: BRIDGE Mode
-            pytest -m "advanced_captive_portal_tests and bridge and external_captive_portal_tests"
+            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and bridge"
     """
 
     @pytest.mark.open
     @pytest.mark.twog
-    @pytest.mark.click_to_continue
-    @allure.title("Click-to-continue mode with open encryption 2.4 GHz Band Bridge mode")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11148", name="WIFI-11148")
-    def test_bridge_open_2g_click_to_continue(self, get_test_library, get_dut_logs_per_test_case,
-                                              get_test_device_logs, check_connectivity, setup_configuration,
-                                              get_testbed_details, get_target_object):
+    @pytest.mark.local_user_and_pass
+    @pytest.mark.ow_regression_lf
+    @allure.title("Local user/pass mode with open encryption 2.4 GHz Band Bridge mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13683", name="WIFI-13683")
+    def test_bridge_open_2g_local_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
+                                                get_test_device_logs, check_connectivity, setup_configuration,
+                                                get_testbed_details, get_target_object):
         """
             BRIDGE Mode External Captive Portal Test with open encryption 2.4 GHz Band
-            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and open and twog and bridge and click_to_continue"
+            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and open and twog and bridge and local_user_and_pass"
         """
         def run_command_using_ssh(ssh_client, command: str):
             output = ""
@@ -174,24 +176,25 @@ class TestBridgeModeExternalCaptivePortal(object):
                 station_mac = url_info['mac']
                 uamport = url_info['uamport']
 
-                link = (
-                    f"https://customer.hotspotsystem.com/customer/hotspotlogin.php?name=&email=&company=&address="
-                    f"&city=&state=&country=&zip=&phone=&capture_custom_1=&capture_custom_2=&capture_custom_3="
-                    f"&capture_custom_4=&capture_custom_5=&ssl-login=&chal={challenge}&uamip={inet_ip_addr}"
-                    f"&uamport={uamport}&nasid={nasid}&mac={station_mac}&userurl=&login=login&skin_id="
-                    f"&uid={station_mac}&pwd=password&operator={nasid}&location_id=1&lang=en&agree=1"
-                )
-                expected_302 = f'/home/lanforge/vrf_exec.bash {station} curl -I "{link}"'
-                response_302 = run_command_using_ssh(client, expected_302)
+                link = (f'https://customer.hotspotsystem.com/customer/hotspotlogin.php?ssl-login=&chal={challenge}'
+                        f'&uamip={inet_ip_addr}&uamport={uamport}&nasid={nasid}&mac={station_mac}'
+                        f'&userurl=ct522-7481%2F&login=login&skin_id=&uid=userr1&pwd=password1')
+                html_request = f'/home/lanforge/vrf_exec.bash {station} curl "{link}"'
+                html_response = run_command_using_ssh(client, html_request)
 
-                logging.info(f"\n{response_302}")
-                allure.attach(name="Expected 302 response: ", body=str(response_302),
+                logging.info(f"HTML response containing authentication url:\n{html_response}")
+                allure.attach(name="HTML response containing authentication url:", body=str(html_response),
                               attachment_type=allure.attachment_type.TEXT)
 
-                link_to_hit = re.findall(r'^Location:\s+(.*?)\s*$', response_302, re.MULTILINE)[0]
-                logging.info(f"Link to hit: {link_to_hit}")
+                soup = BeautifulSoup(html_response, 'html.parser')
+                meta_tag = soup.find('meta', attrs={'http-equiv': 'refresh'})
+                content = meta_tag['content']
+                authentication_url = "=".join(content.split('=')[1:])
 
-                cmd_to_authenticate = f'/home/lanforge/vrf_exec.bash {station} curl "{link_to_hit}"'
+                logging.info(f"Authentication URL extracted from HTML:\n{authentication_url}\n")
+                allure.attach(name="Authentication URL extracted from HTML:", body=str(authentication_url))
+
+                cmd_to_authenticate = f'/home/lanforge/vrf_exec.bash {station} curl "{authentication_url}"'
                 authentication_response = run_command_using_ssh(client, cmd_to_authenticate)
 
                 logging.info(f"\n{authentication_response}\n")
@@ -217,3 +220,34 @@ class TestBridgeModeExternalCaptivePortal(object):
                 pytest.fail(f"Error occurred: {e}")
             finally:
                 client.close()
+
+            logging.info("Checking throughput speed...")
+            wifi_capacity_obj_list = get_test_library.wifi_capacity(mode="BRIDGE",
+                                                                    download_rate="10Gbps",
+                                                                    upload_rate="56Kbps",
+                                                                    protocol="UDP-IPv4",
+                                                                    duration="60000",
+                                                                    batch_size="1",
+                                                                    stations=radio_port_name[:4] + station,
+                                                                    add_stations=False,
+                                                                    create_stations=False)
+
+            report = wifi_capacity_obj_list[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+            numeric_score = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report)
+            expected_throughput = 10
+            throughput = {
+                "download": [numeric_score[0][0]],
+                "upload": [numeric_score[1][0]],
+                "total": [numeric_score[2][0]],
+                "expected": [f"<= {expected_throughput}"],
+                "unit": ["Mbps"],
+                "PASS": [numeric_score[2][0] <= expected_throughput]
+            }
+            data_table = tabulate(throughput, headers='keys', tablefmt='fancy_grid')
+            allure.attach(name='Throughput Data', body=data_table)
+            logging.info(f"\n{data_table}")
+
+            if not throughput["PASS"][0]:
+                logging.info("Throughput exceeded than set threshold")
+                pytest.fail("Throughput exceeded than set threshold")
+            logging.info("Throughput is within the set threshold")
