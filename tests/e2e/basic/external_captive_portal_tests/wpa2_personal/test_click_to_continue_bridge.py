@@ -17,8 +17,8 @@ pytestmark = [pytest.mark.external_captive_portal_tests, pytest.mark.bridge, pyt
 setup_params_general = {
     "mode": "BRIDGE",
     "ssid_modes": {
-        "wpa2_personal": [
-            {"ssid_name": "ssid_ext_cap_portal_wpa2_2g_ctc", "appliedRadios": ["2G"], "security_key": "something",
+        "open": [
+            {"ssid_name": "ssid_ext_cap_portal_open_2g_ctc", "appliedRadios": ["2G"], "security_key": "something",
              "captive": {
                  "auth-mode": "uam",
                  "uam-port": 3990,
@@ -59,17 +59,17 @@ class TestBridgeModeExternalCaptivePortal(object):
             pytest -m "advanced_captive_portal_tests and bridge and external_captive_portal_tests"
     """
 
-    @pytest.mark.wpa2_personal
+    @pytest.mark.open
     @pytest.mark.twog
     @pytest.mark.click_to_continue
-    @allure.title("Click-to-continue mode with WPA2 encryption 2.4 GHz Band Bridge mode")
+    @allure.title("Click-to-continue mode with open encryption 2.4 GHz Band Bridge mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11148", name="WIFI-11148")
-    def test_bridge_wpa2_2g_click_to_continue(self, get_test_library, get_dut_logs_per_test_case,
+    def test_bridge_open_2g_click_to_continue(self, get_test_library, get_dut_logs_per_test_case,
                                               get_test_device_logs, check_connectivity, setup_configuration,
                                               get_testbed_details, get_target_object):
         """
-            BRIDGE Mode External Captive Portal Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and wpa2_personal and twog and bridge and click_to_continue"
+            BRIDGE Mode External Captive Portal Test with open encryption 2.4 GHz Band
+            pytest -m "advanced_captive_portal_tests and external_captive_portal_tests and open and twog and bridge and click_to_continue"
         """
         def run_command_using_ssh(ssh_client, command: str):
             output = ""
@@ -93,13 +93,13 @@ class TestBridgeModeExternalCaptivePortal(object):
             get_test_library.pre_cleanup()
 
             radio_port_name = list(get_test_library.get_radio_availabilities(num_stations_2g=1)[0].keys())[0]
-            security = "wpa2_personal"
+            security = "open"
             station = 'sta_ecp'
             logging.info(f"Creating a station on the configured ssid on {radio_port_name} radio...")
             sta_got_ip = get_test_library.client_connect_using_radio(
                 ssid=setup_params_general["ssid_modes"][security][0]["ssid_name"],
-                passkey=setup_params_general["ssid_modes"][security][0]["security_key"],
-                security=security.split("_")[0],
+                passkey="[BLANK]",
+                security="open",
                 mode=setup_params_general["mode"],
                 radio=radio_port_name,
                 station_name=[station],
