@@ -9,7 +9,7 @@ import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.advanced_captive_portal_tests, pytest.mark.bridge]
+pytestmark = [pytest.mark.advanced_captive_portal_tests, pytest.mark.bridge, pytest.mark.internal_captive_portal_tests]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -38,7 +38,7 @@ setup_params_general = {
 
 @allure.feature("Advanced Captive Portal Test")
 @allure.parent_suite("Advanced Captive Portal Tests")
-@allure.suite(suite_name="BRIDGE Mode")
+@allure.suite(suite_name="Internal Captive Portal")
 @allure.sub_suite(sub_suite_name="Local user/pass mode")
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -50,21 +50,21 @@ setup_params_general = {
 class TestBridgeModeadvancedcaptiveportal(object):
     """
         Advanced Captive Portal Test: BRIDGE Mode
-        pytest -m "advanced_captive_portal_tests and bridge"
+        pytest -m "advanced_captive_portal_tests and bridge and internal_captive_portal_tests"
     """
 
     @pytest.mark.wpa2_personal
     @pytest.mark.twog
     @pytest.mark.local_user_and_pass
     @pytest.mark.ow_regression_lf
-    @allure.title("Local user/pass mode with wpa2_personal encryption 2.4 GHz Band")
+    @allure.title("Local user/pass mode with wpa2_personal encryption 2.4 GHz Band Bridge mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10991", name="WIFI-10991")
     def test_bridge_wpa2_2g_local_user_and_pass(self, get_test_library, get_dut_logs_per_test_case,
                                                 get_test_device_logs, num_stations, check_connectivity,
                                                 setup_configuration, get_testbed_details, get_target_object):
         """
             BRIDGE Mode Advanced Captive Portal Test with wpa2_personal encryption 2.4 GHz Band
-            pytest -m "advanced_captive_portal_tests and wpa2_personal and twog and bridge and local_user_and_pass"
+            pytest -m "advanced_captive_portal_tests and internal_captive_portal_tests and wpa2_personal and twog and bridge and local_user_and_pass"
         """
         profile_data = {"ssid_name": "ssid_captive_portal_wpa2_2g_br", "appliedRadios": ["2G"],
                         "security_key": "something",
