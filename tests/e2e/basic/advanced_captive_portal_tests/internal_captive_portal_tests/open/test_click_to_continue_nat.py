@@ -52,7 +52,7 @@ class TestNatModeadvancedcaptiveportal(object):
     @pytest.mark.click_to_continue
     @pytest.mark.ow_regression_lf
     @allure.title("Click-to-continue mode with open encryption 2.4 GHz Band NAT mode")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10977", name="WIFI-10977")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14121", name="WIFI-14121")
     def test_nat_open_2g_click_to_continue(self, get_test_library, get_dut_logs_per_test_case,
                                               get_test_device_logs, num_stations, check_connectivity,
                                               setup_configuration, get_testbed_details, get_target_object):
