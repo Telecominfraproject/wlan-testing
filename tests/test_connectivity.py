@@ -34,7 +34,7 @@ class TestResources(object):
     @allure.testcase(name="Test Cloud Controller", url="")
     @allure.title("Cloud Controller Connectivity")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-11615", name="11615")
-    def test_controller_connectivity(self, get_target_object, get_testbed_details):
+    def test_controller_connectivity(self, get_target_object, get_testbed_details, get_test_library):
         """Test case to verify cloud Controller Connectivity
            Unique marker: pytest -m "test_cloud_controller"
         """
