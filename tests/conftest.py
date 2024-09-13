@@ -498,7 +498,8 @@ def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_
             get_target_object.get_dut_library_object().run_generic_command(
                 cmd="logger start testcase: " + instance_name,
                 idx=i)
-
+        start_time = int(time.time())
+        logging.info("start time:- " + str(start_time))
         def collect_logs():
             for i in range(len(get_testbed_details["device_under_tests"])):
                 get_target_object.get_dut_library_object().run_generic_command(
@@ -514,6 +515,31 @@ def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_
                 uci_show = get_target_object.get_dut_library_object().run_generic_command(idx=i, attach_allure=False,
                     cmd="uci show", print_log=False)
                 allure.attach(body=uci_show, name="uci show")
+                device_name = get_testbed_details["device_under_tests"][i]["identifier"]
+                resp = get_target_object.controller_library_object.get_device_statistics_teardown(device_name, query="")
+                if resp.status_code == 200:
+                    allure.attach(body=str(resp.json()), name="device_statistics")
+                else:
+                    logging.info("resp.status_code:- " + str(resp.status_code))
+                # Check reboot logs
+                end_time = int(time.time())
+                logging.info("end time:- " + str(end_time))
+                query_ = f"?logType=2&startDate={start_time}&endDate={end_time}"
+                resp = get_target_object.controller_library_object.get_device_reboot_logs(device_name, query=query_)
+                if resp.status_code == 200:
+                    allure.attach(body=str(resp.json()), name="test_case_device_reboot_logs")
+                    response = resp.json()
+                    # crash log validation
+                    if response["values"]:
+                        resp = get_target_object.controller_library_object.get_device_reboot_logs(device_name,
+                                                                                                  query="?logType=2")
+                        allure.attach(body=str(resp.json()), name="all_device_reboot_logs")
+                        logging.info("Reboot detected on AP side")
+                        pytest.exit("Reboot detected on AP side")
+                else:
+                    logging.info("resp.status_code:- " + str(resp.status_code))
+
+
 
         request.addfinalizer(collect_logs)
 
