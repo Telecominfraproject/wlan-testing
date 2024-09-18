@@ -53,7 +53,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -70,7 +70,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -87,7 +87,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -104,7 +104,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -121,7 +121,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -138,7 +138,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -289,7 +289,7 @@ class Test40Mhz5GChannel52PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -306,7 +306,7 @@ class Test40Mhz5GChannel52PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -323,7 +323,7 @@ class Test40Mhz5GChannel52PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -340,7 +340,7 @@ class Test40Mhz5GChannel52PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -357,7 +357,7 @@ class Test40Mhz5GChannel52PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -374,7 +374,7 @@ class Test40Mhz5GChannel52PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -421,7 +421,7 @@ class Test40Mhz5GChannel60PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -438,7 +438,7 @@ class Test40Mhz5GChannel60PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -455,7 +455,7 @@ class Test40Mhz5GChannel60PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -472,7 +472,7 @@ class Test40Mhz5GChannel60PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -489,7 +489,7 @@ class Test40Mhz5GChannel60PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -506,7 +506,7 @@ class Test40Mhz5GChannel60PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -554,7 +554,7 @@ class Test40Mhz5GChannel100PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -571,7 +571,7 @@ class Test40Mhz5GChannel100PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -588,7 +588,7 @@ class Test40Mhz5GChannel100PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -605,7 +605,7 @@ class Test40Mhz5GChannel100PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -622,7 +622,7 @@ class Test40Mhz5GChannel100PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -639,7 +639,7 @@ class Test40Mhz5GChannel100PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -687,7 +687,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -704,7 +704,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -721,7 +721,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -738,7 +738,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -755,7 +755,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -772,7 +772,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -821,7 +821,7 @@ class Test40Mhz5GChannel132PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -838,7 +838,7 @@ class Test40Mhz5GChannel132PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -855,7 +855,7 @@ class Test40Mhz5GChannel132PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -872,7 +872,7 @@ class Test40Mhz5GChannel132PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -889,7 +889,7 @@ class Test40Mhz5GChannel132PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -906,7 +906,7 @@ class Test40Mhz5GChannel132PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -952,7 +952,7 @@ class Test40Mhz5GChannel136PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -969,7 +969,7 @@ class Test40Mhz5GChannel136PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -986,7 +986,7 @@ class Test40Mhz5GChannel136PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1003,7 +1003,7 @@ class Test40Mhz5GChannel136PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1020,7 +1020,7 @@ class Test40Mhz5GChannel136PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1037,7 +1037,7 @@ class Test40Mhz5GChannel136PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1084,7 +1084,7 @@ class Test40Mhz5GChannel140PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1101,7 +1101,7 @@ class Test40Mhz5GChannel140PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1118,7 +1118,7 @@ class Test40Mhz5GChannel140PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1135,7 +1135,7 @@ class Test40Mhz5GChannel140PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1152,7 +1152,7 @@ class Test40Mhz5GChannel140PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1169,7 +1169,7 @@ class Test40Mhz5GChannel140PeakThroughput(object):
         mode = "NAT"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True

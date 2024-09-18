@@ -114,7 +114,7 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
             obj = get_test_library.wifi_capacity(instance_name="Test_Radius_2g_up_per_ssid", mode=mode,
                                                  download_rate="0Gbps", batch_size="1",
-                                                 upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                                 upload_rate="1Gbps", protocol="TCP", duration="60000",
                                                  move_to_influx=False, dut_data=setup_configuration,
                                                  ssid_name=ssid_name,
                                                  add_stations=False, raw_lines=raw_lines)
@@ -166,7 +166,7 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
             obj = get_test_library.wifi_capacity(instance_name="Test_Radius_2g_down_perssid_persta", mode=mode,
                                                  download_rate="1Gbps", batch_size="1",
-                                                 upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                                 upload_rate="0Gbps", protocol="TCP", duration="60000",
                                                  move_to_influx=False, dut_data=setup_configuration,
                                                  ssid_name=ssid_name,
                                                  add_stations=False, raw_lines=raw_lines)
@@ -217,7 +217,7 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
             get_test_library.wifi_capacity(instance_name="Test_Radius_2g_up_perssid_persta", mode=mode,
                                            download_rate="0Gbps", batch_size="1",
-                                           upload_rate="2.488Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="2.488Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -261,7 +261,7 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
             get_test_library.wifi_capacity(instance_name="Test_Radius_2g_up_down_per_per_client", mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -305,7 +305,7 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
             get_test_library.wifi_capacity(instance_name="Test_Radius_5g_down_per_ssid", mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="0Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -349,7 +349,7 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
             get_test_library.wifi_capacity(instance_name="Test_Radius_5g_up_per_ssid", mode=mode,
                                            download_rate="0Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -393,7 +393,7 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
             get_test_library.wifi_capacity(instance_name="Test_Radius_5g_down_per_ssid_perclient", mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="0Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -437,7 +437,7 @@ class TestRateLimitingWithRadiusBridge(object):
             raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
             get_test_library.wifi_capacity(instance_name="Test_Radius_5g_upstream_per_ssid_perclient", mode=mode,
                                            download_rate="0Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -485,7 +485,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Test_Radius_5g_upstream_downstream_per_ssid_perclient",
                                            mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -575,7 +575,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Test_Radius_5g_per_ssid",
                                            mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="0Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -760,7 +760,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Ratelimit_Radius_group_user1",
                                            mode=mode,
                                            download_rate="0Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -823,7 +823,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Ratelimit_Radius_group_user1",
                                            mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="0Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -886,7 +886,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Ratelimit_Radius_group_user2",
                                            mode=mode,
                                            download_rate="0Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -949,7 +949,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Ratelimit_Radius_group_user2",
                                            mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="0Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -1012,7 +1012,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Ratelimit_Radius_group_user2",
                                            mode=mode,
                                            download_rate="0Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
         #     kpi_data = lf_tools.read_kpi_file(column_name=["short-description", "numeric-score"], dir_name=report_name)
@@ -1074,7 +1074,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Ratelimit_Radius_group_user3",
                                            mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="0Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -1137,7 +1137,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Ratelimit_Radius_group_user4",
                                            mode=mode,
                                            download_rate="0Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 
@@ -1200,7 +1200,7 @@ class TestRateLimitingWithRadiusBridge(object):
             get_test_library.wifi_capacity(instance_name="Ratelimit_Radius_group_user4",
                                            mode=mode,
                                            download_rate="1Gbps", batch_size="1",
-                                           upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                           upload_rate="0Gbps", protocol="TCP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
 

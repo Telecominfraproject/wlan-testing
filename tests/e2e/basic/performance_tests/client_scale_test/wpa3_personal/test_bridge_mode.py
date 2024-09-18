@@ -55,7 +55,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": max_stations})
         assert True
@@ -73,7 +73,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_ul", mode=mode,
                                        download_rate="100Kbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": max_stations})
         assert True
@@ -91,7 +91,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_ul", mode=mode,
                                        download_rate="100Kbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": max_stations})
         assert True
@@ -110,7 +110,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": max_stations})
         assert True
@@ -130,7 +130,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_bi", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": max_stations})
         assert True
@@ -150,7 +150,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_bi", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": max_stations})
         assert True
@@ -201,7 +201,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": max_stations})
         assert True
@@ -220,7 +220,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": max_stations})
         assert True
@@ -240,7 +240,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_bi", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": max_stations})
         assert True
@@ -260,7 +260,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_bi", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": max_stations})
         assert True
@@ -278,7 +278,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_ul", mode=mode,
                                        download_rate="100Kbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": max_stations})
         assert True
@@ -296,7 +296,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_ul", mode=mode,
                                        download_rate="100Kbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": max_stations})
         assert True
@@ -348,7 +348,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": max_stations})
         assert True
@@ -368,7 +368,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="56Kbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": max_stations})
         assert True
@@ -389,7 +389,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_bi", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": max_stations})
         assert True
@@ -410,7 +410,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_bi", mode=mode,
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": max_stations})
         assert True
@@ -429,7 +429,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_tcp_ul", mode=mode,
                                        download_rate="100Kbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": max_stations})
         assert True
@@ -448,7 +448,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_BRIDGE_udp_ul", mode=mode,
                                        download_rate="100Kbps", batch_size="1,5,10,20,40,64,128,256",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": max_stations})
         assert True

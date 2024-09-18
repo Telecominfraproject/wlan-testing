@@ -79,7 +79,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up", mode=mode,
                                             download_rate="0Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -116,7 +116,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_dw", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="0Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -156,7 +156,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_dw", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -197,7 +197,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_dw_di", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -235,7 +235,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_dw_per_cl", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, raw_lines=raw_lines, vlan_id=vlan, passkey=passkey,
                                             up_rate=up_rate, down_rate=down_rate)
@@ -272,7 +272,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_per_cl", mode=mode,
                                             download_rate="0Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, raw_lines=raw_lines, vlan_id=vlan,
                                             passkey=passkey, up_rate=up_rate,
@@ -312,7 +312,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_dw_per_cl", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="0Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 5}, raw_lines=raw_lines, vlan_id=vlan,
                                             passkey=passkey, up_rate=up_rate,
@@ -350,7 +350,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_125", mode=mode,
                                             download_rate="0Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -386,7 +386,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_dw_125", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="0Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -423,7 +423,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_dw_125", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -459,7 +459,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_1", mode=mode,
                                             download_rate="0Gbps", batch_size="1",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 1}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -495,7 +495,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_1", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="0Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 1}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -531,7 +531,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_tcp_dl_up_dw_1", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"2G": 1}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -567,7 +567,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_1_5g", mode=mode,
                                             download_rate="0Gbps", batch_size="1",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 1}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -603,7 +603,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_dw_1_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="0Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 1}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -639,7 +639,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_dw_1_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 1}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -677,7 +677,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_dw_di_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, vlan_id=vlan, passkey=passkey, up_rate=up_rate,
                                             down_rate=down_rate)
@@ -714,7 +714,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_per_cl_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, raw_lines=raw_lines, vlan_id=vlan,
                                             passkey=passkey, up_rate=up_rate,
@@ -753,7 +753,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_up_per_cl_5g", mode=mode,
                                             download_rate="0Gbps", batch_size="1,2,5",
-                                            upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, raw_lines=raw_lines, vlan_id=vlan,
                                             passkey=passkey, up_rate=up_rate,
@@ -792,7 +792,7 @@ class TestRateLimitingVLAN(object):
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.rate_limiting_test(instance_name="test_client_wpa2_VLAN_dw_per_cl_5g", mode=mode,
                                             download_rate="1Gbps", batch_size="1,2,5",
-                                            upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                            upload_rate="0Gbps", protocol="UDP", duration="60000",
                                             move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                             num_stations={"5G": 5}, raw_lines=raw_lines, vlan_id=vlan,
                                             passkey=passkey, up_rate=up_rate,

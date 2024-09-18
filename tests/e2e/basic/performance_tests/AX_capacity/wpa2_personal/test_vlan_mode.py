@@ -60,7 +60,7 @@ class TestWifiCapacityVLANModeAX5G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_tcp_dl",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="TCP-IPv4", upload_rate="56Kbps", download_rate="10Gbps",
+                                          protocol="TCP", upload_rate="56Kbps", download_rate="10Gbps",
                                           num_stations={"5G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -87,7 +87,7 @@ class TestWifiCapacityVLANModeAX5G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_udp_dl",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="UDP-IPv4", upload_rate="56Kbps", download_rate="10Gbps",
+                                          protocol="UDP", upload_rate="56Kbps", download_rate="10Gbps",
                                           num_stations={"5G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -114,7 +114,7 @@ class TestWifiCapacityVLANModeAX5G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_tcp_bidirectional",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="TCP-IPv4", upload_rate="10Gbps", download_rate="10Gbps",
+                                          protocol="TCP", upload_rate="10Gbps", download_rate="10Gbps",
                                           num_stations={"5G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -141,7 +141,7 @@ class TestWifiCapacityVLANModeAX5G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_udp_bidirectional",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="UDP-IPv4", upload_rate="10Gbps", download_rate="10Gbps",
+                                          protocol="UDP", upload_rate="10Gbps", download_rate="10Gbps",
                                           num_stations={"5G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -168,7 +168,7 @@ class TestWifiCapacityVLANModeAX5G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_tcp_ul",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="TCP-IPv4", upload_rate="10Gbps", download_rate="56Kbps",
+                                          protocol="TCP", upload_rate="10Gbps", download_rate="56Kbps",
                                           num_stations={"5G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -195,7 +195,7 @@ class TestWifiCapacityVLANModeAX5G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_udp_ul",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="UDP-IPv4", upload_rate="10Gbps", download_rate="56Kbps",
+                                          protocol="UDP", upload_rate="10Gbps", download_rate="56Kbps",
                                           num_stations={"5G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -254,7 +254,7 @@ class TestWifiCapacityVLANModeAX2G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_tcp_dl",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="TCP-IPv4", upload_rate="56Kbps", download_rate="10Gbps",
+                                          protocol="TCP", upload_rate="56Kbps", download_rate="10Gbps",
                                           num_stations={"2G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -281,7 +281,7 @@ class TestWifiCapacityVLANModeAX2G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_udp_dl",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="UDP-IPv4", upload_rate="56Kbps", download_rate="10Gbps",
+                                          protocol="UDP", upload_rate="56Kbps", download_rate="10Gbps",
                                           num_stations={"2G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -308,7 +308,7 @@ class TestWifiCapacityVLANModeAX2G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_tcp_bidirectional",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="TCP-IPv4", upload_rate="10Gbps", download_rate="10Gbps",
+                                          protocol="TCP", upload_rate="10Gbps", download_rate="10Gbps",
                                           num_stations={"2G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -335,7 +335,7 @@ class TestWifiCapacityVLANModeAX2G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_udp_bidirectional",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="UDP-IPv4", upload_rate="10Gbps", download_rate="10Gbps",
+                                          protocol="UDP", upload_rate="10Gbps", download_rate="10Gbps",
                                           num_stations={"2G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -362,7 +362,7 @@ class TestWifiCapacityVLANModeAX2G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_tcp_ul",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="TCP-IPv4", upload_rate="10Gbps", download_rate="56Kbps",
+                                          protocol="TCP", upload_rate="10Gbps", download_rate="56Kbps",
                                           num_stations={"2G": 1}, mode="VLAN", vlan_id=vid)
         assert True
 
@@ -389,6 +389,6 @@ class TestWifiCapacityVLANModeAX2G(object):
 
         get_test_library.ax_capacity_test(instance_name="test_client_wpa2_vlan_udp_ul",
                                           dut_data=setup_configuration, dut_mode=dut_mode,
-                                          protocol="UDP-IPv4", upload_rate="10Gbps", download_rate="56Kbps",
+                                          protocol="UDP", upload_rate="10Gbps", download_rate="56Kbps",
                                           num_stations={"2G": 1}, mode="VLAN", vlan_id=vid)
         assert True
