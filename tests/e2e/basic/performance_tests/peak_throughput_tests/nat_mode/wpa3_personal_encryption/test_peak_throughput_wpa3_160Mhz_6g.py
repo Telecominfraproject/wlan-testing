@@ -39,13 +39,13 @@ setup_params_general = {
 )
 @pytest.mark.wpa3_personal
 @pytest.mark.twog
-@pytest.mark.performance
 @pytest.mark.usefixtures("setup_configuration")
 class Test160Mhz6GChannelautoPeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12400", name="WIFI-12400")
     @pytest.mark.tcp_download
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Single client TCP Download wifi capacity 160Mhz Bw")
     def test_client_wpa3_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
@@ -56,15 +56,16 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_download", mode=mode,
-                                       download_rate="1Gbps", batch_size="1",
+                                       download_rate="10Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12401", name="WIFI-12401")
     @pytest.mark.udp_download
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Single client UDP Download wifi capacity 160Mhz Bw")
     def test_client_wpa3_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
@@ -75,10 +76,10 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_dl", mode=mode,
-                                       download_rate="1Gbps", batch_size="1",
+                                       download_rate="10Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12403", name="WIFI-12403")
@@ -94,10 +95,10 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
-                                       download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       download_rate="10Gbps", batch_size="1",
+                                       upload_rate="10Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12402", name="WIFI-12402")
@@ -113,15 +114,16 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
-                                       download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       download_rate="10Gbps", batch_size="1",
+                                       upload_rate="10Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12399", name="WIFI-12399")
     @pytest.mark.tcp_upload
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Single client TCP Upload wifi capacity 160Mhz Bw")
     def test_client_wpa3_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
@@ -133,14 +135,15 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="56Kbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="10Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12398", name="WIFI-12398")
     @pytest.mark.udp_upload
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Single client UDP Upload wifi capacity 160Mhz Bw")
     def test_client_wpa3_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
@@ -152,7 +155,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="56Kbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="10Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1})
+                                       num_stations={"6G": 1}, pass_fail_criteria=True)
         assert True

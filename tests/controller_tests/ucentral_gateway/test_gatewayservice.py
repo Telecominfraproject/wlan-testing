@@ -380,8 +380,8 @@ class TestUcentralGatewayService(object):
             "when": 0,
             "duration": 1,
             "numberOfPackets": 0,
-            "network": "string",
-            "interface": "string"
+            "network": "up",
+            "interface": "up"
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.trace_device(device_name, payload)
@@ -421,7 +421,6 @@ class TestUcentralGatewayService(object):
     @allure.title("Request Message Device")
     @allure.testcase(name="WIFI-11448",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-11448")
-    @pytest.mark.ow_sanity_lf
     def test_gw_service_request_msg_device(self, get_target_object, get_testbed_details):
         """
             Test to Request specific msg from device present in Gateway UI

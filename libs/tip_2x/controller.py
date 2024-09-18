@@ -1340,6 +1340,7 @@ class FMSUtils:
                   serial + "\"" + " , \"uri\" : " \
                   + "\"" + url \
                   + "\"" + ", \"when\" : 0" \
+                  + ", \"keepRedirector\" : false" \
                   + " }"
         command = "device/" + serial + "/upgrade"
         logging.info("Sending Command: " + "\n" +
@@ -1356,7 +1357,7 @@ class FMSUtils:
                                            method="POST", params="serialNumber=" + serial,
                                            payload="{ \"serialNumber\" : " + "\"" + serial + "\"" +
                                                    " , \"uri\" : " + "\"" + url + "\"" +
-                                                   ", \"when\" : 0" + " }")
+                                                   ", \"when\" : 0" + ", \"keepRedirector\" : false" + " }")
 
     def ap_model_lookup(self, model=""):
         devices = self.get_device_set()

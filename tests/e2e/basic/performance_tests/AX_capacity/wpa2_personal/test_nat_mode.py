@@ -1,11 +1,11 @@
 """
     Performance Test: AX Capacity Test : NAT Mode
-    pytest -m "wifi_capacity_ax and wpa2_personal and nat"
+    pytest -m "wifi_capacity_ax_tests and wpa2_personal and nat"
 """
 import pytest
 import allure
 
-pytestmark = [pytest.mark.performance, pytest.mark.nat, pytest.mark.wifi_capacity_ax, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.nat, pytest.mark.wifi_capacity_ax_tests, pytest.mark.wpa2_personal]
 setup_params_general_5G = {
     "mode": "NAT",
     "ssid_modes": {
@@ -39,6 +39,7 @@ setup_params_general_5G = {
 class TestWifiCapacityNATModeAX5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6947", name="WIFI-6947")
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Download wifi capacity")
     def test_client_wpa2_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -50,7 +51,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and tcp_download
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and tcp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -65,6 +66,7 @@ class TestWifiCapacityNATModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6950", name="WIFI-6950")
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Download wifi capacity")
     def test_client_wpa2_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -76,7 +78,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and udp_download
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and udp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -102,7 +104,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and tcp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and tcp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -128,7 +130,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and udp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and udp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -143,6 +145,7 @@ class TestWifiCapacityNATModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6948", name="WIFI-6948")
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Upload wifi capacity")
     def test_client_wpa2_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -154,7 +157,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and tcp_upload
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and tcp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -169,6 +172,7 @@ class TestWifiCapacityNATModeAX5G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6951", name="WIFI-6951")
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Upload wifi capacity")
     def test_client_wpa2_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -180,7 +184,7 @@ class TestWifiCapacityNATModeAX5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and fiveg and udp_upload
+        wifi_capacity_ax_tests and wpa2_personal and nat and fiveg and udp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -227,6 +231,7 @@ setup_params_general_2G = {
 class TestWifiCapacityNATModeAX2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13290", name="WIFI-13290")
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Download wifi capacity")
     def test_client_wpa2_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -238,7 +243,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and tcp_download
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and tcp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -253,6 +258,7 @@ class TestWifiCapacityNATModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13293", name="WIFI-13293")
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Download wifi capacity")
     def test_client_wpa2_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -264,7 +270,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and udp_download
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and udp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -290,7 +296,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and tcp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and tcp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -316,7 +322,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and udp_bidirectional
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and udp_bidirectional
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -331,6 +337,7 @@ class TestWifiCapacityNATModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13291", name="WIFI-13291")
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client TCP Upload wifi capacity")
     def test_client_wpa2_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -342,7 +349,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and tcp_upload
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and tcp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -357,6 +364,7 @@ class TestWifiCapacityNATModeAX2G(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13294", name="WIFI-13294")
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     @allure.title("Single AX client UDP Upload wifi capacity")
     def test_client_wpa2_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
@@ -368,7 +376,7 @@ class TestWifiCapacityNATModeAX2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        wifi_capacity_ax and wpa2_personal and nat and twog and udp_upload
+        wifi_capacity_ax_tests and wpa2_personal and nat and twog and udp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
