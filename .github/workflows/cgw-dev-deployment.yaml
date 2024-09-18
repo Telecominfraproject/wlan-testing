@@ -5,9 +5,11 @@ defaults:
     shell: bash
 
 env:
-  AWS_EKS_NAME: tip-wlan-main
+  #AWS_EKS_NAME: tip-wlan-main
+  AWS_EKS_NAME: tip-wlan-qa
   AWS_DEFAULT_OUTPUT: json
-  AWS_DEFAULT_REGION: ap-south-1
+  AWS_DEFAULT_REGION: us-east-1
+  #AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -15,14 +17,14 @@ env:
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   # Required object fiels per environment:
   # - namespace - namespace suffix that will used added for the Kubernetes environment (i.e. if you pass 'test', kubernetes namespace will be named 'openlan-test')
-  # - chart_version - OpenLAN Cloud Gateway Git branch to checkout
+  # - deploy_repo_version - wlan_cloud_ucentral_deploy repo version to use
   # - cgw_version - OpenLAN Cloud Gateway version to deploy (will be used for Docker image tag and git branch for Helm chart if git deployment is required)
   # - just_component - if true then deploy only cgw chart
   testbeds: '[
     {
       "namespace": "cgw01",
-      "chart_version": "main",
-      "cgw_version": "main",
+      "deploy_repo_version": "main",
+      "cgw_version": "next",
       "just_component": "false"
     }
   ]'
@@ -76,7 +78,14 @@ jobs:
         with:
           repository: Telecominfraproject/wlan-cloud-ucentral-deploy
           path: wlan-cloud-ucentral-deploy
-          ref: ${{ matrix.chart_version }}
+          ref: ${{ matrix.deploy_repo_version }}
+
+      - name: Checkout cgw repo
+        uses: actions/checkout@v4
+        with:
+          repository: Telecominfraproject/openlan-cgw
+          path: openlan-cgw
+          ref: ${{ matrix.cgw_version }}
 
       - name: Fetch kubeconfig
         run: |
@@ -110,16 +119,22 @@ jobs:
           # service components can't be reinstalled easily
           helm ls -n ${{ matrix.namespace }}
           if ! helm ls -n ${{ matrix.namespace }} | grep "^kafka" >/dev/null ; then
-            helmfile --environment ${{ matrix.namespace }} apply
+            helmfile --environment ${{ matrix.namespace }} \
+              --state-values-set "cgw.tag={{ matrix.cgw_version }}"
+              apply
           else
-            helmfile --environment ${{ matrix.namespace }} -l app=cgw apply
+            helmfile --environment ${{ matrix.namespace }} -l app=cgw \
+              --state-values-set "cgw.tag={{ matrix.cgw_version }}" \
+              apply
           fi
 
       - name: Deploy OpenLAN Cloud Gateway only
         if: ${{ github.event.inputs.just_component }} == "true"
         working-directory: wlan-cloud-ucentral-deploy/cgw
         run: |
-          helmfile --environment ${{ matrix.namespace }} -l app=cgw apply
+          helmfile --environment ${{ matrix.namespace }} -l app=cgw \
+              --state-values-set "cgw.tag={{ matrix.cgw_version }}" \
+              apply
 
       - name: Show resource state on deployment failure
         if: failure()
