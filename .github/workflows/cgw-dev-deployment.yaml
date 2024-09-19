@@ -112,7 +112,7 @@ jobs:
           AWS_EKS_NAME: ${{ github.events.inputs.cluster }}
           AWS_DEFAULT_REGION: ${{ github.events.inputs.region }}
         run: |
-          aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+          aws eks update-kubeconfig --name "$AWS_EKS_NAME"
 
       - name: Install kubectl, helmfile and plugins
         run: |
@@ -143,10 +143,10 @@ jobs:
           CONFIG_NAME: ${{ github.events.inputs.config_name }}
           NAMESPACE: ${{ github.events.inputs.namespace }}
         run: |
-          helm ls -n ${{ env.NAMESPACE }}
+          helm ls -n $NAMESPACE
           echo "If already installed then it may not be possible to upgrade service components"
-          helmfile --environment ${{ env.CONFIG_NAME }} \
-            --state-values-set "cgw.tag={{ env.IMG_TAG }}" \
+          helmfile --environment $CONFIG_NAME \
+            --state-values-set "cgw.tag=$IMG_TAG" \
             apply
 
       - name: Deploy OpenLAN Cloud Gateway only
@@ -157,9 +157,9 @@ jobs:
           CONFIG_NAME: ${{ github.events.inputs.config_name }}
           NAMESPACE: ${{ github.events.inputs.namespace }}
         run: |
-          helm ls -n ${{ env.NAMESPACE }}
-          helmfile --environment ${{ env.CONFIG_NAME }} -l app=cgw \
-              --state-values-set "cgw.tag={{ env.IMG_TAG }}" \
+          helm ls -n $NAMESPACE
+          helmfile --environment $CONFIG_NAME -l app=cgw \
+              --state-values-set "cgw.tag=$IMG_TAG" \
               apply
 
       - name: Show resource state on deployment failure
@@ -168,12 +168,12 @@ jobs:
           NAMESPACE: ${{ github.events.inputs.namespace }}
         run: |
           echo "Deploy/STS:"
-          kubectl get deploy,sts --namespace {{ env.NAMESPACE }} -o wide
+          kubectl get deploy,sts --namespace $NAMESPACE -o wide
           echo "Pods:"
-          kubectl get pods --namespace {{ env.NAMESPACE }} -o wide
+          kubectl get pods --namespace $NAMESPACE -o wide
           echo "Pod Descriptions:"
-          kubectl describe pods --namespace {{ env.NAMESPACE }}
+          kubectl describe pods --namespace $NAMESPACE
           echo "Services:"
-          kubectl get services --namespace {{ env.NAMESPACE }} -o wide
+          kubectl get services --namespace $NAMESPACE -o wide
           echo "Service Descriptions:"
-          kubectl describe services --namespace {{ env.NAMESPACE }}
+          kubectl describe services --namespace $NAMESPACE
