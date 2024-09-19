@@ -52,7 +52,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -69,7 +69,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -86,7 +86,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -103,7 +103,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -120,7 +120,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -137,7 +137,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -184,7 +184,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -201,7 +201,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -218,7 +218,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -235,7 +235,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -252,7 +252,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -269,7 +269,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -315,7 +315,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -332,7 +332,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -349,7 +349,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -366,7 +366,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -383,7 +383,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -400,7 +400,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -447,7 +447,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -464,7 +464,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -481,7 +481,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -498,7 +498,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -515,7 +515,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -532,7 +532,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -579,7 +579,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -596,7 +596,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -613,7 +613,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -630,7 +630,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -647,7 +647,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -664,7 +664,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -711,7 +711,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -728,7 +728,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -745,7 +745,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -762,7 +762,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -779,7 +779,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -796,7 +796,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -844,7 +844,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -861,7 +861,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -878,7 +878,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -895,7 +895,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -912,7 +912,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -929,7 +929,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -977,7 +977,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -994,7 +994,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1011,7 +1011,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1028,7 +1028,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1045,7 +1045,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1062,7 +1062,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1110,7 +1110,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1127,7 +1127,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1144,7 +1144,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1161,7 +1161,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1178,7 +1178,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1195,7 +1195,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1242,7 +1242,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1259,7 +1259,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1276,7 +1276,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1293,7 +1293,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1310,7 +1310,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1327,7 +1327,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1375,7 +1375,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1392,7 +1392,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1409,7 +1409,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1426,7 +1426,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1443,7 +1443,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1460,7 +1460,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1508,7 +1508,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1525,7 +1525,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1542,7 +1542,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1559,7 +1559,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1576,7 +1576,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1593,7 +1593,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1641,7 +1641,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1658,7 +1658,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1675,7 +1675,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1692,7 +1692,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1709,7 +1709,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1726,7 +1726,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1774,7 +1774,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1791,7 +1791,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1808,7 +1808,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1825,7 +1825,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1842,7 +1842,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1859,7 +1859,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1905,7 +1905,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1922,7 +1922,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1939,7 +1939,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1956,7 +1956,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1973,7 +1973,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -1990,7 +1990,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2036,7 +2036,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2053,7 +2053,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2070,7 +2070,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2087,7 +2087,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2104,7 +2104,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2121,7 +2121,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2167,7 +2167,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2184,7 +2184,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2201,7 +2201,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2218,7 +2218,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2235,7 +2235,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True
@@ -2252,7 +2252,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"5G": 1})
         assert True

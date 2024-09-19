@@ -56,7 +56,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_download", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="56Kbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="56Kbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": 1})
         assert True
@@ -75,7 +75,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
 
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="56Kbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": 1})
         assert True
@@ -93,7 +93,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": 1})
         assert True
@@ -111,7 +111,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": 1})
         assert True
@@ -129,7 +129,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="56Kbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": 1})
         assert True
@@ -147,7 +147,7 @@ class Test80Mhz6GChannelautoPeakThroughput(object):
         mode = "NAT-WAN"
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="56Kbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"6G": 1})
         assert True
