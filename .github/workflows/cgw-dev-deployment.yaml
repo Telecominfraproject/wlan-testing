@@ -1,4 +1,4 @@
-name: Update CGW01 OpenLAN Cloud Gateway on tip-wlan-main
+name: Update CGW01 OpenLAN Cloud Gateway
 
 defaults:
   run:
@@ -91,13 +91,15 @@ jobs:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
       fail-fast: false
     steps:
-      - name: Checkout repo with Helm values
+      - name: Checkout deploy repo with Helm values
         uses: actions/checkout@v4
         with:
           repository: Telecominfraproject/wlan-cloud-ucentral-deploy
           path: wlan-cloud-ucentral-deploy
           ref: ${{ matrix.deploy_repo_version }}
 
+      # helmfile has trouble with installing from git+https repos
+      # so check out the relevant branch of cgw and reference the helm chart from there
       - name: Checkout cgw repo
         uses: actions/checkout@v4
         with:
@@ -120,7 +122,6 @@ jobs:
           sudo install -o root -g root -m 0755 helmfile /usr/local/bin/helmfile
           helm plugin install https://github.com/aslafy-z/helm-git --version 0.16.0
           helm plugin install https://github.com/databus23/helm-diff
-          helm plugin install https://github.com/jkroepke/helm-secrets
 
       - name: Create certificate file
         working-directory: wlan-cloud-ucentral-deploy/cgw
@@ -142,7 +143,7 @@ jobs:
                 --state-values-set "cgw.tag=${{ github.event.inputs.cgw_image }}" \
                 apply
           else
-            helmfile --environment ${{ github.event.inputs.config_name }} -l app=cgw \
+            helmfile --environment ${{ github.event.inputs.config_name }} -l group=apps \
                 --state-values-set "cgw.tag=${{ github.event.inputs.cgw_image }}" \
                 apply
           fi
