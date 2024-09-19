@@ -100,17 +100,16 @@ jobs:
 
       - name: Checkout cgw repo
         uses: actions/checkout@v4
-        env:
-          VERSION: ${{ github.events.inputs.cgw_version }}
         with:
           repository: Telecominfraproject/openlan-cgw
           path: openlan-cgw
-          ref: ${{ env.VERSION }}
+          ref: ${{ github.event.inputs.cgw_version }}
 
       - name: Fetch kubeconfig
+        env:
+          AWS_DEFAULT_REGION: ${{ github.event.inputs.region }}
         run: |
-          export AWS_DEFAULT_REGION=${{ github.events.inputs.region }}
-          aws eks update-kubeconfig --name ${{ github.events.inputs.cluster }}
+          aws eks update-kubeconfig --name ${{ github.event.inputs.cluster }}
 
       - name: Install kubectl, helmfile and plugins
         run: |
@@ -137,31 +136,31 @@ jobs:
         if: ${{ github.event.inputs.upgrade }} == "false"
         working-directory: wlan-cloud-ucentral-deploy/cgw
         run: |
-          helm ls -n ${{ github.events.inputs.namespace }}
+          helm ls -n ${{ github.event.inputs.namespace }}
           echo "If already installed then it may not be possible to upgrade service components"
-          helmfile --environment ${{ github.events.inputs.config_name }} \
-            --state-values-set "cgw.tag=${{ github.events.inputs.cgw_image }}" \
+          helmfile --environment ${{ github.event.inputs.config_name }} \
+            --state-values-set "cgw.tag=${{ github.event.inputs.cgw_image }}" \
             apply
 
       - name: Deploy OpenLAN Cloud Gateway only
         if: ${{ github.event.inputs.upgrade }} == "true"
         working-directory: wlan-cloud-ucentral-deploy/cgw
         run: |
-          helm ls -n {{ github.events.inputs.namespace }}
-          helmfile --environment ${{ github.events.inputs.config_name }} -l app=cgw \
-              --state-values-set "cgw.tag=${{ github.events.inputs.cgw_image }}" \
+          helm ls -n ${{ github.event.inputs.namespace }}
+          helmfile --environment ${{ github.event.inputs.config_name }} -l app=cgw \
+              --state-values-set "cgw.tag=${{ github.event.inputs.cgw_image }}" \
               apply
 
       - name: Show resource state on deployment failure
         if: failure()
         run: |
           echo "Deploy/STS:"
-          kubectl get deploy,sts --namespace {{ github.events.inputs.namespace }} -o wide
+          kubectl get deploy,sts --namespace ${{ github.event.inputs.namespace }} -o wide
           echo "Pods:"
-          kubectl get pods --namespace {{ github.events.inputs.namespace }} -o wide
+          kubectl get pods --namespace ${{ github.event.inputs.namespace }} -o wide
           echo "Pod Descriptions:"
-          kubectl describe pods --namespace {{ github.events.inputs.namespace }}
+          kubectl describe pods --namespace ${{ github.event.inputs.namespace }}
           echo "Services:"
-          kubectl get services --namespace {{ github.events.inputs.namespace }} -o wide
+          kubectl get services --namespace ${{ github.event.inputs.namespace }} -o wide
           echo "Service Descriptions:"
-          kubectl describe services --namespace {{ github.events.inputs.namespace }}
+          kubectl describe services --namespace ${{ github.event.inputs.namespace }}
