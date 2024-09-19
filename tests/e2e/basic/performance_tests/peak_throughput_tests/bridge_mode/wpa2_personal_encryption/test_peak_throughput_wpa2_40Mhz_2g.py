@@ -53,7 +53,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1.5Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -70,7 +70,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -87,7 +87,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -104,7 +104,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -121,7 +121,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -138,7 +138,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -186,7 +186,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -203,7 +203,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -220,7 +220,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -237,7 +237,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -254,7 +254,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -271,7 +271,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -319,7 +319,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -336,7 +336,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -353,7 +353,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -370,7 +370,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -387,7 +387,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -404,7 +404,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -452,7 +452,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -469,7 +469,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -486,7 +486,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -503,7 +503,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -520,7 +520,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -537,7 +537,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -585,7 +585,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -602,7 +602,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -619,7 +619,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -636,7 +636,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -653,7 +653,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -670,7 +670,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -718,7 +718,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -735,7 +735,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -752,7 +752,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -769,7 +769,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -786,7 +786,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -803,7 +803,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -852,7 +852,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -869,7 +869,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -886,7 +886,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -903,7 +903,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -920,7 +920,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -937,7 +937,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -985,7 +985,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1002,7 +1002,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1019,7 +1019,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1036,7 +1036,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1053,7 +1053,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1070,7 +1070,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1119,7 +1119,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1136,7 +1136,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1153,7 +1153,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1170,7 +1170,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1187,7 +1187,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1204,7 +1204,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1252,7 +1252,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1269,7 +1269,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1286,7 +1286,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1303,7 +1303,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1320,7 +1320,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1337,7 +1337,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1390,7 +1390,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1408,7 +1408,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="56Kbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="56Kbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1426,7 +1426,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1444,7 +1444,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1462,7 +1462,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
@@ -1480,7 +1480,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         mode = "BRIDGE"
         get_test_library.wifi_capacity(instance_name="test_client_wpa2_personal_bridge_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
-                                       upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
+                                       upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                        num_stations={"2G": 1})
         assert True
