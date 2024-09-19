@@ -50,9 +50,9 @@ on:
         #other: "us-east-1"
         description: 'AWS Region'
         required: false
-      just_component:
+      upgrade:
         default: 'true'
-        description: 'Just deploy CGW component, not all the other services'
+        description: 'Just deploy CGW component, set to false for full install'
         required: false
       id:
         description: 'run identifier'
@@ -90,13 +90,6 @@ jobs:
     strategy:
       matrix: ${{ fromJson( needs.generate-matrix.outputs.matrix ) }}
       fail-fast: false
-    env:
-      IMG_TAG: ${{ github.events.inputs.cgw_image }}
-      VERSION: ${{ github.events.inputs.cgw_version }}
-      CONFIG_NAME: ${{ github.events.inputs.config_name }}
-      NAMESPACE: ${{ github.events.inputs.namespace }}
-      AWS_EKS_NAME: ${{ github.events.inputs.cluster }}
-      AWS_DEFAULT_REGION: ${{ github.events.inputs.region }}
     steps:
       - name: Checkout repo with Helm values
         uses: actions/checkout@v4
@@ -107,12 +100,17 @@ jobs:
 
       - name: Checkout cgw repo
         uses: actions/checkout@v4
+        env:
+          VERSION: ${{ github.events.inputs.cgw_version }}
         with:
           repository: Telecominfraproject/openlan-cgw
           path: openlan-cgw
           ref: ${{ env.VERSION }}
 
       - name: Fetch kubeconfig
+        env:
+          AWS_EKS_NAME: ${{ github.events.inputs.cluster }}
+          AWS_DEFAULT_REGION: ${{ github.events.inputs.region }}
         run: |
           aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
@@ -138,40 +136,44 @@ jobs:
             | grep websocket- >> values/certs.device.yaml
 
       - name: Deploy OpenLAN Cloud Gateway and services
-        if: ${{ github.event.inputs.just_component }} == "false"
+        if: ${{ github.event.inputs.upgrade }} == "false"
         working-directory: wlan-cloud-ucentral-deploy/cgw
+        env:
+          IMG_TAG: ${{ github.events.inputs.cgw_image }}
+          CONFIG_NAME: ${{ github.events.inputs.config_name }}
+          NAMESPACE: ${{ github.events.inputs.namespace }}
         run: |
-          # service components can't be reinstalled easily
-          helm ls -n ${{ env.FULL_NAMESPACE }}
-          if ! helm ls -n ${{ env.FULL_NAMESPACE }} | grep "^kafka" >/dev/null ; then
-            helmfile --environment ${{ env.CONFIG_NAME }} \
-              --state-values-set "cgw.tag={{ env.IMG_TAG }}" \
-              apply
-          else
-            helmfile --environment ${{ env.CONFIG_NAME }} -l app=cgw \
-              --state-values-set "cgw.tag={{ env.IMG_TAG }}" \
-              apply
-          fi
+          helm ls -n ${{ env.NAMESPACE }}
+          echo "If already installed then it may not be possible to upgrade service components"
+          helmfile --environment ${{ env.CONFIG_NAME }} \
+            --state-values-set "cgw.tag={{ env.IMG_TAG }}" \
+            apply
 
       - name: Deploy OpenLAN Cloud Gateway only
-        if: ${{ github.event.inputs.just_component }} == "true"
+        if: ${{ github.event.inputs.upgrade }} == "true"
         working-directory: wlan-cloud-ucentral-deploy/cgw
+        env:
+          IMG_TAG: ${{ github.events.inputs.cgw_image }}
+          CONFIG_NAME: ${{ github.events.inputs.config_name }}
+          NAMESPACE: ${{ github.events.inputs.namespace }}
         run: |
-          helm ls -n ${{ env.FULL_NAMESPACE }}
+          helm ls -n ${{ env.NAMESPACE }}
           helmfile --environment ${{ env.CONFIG_NAME }} -l app=cgw \
               --state-values-set "cgw.tag={{ env.IMG_TAG }}" \
               apply
 
       - name: Show resource state on deployment failure
         if: failure()
+        env:
+          NAMESPACE: ${{ github.events.inputs.namespace }}
         run: |
           echo "Deploy/STS:"
-          kubectl get deploy,sts --namespace {{ env.FULL_NAMESPACE }} -o wide
+          kubectl get deploy,sts --namespace {{ env.NAMESPACE }} -o wide
           echo "Pods:"
-          kubectl get pods --namespace {{ env.FULL_NAMESPACE }} -o wide
+          kubectl get pods --namespace {{ env.NAMESPACE }} -o wide
           echo "Pod Descriptions:"
-          kubectl describe pods --namespace {{ env.FULL_NAMESPACE }}
+          kubectl describe pods --namespace {{ env.NAMESPACE }}
           echo "Services:"
-          kubectl get services --namespace {{ env.FULL_NAMESPACE }} -o wide
+          kubectl get services --namespace {{ env.NAMESPACE }} -o wide
           echo "Service Descriptions:"
-          kubectl describe services --namespace {{ env.FULL_NAMESPACE }}
+          kubectl describe services --namespace {{ env.NAMESPACE }}
