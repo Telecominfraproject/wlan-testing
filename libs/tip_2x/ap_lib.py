@@ -211,7 +211,7 @@ class APLIBS:
                           body=str(data),
                           attachment_type=allure.attachment_type.JSON)
         print(data)
-
+        active_json = data
         return active_json
 
     def get_iwinfo(self, idx=0, print_log=True, attach_allure=True):
