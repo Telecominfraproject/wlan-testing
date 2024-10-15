@@ -521,20 +521,23 @@ def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_
                 query_ = f"?startDate={start_time}&endDate={end_time}"
                 resp = get_target_object.controller_library_object.get_device_statistics_teardown(device_name, query=query_)
                 if resp.status_code == 200:
-                    allure.attach(body=str(resp.json()), name="device_statistics_per_test_case")
+                    allure.attach(body=json.dumps(resp.json(), indent=4), name="device_statistics_per_test_case\n",
+                                                  attachment_type=allure.attachment_type.JSON)
                 else:
                     logging.info("resp.status_code:- " + str(resp.status_code))
                 # Check reboot logs
                 query_ = f"?logType=2&startDate={start_time}&endDate={end_time}"
                 resp = get_target_object.controller_library_object.get_device_reboot_logs(device_name, query=query_)
                 if resp.status_code == 200:
-                    allure.attach(body=str(resp.json()), name="device_reboot_logs_per_test_case")
+                    allure.attach(body=json.dumps(resp.json(), indent=4), name="device_reboot_logs_per_test_case\n",
+                                  attachment_type=allure.attachment_type.JSON)
                     response = resp.json()
                     # crash log validation
                     if response["values"]:
                         resp = get_target_object.controller_library_object.get_device_reboot_logs(device_name,
                                                                                                   query="?logType=2")
-                        allure.attach(body=str(resp.json()), name="all_device_reboot_logs")
+                        allure.attach(body=json.dumps(resp.json(), indent=4), name="all_device_reboot_logs\n",
+                                      attachment_type=allure.attachment_type.JSON)
                         logging.info("Reboot detected on AP side")
                         pytest.exit("Reboot detected on AP side")
                 else:
