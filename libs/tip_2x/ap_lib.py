@@ -211,6 +211,7 @@ class APLIBS:
                           body=str(data),
                           attachment_type=allure.attachment_type.JSON)
         print(data)
+        active_json = data
 
         return active_json
 
