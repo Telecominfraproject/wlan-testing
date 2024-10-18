@@ -538,8 +538,8 @@ def get_dut_logs_per_test_case(request, run_lf, get_testbed_details, get_target_
                                                                                                   query="?logType=2")
                         allure.attach(body=json.dumps(resp.json(), indent=4), name="all_device_reboot_logs\n",
                                       attachment_type=allure.attachment_type.JSON)
-                        logging.info("Reboot detected on AP side")
-                        pytest.exit("Reboot detected on AP side", 1)
+                        logging.info("AP crashed during the test")
+                        pytest.exit("AP crashed during the test", 1)
                 else:
                     logging.info("resp.status_code:- " + str(resp.status_code))
 
