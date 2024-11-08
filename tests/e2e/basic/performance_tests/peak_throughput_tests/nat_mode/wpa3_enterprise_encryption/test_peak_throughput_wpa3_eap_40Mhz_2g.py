@@ -43,103 +43,241 @@ class Test20Mhz2GChannel1PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -175,103 +313,241 @@ class Test20Mhz2GChannel2PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -307,103 +583,241 @@ class Test20Mhz2GChannel3PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -439,103 +853,241 @@ class Test20Mhz2GChannel4PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -571,103 +1123,241 @@ class Test20Mhz2GChannel5PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -703,103 +1393,241 @@ class Test20Mhz2GChannel6PeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -836,103 +1664,241 @@ class Test20Mhz2GChannel7PeakThroughput(object):
     @pytest.mark.tcp_download
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -968,103 +1934,241 @@ class Test20Mhz2GChannel8PeakThroughput(object):
     @pytest.mark.tcp_download
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -1101,103 +2205,241 @@ class Test20Mhz2GChannel9PeakThroughput(object):
     @pytest.mark.tcp_download
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -1233,103 +2475,241 @@ class Test20Mhz2GChannel10PeakThroughput(object):
     @pytest.mark.tcp_download
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
 
@@ -1365,101 +2745,239 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @pytest.mark.tcp_download
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
     def test_client_wpa3_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
     def test_client_wpa3_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
-                                                  get_test_device_logs, num_stations, setup_configuration):
+                                                  get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_bidirectional", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
     def test_client_wpa3_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_tcp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
     def test_client_wpa3_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
-                                       get_test_device_logs, num_stations, setup_configuration):
+                                       get_test_device_logs, num_stations, setup_configuration,radius_info):
         """ Wifi Capacity Test NAT mode
             pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
         """
         profile_data = {"ssid_name": "ssid_wpa3_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "NAT"
-        get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
+        security = "wpa3"
+        band = "twog"
+        eap = "TTLS"
+        ttls_passwd = radius_info["password"]
+        identity=radius_info["user"]
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(
+            ssid=ssid_name,
+            security=security,
+            mode="BRIDGE",
+            band=band,
+            eap=eap,
+            ttls_passwd=ttls_passwd,
+            identity=identity,
+            num_sta=1,
+            dut_data=setup_configuration,
+            cleanup=False,
+            key_mgmt="WPA-EAP-SHA256"
+        )
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_nat_udp_ul", mode=mode,
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP-IPv4", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"2G": 1})
+                                       num_stations={"2G": 1},add_stations=False)
         assert True
