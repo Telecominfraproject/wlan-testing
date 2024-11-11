@@ -44,8 +44,14 @@ class Test20Mhz2GChannel1PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -83,8 +89,14 @@ class Test20Mhz2GChannel1PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -122,8 +134,14 @@ class Test20Mhz2GChannel1PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -161,8 +179,14 @@ class Test20Mhz2GChannel1PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -200,8 +224,14 @@ class Test20Mhz2GChannel1PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -239,8 +269,14 @@ class Test20Mhz2GChannel1PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_1", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -308,8 +344,14 @@ class Test20Mhz2GChannel2PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -347,8 +389,14 @@ class Test20Mhz2GChannel2PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -386,8 +434,14 @@ class Test20Mhz2GChannel2PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -425,8 +479,14 @@ class Test20Mhz2GChannel2PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -464,8 +524,14 @@ class Test20Mhz2GChannel2PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -503,8 +569,14 @@ class Test20Mhz2GChannel2PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_2", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -572,8 +644,14 @@ class Test20Mhz2GChannel3PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -611,8 +689,14 @@ class Test20Mhz2GChannel3PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -650,8 +734,14 @@ class Test20Mhz2GChannel3PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -689,8 +779,14 @@ class Test20Mhz2GChannel3PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -728,8 +824,14 @@ class Test20Mhz2GChannel3PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -767,8 +869,14 @@ class Test20Mhz2GChannel3PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_3", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -836,8 +944,14 @@ class Test20Mhz2GChannel4PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -875,8 +989,14 @@ class Test20Mhz2GChannel4PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -914,8 +1034,14 @@ class Test20Mhz2GChannel4PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -953,8 +1079,14 @@ class Test20Mhz2GChannel4PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -992,8 +1124,14 @@ class Test20Mhz2GChannel4PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1031,8 +1169,14 @@ class Test20Mhz2GChannel4PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_4", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1100,8 +1244,14 @@ class Test20Mhz2GChannel5PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1139,8 +1289,14 @@ class Test20Mhz2GChannel5PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1178,8 +1334,14 @@ class Test20Mhz2GChannel5PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1217,8 +1379,14 @@ class Test20Mhz2GChannel5PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1256,8 +1424,14 @@ class Test20Mhz2GChannel5PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1295,8 +1469,14 @@ class Test20Mhz2GChannel5PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_5", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1364,8 +1544,14 @@ class Test20Mhz2GChannel6PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1403,8 +1589,14 @@ class Test20Mhz2GChannel6PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1442,8 +1634,14 @@ class Test20Mhz2GChannel6PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1481,8 +1679,14 @@ class Test20Mhz2GChannel6PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1520,8 +1724,14 @@ class Test20Mhz2GChannel6PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1559,8 +1769,14 @@ class Test20Mhz2GChannel6PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_6", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1629,8 +1845,14 @@ class Test20Mhz2GChannel7PeakThroughput(object):
     @pytest.mark.aaa
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1668,8 +1890,14 @@ class Test20Mhz2GChannel7PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1707,8 +1935,14 @@ class Test20Mhz2GChannel7PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1746,8 +1980,14 @@ class Test20Mhz2GChannel7PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1785,8 +2025,14 @@ class Test20Mhz2GChannel7PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1824,8 +2070,14 @@ class Test20Mhz2GChannel7PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_7", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1893,8 +2145,14 @@ class Test20Mhz2GChannel8PeakThroughput(object):
     @pytest.mark.aaa
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1932,8 +2190,14 @@ class Test20Mhz2GChannel8PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1971,8 +2235,14 @@ class Test20Mhz2GChannel8PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2010,8 +2280,14 @@ class Test20Mhz2GChannel8PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2049,8 +2325,14 @@ class Test20Mhz2GChannel8PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2088,8 +2370,14 @@ class Test20Mhz2GChannel8PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_8", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2158,8 +2446,14 @@ class Test20Mhz2GChannel9PeakThroughput(object):
     @pytest.mark.aaa
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2197,8 +2491,14 @@ class Test20Mhz2GChannel9PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2236,8 +2536,14 @@ class Test20Mhz2GChannel9PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2275,8 +2581,14 @@ class Test20Mhz2GChannel9PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2314,8 +2626,14 @@ class Test20Mhz2GChannel9PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2353,8 +2671,14 @@ class Test20Mhz2GChannel9PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_9", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2422,8 +2746,14 @@ class Test20Mhz2GChannel10PeakThroughput(object):
     @pytest.mark.aaa
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2461,8 +2791,14 @@ class Test20Mhz2GChannel10PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2500,8 +2836,14 @@ class Test20Mhz2GChannel10PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2539,8 +2881,14 @@ class Test20Mhz2GChannel10PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2578,8 +2926,14 @@ class Test20Mhz2GChannel10PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2617,8 +2971,14 @@ class Test20Mhz2GChannel10PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_10", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2686,8 +3046,14 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @pytest.mark.aaa
     def test_client_wpa2_enterprise_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2725,8 +3091,14 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa2_enterprise_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2764,8 +3136,14 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa2_enterprise_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2803,8 +3181,14 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @pytest.mark.udp_bidirectional
     def test_client_wpa2_enterprise_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP bidirectional traffic. It confirms the client's ability to connect via RADIUS, authenticate 
+        using TTLS, and measures throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2842,8 +3226,14 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa2_enterprise_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2881,8 +3271,14 @@ class Test20Mhz2GChannel11PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa2_enterprise_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa2_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa2 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa2_enterprise and twog and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_enterprise_2g_11", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]

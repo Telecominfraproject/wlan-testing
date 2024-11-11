@@ -3669,6 +3669,9 @@ setup_params_general13 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("peak throughput test")
+@allure.suite("5 GHz Band")
+@allure.sub_suite("BRIDGE Mode")
 @pytest.mark.channel_116
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -3970,6 +3973,9 @@ setup_params_general14 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("peak throughput test")
+@allure.suite("5 GHz Band")
+@allure.sub_suite("BRIDGE Mode")
 @pytest.mark.channel_114
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -4269,6 +4275,9 @@ setup_params_general15 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("peak throughput test")
+@allure.suite("5 GHz Band")
+@allure.sub_suite("BRIDGE Mode")
 @pytest.mark.channel_136
 @pytest.mark.parametrize(
     'setup_configuration',
@@ -4569,6 +4578,9 @@ setup_params_general16 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("peak throughput test")
+@allure.suite("5 GHz Band")
+@allure.sub_suite("BRIDGE Mode")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_general16],
@@ -4867,6 +4879,9 @@ setup_params_general17 = {
 
 
 @allure.feature("PEAK THROUGHPUT TESTS")
+@allure.parent_suite("peak throughput test")
+@allure.suite("5 GHz Band")
+@allure.sub_suite("BRIDGE Mode")
 @pytest.mark.channel_144
 @pytest.mark.parametrize(
     'setup_configuration',

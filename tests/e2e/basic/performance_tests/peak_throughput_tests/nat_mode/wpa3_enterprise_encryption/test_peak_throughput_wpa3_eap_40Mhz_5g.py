@@ -45,8 +45,15 @@ class Test40Mhz5GChannel36PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -85,8 +92,15 @@ class Test40Mhz5GChannel36PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -125,8 +139,15 @@ class Test40Mhz5GChannel36PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -163,10 +184,17 @@ class Test40Mhz5GChannel36PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -205,8 +233,15 @@ class Test40Mhz5GChannel36PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -245,8 +280,15 @@ class Test40Mhz5GChannel36PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -315,8 +357,15 @@ class Test40Mhz5GChannel44PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -327,8 +376,15 @@ class Test40Mhz5GChannel44PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -339,8 +395,15 @@ class Test40Mhz5GChannel44PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -349,10 +412,17 @@ class Test40Mhz5GChannel44PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -363,8 +433,15 @@ class Test40Mhz5GChannel44PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -375,8 +452,15 @@ class Test40Mhz5GChannel44PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -416,8 +500,15 @@ class Test40Mhz5GChannel52PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -456,8 +547,15 @@ class Test40Mhz5GChannel52PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -496,8 +594,15 @@ class Test40Mhz5GChannel52PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -534,10 +639,17 @@ class Test40Mhz5GChannel52PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -576,8 +688,15 @@ class Test40Mhz5GChannel52PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -616,8 +735,15 @@ class Test40Mhz5GChannel52PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -686,8 +812,15 @@ class Test40Mhz5GChannel60PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -726,8 +859,15 @@ class Test40Mhz5GChannel60PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -766,8 +906,15 @@ class Test40Mhz5GChannel60PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -804,10 +951,17 @@ class Test40Mhz5GChannel60PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -846,8 +1000,15 @@ class Test40Mhz5GChannel60PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -886,8 +1047,15 @@ class Test40Mhz5GChannel60PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -957,8 +1125,15 @@ class Test40Mhz5GChannel100PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -997,8 +1172,15 @@ class Test40Mhz5GChannel100PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1037,8 +1219,15 @@ class Test40Mhz5GChannel100PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1075,10 +1264,17 @@ class Test40Mhz5GChannel100PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1117,8 +1313,15 @@ class Test40Mhz5GChannel100PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1157,8 +1360,15 @@ class Test40Mhz5GChannel100PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1228,8 +1438,15 @@ class Test40Mhz5GChannel108PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1268,8 +1485,15 @@ class Test40Mhz5GChannel108PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1308,8 +1532,15 @@ class Test40Mhz5GChannel108PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1346,10 +1577,17 @@ class Test40Mhz5GChannel108PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1388,8 +1626,15 @@ class Test40Mhz5GChannel108PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1428,8 +1673,15 @@ class Test40Mhz5GChannel108PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1500,8 +1752,15 @@ class Test40Mhz5GChannel132PeakThroughput(object):
     @pytest.mark.aaa
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1540,8 +1799,15 @@ class Test40Mhz5GChannel132PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1580,8 +1846,15 @@ class Test40Mhz5GChannel132PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1618,10 +1891,17 @@ class Test40Mhz5GChannel132PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1660,8 +1940,15 @@ class Test40Mhz5GChannel132PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1700,8 +1987,15 @@ class Test40Mhz5GChannel132PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1769,8 +2063,15 @@ class Test40Mhz5GChannel136PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1809,8 +2110,15 @@ class Test40Mhz5GChannel136PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1849,8 +2157,15 @@ class Test40Mhz5GChannel136PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1887,10 +2202,17 @@ class Test40Mhz5GChannel136PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1929,8 +2251,15 @@ class Test40Mhz5GChannel136PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1969,8 +2298,15 @@ class Test40Mhz5GChannel136PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2039,8 +2375,15 @@ class Test40Mhz5GChannel140PeakThroughput(object):
     @pytest.mark.tcp_download
     def test_client_wpa3_eap_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks the Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP download traffic. It ensures that the client can connect to the AP via RADIUS, authenticate with 
+        TTLS, and measures the throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2079,8 +2422,15 @@ class Test40Mhz5GChannel140PeakThroughput(object):
     @pytest.mark.udp_download
     def test_client_wpa3_eap_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP download traffic. The client connects via RADIUS, authenticates using TTLS, and measures the 
+        throughput with 1Gbps download and 0Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_download
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2119,8 +2469,15 @@ class Test40Mhz5GChannel140PeakThroughput(object):
     @pytest.mark.tcp_bidirectional
     def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2157,10 +2514,17 @@ class Test40Mhz5GChannel140PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
-    def test_client_wpa3_eap_nat_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
+    def test_client_wpa3_eap_nat_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test assesses Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP bidirectional traffic. It verifies that the client can connect via RADIUS and authenticate 
+        using TTLS, measuring throughput with 1Gbps download and upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_bidirectional
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2199,8 +2563,15 @@ class Test40Mhz5GChannel140PeakThroughput(object):
     @pytest.mark.tcp_upload
     def test_client_wpa3_eap_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test checks Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and TCP upload traffic. It ensures that the client connects via RADIUS, authenticates with TTLS, and 
+        measures the upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and tcp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2239,8 +2610,15 @@ class Test40Mhz5GChannel140PeakThroughput(object):
     @pytest.mark.udp_upload
     def test_client_wpa3_eap_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test NAT mode
-            pytest -m "wifi_capacity_test and NAT and wpa3_enterprise and twog"
+        """
+        Test Description:
+        This test evaluates Peak Throughput in NAT mode using wpa3 Enterprise security with a 
+        5 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and NAT and wpa3_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa3_eap_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
