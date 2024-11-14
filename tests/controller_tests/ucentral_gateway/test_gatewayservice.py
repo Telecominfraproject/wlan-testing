@@ -16,6 +16,8 @@ import allure
 import pytest
 import requests
 
+from jsonschema import validate, ValidationError
+
 
 @pytest.mark.uc_sanity
 @pytest.mark.ow_sdk_tests
@@ -249,11 +251,46 @@ class TestUcentralGatewayService(object):
             Unique marker:pytest -m "gw_device_logs"
         """
         print("XXXXXXX", get_testbed_details)
+
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         resp = get_target_object.controller_library_object.get_device_logs(device_name)
         # print(resp.json())
         # allure.attach(name="Device Logs", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
         assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Example schema to validate
+        schema = {
+  "type": "object",
+  "properties": {
+    "serialNumber": {"type": "string"},
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "UUID": {"type": "integer"},
+          "data": {"type": "object"},
+          "log": {"type": "string"},
+          "logType": {"type": "integer"},
+          "recorded": {"type": "integer"},
+          "severity": {"type": "integer"}
+        },
+        "required": ["UUID", "data", "log", "logType", "recorded", "severity"]
+      }
+    }
+  },
+  "required": ["serialNumber", "values"]
+}
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
 
     @pytest.mark.gw_device_health_checks
     @allure.title("Get Health Checks")
@@ -336,9 +373,37 @@ class TestUcentralGatewayService(object):
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.ping_device(device_name, payload)
-        # print(resp.json())
-        # allure.attach(name="Device Ping status", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
+        print(resp.json())
+        #Example schema for validation
+        schema = {
+                "type": "object",
+                "properties": {
+                    "serialNumber": {"type": "string"},
+                    "currentUTCTime": {"type": "integer"},
+                    "deviceUTCTime": {"type": "integer"},
+                    "latency": {"type": "string"},
+                    "configurationUUID": {"type": "integer"}
+                },
+                "required": ["serialNumber","currentUTCTime","latency"]
+        }
+        iwinfo = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=True)
+        print("iwinfo:", iwinfo)
+        # Validate response code
         assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed, ping device success.")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+
 
     @pytest.mark.gw_led_blink_device
     @allure.title("Blink LED API")
@@ -359,10 +424,95 @@ class TestUcentralGatewayService(object):
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.led_blink_device(device_name, payload)
-        # print(resp.json())
-        # allure.attach(name="Device Blink led status", body=str(resp.json()),
-        # attachment_type=#allure.#attachment_type.JSON)
+        print(resp.json())
+        # Expected JSON schema
+        schema = {
+            "type": "object",
+            "properties": {
+                "UUID": {"type": "string"},
+                "attachFile": {"type": "integer"},
+                "command": {"type": "string"},
+                "completed": {"type": "integer"},
+                "custom": {"type": "integer"},
+                "deferred": {"type": "boolean"},
+                "details": {
+                    "type": "object",
+                    "properties": {
+                        "duration": {"type": "integer"},
+                        "pattern": {"type": "string"},
+                        "serial": {"type": "string"},
+                        "when": {"type": "integer"}
+                    },
+                    "required": ["duration", "pattern", "serial", "when"]
+                },
+                "errorCode": {"type": "integer"},
+                "errorText": {"type": "string"},
+                "executed": {"type": "integer"},
+                "executionTime": {"type": "number"},
+                "lastTry": {"type": "integer"},
+                "results": {
+                    "type": "object",
+                    "properties": {
+                        "serial": {"type": "string"},
+                        "status": {
+                            "type": "object",
+                            "properties": {
+                                "error": {"type": "integer"},
+                                "resultCode": {"type": "integer"},
+                                "text": {"type": "string"}
+                            },
+                            "required": ["error", "resultCode", "text"]
+                        },
+                        "uuid": {"type": "integer"}
+                    },
+                    "required": ["serial", "status", "uuid"]
+                },
+                "serialNumber": {"type": "string"},
+                "status": {"type": "string"},
+                "submitted": {"type": "integer"},
+                "submittedBy": {"type": "string"},
+                "waitingForFile": {"type": "integer"},
+                "when": {"type": "integer"}
+            },
+            "required": ["UUID", "attachFile", "command", "completed", "custom", "deferred", "details",
+                         "errorCode", "errorText", "executed", "executionTime", "lastTry", "results",
+                         "serialNumber", "status", "submitted", "submittedBy", "waitingForFile", "when"]
+        }
+
+        # Validate status code
         assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        # Extract only the parts of the response needed for validation
+        data_to_validate = {
+                "result": {
+                    "serial": data["results"]["serial"],
+                    "status": {
+                        "error": data["results"]["status"]["error"],
+                        "text": data["results"]["status"]["text"]
+                    }
+                }
+            }
+
+        # Validate specific data fields
+        if data_to_validate["result"]["status"]["error"] == 0:
+            print("Error code is 0, indicating success.")
+            allure.attach(name="Specific data field validation", body="Error code is 0, indicating success.")
+        else:
+            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+
+
 
     @pytest.mark.gw_trace_device
     @allure.title("Trace Command")
@@ -378,16 +528,104 @@ class TestUcentralGatewayService(object):
         payload = {
             "serialNumber": device_name,
             "when": 0,
-            "duration": 1,
-            "numberOfPackets": 0,
+            "duration": 10, # <integer representing the number of seconds to run the trace>
+            "numberOfPackets": 0, # <integer for the number of packets to capture>
             "network": "up",
             "interface": "up"
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.trace_device(device_name, payload)
-        # print(resp.json())
-        # allure.attach(name="Device trace status", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
+        print(resp.json())
+        # Expected JSON schema
+        schema = {
+            "type": "object",
+            "properties": {
+                "UUID": {"type": "string"},
+                "attachFile": {"type": "integer"},
+                "command": {"type": "string"},
+                "completed": {"type": "integer"},
+                "custom": {"type": "integer"},
+                "deferred": {"type": "boolean"},
+                "details": {
+                    "type": "object",
+                    "properties": {
+                        "duration": {"type": "integer"},
+                        "interface": {"type": "string"},
+                        "network": {"type": "string"},
+                        "serial": {"type": "string"},
+                        "uri": {"type": "string", "format": "uri"},
+                        "when": {"type": "integer"}
+                    },
+                    "required": ["duration", "interface", "network", "serial", "uri", "when"]
+                },
+                "errorCode": {"type": "integer"},
+                "errorText": {"type": "string"},
+                "executed": {"type": "integer"},
+                "executionTime": {"type": "number"},
+                "lastTry": {"type": "integer"},
+                "results": {
+                    "type": "object",
+                    "properties": {
+                        "serial": {"type": "string"},
+                        "status": {
+                            "type": "object",
+                            "properties": {
+                                "error": {"type": "integer"},
+                                "resultCode": {"type": "integer"},
+                                "resultText": {"type": "string"},
+                                "text": {"type": "string"}
+                            },
+                            "required": ["error", "resultCode", "resultText", "text"]
+                        },
+                        "uuid": {"type": "integer"}
+                    },
+                    "required": ["serial", "status", "uuid"]
+                },
+                "serialNumber": {"type": "string"},
+                "status": {"type": "string"},
+                "submitted": {"type": "integer"},
+                "submittedBy": {"type": "string"},
+                "waitingForFile": {"type": "integer"},
+                "when": {"type": "integer"}
+            },
+            "required": ["UUID", "attachFile", "command", "completed", "custom", "deferred", "details",
+                         "errorCode", "errorText", "executed", "executionTime", "lastTry", "results",
+                         "serialNumber", "status", "submitted", "submittedBy", "waitingForFile", "when"]
+        }
+
+        # Validate status code
         assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        # Extract only the parts of the response needed for validation
+        data_to_validate = {
+            "result": {
+                "serial": data["results"]["serial"],
+                "status": {
+                    "error": data["results"]["status"]["error"],
+                    "text": data["results"]["status"]["text"]
+                }
+            }
+        }
+        # Validate specific data fields
+        if data_to_validate["result"]["status"]["error"] == 0:
+            print("Error code is 0, indicating success.")
+            allure.attach(name="Specific data field validation", body="Error code is 0, indicating success.")
+        else:
+            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+
+
 
     @pytest.mark.gw_wifi_scan_device
     @allure.title("Wi-Fi Scan Device")
@@ -406,16 +644,101 @@ class TestUcentralGatewayService(object):
             "activeScan": True,
             "selector": {
                 "bands": [
-                    "2"
+                    "2", "5"
                 ]
             }
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.wifi_scan_device(device_name, payload)
-        # print(resp.json())
-        # allure.attach(name="Device Wifi scan status", body=str(resp.json()),
-        # attachment_type=#allure.#attachment_type.JSON)
+        print(resp.json())
+        schema = {
+            "type": "object",
+            "properties": {
+                "UUID": {"type": "string"},
+                "attachFile": {"type": "integer"},
+                "command": {"type": "string"},
+                "completed": {"type": "integer"},
+                "custom": {"type": "integer"},
+                "deferred": {"type": "boolean"},
+                "details": {
+                    "type": "object",
+                    "properties": {
+                                      "active": {"type": "boolean"},
+                                      "override_dfs": {"type": "boolean"},
+                                      "serial": {"type": "string"}
+                                  },
+                    "required": ["active", "override_dfs", "serial"]
+        },
+        "errorCode": {"type": "integer"},
+        "errorText": {"type": "string"},
+        "executed": {"type": "integer"},
+        "executionTime": {"type": "number"},
+        "lastTry": {"type": "integer"},
+        "results": {
+            "type": "object",
+            "properties": {
+                "serial": {"type": "string"},
+                "status": {
+                    "type": "object",
+                    "properties": {
+                        "error": {"type": "integer"},
+                        "resultCode": {"type": "integer"},
+                        "scan": {
+                            "type": "array",
+                            "items": {}
+                        },
+                        "text": {"type": "string"}
+                    },
+                    "required": ["error", "resultCode", "scan", "text"]
+                },
+                "uuid": {"type": "integer"}
+            },
+            "required": ["serial", "status", "uuid"]
+        },
+        "serialNumber": {"type": "string"},
+        "status": {"type": "string"},
+        "submitted": {"type": "integer"},
+        "submittedBy": {"type": "string"},
+        "waitingForFile": {"type": "integer"},
+        "when": {"type": "integer"}
+        },
+        "required": ["results", "serialNumber", "status", "when"]
+        }
+
+
+        # Validate status code
         assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        # Extract only the parts of the response needed for validation
+        data_to_validate = {
+            "result": {
+                "serial": data["results"]["serial"],
+                "status": {
+                    "error": data["results"]["status"]["error"],
+                    "text": data["results"]["status"]["text"]
+                }
+            }
+        }
+
+        # Validate specific data fields
+        if data_to_validate["result"]["status"]["error"] == 0:
+            print("Error code is 0, indicating success.")
+            allure.attach(name="Specific data field validation", body="Error code is 0, indicating success.")
+        else:
+            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+
 
     @pytest.mark.gw_request_msg_device
     @allure.title("Request Message Device")
@@ -434,10 +757,96 @@ class TestUcentralGatewayService(object):
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.request_specific_msg_from_device(device_name, payload)
-        # print(resp.json())
-        # allure.attach(name="Device Request specific msg status", body=str(resp.json()),
-        # attachment_type=#allure.#attachment_type.JSON)
+        print(resp.json())
+        # Expected JSON schema
+        schema = {
+            "type": "object",
+            "properties": {
+                "UUID": {"type": "string"},
+                "attachFile": {"type": "integer"},
+                "command": {"type": "string"},
+                "completed": {"type": "integer"},
+                "custom": {"type": "integer"},
+                "deferred": {"type": "boolean"},
+                "details": {
+                    "type": "object",
+                    "properties": {
+                        "duration": {"type": "integer"},
+                        "interface": {"type": "string"},
+                        "network": {"type": "string"},
+                        "serial": {"type": "string"},
+                        "uri": {"type": "string", "format": "uri"},
+                        "when": {"type": "integer"}
+                    },
+                    "required": ["duration", "interface", "network", "serial", "uri", "when"]
+                },
+                "errorCode": {"type": "integer"},
+                "errorText": {"type": "string"},
+                "executed": {"type": "integer"},
+                "executionTime": {"type": "number"},
+                "lastTry": {"type": "integer"},
+                "results": {
+                    "type": "object",
+                    "properties": {
+                        "serial": {"type": "string"},
+                        "status": {
+                            "type": "object",
+                            "properties": {
+                                "error": {"type": "integer"},
+                                "text": {"type": "string"},
+                                "when": {"type": "integer"}
+                            },
+                            "required": ["error", "resultCode", "resultText", "text"]
+                        },
+                        "uuid": {"type": "integer"}
+                    },
+                    "required": ["serial", "status", "uuid"]
+                },
+                "serialNumber": {"type": "string"},
+                "status": {"type": "string"},
+                "submitted": {"type": "integer"},
+                "submittedBy": {"type": "string"},
+                "waitingForFile": {"type": "integer"}
+            },
+            "required": ["UUID", "attachFile", "command", "completed", "custom", "deferred", "details",
+                         "errorCode", "errorText", "executed", "executionTime", "lastTry", "results",
+                         "serialNumber", "status", "submitted", "submittedBy", "waitingForFile", "when"]
+        }
+
+        # Validate status code
         assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        # Extract only the parts of the response needed for validation
+        data_to_validate = {
+            "result": {
+                "serial": data["results"]["serial"],
+                "status": {
+                    "error": data["results"]["status"]["error"],
+                    "text": data["results"]["status"]["text"]
+                }
+            }
+        }
+
+        # Validate specific data fields
+        if data_to_validate["result"]["status"]["error"] == 0:
+            print("Error code is 0, indicating success.")
+            allure.attach(name="Specific data field validation", body="Error code is 0, indicating success.")
+        else:
+            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+
+
 
     @pytest.mark.gw_event_queue_device
     @allure.title("Get Event Queue of Device")
@@ -458,10 +867,96 @@ class TestUcentralGatewayService(object):
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.event_queue(device_name, payload)
-        # print(resp.json())
-        # allure.attach(name="Device Request Event Queue status", body=str(resp.json()),
-        # attachment_type=#allure.#attachment_type.JSON)
+        print(resp.json())
+        # Expected JSON schema
+        schema = {
+            "type": "object",
+            "properties": {
+                "UUID": {"type": "string"},
+                "attachFile": {"type": "integer"},
+                "command": {"type": "string"},
+                "completed": {"type": "integer"},
+                "custom": {"type": "integer"},
+                "deferred": {"type": "boolean"},
+                "details": {
+                    "type": "object",
+                    "properties": {
+                        "serial": {"type": "string"},
+                        "types": {
+                            "type": "array",
+                            "items": {"type": "string"}
+                        }
+                    },
+                    "required": ["serial", "types"]
+                },
+                "errorCode": {"type": "integer"},
+                "errorText": {"type": "string"},
+                "executed": {"type": "integer"},
+                "executionTime": {"type": "number"},
+                "lastTry": {"type": "integer"},
+                "results": {
+                    "type": "object",
+                    "properties": {
+                        "events": {"type": "object"},
+                        "serial": {"type": "string"},
+                        "status": {
+                            "type": "object",
+                            "properties": {
+                                "error": {"type": "integer"},
+                                "text": {"type": "string"}
+                            },
+                            "required": ["error", "text"]
+                        },
+                    "uuid": {"type": "integer"}
+                     },
+                    "required": ["events", "serial", "status", "uuid"]
+                },
+        "serialNumber": {"type": "string"},
+        "status": {"type": "string"},
+        "submitted": {"type": "integer"},
+        "submittedBy": {"type": "string"},
+        "waitingForFile": {"type": "integer"},
+        "when": {"type": "integer"}
+        },
+        "required": [
+            "UUID", "attachFile", "command", "completed", "custom", "deferred", "details",
+            "errorCode", "errorText", "executed", "executionTime", "lastTry", "results",
+            "serialNumber", "status", "submitted", "submittedBy", "waitingForFile", "when"]
+        }
+
+        # Validate status code
         assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        # Extract only the parts of the response needed for validation
+        data_to_validate = {
+            "result": {
+                "serial": data["results"]["serial"],
+                "status": {
+                    "error": data["results"]["status"]["error"],
+                    "text": data["results"]["status"]["text"]
+                }
+            }
+        }
+
+        # Validate specific data fields
+        if data_to_validate["result"]["status"]["error"] == 0:
+            print("Error code is 0, indicating success.")
+            allure.attach(name="Specific data field validation", body="Error code is 0, indicating success.")
+        else:
+            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+
 
     @pytest.mark.gw_telemetry_device
     @allure.title("Telemetry Device")
@@ -476,8 +971,8 @@ class TestUcentralGatewayService(object):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         payload = {
             "serialNumber": device_name,
-            "interval": 0,
-            "lifetime": 0,
+            "interval": 3,
+            "lifetime": 2,
             "kafka": False,
             "types": [
                 "dhcp-snooping"
@@ -486,10 +981,47 @@ class TestUcentralGatewayService(object):
         }
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.telemetry(device_name, payload)
-        # print(resp.json())
-        # allure.attach(name="Device telemetry status", body=str(resp.json()),
-        # attachment_type=#allure.#attachment_type.JSON)
+        print(resp.json())
+        # Expected JSON Schema
+        schema = {
+            "type": "object",
+            "properties": {
+                "action": {"type": "string"},
+                "serialNumber": {"type": "string"},
+                "status": {
+                    "type": "object",
+                    "properties": {
+                        "interval": {"type": "integer"},
+                        "kafkaClients": {"type": "integer"},
+                        "kafkaPackets": {"type": "integer"},
+                        "kafkaTimer": {"type": "integer"},
+                        "running": {"type": "boolean"},
+                        "websocketClients": {"type": "integer"},
+                        "websocketPackets": {"type": "integer"},
+                        "websocketTimer": {"type": "integer"}
+                    },
+                    "required": [
+                        "interval", "kafkaClients", "kafkaPackets", "kafkaTimer", "running",
+                        "websocketClients", "websocketPackets", "websocketTimer"
+                    ]
+                },
+                "uri": {"type": "string", "format": "uri"},
+                "uuid": {"type": "string", "format": "uuid"}
+            },
+            "required": ["action", "serialNumber", "status", "uri", "uuid"]
+        }
+        # Validate status code
         assert resp.status_code == 200
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
 
     @pytest.mark.gw_rtty
     @pytest.mark.ow_sdk_load_tests
@@ -499,12 +1031,44 @@ class TestUcentralGatewayService(object):
     def test_gw_service_get_rtty(self, get_target_object, get_testbed_details):
         """
             Test the device rtty parameters in Gateway UI
+            Unique marker:pytest -m "gw_rtty"
         """
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         resp = get_target_object.controller_library_object.get_rtty_params(device_name)
-        # print(resp.json())
-        # allure.attach(name="Device RTTY parameters", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
+        print(resp.json())
+        # Expected JSON Schema
+        schema = {
+            "type": "object",
+            "properties": {
+                "serialNumber": {"type": "string"},
+                "server": {"type": "string"},
+                "port": {"type": "integer"},
+                "token": {"type": "string"},
+                "timeout": {"type": "integer"},
+                "connectionId": {"type": "string"},
+                "started": {"type": "integer"},
+                "commandUUID": {"type": "string"},
+                "viewport": {"type": "integer"},
+                "password": {"type": "string"}
+            },
+            "required": [
+                "serialNumber", "server", "port", "token", "timeout", "connectionId",
+                "started", "commandUUID", "viewport", "password"
+            ]
+        }
+        # Validate status code
         assert resp.status_code == 200
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
 
     @pytest.mark.gw_asb_non_restricted
     @allure.title("Asb script on non restricted AP")
@@ -812,24 +1376,142 @@ class TestUcentralGatewayService(object):
                    "created": 0,
                    "lastModified": 0
                    }
+        #POST (Create)
         resp = get_target_object.controller_library_object.create_default_configuration(device_name, payload)
-        if resp.status_code != 200:
-            assert False
-        resp = get_target_object.controller_library_object.get_default_configuration(device_name)
-        if resp.status_code != 200:
-            assert False
 
+        schema = {
+            "type": "object",
+            "properties": {
+                "Code": {"type": "integer"},
+                "Details": {"type": "string"},
+                "Operation": {"type": "string"}
+            },
+            "required": ["Code", "Details", "Operation"]
+        }
+
+        # Validate response status code
+        assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        # Sample response data
+        response_data = {
+            "Code": 0,
+            "Details": "Command completed.",
+            "Operation": "POST"
+        }
+
+        # Validate the response against the schema
+        try:
+            validate(instance=response_data, schema=schema)
+            print("Validation successful: The response matches the expected schema.")
+        except ValidationError as e:
+            print("Validation error:", e.message)
+
+        # GET (Read)
+        resp = get_target_object.controller_library_object.get_default_configuration(device_name)
+
+        # Validate response status code
+        assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        schema = {
+            "type": "object",
+            "properties": {
+                "configuration": {
+                    "type": "object",
+                    "minProperties": 1  # Ensures that 'configuration' is not empty
+                },
+                "created": {"type": "integer"},
+                "description": {"type": "string"},
+                "lastModified": {"type": "integer"},
+                "modelIds": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "name": {"type": "string"},
+                "platform": {"type": "string"}
+            },
+            "required": ["configuration", "created", "description", "lastModified", "modelIds", "name", "platform"]
+        }
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+
+        #PUT (Update)
         editing_payload = {
             "description": "edit_default_configuration"
         }
         # print(json.dumps(editing_payload))
         resp = get_target_object.controller_library_object.edit_default_configuration(device_name, editing_payload)
-        if resp.status_code != 200:
-            assert False
+        print(resp)
 
+        # Validate response status code
+        assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        schema = {
+            "type": "object",
+            "properties": {
+                "configuration": {
+                    "type": "object",
+                    "minProperties": 1  # Ensures that 'configuration' is not empty
+                },
+                "created": {"type": "integer"},
+                "description": {"type": "string"},
+                "lastModified": {"type": "integer"},
+                "modelIds": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "name": {"type": "string"},
+                "platform": {"type": "string"}
+            },
+            "required": ["configuration", "created", "description", "lastModified", "modelIds", "name", "platform"]
+        }
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        # Step 4: Validate the change
+        if data.get("description") == editing_payload["description"]:
+            print("Validation successful: Configuration updated correctly.")
+        else:
+            print("Validation error: Configuration did not update as expected.")
+
+
+        #DELETE
         resp = get_target_object.controller_library_object.delete_default_configuration(device_name)
-        if resp.status_code != 200:
-            assert False
+        print(resp)
+        # Validate response status code
+        assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
 
     @pytest.mark.gw_list_of_blacklisted_devices
     @allure.title("Get list blacklisted devices")
@@ -1097,7 +1779,8 @@ class TestUcentralGatewayService(object):
         logging.info("iwinfo before applying Tx Power using RRM action command: \n")
         cmd_response = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
         allure.attach(body=cmd_response, name="iwinfo before applying Tx Power using RRM action command:")
-        if str(cmd_response) != "pop from empty list":
+        # if str(cmd_response) != "pop from empty list":
+        if str(cmd_response) != "Error: pop from empty list":
             interfaces = {}
             interface_matches = re.finditer(
                 r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response,
@@ -1205,7 +1888,8 @@ class TestUcentralGatewayService(object):
         logging.info("iwinfo before changing Channel using RRM action command: \n")
         cmd_response = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
         allure.attach(body=cmd_response, name="iwinfo before changing Channel using RRM action command:")
-        if str(cmd_response) != "pop from empty list":
+        # if str(cmd_response) != "pop from empty list":
+        if str(cmd_response) != "Error: pop from empty list":
             interfaces = {}
             interface_matches = re.finditer(
                 r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+([\d\s]+)', cmd_response,
@@ -1334,6 +2018,7 @@ class TestUcentralGatewayService(object):
                       attachment_type=allure.attachment_type.TEXT)
         logging.info("get the client mac address")
         client_mac = sta_info['mac']
+        ap_radio_mac = sta_info['ap']
         action_body['actions'][0]['addr'] = str(client_mac)
         logging.info(f'rrm cmd payload: {action_body}')
         response = get_target_object.controller_library_object.rrm_command(payload=action_body,
@@ -1346,9 +2031,13 @@ class TestUcentralGatewayService(object):
         wifi_messages = get_test_library.json_get("/wifi-msgs/since=time/" + str(last_timestamp))
         allure.attach(name=f"wifi-messages:", body=str(wifi_messages),
                       attachment_type=allure.attachment_type.TEXT)
-        msg_to_check1 = 'Reason 5; disassociated as AP is unable to handle all connected STA'
-        msg_to_check2 = f"IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(client_mac)} reason=5"
-        if msg_to_check1 in wifi_messages or msg_to_check2 in wifi_messages:
+        msg_to_check1 = 'reason 5: Disassociated because AP is unable to handle all currently associated STA'
+        # msg_to_check1 = 'Reason 5; disassociated as AP is unable to handle all connected STA'
+        # msg_to_check2 = f"IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(client_mac)} reason=5"
+        msg_to_check2 = f"IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(ap_radio_mac)} reason=5"
+        print("client_mac", str(ap_radio_mac))
+        print("msg_to_check2", msg_to_check2)
+        if (msg_to_check1 in str(wifi_messages)) or (msg_to_check2 in str(wifi_messages)):
             logging.info("AP kicked off the STA successfully using RRM kick and ban CMD")
             assert True
         else:
