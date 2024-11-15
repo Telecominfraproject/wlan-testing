@@ -74,7 +74,8 @@ class TestDynamicVlanOverSsid2GWpa3(object):
                                                                   extra_securities=extra_secu, key_mgmt="WPA-EAP-SHA256",
                                                                   vlan_id=vlan, mode=mode, band=band, eap=eap, 
                                                                   ttls_passwd=ttls_passwd, ieee80211w=0, 
-                                                                  identity=identity, num_sta=1, dut_data=setup_configuration)
+                                                                  identity=identity, num_sta=1, dut_data=setup_configuration,
+                                                                              d_vlan=True)
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
@@ -101,3 +102,4 @@ class TestDynamicVlanOverSsid2GWpa3(object):
             assert True, result
         elif not val:
             assert False, result
+        assert passes == "PASS", result
