@@ -52,7 +52,8 @@ class TestDynamicVlanOverSsid2GWpa2(object):
     @allure.title("Verify that Dynamic VLAN takes precedence over configured SSID VLAN")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5705", name="WIFI-5705")
     def test_dynamic_precedence_over_ssid_vlan_2g_wpa2(self, get_test_library, get_dut_logs_per_test_case,
-                                get_test_device_logs, num_stations, setup_configuration, check_connectivity):
+                                                       get_test_device_logs, num_stations, setup_configuration,
+                                                       check_connectivity):
         """
                 To Verify that Dynamic VLAN takes precedence over configured SSID VLAN
               Unique Marker:  pytest -m "dynamic_precedence_over_ssid and wpa2_enterprise and vlan"
@@ -65,7 +66,7 @@ class TestDynamicVlanOverSsid2GWpa2(object):
         security = "wpa2"
         extra_secu = []
         band = "twog"
-        vlan = [100,200]
+        vlan = [100, 200]
         ttls_passwd = "passwordB"
         eap = "TTLS"
         identity = "userB"
@@ -73,23 +74,26 @@ class TestDynamicVlanOverSsid2GWpa2(object):
         port_resources = list(get_test_library.lanforge_data['wan_ports'].keys())[0].split('.')
 
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
-                                                                  extra_securities=extra_secu,
-                                                                  vlan_id=vlan, mode=mode, band=band, eap=eap, 
-                                                                  ttls_passwd=ttls_passwd, ieee80211w=0, 
-                                                                  identity=identity, num_sta=1, dut_data=setup_configuration)
+                                                                              extra_securities=extra_secu,
+                                                                              vlan_id=vlan, mode=mode, band=band,
+                                                                              eap=eap,
+                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                                              identity=identity, num_sta=1,
+                                                                              dut_data=setup_configuration, d_vlan=True)
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                               "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
+                                                     "/" + port_resources[2] + "." + str(vlan[0]))["interface"]["ip"]
         eth_radius_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                        "/" + port_resources[2] + "." + str(vlan[1]))["interface"]["ip"]
+                                                       "/" + port_resources[2] + "." + str(vlan[1]))["interface"]["ip"]
         eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
-                                   "/" + port_resources[2])["interface"]["ip"]
+                                           "/" + port_resources[2])["interface"]["ip"]
 
         sta_ip_1 = station_ip.split('.')
         eth_vlan_ip_1 = eth_radius_vlan_ip.split('.')
-        logging.info(f"station ip...{sta_ip_1}\neth.{vlan[0]}...{eth_ssid_vlan_ip}\neth.{vlan[1]}...{eth_radius_vlan_ip}"
-                     f"\neth_upstream_ip...{eth_ip}")
+        logging.info(
+            f"station ip...{sta_ip_1}\neth.{vlan[0]}...{eth_ssid_vlan_ip}\neth.{vlan[1]}...{eth_radius_vlan_ip}"
+            f"\neth_upstream_ip...{eth_ip}")
         if sta_ip_1[0] == "0":
             assert False, result
         elif eth_vlan_ip_1[0] == "0":
@@ -103,3 +107,4 @@ class TestDynamicVlanOverSsid2GWpa2(object):
             assert True, result
         elif not val:
             assert False, result
+        assert passes == "PASS", result
