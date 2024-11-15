@@ -263,27 +263,28 @@ class TestUcentralGatewayService(object):
 
         # Example schema to validate
         schema = {
-  "type": "object",
-  "properties": {
-    "serialNumber": {"type": "string"},
-    "values": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "UUID": {"type": "integer"},
-          "data": {"type": "object"},
-          "log": {"type": "string"},
-          "logType": {"type": "integer"},
-          "recorded": {"type": "integer"},
-          "severity": {"type": "integer"}
-        },
-        "required": ["UUID", "data", "log", "logType", "recorded", "severity"]
-      }
-    }
-  },
-  "required": ["serialNumber", "values"]
-}
+            "type": "object",
+            "properties": {
+                "serialNumber": {"type": "string"},
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "UUID": {"type": "integer"},
+                            "data": {"type": "object"},
+                            "log": {"type": "string"},
+                            "logType": {"type": "integer"},
+                            "recorded": {"type": "integer"},
+                            "severity": {"type": "integer"}
+                        },
+                        "required": ["UUID", "data", "log", "logType", "recorded", "severity"]
+                    }
+                }
+            },
+            "required": ["serialNumber", "values"]
+        }
+
         # Validate response schema
         data = resp.json()
         try:
