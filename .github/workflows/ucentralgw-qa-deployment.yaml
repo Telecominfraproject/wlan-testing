@@ -35,7 +35,7 @@ env:
       "namespace": "qa01",
       "deploy_method": "git",
       "chart_version": "${{ github.event.inputs.chart_version }}",
-      "owgw_version": "master",
+      "owgw_version": "WIFI-14292-fix-json-parse-error",
       "owsec_version": "main",
       "owfms_version": "main",
       "owprov_version": "main",
