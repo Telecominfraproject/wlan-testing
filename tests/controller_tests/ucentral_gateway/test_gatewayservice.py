@@ -1422,7 +1422,7 @@ class TestUcentralGatewayService(object):
         try:
             validate(instance=response_data, schema=schema)
             print("Validation successful: The response matches the expected schema.")
-            allure.attach(name="Validation successful successful", body="The response matches the expected schema.")
+            allure.attach(name="Validation successful", body="The response matches the expected schema.")
         except ValidationError as e:
             print("Validation error:", e.message)
             pytest.fail(f"Response validation failed: {e}")
@@ -1505,14 +1505,17 @@ class TestUcentralGatewayService(object):
         try:
             validate(instance=data, schema=schema)
             print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
             pytest.fail(f"Schema validation failed: {e}")
 
         # Step 4: Validate the change
         if data.get("description") == editing_payload["description"]:
             print("Validation successful: Configuration updated correctly.")
+            allure.attach(name="Validation successful", body="Configuration updated correctly.")
         else:
             print("Validation error: Configuration did not update as expected.")
+            allure.attach(name="Validation error", body="Configuration did not update as expected.")
 
 
         #DELETE
@@ -1834,14 +1837,28 @@ class TestUcentralGatewayService(object):
             else:
                 logging.error("Failed to get iwinfo")
                 pytest.exit("Failed to get iwinfo")
-            key_to_check = ('Tx-Power', '20')
+            # key_to_check = ('Tx-Power', '20')
+            # logging.info(interfaces1.items())
+            # for key, value in interfaces1.items():
+            #     logging.info(key, value)
+            #     if key_to_check in value:
+            #         assert True
+            #     else:
+            #         assert False, "failed to set tx power using RRM CMD"
+
+            key_to_check = 'Tx-Power'
+            expected_value = '20'
+
             logging.info(interfaces1.items())
+            print("interfaces1", interfaces1.items())
             for key, value in interfaces1.items():
-                logging.info(key, value)
-                if key_to_check in value:
+                if value.get(key_to_check) == expected_value:
+                    print("success!!!")
                     assert True
+                    break
                 else:
-                    assert False, "failed to set tx power using RRM CMD"
+                    assert False, "failed to set channel using RRM CMD"
+
         elif cmd_response == {}:
             assert False, "Empty iwinfo reponse from AP through minicom"
         else:
@@ -1871,7 +1888,7 @@ class TestUcentralGatewayService(object):
             if self.configuration['radios'][i]["band"] == "5G":
                 self.configuration['radios'][i]['channel'] = 36
             if self.configuration['radios'][i]["band"] == "2G":
-                self.configuration['radios'][i]['channel'] = 11
+                self.configuration['radios'][i]['channel'] = 6
         payload = {"configuration": self.configuration, "serialNumber": serial_number, "UUID": 1}
         uri = get_target_object.controller_library_object.build_uri("device/" + serial_number + "/configure")
         basic_cfg_str = json.dumps(payload)
@@ -1917,7 +1934,7 @@ class TestUcentralGatewayService(object):
                 pytest.exit("Failed to get iwinfo")
             for i in interfaces:
                 action_body["actions"][0]["bssid"] = interfaces[i]['Access Point']
-                action_body["actions"][0]["channel"] = 6
+                action_body["actions"][0]["channel"] = 11
                 response = get_target_object.controller_library_object.rrm_command(payload=action_body,
                                                                                    serial_number=serial_number)
                 logging.info(response.json())
@@ -1944,14 +1961,25 @@ class TestUcentralGatewayService(object):
             else:
                 logging.error("Failed to get iwinfo")
                 pytest.exit("Failed to get iwinfo")
-            key_to_check = ('Channel', '6')
+            # key_to_check = ('Channel', '6')
+            # logging.info(interfaces1.items())
+            # for key, value in interfaces1.items():
+            #     logging.info(key, value)
+            #     if key_to_check in value:
+            #         assert True
+            #     else:
+            #         assert False, "failed to set channel using RRM CMD"
+
+            key_to_check = 'Channel'
+            expected_value = '11'
+
             logging.info(interfaces1.items())
             print("interfaces1", interfaces1.items())
             for key, value in interfaces1.items():
-                logging.info(key, value)
-                print("key, value", key, value)
-                if key_to_check in value:
+                if value.get(key_to_check) == expected_value:
+                    print("success!!!")
                     assert True
+                    break
                 else:
                     assert False, "failed to set channel using RRM CMD"
         elif cmd_response == {}:
