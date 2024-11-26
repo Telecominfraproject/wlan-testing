@@ -15,7 +15,7 @@ from time import sleep
 import allure
 import pytest
 import requests
-
+from jsonschema import validate, ValidationError
 
 @pytest.mark.uc_sanity
 @pytest.mark.ow_sdk_tests
@@ -1353,3 +1353,431 @@ class TestUcentralGatewayService(object):
             assert True
         else:
             assert False, 'AP failed to kick & ban the client using RRM CMD'
+
+
+    @pytest.mark.ap_reboot
+    @allure.title("AP Reboot")
+    @allure.testcase(name="WIFI-7991",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-7991")
+    @pytest.mark.ow_sanity_lf
+    def test_gw_service_ap_reboot(self, get_target_object, get_testbed_details):
+        """
+            Test to AP Reboot present in Gateway UI
+            Unique marker:pytest -m "ap_reboot"
+        """
+        ubus_call = get_target_object.get_dut_library_object().ubus_call_ucentral_status(idx=1)
+        print("ubus_call:", ubus_call)
+        # Convert dictionary to JSON string
+        ubus_call_json = json.dumps(ubus_call, indent=4)
+        allure.attach(name="ubus_call_ucentral_status before reboot", body=ubus_call_json,
+                      attachment_type=allure.attachment_type.JSON)
+
+        if "connected" in ubus_call:
+            print("The AP is in connected state before reboot")
+
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        payload = {
+            "serialNumber": device_name,
+            "when": 0
+        }
+        resp = get_target_object.controller_library_object.ap_reboot(device_name, payload)
+        #Example Schema for validation
+        schema = {
+            "type": "object",
+            "properties": {
+                "UUID": {"type": "string"},
+                "attachFile": {"type": "integer"},
+                "command": {"type": "string"},
+                "completed": {"type": "integer"},
+                "custom": {"type": "integer"},
+                "deferred": {"type": "boolean"},
+                "details": {
+                    "type": "object",
+                    "properties": {
+                        "serial": {"type": "string"},
+                        "when": {"type": "integer"}
+                    },
+                    "required": ["serial", "when"]
+                },
+                "errorCode": {"type": "integer"},
+                "errorText": {"type": "string"},
+                "executed": {"type": "integer"},
+                "executionTime": {"type": "number"},
+                "lastTry": {"type": "integer"},
+                "results": {
+                    "type": "object",
+                    "properties": {
+                        "serial": {"type": "string"},
+                        "status": {
+                            "type": "object",
+                            "properties": {
+                                "error": {"type": "integer"},
+                                "resultCode": {"type": "integer"},
+                                "text": {"type": "string"}
+                            },
+                            "required": ["error", "resultCode", "text"]
+                        },
+                        "uuid": {"type": "integer"}
+                    },
+                    "required": ["serial", "status", "uuid"]
+                },
+                "serialNumber": {"type": "string"},
+                "status": {"type": "string"},
+                "submitted": {"type": "integer"},
+                "submittedBy": {"type": "string"},
+                "waitingForFile": {"type": "integer"},
+                "when": {"type": "integer"}
+            },
+            "required": ["UUID", "attachFile", "command", "completed", "custom", "deferred", "details", "errorCode",
+                         "errorText", "executed", "executionTime", "lastTry", "results", "serialNumber", "status",
+                         "submitted", "submittedBy", "waitingForFile", "when"]
+        }
+        # Validate response code
+        assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        data_to_validate = {
+            "result": {
+                "serial": data["results"]["serial"],
+                "status": {
+                    "error": data["results"]["status"]["error"],
+                    "text": data["results"]["status"]["text"]
+                }
+            }
+        }
+        # Validate specific data fields
+        if data_to_validate["result"]["status"]["error"] == 0:
+            print("Error code is 0, indicating success.")
+        else:
+            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+
+
+    @pytest.mark.ap_factory_reset
+    @allure.title("AP factory_reset")
+    @allure.testcase(name="WIFI-7991",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-7991")
+    @pytest.mark.ow_sanity_lf
+    def test_gw_service_ap_factory_reset(self, get_target_object, get_testbed_details):
+        """
+            Test to AP factory reset present in Gateway UI
+            Unique marker:pytest -m "ap_factory_reset"
+        """
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        payload = {
+            "serialNumber": device_name,
+            "when": 0,
+            "keepRedirector": "True"
+        }
+        resp = get_target_object.controller_library_object.ap_factory_reset(device_name, payload)
+        #Example Schema for validation
+        schema = {
+            "type": "object",
+            "properties": {
+                "UUID": {"type": "string"},
+                "attachFile": {"type": "integer"},
+                "command": {"type": "string"},
+                "completed": {"type": "integer"},
+                "custom": {"type": "integer"},
+                "details": {
+                    "type": "object",
+                    "properties": {
+                        "keep_redirector": {"type": "integer"},
+                        "serial": {"type": "string"},
+                        "when": {"type": "integer"}
+                    },
+                    "required": ["keep_redirector", "serial", "when"]
+                },
+                "errorCode": {"type": "integer"},
+                "errorText": {"type": "string"},
+                "executed": {"type": "integer"},
+                "executionTime": {"type": "number"},
+                "results": {
+                    "type": "object",
+                    "properties": {
+                        "serial": {"type": "string"},
+                        "status": {
+                            "type": "object",
+                            "properties": {
+                                "error": {"type": "integer"},
+                                "resultCode": {"type": "integer"},
+                                "text": {"type": "string"}
+                            },
+                            "required": ["error", "resultCode", "text"]
+                        },
+                        "uuid": {"type": "integer"}
+                    },
+                    "required": ["serial", "status", "uuid"]
+                },
+                "serialNumber": {"type": "string"},
+                "status": {"type": "string"},
+                "submitted": {"type": "integer"},
+                "submittedBy": {"type": "string"},
+                "waitingForFile": {"type": "integer"},
+                "when": {"type": "integer"}
+            },
+            "required": ["UUID", "attachFile", "command", "completed", "custom", "details", "errorCode", "errorText",
+                         "executed", "executionTime", "results", "serialNumber", "status", "submitted", "submittedBy",
+                         "waitingForFile", "when"]
+        }
+        # Validate response code
+        assert resp.status_code == 200
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+        data_to_validate = {
+            "result": {
+                "serial": data["results"]["serial"],
+                "status": {
+                    "error": data["results"]["status"]["error"],
+                    "text": data["results"]["status"]["text"]
+                }
+            }
+        }
+        # Validate specific data fields
+        if data_to_validate["result"]["status"]["error"] == 0:
+            print("Error code is 0, indicating success.")
+        else:
+            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+
+
+    @pytest.mark.gw_device_reboot_logs
+    @allure.title("Get Device Reboot Logs")
+    @allure.testcase(name="WIFI-14299",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-14299")
+    @pytest.mark.ow_sanity_lf
+    def test_gw_service_get_reboot_logs(self, get_target_object, get_testbed_details):
+        """
+            Test the device reboot logs present in Gateway UI
+            Unique marker:pytest -m "gw_device_reboot_logs"
+        """
+        print("testbed details:", get_testbed_details)
+
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp = get_target_object.controller_library_object.get_device_reboot_logs(device_name, allure_attach=True)
+        # print(resp.json())
+        # allure.attach(name="Device Reboot Logs", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
+        assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Example schema to validate
+        schema = {
+            "type": "object",
+            "properties": {
+                "serialNumber": {"type": "string"},
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "UUID": {"type": "integer"},
+                            "data": {"type": "object"},
+                            "log": {"type": "string"},
+                            "logType": {"type": "integer"},
+                            "recorded": {"type": "integer"},
+                            "severity": {"type": "integer"}
+                        },
+                        "required": ["UUID", "data", "log", "logType", "recorded", "severity"]
+                    }
+                }
+            },
+            "required": ["serialNumber", "values"]
+        }
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+    @pytest.mark.gw_device_crash_logs
+    @allure.title("Get Device Crash Logs")
+    @allure.testcase(name="WIFI-14299",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-14299")
+    @pytest.mark.ow_sanity_lf
+    def test_gw_service_get_crash_logs(self, get_target_object, get_testbed_details):
+        """
+            Test the device reboot logs present in Gateway UI
+            Unique marker:pytest -m "gw_device_crash_logs"
+        """
+        print("testbed details:", get_testbed_details)
+
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp = get_target_object.controller_library_object.get_device_reboot_logs(device_name, query="?startDate=1726204413&endDate=1726206213&limit=30&logType=1&newest=true", allure_attach=True)
+        # print(resp.json())
+        # allure.attach(name="Device Crash Logs", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
+        assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        # Example schema to validate
+        schema = {
+            "type": "object",
+            "properties": {
+                "serialNumber": {"type": "string"},
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "UUID": {"type": "integer"},
+                            "data": {"type": "object"},
+                            "log": {"type": "string"},
+                            "logType": {"type": "integer"},
+                            "recorded": {"type": "integer"},
+                            "severity": {"type": "integer"}
+                        },
+                        "required": ["UUID", "data", "log", "logType", "recorded", "severity"]
+                    }
+                }
+            },
+            "required": ["serialNumber", "values"]
+        }
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+
+    @pytest.mark.get_list_of_firmwares
+    @allure.title("Get a list of Default Firmwares")
+    @allure.testcase(name="WIFI-14300",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-14300")
+    def test_gw_service_get_list_of_default_firmwares(self, get_target_object, get_testbed_details):
+        """
+            Test the list of default firmwares present in Gateway UI
+            Unique marker:pytest -m "get_list_of_firmwares"
+        """
+        print("testbed details:", get_testbed_details)
+
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp = get_target_object.controller_library_object.get_list_of_firmwares()
+        print("resp:",resp.json())
+        # allure.attach(name="get_list_of_firmwares", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
+        assert resp.status_code == 200
+
+        # Validate headers
+        assert resp.headers["Content-Type"] == "application/json"
+
+        #Example Schema to validate
+        schema = {
+            "type": "object",
+            "properties": {
+                "firmwares": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "deviceType": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "uri": {
+                                "type": "string",
+                                "format": "uri"
+                            },
+                            "revision": {
+                                "type": "string"
+                            },
+                            "imageCreationDate": {
+                                "type": "integer",
+                                "description": "Unix timestamp for the image creation date"
+                            },
+                            "created": {
+                                "type": "integer",
+                                "description": "Unix timestamp for when this firmware was created"
+                            },
+                            "lastModified": {
+                                "type": "integer",
+                                "description": "Unix timestamp for the last modification date"
+                            }
+                        },
+                        "required": [
+                            "deviceType",
+                            "description",
+                            "uri",
+                            "revision",
+                            "created"
+                        ]
+                    }
+                }
+            },
+            "required": ["firmwares"]
+        }
+        # Validate response schema
+        data = resp.json()
+        try:
+            validate(instance=data, schema=schema)
+            print("Schema validation passed")
+            allure.attach(name="Schema validation passed", body=str(data))
+        except ValidationError as e:
+            pytest.fail(f"Schema validation failed: {e}")
+
+    @pytest.mark.get_firmwares
+    @allure.title("Get a list of Default Firmwares(device type)")
+    @allure.testcase(name="WIFI-14301",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-14301")
+    def test_gw_service_get_list_of_default_firmwares_device_type(self, get_target_object, get_testbed_details):
+        """
+            Test the get list of default firmwares(device type) present in Gateway UI
+            Unique marker:pytest -m "get_firmwares"
+        """
+        print("testbed details:", get_testbed_details)
+
+        device_type = get_testbed_details['device_under_tests'][0]['model']
+
+        resp = get_target_object.firmware_library_object.get_firmwares(model = device_type, latestonly="1") # returns a list of firmwares
+        #response validation is present in get_firmwares method
+        print("response list:", resp)
+
+    @pytest.mark.upgrade_firmware
+    @allure.title("Firmware Upgrade")
+    @allure.testcase(name="WIFI-14302",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-14302")
+    def test_gw_service_upgrade_firmware(self, get_target_object, get_testbed_details):
+        """
+            Test the firmware upgrade present in Gateway UI
+            Unique marker:pytest -m "upgrade_firmware"
+        """
+        print("testbed details:", get_testbed_details)
+        device_type = get_testbed_details['device_under_tests'][0]['model']
+        resp = get_target_object.firmware_library_object.get_firmwares(model=device_type, latestonly="1")
+
+        # Access the latest firmware uri
+        latest_firmware = resp[-1]
+        latest_uri = latest_firmware['uri']
+        print("latest_uri:", latest_uri)
+
+        device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        resp1 = get_target_object.firmware_library_object.upgrade_firmware(serial=device_name, url=latest_uri)
+
+        print("resp:", resp1) # upgrade_firmware returns nothing, results attached in allure report
