@@ -189,7 +189,7 @@ class TestDynamicVlan2GWpa2(object):
                                         mode = mode, band = band, eap = eap,
                                         ttls_passwd = ttls_passwd, ieee80211w = 0,
                                         identity = identity, num_sta = 1,
-                                        dut_data = setup_configuration, cleanup=False)
+                                        dut_data = setup_configuration, cleanup=False, d_vlan=True)
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
@@ -227,6 +227,8 @@ class TestDynamicVlan2GWpa2(object):
             assert True, result
         else:
             assert False, result
+
+        assert passes == "PASS", result
 
     @pytest.mark.absenceofvlanid
     @pytest.mark.wpa2_enterprise
@@ -351,7 +353,7 @@ class TestDynamicVlan2GWpa2(object):
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
                                                                               identity=identity, num_sta=1,
-                                                                              dut_data=setup_configuration)
+                                                                              dut_data=setup_configuration, d_vlan=True)
 
         station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
         eth_ssid_vlan_ip = get_test_library.json_get("/port/" + port_resources[0] + "/" + port_resources[1] +
@@ -378,6 +380,8 @@ class TestDynamicVlan2GWpa2(object):
             assert True, result
         elif not val:
             assert False, result
+
+        assert passes == "PASS", result
 
     @pytest.mark.subsequent_user_for_same_user_account
     @pytest.mark.wpa2_enterprise
@@ -460,11 +464,15 @@ class TestDynamicVlan2GWpa2(object):
         dynamic_vlan_pass = ["passwordA", "passwordB"]
 
         for user_id, user_pass, cnt in zip(dynamic_vlan_user, dynamic_vlan_pass, range(0, len(vlan))):
+            if cnt == 0:
+                d_vlan = False
+            else:
+                d_vlan = True
             passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, passkey="[BLANK]",
                                 security=security, extra_securities=extra_secu,
                                 mode=mode, band=band, vlan_id=vlan, dut_data=setup_configuration,
                                 num_sta=1, ttls_passwd=user_pass, ieee80211w=0,
-                                wep_key="NA", ca_cert="NA", eap=eap, identity=user_id)
+                                wep_key="NA", ca_cert="NA", eap=eap, identity=user_id, d_vlan=d_vlan)
 
             station_ip = get_test_library.station_data[list(get_test_library.station_data.keys())[0]]['ip']
             sta_ip.append(station_ip)
@@ -487,3 +495,5 @@ class TestDynamicVlan2GWpa2(object):
                 assert True, result
             elif not val:
                 assert False, result
+
+            assert passes == "PASS", result
