@@ -1359,7 +1359,6 @@ class TestUcentralGatewayService(object):
     @allure.title("AP Reboot")
     @allure.testcase(name="WIFI-7991",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-7991")
-    @pytest.mark.ow_sanity_lf
     def test_gw_service_ap_reboot(self, get_target_object, get_testbed_details):
         """
             Test to AP Reboot present in Gateway UI
@@ -1445,29 +1444,25 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
-        data_to_validate = {
-            "result": {
-                "serial": data["results"]["serial"],
-                "status": {
-                    "error": data["results"]["status"]["error"],
-                    "text": data["results"]["status"]["text"]
-                }
-            }
-        }
         # Validate specific data fields
-        if data_to_validate["result"]["status"]["error"] == 0:
+        error_code = data["results"]["status"]["error"]
+        error_text = data["results"]["status"]["text"]
+        if error_code == 0:
             print("Error code is 0, indicating success.")
+            allure.attach(name="Specific data field validation", body="Error code is 0, indicating success.")
         else:
-            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+            print(f"Error code is not 0: {error_code}. Text: {error_text}")
+            allure.attach(name="Specific data field validation failed",
+                          body=f"Error code: {error_code}. Text: {error_text}")
 
 
     @pytest.mark.ap_factory_reset
     @allure.title("AP factory_reset")
     @allure.testcase(name="WIFI-7991",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-7991")
-    @pytest.mark.ow_sanity_lf
     def test_gw_service_ap_factory_reset(self, get_target_object, get_testbed_details):
         """
             Test to AP factory reset present in Gateway UI
@@ -1541,29 +1536,26 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
-        data_to_validate = {
-            "result": {
-                "serial": data["results"]["serial"],
-                "status": {
-                    "error": data["results"]["status"]["error"],
-                    "text": data["results"]["status"]["text"]
-                }
-            }
-        }
         # Validate specific data fields
-        if data_to_validate["result"]["status"]["error"] == 0:
+        error_code = data["results"]["status"]["error"]
+        error_text = data["results"]["status"]["text"]
+        # Validate specific data fields
+        if error_code == 0:
             print("Error code is 0, indicating success.")
+            allure.attach(name="Specific data field validation", body="Error code is 0, indicating success.")
         else:
-            print("Error code is not 0:", data_to_validate["result"]["status"]["error"])
+            print(f"Error code is not 0: {error_code}. Text: {error_text}")
+            allure.attach(name="Specific data field validation failed",
+                          body=f"Error code: {error_code}. Text: {error_text}")
 
 
     @pytest.mark.gw_device_reboot_logs
     @allure.title("Get Device Reboot Logs")
     @allure.testcase(name="WIFI-14299",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-14299")
-    @pytest.mark.ow_sanity_lf
     def test_gw_service_get_reboot_logs(self, get_target_object, get_testbed_details):
         """
             Test the device reboot logs present in Gateway UI
@@ -1610,13 +1602,14 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
+
 
     @pytest.mark.gw_device_crash_logs
     @allure.title("Get Device Crash Logs")
     @allure.testcase(name="WIFI-14299",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-14299")
-    @pytest.mark.ow_sanity_lf
     def test_gw_service_get_crash_logs(self, get_target_object, get_testbed_details):
         """
             Test the device reboot logs present in Gateway UI
@@ -1663,6 +1656,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
 
@@ -1680,7 +1674,7 @@ class TestUcentralGatewayService(object):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         resp = get_target_object.controller_library_object.get_list_of_firmwares()
         print("resp:",resp.json())
-        # allure.attach(name="get_list_of_firmwares", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
+
         assert resp.status_code == 200
 
         # Validate headers
@@ -1740,6 +1734,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
     @pytest.mark.get_firmwares
@@ -1756,7 +1751,7 @@ class TestUcentralGatewayService(object):
         device_type = get_testbed_details['device_under_tests'][0]['model']
 
         resp = get_target_object.firmware_library_object.get_firmwares(model = device_type, latestonly="1") # returns a list of firmwares
-        #response validation is present in get_firmwares method
+        #response validation is present in get_firmwares method in controller.py
         print("response list:", resp)
 
     @pytest.mark.upgrade_firmware
