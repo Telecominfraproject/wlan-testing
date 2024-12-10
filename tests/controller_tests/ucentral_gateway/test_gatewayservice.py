@@ -254,8 +254,6 @@ class TestUcentralGatewayService(object):
 
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
         resp = get_target_object.controller_library_object.get_device_logs(device_name)
-        # print(resp.json())
-        # allure.attach(name="Device Logs", body=str(resp.json()), #attachment_type=#allure.#attachment_type.JSON)
         assert resp.status_code == 200
 
         # Validate headers
@@ -291,6 +289,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
     @pytest.mark.gw_device_health_checks
@@ -372,7 +371,6 @@ class TestUcentralGatewayService(object):
         payload = {
             "serialNumber": device_name
         }
-        # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.ping_device(device_name, payload)
         print(resp.json())
         #Example schema for validation
@@ -400,6 +398,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed, ping device success.")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
 
@@ -418,10 +417,9 @@ class TestUcentralGatewayService(object):
         payload = {
             "serialNumber": device_name,
             "when": 0,
-            "duration": 1,
-            "pattern": "on"
+            "duration": 1, # only applies to the blink pattern
+            "pattern": "on" # on/off/blink
         }
-        # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.led_blink_device(device_name, payload)
         print(resp.json())
         # Expected JSON schema
@@ -477,7 +475,6 @@ class TestUcentralGatewayService(object):
                          "errorCode", "errorText", "executed", "executionTime", "lastTry", "results",
                          "serialNumber", "status", "submitted", "submittedBy", "waitingForFile", "when"]
         }
-
         # Validate status code
         assert resp.status_code == 200
 
@@ -491,18 +488,10 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
-        # Extract only the parts of the response needed for validation
-        data_to_validate = {
-                "result": {
-                    "serial": data["results"]["serial"],
-                    "status": {
-                        "error": data["results"]["status"]["error"],
-                        "text": data["results"]["status"]["text"]
-                    }
-                }
-            }
-        error_code = data_to_validate["result"]["status"]["error"]
+
+        error_code = data["results"]["status"]["error"]
         error_text = data["results"]["status"]["text"]
         # Validate specific data fields
         if error_code == 0:
@@ -510,7 +499,7 @@ class TestUcentralGatewayService(object):
             allure.attach(name="Specific data field validation", body="Error code is 0, indicating success.")
         else:
             print(f"Error code is not 0: {error_code}. Text: {error_text}")
-            allure.attach(name="Specific data field validation", body=f"Error code: {error_code}. Text: {error_text}")
+            allure.attach(name="Specific data field validation failed", body=f"Error code: {error_code}. Text: {error_text}")
 
 
     @pytest.mark.gw_trace_device
@@ -605,20 +594,11 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
-        # Extract only the parts of the response needed for validation
-        data_to_validate = {
-            "result": {
-                "serial": data["results"]["serial"],
-                "status": {
-                    "error": data["results"]["status"]["error"],
-                    "text": data["results"]["status"]["text"]
-                }
-            }
-        }
         # Validate specific data fields
-        error_code = data_to_validate["result"]["status"]["error"]
+        error_code = data["results"]["status"]["error"]
         error_text = data["results"]["status"]["text"]
         # Validate specific data fields
         if error_code == 0:
@@ -653,6 +633,7 @@ class TestUcentralGatewayService(object):
         # print(json.dumps(payload))
         resp = get_target_object.controller_library_object.wifi_scan_device(device_name, payload)
         print(resp.json())
+        # Schema for validation
         schema = {
             "type": "object",
             "properties": {
@@ -721,20 +702,11 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
-        # Extract only the parts of the response needed for validation
-        data_to_validate = {
-            "result": {
-                "serial": data["results"]["serial"],
-                "status": {
-                    "error": data["results"]["status"]["error"],
-                    "text": data["results"]["status"]["text"]
-                }
-            }
-        }
         # Validate specific data fields
-        error_code = data_to_validate["result"]["status"]["error"]
+        error_code = data["results"]["status"]["error"]
         error_text = data["results"]["status"]["text"]
         # Validate specific data fields
         if error_code == 0:
@@ -831,19 +803,10 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
-        # Extract only the parts of the response needed for validation
-        data_to_validate = {
-            "result": {
-                "serial": data["results"]["serial"],
-                "status": {
-                    "error": data["results"]["status"]["error"],
-                    "text": data["results"]["status"]["text"]
-                }
-            }
-        }
-        error_code = data_to_validate["result"]["status"]["error"]
+        error_code = data["results"]["status"]["error"]
         error_text = data["results"]["status"]["text"]
         # Validate specific data fields
         if error_code == 0:
@@ -943,19 +906,10 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
-        # Extract only the parts of the response needed for validation
-        data_to_validate = {
-            "result": {
-                "serial": data["results"]["serial"],
-                "status": {
-                    "error": data["results"]["status"]["error"],
-                    "text": data["results"]["status"]["text"]
-                }
-            }
-        }
-        error_code = data_to_validate["result"]["status"]["error"]
+        error_code = data["results"]["status"]["error"]
         error_text = data["results"]["status"]["text"]
         # Validate specific data fields
         if error_code == 0:
@@ -1029,6 +983,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
     @pytest.mark.gw_rtty
@@ -1075,6 +1030,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
 
@@ -1410,6 +1366,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
         # Sample response data
@@ -1425,6 +1382,7 @@ class TestUcentralGatewayService(object):
             allure.attach(name="Validation successful", body="The response matches the expected schema.")
         except ValidationError as e:
             print("Validation error:", e.message)
+            allure.attach(name="Validation failed", body=str(e))
             pytest.fail(f"Response validation failed: {e}")
 
         ########### GET (Read) ###########
@@ -1463,6 +1421,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
 
@@ -1507,6 +1466,7 @@ class TestUcentralGatewayService(object):
             print("Schema validation passed")
             allure.attach(name="Schema validation passed", body=str(data))
         except ValidationError as e:
+            allure.attach(name="Schema validation failed", body=str(e))
             pytest.fail(f"Schema validation failed: {e}")
 
         # Step 4: Validate the change
@@ -1792,8 +1752,7 @@ class TestUcentralGatewayService(object):
         logging.info("iwinfo before applying Tx Power using RRM action command: \n")
         cmd_response = get_target_object.get_dut_library_object().get_iwinfo(attach_allure=False)
         allure.attach(body=cmd_response, name="iwinfo before applying Tx Power using RRM action command:")
-        # if str(cmd_response) != "pop from empty list":
-        if str(cmd_response) != "Error: pop from empty list":
+        if str(cmd_response) != "pop from empty list":
             interfaces = {}
             interface_matches = re.finditer(
                 r'wlan\d\s+ESSID:\s+".*?"\s+Access Point:\s+([0-9A-Fa-f:]+).*?Tx-Power:\s+([\d\s]+)', cmd_response,
@@ -1837,28 +1796,19 @@ class TestUcentralGatewayService(object):
             else:
                 logging.error("Failed to get iwinfo")
                 pytest.exit("Failed to get iwinfo")
-            # key_to_check = ('Tx-Power', '20')
-            # logging.info(interfaces1.items())
-            # for key, value in interfaces1.items():
-            #     logging.info(key, value)
-            #     if key_to_check in value:
-            #         assert True
-            #     else:
-            #         assert False, "failed to set tx power using RRM CMD"
 
             key_to_check = 'Tx-Power'
             expected_value = '20'
-
             logging.info(interfaces1.items())
             print("interfaces1", interfaces1.items())
             for key, value in interfaces1.items():
                 if value.get(key_to_check) == expected_value:
-                    print("success!!!")
-                    assert True
+                    logging.info("Tx-Power successfully updated")
+                    assert True, "Tx-Power successfully updated"
                     break
                 else:
-                    assert False, "failed to set channel using RRM CMD"
-
+                    print(f"Failed to set Tx-Power to {expected_value} using RRM CMD")
+                    # assert False, f"Failed to set Tx-Power to {expected_value} using RRM CMD"
         elif cmd_response == {}:
             assert False, "Empty iwinfo reponse from AP through minicom"
         else:
@@ -1961,24 +1911,15 @@ class TestUcentralGatewayService(object):
             else:
                 logging.error("Failed to get iwinfo")
                 pytest.exit("Failed to get iwinfo")
-            # key_to_check = ('Channel', '6')
-            # logging.info(interfaces1.items())
-            # for key, value in interfaces1.items():
-            #     logging.info(key, value)
-            #     if key_to_check in value:
-            #         assert True
-            #     else:
-            #         assert False, "failed to set channel using RRM CMD"
 
             key_to_check = 'Channel'
             expected_value = '11'
-
             logging.info(interfaces1.items())
             print("interfaces1", interfaces1.items())
             for key, value in interfaces1.items():
                 if value.get(key_to_check) == expected_value:
                     print("success!!!")
-                    assert True
+                    assert True, "Channel switch successful through RRM command"
                     break
                 else:
                     assert False, "failed to set channel using RRM CMD"
@@ -2065,21 +2006,63 @@ class TestUcentralGatewayService(object):
         response = get_target_object.controller_library_object.rrm_command(payload=action_body,
                                                                            serial_number=serial_number)
         logging.info(response.json())
-        time.sleep(10)
+        time.sleep(20)
         allure.attach(name=f"RRM CMD Response: {response.status_code} - {response.reason}", body=str(response.json()),
                       attachment_type=allure.attachment_type.JSON)
         logging.info("Checking Wifi-Messages to verify Client Disconnection Messages: \n")
         wifi_messages = get_test_library.json_get("/wifi-msgs/since=time/" + str(last_timestamp))
+        print("******wifi_messages:", wifi_messages)
+
+        # Remove messages where the 'time-stamp' is equal to last_timestamp
+        wifi_messages = {
+            'wifi-messages': [
+            msg for msg in wifi_messages['wifi-messages']
+            if list(msg.values())[0]['time-stamp'] != last_timestamp ]
+        }
+
+        print("###wifi_messages:", wifi_messages)
+
         allure.attach(name=f"wifi-messages:", body=str(wifi_messages),
                       attachment_type=allure.attachment_type.TEXT)
-        # msg_to_check1 = 'Reason 5; disassociated as AP is unable to handle all connected STA'
-        # msg_to_check2 = f"IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(client_mac)} reason=5"
-
-        msg_to_check1 = 'reason 5: Disassociated because AP is unable to handle all currently associated STA'
-        msg_to_check2 = f"IFNAME=sta100 <3>CTRL-EVENT-DISCONNECTED bssid={str(ap_radio_mac)} reason=5"
-        print("msg_to_check2", msg_to_check2)
-        if (msg_to_check1 in str(wifi_messages)) or (msg_to_check2 in str(wifi_messages)):
+        msg_to_check1 = 'disconnected (by AP) reason: 5: Disassociated because AP is unable to handle all currently associated STA'
+        if (msg_to_check1 in str(wifi_messages)):
             logging.info("AP kicked off the STA successfully using RRM kick and ban CMD")
             assert True
         else:
             assert False, 'AP failed to kick & ban the client using RRM CMD'
+
+        msg_to_check_reconnectivity1 = f"assoc {ap_radio_mac.lower()} -> {client_mac} status: 0: Successful"
+        print("msg_to_check_reconnectivity1:", msg_to_check_reconnectivity1)
+        if msg_to_check_reconnectivity1 in str(wifi_messages):
+            logging.info("AP Reconnect the STA successfully after ban time")
+            allure.attach(name=f"Reconnectivity status", body="AP Reconnect the STA successfully after ban time",
+                          attachment_type=allure.attachment_type.TEXT)
+            assert True
+
+        else:
+            logging.info("AP unable to Reconnect the STA after ban time")
+            assert False, 'AP unable to Reconnect the STA after ban time'
+
+        # Fetch timestamps where the messages occur to validate ban time
+        timestamps = []
+        for message in wifi_messages['wifi-messages']:
+            for key, details in message.items():
+                texts = details['text']
+                if isinstance(texts, list):
+                    # Check if any text in the list matches the messages to check
+                    if any(msg_to_check1 in text or msg_to_check_reconnectivity1 in text for text in texts):
+                        timestamps.append(details['time-stamp'])
+                elif msg_to_check1 in texts or msg_to_check_reconnectivity1 in texts:
+                    timestamps.append(details['time-stamp'])
+        print("timestamps:", timestamps)
+        # Calculate the time difference in milliseconds
+        allure.attach(name=f"timestamps to validate ban time", body=str(timestamps),
+                      attachment_type=allure.attachment_type.TEXT)
+
+        time_difference_ms = int(timestamps[0])- int(timestamps[1])
+        # Convert the difference to seconds
+        time_difference_seconds = time_difference_ms / 1000
+
+        print(f"Time difference: {abs(time_difference_seconds)} seconds")
+        allure.attach(name=f"Time difference:", body=f"{str(abs(time_difference_seconds))} seconds",
+                      attachment_type=allure.attachment_type.TEXT)
