@@ -45,6 +45,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -81,7 +82,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -90,6 +91,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -126,7 +128,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -135,6 +137,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -180,6 +183,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -225,6 +229,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -270,6 +275,7 @@ class Test20Mhz2GChannel1PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -348,6 +354,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -384,7 +391,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -393,6 +400,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -429,7 +437,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -438,6 +446,8 @@ class Test20Mhz2GChannel2PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -483,6 +493,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -528,6 +539,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -573,6 +585,7 @@ class Test20Mhz2GChannel2PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -651,6 +664,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -687,7 +701,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -696,6 +710,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -732,7 +747,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -741,6 +756,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -786,6 +802,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -831,6 +848,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -876,6 +894,7 @@ class Test20Mhz2GChannel3PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -954,6 +973,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -990,7 +1010,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -999,6 +1019,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1035,7 +1056,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1044,6 +1065,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1089,6 +1111,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1134,6 +1157,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1179,6 +1203,7 @@ class Test20Mhz2GChannel4PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1257,6 +1282,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1293,7 +1319,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1302,6 +1328,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1338,7 +1365,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1347,6 +1374,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1392,6 +1420,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1437,6 +1466,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1482,6 +1512,7 @@ class Test20Mhz2GChannel5PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1560,6 +1591,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1596,7 +1628,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1605,6 +1637,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1641,7 +1674,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1650,6 +1683,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1695,6 +1729,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1740,6 +1775,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1785,6 +1821,7 @@ class Test20Mhz2GChannel6PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1863,6 +1900,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
@@ -1900,7 +1938,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1909,6 +1947,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1945,7 +1984,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1954,6 +1993,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -1999,6 +2039,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2044,6 +2085,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
@@ -2089,6 +2131,7 @@ class Test20Mhz2GChannel7PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2166,6 +2209,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
@@ -2203,7 +2247,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2212,6 +2256,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2248,7 +2293,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2257,6 +2302,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2302,6 +2348,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2347,6 +2394,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2392,6 +2440,7 @@ class Test20Mhz2GChannel8PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2470,6 +2519,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
@@ -2507,7 +2557,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2516,6 +2566,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2552,7 +2603,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2561,6 +2612,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
@@ -2606,6 +2658,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration, radius_info):
         """
@@ -2651,6 +2704,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2696,6 +2750,7 @@ class Test20Mhz2GChannel9PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2773,6 +2828,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     @pytest.mark.aaa
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
@@ -2810,7 +2866,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2819,6 +2875,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2855,7 +2912,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2864,6 +2921,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2909,6 +2967,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2954,6 +3013,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -2999,6 +3059,7 @@ class Test20Mhz2GChannel10PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -3076,7 +3137,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
-    @pytest.mark.aaa
+    @allure.title("peak thoughput client TCP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -3113,7 +3174,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3122,6 +3183,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
     @pytest.mark.udp_download
+    @allure.title("peak thoughput enterprise client UDP Download wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -3158,7 +3220,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa3_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3167,6 +3229,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
     @pytest.mark.tcp_bidirectional
+    @allure.title("peak thoughput enterprise client TCP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -3212,6 +3275,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
     @pytest.mark.udp_bidirectional
+    @allure.title("peak thoughput enterprise client UDP Bidirectional wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                   get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -3257,6 +3321,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
     @pytest.mark.tcp_upload
+    @allure.title("peak thoughput enterprise client TCP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """
@@ -3302,6 +3367,7 @@ class Test20Mhz2GChannel11PeakThroughput(object):
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
     @pytest.mark.udp_upload
+    @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa3_enterprise_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
         """

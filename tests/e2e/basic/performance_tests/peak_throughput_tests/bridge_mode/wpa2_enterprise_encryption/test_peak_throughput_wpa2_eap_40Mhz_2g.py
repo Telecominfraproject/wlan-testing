@@ -82,7 +82,7 @@ class Test40Mhz2GChannel1PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -127,7 +127,7 @@ class Test40Mhz2GChannel1PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -386,7 +386,7 @@ class Test40Mhz2GChannel2PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -431,7 +431,7 @@ class Test40Mhz2GChannel2PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -690,7 +690,7 @@ class Test40Mhz2GChannel3PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -735,7 +735,7 @@ class Test40Mhz2GChannel3PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -993,7 +993,7 @@ class Test40Mhz2GChannel4PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1038,7 +1038,7 @@ class Test40Mhz2GChannel4PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1296,7 +1296,7 @@ class Test40Mhz2GChannel5PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1341,7 +1341,7 @@ class Test40Mhz2GChannel5PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1599,7 +1599,7 @@ class Test40Mhz2GChannel6PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1644,7 +1644,7 @@ class Test40Mhz2GChannel6PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1903,7 +1903,7 @@ class Test40Mhz2GChannel7PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1948,7 +1948,7 @@ class Test40Mhz2GChannel7PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2206,7 +2206,7 @@ class Test40Mhz2GChannel8PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2251,7 +2251,7 @@ class Test40Mhz2GChannel8PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2448,7 +2448,8 @@ setup_params_general_9 = {
             'band': '2G',
 
             'channel-width': 40,
-            "channel": 9}
+            "channel": 9
+        }
     },
     "radius": True
 }
@@ -2509,7 +2510,7 @@ class Test40Mhz2GChannel9PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2554,7 +2555,7 @@ class Test40Mhz2GChannel9PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2750,7 +2751,8 @@ setup_params_general_10 = {
         "2G": {
             'band': '2G',
             'channel-width': 40,
-            "channel": 10}
+            "channel": 10
+        }
     },
     "radius": True
 }
@@ -2811,7 +2813,7 @@ class Test40Mhz2GChannel10PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2856,7 +2858,7 @@ class Test40Mhz2GChannel10PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3052,7 +3054,8 @@ setup_params_general_11 = {
         "2G": {
             'band': '2G',
             'channel-width': 40,
-            "channel": 11}
+            "channel": 11
+        }
     },
     "radius": True
 }
@@ -3114,7 +3117,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3159,7 +3162,7 @@ class Test40Mhz2GChannel11PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,

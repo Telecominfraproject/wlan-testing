@@ -81,7 +81,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -126,7 +126,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -280,7 +280,7 @@ class Test20Mhz5GChannel36PeakThroughput(object):
         measures upload throughput with 0Gbps download and 1Gbps upload.
 
         Unique Marker:
-        ptest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg and udp_upload"
+        wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -323,7 +323,8 @@ setup_params_general2 = {
         "5G": {
             'band': '5G',
             'channel-width': 20,
-            "channel": 40}
+            "channel": 40
+        }
     },
     "radius": True
 }
@@ -384,7 +385,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -429,7 +430,7 @@ class Test20Mhz5GChannel40PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -625,7 +626,8 @@ setup_params_general3 = {
         "5G": {
             'band': '5G',
             'channel-width': 20,
-            "channel": 44}
+            "channel": 44
+        }
     },
     "radius": True
 }
@@ -686,11 +688,11 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},add_stations=True)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
@@ -731,7 +733,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -825,7 +827,7 @@ class Test20Mhz5GChannel44PeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},radius_info=False)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
@@ -928,7 +930,8 @@ setup_params_general4 = {
             'band': '5G',
 
             'channel-width': 20,
-            "channel": 48}
+            "channel": 48
+        }
     },
     "radius": True
 }
@@ -990,7 +993,7 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1035,11 +1038,11 @@ class TestCountryCA20Mhz5GChannel48PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1})
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
@@ -1232,7 +1235,8 @@ setup_params_general5 = {
         "5G": {
             'band': '5G',
             'channel-width': 20,
-            "channel": 52}
+            "channel": 52
+        }
     },
     "radius": True
 }
@@ -1293,7 +1297,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1338,7 +1342,7 @@ class TestCountryCA20Mhz5GChannel52PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1596,7 +1600,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1641,7 +1645,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1825,7 +1829,7 @@ class TestCountryCA20Mhz5GChannel56PeakThroughput(object):
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1})
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
 
@@ -1838,7 +1842,8 @@ setup_params_general7 = {
             'band': '5G',
 
             'channel-width': 20,
-            "channel": 60}
+            "channel": 60
+        }
     },
     "radius": True
 }
@@ -1899,7 +1904,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1944,7 +1949,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1993,7 +1998,7 @@ class TestCountryCA20Mhz5GChannel60PeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1})
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
@@ -2142,7 +2147,8 @@ setup_params_general8 = {
             'band': '5G',
 
             'channel-width': 20,
-            "channel": 64}
+            "channel": 64
+    }
     },
     "radius": True
 }
@@ -2203,7 +2209,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2248,7 +2254,7 @@ class TestCountryCA20Mhz5GChannel64PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2446,7 +2452,8 @@ setup_params_general9 = {
             'band': '5G',
 
             'channel-width': 20,
-            "channel": 100}
+            "channel": 100
+        }
     },
     "radius": True
 }
@@ -2507,7 +2514,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2552,7 +2559,7 @@ class TestCountryCA20Mhz5GChannel100PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2749,7 +2756,8 @@ setup_params_general10 = {
             'band': '5G',
 
             'channel-width': 20,
-            "channel": 104}
+            "channel": 104
+        }
     },
     "radius": True
 }
@@ -2810,7 +2818,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2855,7 +2863,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2904,7 +2912,7 @@ class TestCountryCA20Mhz5GChannel104PeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1})
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
@@ -3114,7 +3122,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3159,7 +3167,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3208,7 +3216,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1})
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
@@ -3299,7 +3307,7 @@ class TestCountryCA20Mhz5GChannel108PeakThroughput(object):
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1})
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
@@ -3358,7 +3366,8 @@ setup_params_general12 = {
             'band': '5G',
 
             'channel-width': 20,
-            "channel": 112}
+            "channel": 112
+        }
     },
     "radius": True
 }
@@ -3419,7 +3428,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3464,7 +3473,7 @@ class TestCountryCA20Mhz5GChannel112PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3662,7 +3671,8 @@ setup_params_general13 = {
             'band': '5G',
 
             'channel-width': 20,
-            "channel": 116}
+            "channel": 116
+        }
     },
     "radius": True
 }
@@ -3723,7 +3733,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -3768,7 +3778,7 @@ class TestCountryCA20Mhz5GChannel116PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -4027,7 +4037,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -4072,7 +4082,7 @@ class TestCountryCA20Mhz5GChannel132PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -4268,7 +4278,8 @@ setup_params_general15 = {
         "5G": {
             'band': '5G',
             'channel-width': 20,
-            "channel": 136}
+            "channel": 136
+        }
     },
     "radius": True
 }
@@ -4329,7 +4340,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -4374,7 +4385,7 @@ class TestCountryCA20Mhz5GChannel136PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -4571,7 +4582,8 @@ setup_params_general16 = {
         "5G": {
             'band': '5G',
             'channel-width': 20,
-            "channel": 140}
+            "channel": 140
+        }
     },
     "radius": True
 }
@@ -4631,7 +4643,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -4676,7 +4688,7 @@ class TestCountryCA20Mhz5GChannel140PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -4872,7 +4884,8 @@ setup_params_general17 = {
         "5G": {
             'band': '5G',
             'channel-width': 20,
-            "channel": 144}
+            "channel": 144
+        }
     },
     "radius": True
 }
@@ -4933,7 +4946,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -4978,7 +4991,7 @@ class TestCountryCA20Mhz5GChannel144PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,

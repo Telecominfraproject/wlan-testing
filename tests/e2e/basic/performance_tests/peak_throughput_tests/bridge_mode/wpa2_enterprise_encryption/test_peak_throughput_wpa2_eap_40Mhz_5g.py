@@ -82,7 +82,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -128,7 +128,7 @@ class Test40Mhz5GChannel36PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -275,8 +275,14 @@ class Test40Mhz5GChannel36PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_36", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -380,7 +386,7 @@ class Test40Mhz5GChannel44PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -425,7 +431,7 @@ class Test40Mhz5GChannel44PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_enterprise_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -572,8 +578,14 @@ class Test40Mhz5GChannel44PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_44", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -677,7 +689,7 @@ class Test40Mhz5GChannel52PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -722,7 +734,7 @@ class Test40Mhz5GChannel52PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -869,8 +881,14 @@ class Test40Mhz5GChannel52PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_52", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -913,7 +931,8 @@ setup_params_general7 = {
             'band': '5G',
 
             'channel-width': 40,
-            "channel": 60}
+            "channel": 60
+        }
     },
     "radius": True
 }
@@ -974,7 +993,7 @@ class Test40Mhz5GChannel60PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1019,7 +1038,7 @@ class Test40Mhz5GChannel60PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1166,8 +1185,14 @@ class Test40Mhz5GChannel60PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1211,7 +1236,8 @@ setup_params_general9 = {
             'band': '5G',
 
             'channel-width': 40,
-            "channel": 100}
+            "channel": 100
+        }
     },
     "radius": True
 }
@@ -1233,7 +1259,6 @@ class Test40Mhz5GChannel100PeakThroughput(object):
     """Country code along with Channel and Channel-width Test Bridge mode
        pytest -m "country_code and Bridge"
     """
-
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6934", name="WIFI-6934")
     @pytest.mark.tcp_download
     @allure.title("peak thoughput client TCP Download wifi capacity")
@@ -1272,11 +1297,11 @@ class Test40Mhz5GChannel100PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1})
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
@@ -1317,7 +1342,7 @@ class Test40Mhz5GChannel100PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -1464,8 +1489,14 @@ class Test40Mhz5GChannel100PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_60", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1570,11 +1601,11 @@ class Test40Mhz5GChannel108PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},add_statioins=False)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
@@ -1615,11 +1646,11 @@ class Test40Mhz5GChannel108PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},add_statioins=False)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6943", name="WIFI-6943")
@@ -1664,7 +1695,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},add_statioins=False)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6946", name="WIFI-6946")
@@ -1709,7 +1740,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},add_statioins=False)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6942", name="WIFI-6942")
@@ -1754,7 +1785,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},add_statioins=False)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6945", name="WIFI-6945")
@@ -1762,8 +1793,14 @@ class Test40Mhz5GChannel108PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_108", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -1793,7 +1830,7 @@ class Test40Mhz5GChannel108PeakThroughput(object):
                                        download_rate="0Gbps", batch_size="1",
                                        upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},add_statioins=False)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
 
@@ -1807,7 +1844,8 @@ setup_params_general14 = {
             'band': '5G',
 
             'channel-width': 40,
-            "channel": 132}
+            "channel": 132
+        }
     },
     "radius": True
 }
@@ -1868,11 +1906,11 @@ class Test40Mhz5GChannel132PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"5G": 1},add_statioins=False)
+                                       num_stations={"5G": 1},add_stations=False)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-6944", name="WIFI-6944")
@@ -1913,7 +1951,7 @@ class Test40Mhz5GChannel132PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2060,8 +2098,14 @@ class Test40Mhz5GChannel132PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_132", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2103,7 +2147,8 @@ setup_params_general15 = {
         "5G": {
             'band': '5G',
             'channel-width': 40,
-            "channel": 136}
+            "channel": 136
+        }
     },
     "radius": True
 }
@@ -2164,7 +2209,7 @@ class Test40Mhz5GChannel136PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2209,7 +2254,7 @@ class Test40Mhz5GChannel136PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2356,8 +2401,14 @@ class Test40Mhz5GChannel136PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_136", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -2400,7 +2451,8 @@ setup_params_general16 = {
         "5G": {
             'band': '5G',
             'channel-width': 40,
-            "channel": 140}
+            "channel": 140
+        }
     },
     "radius": True
 }
@@ -2461,7 +2513,7 @@ class Test40Mhz5GChannel140PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2500,7 +2552,7 @@ class Test40Mhz5GChannel140PeakThroughput(object):
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
-            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_tcp_bidirectional", mode=mode,
+            get_test_library.wifi_capacity(instance_name="test_client_wpa2_eap_bridge_udp_dl", mode=mode,
                                        download_rate="1Gbps", batch_size="1",
                                        upload_rate="0Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
@@ -2641,8 +2693,14 @@ class Test40Mhz5GChannel140PeakThroughput(object):
     @allure.title("peak thoughput enterprise client UDP Upload wifi capacity")
     def test_client_wpa2_eap_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,radius_info):
-        """ Wifi Capacity Test BRIDGE mode
-            pytest -m "wifi_capacity_test and BRIDGE and wpa2_enterprise and fiveg"
+        """
+        Test Description:
+        This test evaluates Peak throughput in BRIDGE mode using WPA3 Enterprise security with a 2.4 GHz band 
+        and UDP upload traffic. It confirms that the client connects via RADIUS, authenticates with TTLS, and 
+        measures upload throughput with 0Gbps download and 1Gbps upload.
+
+        Unique Marker:
+        wifi_capacity_test and BRIDGE and wpa3_enterprise and  and udp_upload
         """
         profile_data = {"ssid_name": "ssid_wpa2_eap_5g_140", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
