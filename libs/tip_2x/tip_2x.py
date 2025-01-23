@@ -298,6 +298,7 @@ class tip_2x:
 
         # Setup Config Apply on all AP's
         ret_val = dict()
+        num_of_dut = len(self.device_under_tests_info)
         for i in range(0, len(self.device_under_tests_info)):
             self.pre_apply_check(idx=i)  # Do check AP before pushing the configuration
             # Before config push ifconfig up0v0
@@ -493,8 +494,14 @@ class tip_2x:
 
             ret_val[self.device_under_tests_info[i]["identifier"]] = self.get_applied_ssid_info(idx=i,
                                                                                                 profile_object=profile_object)
-
+        logging.info(f"#####ret_val: {ret_val}")
         temp_data = ret_val.copy()
+        if len(temp_data) == num_of_dut:
+            logging.info("*****getting valid number of dut's info*****")
+        else:
+            logging.info(f"getting invalid number of dut's info: actaul no.of duts {num_of_dut} and we are getiing {len(temp_data)}")
+
+
         for dut in temp_data:
             ret_val[dut] = dict.fromkeys(["ssid_data", "radio_data"])
             ret_val[dut]["radio_data"] = temp_data[dut][-1]
@@ -502,6 +509,7 @@ class tip_2x:
             n = len(temp_data[dut])
             lst = list(range(0, n))
             ret_val[dut]["ssid_data"] = dict.fromkeys(lst)
+            logging.info(f"####ret_val[dut]:{ret_val[dut]}")
             for j in ret_val[dut]["ssid_data"]:
                 a = temp_data[dut][j].copy()
                 a = dict.fromkeys(["ssid", "encryption", "password", "band", "bssid"])
@@ -512,6 +520,7 @@ class tip_2x:
                 a["bssid"] = temp_data[dut][j][4]
                 ret_val[dut]["ssid_data"][j] = a
             temp = ret_val[dut]["radio_data"].copy()
+            logging.info(f"###temp:{temp}")
             for j in temp:
                 a = dict.fromkeys(["channel", "bandwidth", "frequency"])
                 if temp[j] != None:
@@ -646,8 +655,11 @@ class tip_2x:
             logging.error("Profile object is None, Unable to fetch ssid info from AP")
             return None
         ssid_info_sdk = profile_object.get_ssid_info()
+        logging.info(f"###ssid_info_sdk:{ssid_info_sdk}")
         ap_wifi_data = self.dut_library_object.get_iwinfo(idx=idx)
+        logging.info(f"###ap_wifi_data:{ap_wifi_data}")
         channel_info = self.get_dut_channel_data(idx=idx)
+        logging.info(f"###channel_info:{channel_info}")
         o = ap_wifi_data.split()
         iwinfo_bssid_data = {}
         print(o)
@@ -660,11 +672,13 @@ class tip_2x:
                 else:
                     band = "6G"
                 iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
+        logging.info(f"###iwinfo_bssid_data:{iwinfo_bssid_data}")
         for p in iwinfo_bssid_data:
             for q in ssid_info_sdk:
                 if iwinfo_bssid_data[p][0] == q[0] and iwinfo_bssid_data[p][2] == q[3]:
                     q.append(iwinfo_bssid_data[p][1])
         ssid_info_sdk.append(channel_info)
+        logging.info(f"####ssid_info_sdk:{ssid_info_sdk}")
         return ssid_info_sdk
 
     def get_dut_version(self):
