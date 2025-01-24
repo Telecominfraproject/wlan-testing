@@ -35,7 +35,7 @@ env:
       "namespace": "qa02",
       "deploy_method": "git",
       "chart_version": "main",
-      "owgw_version": "WIFI-14140-fix-update-schema-multi-psk",
+      "owgw_version": "v3.0.2-RC1",
       "owsec_version": "main",
       "owfms_version": "main",
       "owprov_version": "main",
