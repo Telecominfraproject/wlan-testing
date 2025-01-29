@@ -21,7 +21,8 @@ setup_params_enterprise = {
             {"ssid_name": "ssid_wpa2_eap_5g", "appliedRadios": ["5G"]}],
         "wpa3_enterprise": [
             {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
-            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]}]},
+            {"ssid_name": "ssid_wpa3_eap_5g", "appliedRadios": ["5G"]},
+            {"ssid_name": "ttls_ssid_wpa3_eap_6g", "appliedRadios": ["6G"]}]},
 
     "rf": {},
     "radius": True
@@ -343,5 +344,70 @@ class TestNATModeEnterpriseTTLSSuiteTwo(object):
                                                                               ttls_passwd=ttls_passwd,
                                                                               identity=identity, num_sta=num_stations,
                                                                               dut_data=setup_configuration)
+
+        assert passes == "PASS", result
+
+
+
+setup_params_enterprise_6G = {
+        "mode": "NAT",
+        "ssid_modes": {
+            "wpa3_enterprise": [
+                {"ssid_name": "ssid_wpa3_eap_2g", "appliedRadios": ["2G"]},
+                {"ssid_name": "ttls_ssid_wpa3_eap_6g", "appliedRadios": ["6G"]}
+            ]
+        },
+        "rf": {
+            "6G": {
+            "band": "6G",
+            "channel-mode": "EHT",
+            "channel-width": 320,
+                }
+        },
+        "radius": True
+}
+@allure.parent_suite("Client Connectivity Tests")
+@allure.feature("Client Connectivity")
+@allure.suite(suite_name="NAT Mode")
+@allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-B")
+@pytest.mark.parametrize(
+        'setup_configuration',
+        [setup_params_enterprise_6G],
+        indirect=True,
+        scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
+@pytest.mark.wpa3_enterprise
+@pytest.mark.twog
+class TestNATModeEnterpriseTTLSSuiteC(object):
+    """ SuiteC Enterprise Test Cases
+            pytest -m "client_connectivity_tests and nat and enterprise and ttls and suiteC"
+    """
+
+    @pytest.mark.wpa3_enterprise
+    @pytest.mark.sixg
+    @allure.title("Test for wpa3 enterprise 6 GHz")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14370", name="WIFI-14370")
+    def test_wpa3_enterprise_6g(self, get_test_library, get_dut_logs_per_test_case,
+                                get_test_device_logs,
+                                get_target_object,
+                                num_stations, setup_configuration, check_connectivity, radius_info):
+        """ wpa3 enterprise 6g
+            pytest -m "client_connectivity_tests and nat and enterprise and ttls and wpa3_enterprise and sixg"
+        """
+        profile_data = {"ssid_name": "ttls_ssid_wpa3_eap_6g", "appliedRadios": ["6G"]}
+        ssid_name = profile_data["ssid_name"]
+        security = "wpa3"
+        mode = "NAT-WAN"
+        band = "sixg"
+        ttls_passwd = radius_info["password"]
+        eap = "TTLS"
+        identity = radius_info['user']
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=ttls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration,
+                                                                              key_mgmt="WPA-EAP-SHA256")
 
         assert passes == "PASS", result

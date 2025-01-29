@@ -15,7 +15,8 @@ setup_params_enterprise = {
             {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_enterprise": [
             {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
+            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"},
+            {"ssid_name": "tls_ssid_wpa3_eap_6g", "appliedRadios": ["6G"], "security_key": "something"}]},
 
     "rf": {},
     "radius": True
@@ -396,6 +397,76 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
                                                                               mode=mode, band=band, eap=eap,
                                                                               ttls_passwd=tls_passwd, pk_passwd=pk_passwd,
                                                                               identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration)
+
+        assert passes == "PASS", result
+
+
+
+setup_params_enterprise_6G = {
+        "mode": "BRIDGE",
+        "ssid_modes": {
+            "wpa3_enterprise": [
+                {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
+                {"ssid_name": "tls_ssid_wpa3_eap_6g", "appliedRadios": ["6G"], "security_key": "something"}
+            ]
+        },
+        "rf": {
+            "6G": {
+            "band": "6G",
+            "channel-mode": "EHT",
+            "channel-width": 80,
+                }
+        },
+        "radius": True
+}
+@allure.parent_suite("Client Connectivity Tests")
+@allure.feature("Client Connectivity")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-B")
+@pytest.mark.parametrize(
+        'setup_configuration',
+        [setup_params_enterprise_6G],
+        indirect=True,
+        scope="class"
+)
+@pytest.mark.uc_sanity
+@pytest.mark.usefixtures("setup_configuration")
+@pytest.mark.wpa3_enterprise
+@pytest.mark.twog
+class TestBridgeModeEnterpriseTLSSuiteC(object):
+    """ SuiteB Enterprise Test Cases
+            pytest -m "client_connectivity_tests and bridge and enterprise and tls"
+    """
+
+    @pytest.mark.wpa3_enterprise
+    @pytest.mark.sixg
+    @allure.title("Bridge Mode Client Connectivity Test with WPA3-Enterprise-TLS in 6GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14369", name="WIFI-14369")
+    def test_tls_wpa3_enterprise_6g(self, get_test_library, get_dut_logs_per_test_case,
+                                    get_test_device_logs,
+                                    get_target_object,
+                                    num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+        To verify that a client created on 6G radio connects to AP in Bridge mode with WPA3 enterprise TLS security
+        Unique Marker: pytest -m "client_connectivity_tests and enterprise and wpa3_enterprise and ow_sanity_lf and tls and bridge and sixg"
+                """
+
+        profile_data = {"ssid_name": "tls_ssid_wpa3_eap_6g", "appliedRadios": ["6G"], "security_key": "something"}
+        ssid_name = profile_data["ssid_name"]
+        security = "wpa3"
+        mode = "BRIDGE"
+        band = "sixg"
+        tls_passwd = radius_info["password"]
+        eap = "TLS"
+        key_mgmt = "WPA-EAP-SHA256"
+        identity = radius_info['user']
+        pk_passwd = radius_info['pk_password']
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=tls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              key_mgmt=key_mgmt, pk_passwd=pk_passwd,
                                                                               dut_data=setup_configuration)
 
         assert passes == "PASS", result
