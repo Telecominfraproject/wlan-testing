@@ -1273,7 +1273,6 @@ class TestRateLimitingWithRadiusBridgeSixg(object):
 
     @pytest.mark.wpa3_enterprise
     @pytest.mark.sixg
-    @pytest.mark.jsk
     @pytest.mark.sixg_upload_per_ssid
     @allure.title("Test for UDP Upload per SSID 6 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14366", name="WIFI-14366")
@@ -1304,7 +1303,7 @@ class TestRateLimitingWithRadiusBridgeSixg(object):
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
                                                                               identity=identity, num_sta=1,
                                                                               dut_data=setup_configuration,
-                                                                              cleanup=False)
+                                                                              cleanup=False, key_mgmt="WPA-EAP-SHA256")
 
         if passes != "PASS":
             assert passes == "PASS", result
@@ -1327,7 +1326,6 @@ class TestRateLimitingWithRadiusBridgeSixg(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.sixg
     @pytest.mark.sixg_download_perssid_persta
-    @pytest.mark.jsk
     @allure.title("Test for TCP Download per Station 6GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14365", name="WIFI-14365")
     def test_radius_server_6g_download_persta(self, get_test_library, get_dut_logs_per_test_case,
@@ -1357,7 +1355,7 @@ class TestRateLimitingWithRadiusBridgeSixg(object):
                                                                               ttls_passwd=ttls_passwd, ieee80211w=0,
                                                                               identity=identity, num_sta=1,
                                                                               dut_data=setup_configuration,
-                                                                              cleanup=False)
+                                                                              cleanup=False, key_mgmt="WPA-EAP-SHA256")
         if passes != "PASS":
             assert passes == "PASS", result
         if passes == "PASS":
