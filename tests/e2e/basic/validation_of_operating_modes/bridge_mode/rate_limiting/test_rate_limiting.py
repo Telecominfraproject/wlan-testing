@@ -822,7 +822,6 @@ class TestRateLimitingBridgeSixg(object):
     @pytest.mark.batch_size_125
     @pytest.mark.rate_limiting_tests
     @pytest.mark.bridge
-    @pytest.mark.jsk
     @pytest.mark.ow_regression_lf
     @allure.testcase(name="WIFI-14364",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-14364")
