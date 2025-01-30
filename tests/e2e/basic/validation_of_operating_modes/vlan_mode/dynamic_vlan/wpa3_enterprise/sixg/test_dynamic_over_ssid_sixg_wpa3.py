@@ -72,7 +72,7 @@ class TestDynamicVlanOverSsid6GWpa3(object):
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
-        ssid_name = profile_data[0]["ssid_name"]
+        ssid_name = profile_data[1]["ssid_name"]
         security = "wpa3"
         extra_secu = []
         mode = "VLAN"
