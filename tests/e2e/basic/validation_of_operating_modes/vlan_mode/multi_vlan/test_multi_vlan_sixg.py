@@ -69,7 +69,6 @@ class TestMultiVlan(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.sixg
     @pytest.mark.disable_vlan_sixg  # wifi-2174
-    @pytest.mark.ow_sanity_lf
     @allure.testcase(name="WIFI-14361",
                      url="https://telecominfraproject.atlassian.net/browse/WIFI-14361")
     @allure.title("Test Disabled VLAN with WPA3 Security Mode")
