@@ -361,7 +361,7 @@ setup_params_enterprise_6G = {
             "6G": {
             "band": "6G",
             "channel-mode": "EHT",
-            "channel-width": 320,
+            "channel-width": 80,
                 }
         },
         "radius": True
@@ -369,7 +369,7 @@ setup_params_enterprise_6G = {
 @allure.parent_suite("Client Connectivity Tests")
 @allure.feature("Client Connectivity")
 @allure.suite(suite_name="NAT Mode")
-@allure.sub_suite(sub_suite_name="EAP TLS Client Connectivity : Suite-B")
+@allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-B")
 @pytest.mark.parametrize(
         'setup_configuration',
         [setup_params_enterprise_6G],
