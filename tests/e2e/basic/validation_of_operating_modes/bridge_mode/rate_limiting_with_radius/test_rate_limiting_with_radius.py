@@ -1218,3 +1218,158 @@ class TestRateLimitingWithRadiusBridge(object):
         #         assert False, f"Expected Throughput should be less than {configured} Mbps"
         # else:
         #     assert False, "EAP Connect Failed"
+
+setup_params_general_sixg = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "wpa3_enterprise": [
+            {"ssid_name": "ssid_wpa2_2g_br",
+             "appliedRadios": ["2G"],
+             "security_key": "something",
+             "rate-limit": {
+                 "ingress-rate": 10,
+                 "egress-rate": 10
+             },
+             "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
+             "radius_acc_data": RATE_LIMITING_RADIUS_ACCOUNTING_DATA
+
+             },
+            {"ssid_name": "ssid_wpa2_6g_br",
+             "appliedRadios": ["6G"],
+             "security_key": "something",
+             "rate-limit": {
+                 "ingress-rate": 5,
+                 "egress-rate": 5
+             },
+             "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
+             "radius_acc_data": RATE_LIMITING_RADIUS_ACCOUNTING_DATA
+             }
+        ]
+    },
+    "rf": {
+        "6G": {
+            "band": "6G",
+            "channel-mode": "EHT",
+            "channel-width": 80,
+        }
+    },
+    "radius": True
+}
+
+@allure.feature("Rate Limiting With Radius Test")
+@allure.parent_suite("Rate Limiting With Radius Test")
+@allure.suite("BRIDGE Mode")
+@allure.sub_suite("WPA3 Enterprise Security")
+@pytest.mark.parametrize(
+    'setup_configuration',
+    [setup_params_general_sixg],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
+@pytest.mark.wpa3_enterprise
+@pytest.mark.twog
+class TestRateLimitingWithRadiusBridgeSixg(object):
+
+    @pytest.mark.wpa3_enterprise
+    @pytest.mark.sixg
+    @pytest.mark.sixg_upload_per_ssid
+    @allure.title("Test for UDP Upload per SSID 6 GHz")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14366", name="WIFI-14366")
+    def test_radius_server_6g_upload_per_ssid(self, get_test_library, get_dut_logs_per_test_case,
+                                              get_test_device_logs,
+                                              get_target_object,
+                                              num_stations, setup_configuration, rate_radius_info,
+                                              rate_radius_accounting_info, check_connectivity):
+        profile_data = {"ssid_name": "ssid_wpa2_6g_br",
+             "appliedRadios": ["6G"],
+             "security_key": "something",
+             "rate-limit": {
+                 "ingress-rate": 5,
+                 "egress-rate": 5
+             }}
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        security = "wpa3"
+        band = "sixg"
+        eap = "TTLS"
+        ttls_passwd = "password"
+        identity = "user"
+        configured = profile_data["rate-limit"]["ingress-rate"]
+        allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                                              identity=identity, num_sta=1,
+                                                                              dut_data=setup_configuration,
+                                                                              cleanup=False, key_mgmt="WPA-EAP-SHA256")
+
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel: Per-Total Download Rate:"]]
+            obj = get_test_library.wifi_capacity(instance_name="Test_Radius_2g_up_per_ssid", mode=mode,
+                                                 download_rate="0Gbps", batch_size="1",
+                                                 upload_rate="1Gbps", protocol="UDP", duration="60000",
+                                                 move_to_influx=False, dut_data=setup_configuration,
+                                                 ssid_name=ssid_name,
+                                                 add_stations=False, raw_lines=raw_lines)
+            report_name = obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+            kpi_data = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
+            achieved = float("{:.2f}".format(kpi_data[1][0]))
+            if achieved <= configured:
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
+
+    @pytest.mark.wpa3_enterprise
+    @pytest.mark.sixg
+    @pytest.mark.sixg_download_perssid_persta
+    @allure.title("Test for TCP Download per Station 6GHz")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14365", name="WIFI-14365")
+    def test_radius_server_6g_download_persta(self, get_test_library, get_dut_logs_per_test_case,
+                                                      get_test_device_logs,
+                                                      get_target_object,
+                                                      num_stations, setup_configuration, rate_radius_info,
+                                                      rate_radius_accounting_info, check_connectivity):
+        profile_data = {"ssid_name": "ssid_wpa2_6g_br",
+             "appliedRadios": ["6G"],
+             "security_key": "something",
+             "rate-limit": {
+                 "ingress-rate": 5,
+                 "egress-rate": 5
+             }}
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        security = "wpa3"
+        band = "sixg"
+        eap = "TTLS"
+        ttls_passwd = "password"
+        identity = "user"
+        configured = profile_data["rate-limit"]["egress-rate"]
+        allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.pre_cleanup()
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=ttls_passwd, ieee80211w=0,
+                                                                              identity=identity, num_sta=1,
+                                                                              dut_data=setup_configuration,
+                                                                              cleanup=False, key_mgmt="WPA-EAP-SHA256")
+        if passes != "PASS":
+            assert passes == "PASS", result
+        if passes == "PASS":
+            raw_lines = [["dl_rate_sel:  Per-Station Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
+            obj = get_test_library.wifi_capacity(instance_name="Test_Radius_2g_down_perssid_persta", mode=mode,
+                                                 download_rate="1Gbps", batch_size="1",
+                                                 upload_rate="0Gbps", protocol="TCP", duration="60000",
+                                                 move_to_influx=False, dut_data=setup_configuration,
+                                                 ssid_name=ssid_name,
+                                                 add_stations=False, raw_lines=raw_lines)
+            report_name = obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+            kpi_data = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
+            achieved = float("{:.2f}".format(kpi_data[0][0]))
+            if achieved <= configured:
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"

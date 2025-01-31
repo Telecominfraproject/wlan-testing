@@ -770,3 +770,89 @@ class TestRateLimitingBridge(object):
                                             down_rate=down_rate)
 
         assert True
+
+setup_params_general_sixg = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "wpa3_personal": [
+            {"ssid_name": "ssid_wpa2_2g_br",
+             "appliedRadios": ["2G"],
+             "security_key": "something",
+             "rate-limit": {
+                 "ingress-rate": 10,
+                 "egress-rate": 5
+             }
+             },
+            {"ssid_name": "ssid_wpa2_6g_br",
+             "appliedRadios": ["6G"],
+             "security_key": "something",
+             "rate-limit": {
+                 "ingress-rate": 10,
+                 "egress-rate": 5
+             }
+             }]},
+    "rf": {
+        "6G": {
+            "band": "6G",
+            "channel-mode": "EHT",
+            "channel-width": 80,
+        }
+    },
+    "radius": False
+}
+
+@allure.feature("Rate Limiting Test")
+@allure.parent_suite("Rate Limiting Tests")
+@allure.suite("BRIDGE Mode")
+@allure.sub_suite("WPA3 Personal Security")
+@pytest.mark.parametrize(
+    'setup_configuration',
+    [setup_params_general_sixg],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
+@pytest.mark.wpa3_personal
+@pytest.mark.twog
+class TestRateLimitingBridgeSixg(object):
+
+    @pytest.mark.wpa3_personal
+    @pytest.mark.sixg
+    @pytest.mark.upload_download
+    @pytest.mark.batch_size_125
+    @pytest.mark.rate_limiting_tests
+    @pytest.mark.bridge
+    @allure.testcase(name="WIFI-14364",
+                     url="https://telecominfraproject.atlassian.net/browse/WIFI-14364")
+    @allure.title("Test for Upload and Download batch size 1,2,5 6 GHz")
+    def test_wpa2_personal_ssid_up_dw_batch_size_125_6g(self, get_test_library, get_dut_logs_per_test_case,
+                                                        get_test_device_logs, num_stations, setup_configuration,
+                                                        check_connectivity):
+        """
+            To verfiy a client operating with WPA3 Personal security can limit the UP & DW traffic or not.
+            pytest -m "rate_limiting_tests and wpa3_personal and bridge and ow_sanity_lf and sixg and upload_download and batch_size_125"
+
+        """
+        # run wifi capacity test here
+        profile_data = {"ssid_name": "ssid_wpa2_6g_br",
+             "appliedRadios": ["6G"],
+             "security_key": "something",
+             "rate-limit": {
+                 "ingress-rate": 10,
+                 "egress-rate": 5
+             }
+             }
+        ssid_name = profile_data["ssid_name"]
+        mode = "BRIDGE"
+        passkey = profile_data["security_key"]
+        up_rate = profile_data["rate-limit"]["ingress-rate"]
+        down_rate = profile_data["rate-limit"]["egress-rate"]
+        allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
+        get_test_library.rate_limiting_test(instance_name="test_client_wpa2_BRIDGE_up_dw", mode=mode,
+                                            download_rate="1Gbps", batch_size="1,2,5",
+                                            upload_rate="1Gbps", protocol="UDP", duration="60000",
+                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
+                                            num_stations={"6G": 5}, passkey=passkey, up_rate=up_rate,
+                                            down_rate=down_rate)
+
+        assert True
