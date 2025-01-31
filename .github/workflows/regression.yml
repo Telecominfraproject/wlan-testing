@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,yuncore_ax820,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sercomm_ap72tip,edgecore_eap101,edgecore_eap111"
+        default: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sercomm_ap72tip,edgecore_eap101,edgecore_eap111"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -130,7 +130,7 @@ jobs:
   # Run tests on APs
 
   test-hfcl-ion4xe:
-    needs: ["vars", "build", "test-yuncore-ax820"]
+    needs: ["vars", "build", "test-udaya-a6-id2" ]
     runs-on: [self-hosted, small]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xe')"
@@ -2125,13 +2125,13 @@ jobs:
         run: kubectl -n openwifi-qa01 logs deployment/owsec
 
 
-  test-yuncore-ax820:
-    needs: ["vars", "build"]
+  test-sonicfi-rap630c-311g:
+    needs: ["vars", "build", "test-yuncore-fap655" ]
     runs-on: [self-hosted, small]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'yuncore_ax820')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'sonicfi_rap630c-311g')"
     env:
-      AP_MODEL: yuncore_ax820
+      AP_MODEL: sonicfi_rap630c-311g
     steps:
       - name: Set AP model output
         id: ap_model
@@ -2178,7 +2178,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dfs_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dfs
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and dfs_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2204,7 +2204,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_psk_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multipsk
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and multi_psk_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2230,7 +2230,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and rate_limiting_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2256,7 +2256,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_with_radius_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting-radius
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and rate_limiting_with_radius_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2282,7 +2282,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dynamic-vlan
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and dynamic_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2308,7 +2308,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multi-vlan
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and multi_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2334,7 +2334,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2360,7 +2360,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2386,7 +2386,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fwd
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2412,7 +2412,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-3
+          testbed: basic-2a
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3117,7 +3117,7 @@ jobs:
         run: kubectl -n openwifi-qa01 logs deployment/owsec
 
   test-udaya-a6-id2:
-    needs: [ "vars", "build", "test-yuncore-fap655" ]
+    needs: [ "vars", "build" ]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'udaya_a6-id2')"
@@ -4117,7 +4117,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-yuncore-ax820, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
+    needs: [vars, test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
     strategy:
       fail-fast: false
       matrix:
@@ -4170,7 +4170,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-yuncore-ax820, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
+    needs: [test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
     runs-on: ubuntu-latest
     if: always()
     steps:
