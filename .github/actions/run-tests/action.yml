@@ -141,7 +141,7 @@ runs:
 
     - name: upload Allure results as artifact
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.allure_results_artifact_name }}
         path: allure-results
