@@ -2583,27 +2583,27 @@ jobs:
       - name: checkout testing repo
         uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: allure-results-${{ matrix.model }}-dataplane_tests
           path: allure-results-dataplane_tests
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: allure-results-${{ matrix.model }}-wifi_capacity_ax_tests
           path: allure-results-wifi_capacity_ax_tests
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: allure-results-${{ matrix.model }}-peak_throughput_tests
           path: allure-results-peak_throughput_tests
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: allure-results-${{ matrix.model }}-client_scale_tests
           path: allure-results-client_scale_tests
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: allure-results-${{ matrix.model }}-dual_band_tests
           path: allure-results-dual_band_tests
@@ -2632,7 +2632,7 @@ jobs:
             Ap.Model=${{ matrix.model }}
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report-${{ matrix.model }}
           path: allure-report

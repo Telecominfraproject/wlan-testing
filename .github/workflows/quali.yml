@@ -1222,7 +1222,7 @@ jobs:
       - name: checkout testing repo
         uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: allure-results-${{ matrix.model }}
           path: allure-results
@@ -1242,7 +1242,7 @@ jobs:
             Ap.Model=${{ matrix.model }}
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report-${{ matrix.model }}
           path: allure-report
