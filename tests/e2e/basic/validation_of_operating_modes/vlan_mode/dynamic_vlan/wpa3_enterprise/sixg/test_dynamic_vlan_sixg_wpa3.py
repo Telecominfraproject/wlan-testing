@@ -16,7 +16,7 @@ DYNAMIC_VLAN_RADIUS_SERVER_DATA = lf_library.DYNAMIC_VLAN_RADIUS_SERVER_DATA
 DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = lf_library.DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
 pytestmark = [pytest.mark.dynamic_vlan_tests,
-              pytest.mark.vlan, pytest.mark.ow_regression_lf]
+              pytest.mark.vlan]
 
 setup_params_general = {
     "mode": "VLAN",
@@ -69,7 +69,7 @@ class TestDynamicVlan6GWpa3(object):
                                                                         get_test_device_logs, num_stations,
                                                                         setup_configuration, check_connectivity):
         """
-                pytest -m " absence_of_radius_vlan_identifier and wpa3_enterprise and vlan and sixg"
+                pytest -m "absence_of_radius_vlan_identifier and wpa3_enterprise and vlan and sixg"
         """
 
         profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
