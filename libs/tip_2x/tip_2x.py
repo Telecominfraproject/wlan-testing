@@ -493,7 +493,7 @@ class tip_2x:
 
             ret_val[self.device_under_tests_info[i]["identifier"]] = self.get_applied_ssid_info(idx=i,
                                                                                                 profile_object=profile_object)
-
+        logging.info(f"ret_val:{ret_val}")
         temp_data = ret_val.copy()
         for dut in temp_data:
             ret_val[dut] = dict.fromkeys(["ssid_data", "radio_data"])
@@ -512,6 +512,7 @@ class tip_2x:
                 a["bssid"] = temp_data[dut][j][4]
                 ret_val[dut]["ssid_data"][j] = a
             temp = ret_val[dut]["radio_data"].copy()
+            logging.info(f"temp:{temp}")
             for j in temp:
                 a = dict.fromkeys(["channel", "bandwidth", "frequency"])
                 if temp[j] != None:
@@ -646,8 +647,10 @@ class tip_2x:
             logging.error("Profile object is None, Unable to fetch ssid info from AP")
             return None
         ssid_info_sdk = profile_object.get_ssid_info()
+        logging.info(f"ssid_info_sdk:{ssid_info_sdk}")
         ap_wifi_data = self.dut_library_object.get_iwinfo(idx=idx)
         channel_info = self.get_dut_channel_data(idx=idx)
+        logging.info(f"channel_info:{channel_info}")
         o = ap_wifi_data.split()
         iwinfo_bssid_data = {}
         print(o)
