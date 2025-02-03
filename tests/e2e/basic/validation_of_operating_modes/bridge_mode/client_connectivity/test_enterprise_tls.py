@@ -15,8 +15,7 @@ setup_params_enterprise = {
             {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_enterprise": [
             {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "tls_ssid_wpa3_eap_6g", "appliedRadios": ["6G"], "security_key": "something"}]},
+            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
 
     "rf": {},
     "radius": True

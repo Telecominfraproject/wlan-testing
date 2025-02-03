@@ -502,15 +502,30 @@ class tip_2x:
             n = len(temp_data[dut])
             lst = list(range(0, n))
             ret_val[dut]["ssid_data"] = dict.fromkeys(lst)
+            fields = ["SSID", "Encryption", "Password", "Band", "BSSID"]
             for j in ret_val[dut]["ssid_data"]:
-                a = temp_data[dut][j].copy()
-                a = dict.fromkeys(["ssid", "encryption", "password", "band", "bssid"])
-                a["ssid"] = temp_data[dut][j][0]
-                a["encryption"] = temp_data[dut][j][1]
-                a["password"] = temp_data[dut][j][2]
-                a["band"] = temp_data[dut][j][3]
-                a["bssid"] = temp_data[dut][j][4]
-                ret_val[dut]["ssid_data"][j] = a
+                ssid_entry = temp_data[dut][j]
+                expected_length = 5
+                if len(ssid_entry) < expected_length:
+                    missing_fields = []
+                    # Check each field for its presence
+                    for index, field in enumerate(fields):
+                        if len(ssid_entry) <= index:
+                            missing_fields.append(field)
+                    if missing_fields:
+                        logging.error(
+                            f"Error: Missing field(s) {', '.join(missing_fields)} for SSID entry '{ssid_entry[0]}' in {ssid_entry}. Please check iwinfo")
+                        pytest.fail(
+                            f"Error: Missing field(s) {', '.join(missing_fields)} for SSID entry '{ssid_entry[0]}' in {ssid_entry}. Please check iwinfo")
+                else:
+                    a = temp_data[dut][j].copy()
+                    a = dict.fromkeys(["ssid", "encryption", "password", "band", "bssid"])
+                    a["ssid"] = temp_data[dut][j][0]
+                    a["encryption"] = temp_data[dut][j][1]
+                    a["password"] = temp_data[dut][j][2]
+                    a["band"] = temp_data[dut][j][3]
+                    a["bssid"] = temp_data[dut][j][4]
+                    ret_val[dut]["ssid_data"][j] = a
             temp = ret_val[dut]["radio_data"].copy()
             logging.info(f"temp:{temp}")
             for j in temp:
