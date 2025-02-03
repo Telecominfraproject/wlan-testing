@@ -675,6 +675,9 @@ class tip_2x:
                     band = "2G"
                 elif o[i + 9].__contains__("5."):
                     band = "5G"
+                elif "unknown" in o[i + 9]:
+                    logging.info(f"Error: {o[i - 1]} has an unknown channel frequency from iwinfo")
+                    pytest.fail(f"Error: {o[i - 1]} has an unknown channel frequency from iwinfo")
                 else:
                     band = "6G"
                 iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
