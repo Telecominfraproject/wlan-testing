@@ -15,7 +15,7 @@ DYNAMIC_VLAN_RADIUS_SERVER_DATA = lf_library.DYNAMIC_VLAN_RADIUS_SERVER_DATA
 DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA = lf_library.DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA
 
 pytestmark = [pytest.mark.dynamic_vlan_tests,
-              pytest.mark.vlan]
+              pytest.mark.vlan, pytest.mark.ow_sanity_lf]
 
 setup_params_general = {
     "mode": "VLAN",
