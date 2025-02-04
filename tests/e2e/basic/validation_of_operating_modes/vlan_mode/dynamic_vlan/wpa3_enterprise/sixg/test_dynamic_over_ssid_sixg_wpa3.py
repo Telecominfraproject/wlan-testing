@@ -71,8 +71,11 @@ class TestDynamicVlanOverSsid6GWpa3(object):
                 pytest -m "dynamic_precedence_over_ssid and wpa3_enterprise and vlan and sixg"
         """
 
-        profile_data = setup_params_general["ssid_modes"]["wpa3_enterprise"]
-        ssid_name = profile_data[1]["ssid_name"]
+        profile_data = {"ssid_name": "ssid_wpa3e_6g", "appliedRadios": ["6G"],
+             "security_key": "something",
+             "vlan": 100
+             }
+        ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         extra_secu = []
         mode = "VLAN"
