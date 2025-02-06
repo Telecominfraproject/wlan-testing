@@ -681,11 +681,13 @@ class tip_2x:
                 else:
                     band = "6G"
                 iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
+        logging.info(f"iwinfo_bssid_data:{iwinfo_bssid_data}")
         for p in iwinfo_bssid_data:
             for q in ssid_info_sdk:
                 if iwinfo_bssid_data[p][0] == q[0] and iwinfo_bssid_data[p][2] == q[3]:
                     q.append(iwinfo_bssid_data[p][1])
         ssid_info_sdk.append(channel_info)
+        logging.info(f"ssid_info_sdk:{ssid_info_sdk}")
         return ssid_info_sdk
 
     def get_dut_version(self):

@@ -22,7 +22,9 @@ setup_params_general = {
     "rf": {
         "6G": {
             'band': '6G',
-            'channel-width': 160}
+            'channel-width': 160,
+            'channel-mode':'HE'
+        }
     },
     "radius": False
 }

@@ -2641,20 +2641,20 @@ class UProfileUtility:
             base_radio_config_2g = {
                 "band": "2G",
                 "country": "US",
-                "channel-mode": "HE",
+                "channel-mode": "EHT",
                 "channel": "auto"
             }
             base_radio_config_5g = {
                 "band": "5G",
                 "country": "US",
                 "allow-dfs": False,
-                "channel-mode": "HE",
+                "channel-mode": "EHT",
                 "channel": "auto"
             }
             base_radio_config_6g = {
                 "band": "6G",
                 "country": "US",
-                "channel-mode": "HE",
+                "channel-mode": "EHT",
                 "channel": "auto"
             }
             for band in radio_config:
