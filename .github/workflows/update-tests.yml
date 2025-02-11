@@ -52,6 +52,7 @@ jobs:
           git config --global user.name "TIP Automation User"
           git pull
           git checkout gh-pages || git checkout -b gh-pages
+          rm -rf docs/tmp-docs || true
           mv tmp-docs docs
           git add docs
           git commit -m'Update allure report for github pages'
