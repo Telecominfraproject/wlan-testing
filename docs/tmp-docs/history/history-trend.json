@@ -1,13 +1,1 @@
-[ {
-  "buildOrder" : 62,
-  "reportUrl" : "../62/index.html",
-  "reportName" : "Telecominfraproject/wlan-testing Update tests list from master branch #62",
-  "data" : {
-    "failed" : 0,
-    "broken" : 0,
-    "skipped" : 5238,
-    "passed" : 8,
-    "unknown" : 0,
-    "total" : 5246
-  }
-} ]
+[{"buildOrder":134,"reportUrl":"../134/index.html","reportName":"Telecominfraproject/wlan-testing Update tests list from master branch #134","data":{"failed":0,"broken":0,"skipped":5208,"passed":8,"unknown":0,"total":5216}}]
