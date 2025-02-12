@@ -17,7 +17,6 @@ setup_params_general_5G = {
         "5G": {
             "band": "5G",
             "channel-width": 80,
-            "channel-mode": "HE",
             "channel": 36
         }
     },
@@ -209,7 +208,6 @@ setup_params_general_2G = {
         "2G": {
             "band": "2G",
             "channel-width": 20,
-            "channel-mode": "HE",
             "channel": 6
         }
     },
