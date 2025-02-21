@@ -427,7 +427,7 @@ class tip_2x:
             self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=False)
             logging.info("Waiting for 45 Seconds for All interfaces to come up")
             # wait time interfaces to come up
-            time.sleep(70)
+            time.sleep(45)
 
             # x = 0
             # while uuid_before_apply == uuid_after_apply:
