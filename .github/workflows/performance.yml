@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sercomm_ap72tip,edgecore_eap101,edgecore_eap111"
+        default: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -130,7 +130,7 @@ jobs:
 
   # Run tests on APs
   test-cig-wf189:
-    needs: ["vars", "build", "test-cig-wf196" ]
+    needs: ["vars", "build", "test-edgecore-eap105" ]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf189')"
@@ -183,7 +183,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-4a
+          testbed: basic-5a
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -209,7 +209,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_ax_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wca
-          testbed: basic-4a
+          testbed: basic-5a
           marker_expression: "performance and wifi_capacity_ax_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -235,7 +235,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-4a
+          testbed: basic-5a
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -261,7 +261,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-4a
+          testbed: basic-5a
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -287,7 +287,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-4a
+          testbed: basic-5a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2365,13 +2365,13 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsec
 
-  test-sercomm-ap72tip:
-    needs: [ "vars", "build", "test-edgecore-eap105" ]
+  test-sonicfi-rap7110c-341x:
+    needs: [ "vars", "build", "test-cig-wf196" ]
     runs-on: [ self-hosted, small ]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'sercomm_ap72tip')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'sonicfi_rap7110c-341x')"
     env:
-      AP_MODEL: sercomm_ap72tip
+      AP_MODEL: sonicfi_rap7110c-341x
     steps:
       - name: Set AP model output
         id: ap_model
@@ -2419,7 +2419,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-5a
+          testbed: basic-4a
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2445,7 +2445,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_ax_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wca
-          testbed: basic-5a
+          testbed: basic-4a
           marker_expression: "performance and wifi_capacity_ax_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2471,7 +2471,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'peak_throughput_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-5a
+          testbed: basic-4a
           marker_expression: "performance and peak_throughput_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2497,7 +2497,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-5a
+          testbed: basic-4a
           marker_expression: "performance and client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2523,7 +2523,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dual_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-5a
+          testbed: basic-4a
           marker_expression: "performance and dual_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2573,7 +2573,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
+    needs: [vars, test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sonicfi-rap7110c-341x, test-edgecore-eap101, test-edgecore-eap111]
     strategy:
       fail-fast: false
       matrix:
@@ -2654,7 +2654,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-edgecore-eap101, test-edgecore-eap111]
+    needs: [test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sonicfi-rap7110c-341x, test-edgecore-eap101, test-edgecore-eap111]
     runs-on: ubuntu-latest
     if: always()
     steps:
