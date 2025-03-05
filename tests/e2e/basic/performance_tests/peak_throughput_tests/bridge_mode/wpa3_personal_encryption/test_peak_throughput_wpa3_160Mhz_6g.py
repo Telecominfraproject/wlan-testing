@@ -71,6 +71,10 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12395", name="WIFI-12395")
     @pytest.mark.udp_download
     @pytest.mark.sixg
+    @allure.feature("Performance Test")
+    @allure.parent_suite("AX Capacity Test")
+    @allure.suite("6 GHz Band")
+    @allure.sub_suite("BRIDGE Mode")
     @pytest.mark.performance
     @allure.title("Single client UDP Download wifi capacity 160Mhz Bw")
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
@@ -129,6 +133,10 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12393", name="WIFI-12393")
     @pytest.mark.tcp_upload
     @pytest.mark.sixg
+    @allure.feature("Performance Test")
+    @allure.parent_suite("AX Capacity Test")
+    @allure.suite("6 GHz Band")
+    @allure.sub_suite("BRIDGE Mode")
     @pytest.mark.performance
     @allure.title("Single client TCP Upload wifi capacity 160Mhz Bw")
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
@@ -149,6 +157,10 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12392", name="WIFI-12392")
     @pytest.mark.udp_upload
     @pytest.mark.sixg
+    @allure.feature("Performance Test")
+    @allure.parent_suite("AX Capacity Test")
+    @allure.suite("6 GHz Band")
+    @allure.sub_suite("BRIDGE Mode")
     @pytest.mark.performance
     @allure.title("Single client UDP Upload wifi capacity 160Mhz Bw")
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
