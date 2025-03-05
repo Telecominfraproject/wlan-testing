@@ -1,14 +1,14 @@
 """
 
-    Performance Test: Client Scale Test : NAT Mode
-    pytest -m "client_scale_test and nat"
+    Performance Test: AX Client Scale Test : NAT Mode
+    pytest -m "ax_client_scale_tests and nat"
 
 """
 import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.nat, pytest.mark.client_scale_tests]
+pytestmark = [pytest.mark.performance, pytest.mark.nat, pytest.mark.ax_client_scale_tests]
 
 setup_params_general_2G = {
     "mode": "NAT",
@@ -22,8 +22,8 @@ setup_params_general_2G = {
 }
 
 
-@allure.feature("Client Scale Tests")
-@allure.parent_suite("Client Scale Tests")
+@allure.feature("AX Client Scale Tests")
+@allure.parent_suite("AX Client Scale Tests")
 @allure.suite(suite_name="WPA2 Personal Security")
 @allure.sub_suite(sub_suite_name="NAT Mode")
 @pytest.mark.parametrize(
@@ -37,8 +37,8 @@ setup_params_general_2G = {
 @pytest.mark.twog
 @pytest.mark.twog_band
 class TestWifiCapacityNATMode2G(object):
-    """ Client Scale Test NAT mode
-        pytest -m "client_scale_tests and nat and wpa2_personal and twog"
+    """ AX Client Scale Test NAT mode
+        pytest -m "ax_client_scale_tests and nat and wpa2_personal and twog"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3928", name="WIFI-3928")
@@ -47,8 +47,8 @@ class TestWifiCapacityNATMode2G(object):
     @allure.title("Test for TCP Download 2.4 GHz")
     def test_client_wpa2_NAT_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and twog and tcp_download"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and twog and tcp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -66,8 +66,8 @@ class TestWifiCapacityNATMode2G(object):
     @allure.title("Test for UDP Download 2.4 GHz")
     def test_client_wpa2_NAT_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and twog and udp_download"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and twog and udp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -86,8 +86,8 @@ class TestWifiCapacityNATMode2G(object):
     def test_client_wpa2_NAT_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration,
                                                max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and twog and tcp_bidirectional"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and twog and tcp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -106,8 +106,8 @@ class TestWifiCapacityNATMode2G(object):
     def test_client_wpa2_NAT_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration,
                                                max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and twog and udp_bidirectional"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and twog and udp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -126,8 +126,8 @@ class TestWifiCapacityNATMode2G(object):
     def test_client_wpa2_NAT_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
                                     max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and twog and tcp_upload"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and twog and tcp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -146,8 +146,8 @@ class TestWifiCapacityNATMode2G(object):
     def test_client_wpa2_NAT_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
                                     max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and twog and udp_upload"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and twog and udp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -172,8 +172,8 @@ setup_params_general_5G = {
 }
 
 
-@allure.feature("Client Scale Tests")
-@allure.parent_suite("Client Scale Tests")
+@allure.feature("AX Client Scale Tests")
+@allure.parent_suite("AX Client Scale Tests")
 @allure.suite(suite_name="WPA2 Personal Security")
 @allure.sub_suite(sub_suite_name="NAT Mode")
 @pytest.mark.parametrize(
@@ -187,8 +187,8 @@ setup_params_general_5G = {
 @pytest.mark.fiveg
 @pytest.mark.fiveg_band
 class TestWifiCapacityNATMode5G(object):
-    """ Client Scale Test NAT mode
-        pytest -m "client_scale_tests and nat and wpa2_personal and fiveg"
+    """ AX Client Scale Test NAT mode
+        pytest -m "ax_client_scale_tests and nat and wpa2_personal and fiveg"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3929", name="WIFI-3929")
@@ -198,8 +198,8 @@ class TestWifiCapacityNATMode5G(object):
     def test_client_wpa2_NAT_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
                                     max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and fiveg and tcp_download"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and fiveg and tcp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -219,8 +219,8 @@ class TestWifiCapacityNATMode5G(object):
     def test_client_wpa2_NAT_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
                                     max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and fiveg and udp_download"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and fiveg and udp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -239,8 +239,8 @@ class TestWifiCapacityNATMode5G(object):
     def test_client_wpa2_NAT_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration,
                                                max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and fiveg and tcp_bidirectional"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and fiveg and tcp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -259,8 +259,8 @@ class TestWifiCapacityNATMode5G(object):
     def test_client_wpa2_NAT_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration,
                                                max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and fiveg and udp_bidirectional"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and fiveg and udp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -278,8 +278,8 @@ class TestWifiCapacityNATMode5G(object):
     def test_client_wpa2_NAT_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
                                     max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and fiveg and udp_upload"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and fiveg and udp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -297,8 +297,8 @@ class TestWifiCapacityNATMode5G(object):
     def test_client_wpa2_NAT_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
                                     max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and fiveg and tcp_upload"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and fiveg and tcp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -323,8 +323,8 @@ setup_params_general_dual = {
 }
 
 
-@allure.feature("Client Scale Tests")
-@allure.parent_suite("Client Scale Tests")
+@allure.feature("AX Client Scale Tests")
+@allure.parent_suite("AX Client Scale Tests")
 @allure.suite(suite_name="WPA2 Personal Security")
 @allure.sub_suite(sub_suite_name="NAT Mode")
 @pytest.mark.parametrize(
@@ -340,8 +340,8 @@ setup_params_general_dual = {
 @pytest.mark.dual_band
 @pytest.mark.twog_band
 class TestWifiCapacityNATModeDual(object):
-    """ Client Scale Test NAT mode
-        pytest -m "client_scale_tests and nat and wpa2_personal and dual_band"
+    """ AX Client Scale Test NAT mode
+        pytest -m "ax_client_scale_tests and nat and wpa2_personal and dual_band"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
@@ -350,8 +350,8 @@ class TestWifiCapacityNATModeDual(object):
     @allure.title("Test for TCP Download 2.4 GHz and 5 GHz")
     def test_client_wpa2_NAT_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and dual_band and tcp_download"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and dual_band and tcp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -369,8 +369,8 @@ class TestWifiCapacityNATModeDual(object):
     @allure.title("Test for UDP Download 2.4 GHz and 5 GHz")
     def test_client_wpa2_NAT_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and dual_band and udp_download"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and dual_band and udp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -389,8 +389,8 @@ class TestWifiCapacityNATModeDual(object):
     def test_client_wpa2_NAT_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration,
                                                max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and dual_band and tcp_bidirectional"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and dual_band and tcp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -409,8 +409,8 @@ class TestWifiCapacityNATModeDual(object):
     def test_client_wpa2_NAT_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, setup_configuration,
                                                max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and dual_band and udp_bidirectional"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and dual_band and udp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -429,8 +429,8 @@ class TestWifiCapacityNATModeDual(object):
     def test_client_wpa2_NAT_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
                                     max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and dual_band and tcp_upload"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and dual_band and tcp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -449,8 +449,8 @@ class TestWifiCapacityNATModeDual(object):
     def test_client_wpa2_NAT_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration,
                                     max_stations):
-        """ Client Scale Test NAT mode
-            pytest -m "client_scale_tests and nat and wpa2_personal and dual_band and udp_upload"
+        """ AX Client Scale Test NAT mode
+            pytest -m "ax_client_scale_tests and nat and wpa2_personal and dual_band and udp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
