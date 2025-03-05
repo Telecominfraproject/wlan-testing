@@ -328,7 +328,6 @@ setup_params_general_6G = {
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa3_personal
 @pytest.mark.twog
-@pytest.mark.performance
 class TestWifiCapacityBRIDGEMode6G(object):
     """ AX Client Scale Test BRIDGE mode
            ax_client_scale_tests and bridge and wpa3_personal and sixg"
@@ -337,6 +336,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_download
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Test for TCP Download 6 GHz")
     def test_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
@@ -357,6 +357,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_download
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Test for UDP Download 6 GHz")
     def test_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
@@ -418,6 +419,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.tcp_upload
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Test for TCP Upload 6 GHz")
     def test_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
@@ -437,6 +439,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
     @pytest.mark.wpa3_personal
     @pytest.mark.udp_upload
     @pytest.mark.sixg
+    @pytest.mark.performance
     @allure.title("Test for UDP Upload 6 GHz")
     def test_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):

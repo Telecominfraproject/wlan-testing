@@ -8,7 +8,7 @@ import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.performance, pytest.mark.bridge, pytest.mark.ax_client_scale_tests]
+pytestmark = [pytest.mark.bridge, pytest.mark.ax_client_scale_tests]
 
 setup_params_general_2G = {
     "mode": "BRIDGE",
@@ -44,6 +44,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3928", name="WIFI-3928")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Test for TCP Download 2.4 GHz")
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
@@ -63,6 +64,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3930", name="WIFI-3930")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Test for UDP Download 2.4 GHz")
     def test_client_wpa2_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
@@ -122,6 +124,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     @allure.title("Test for TCP Upload 2.4 GHz")
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -142,6 +145,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     @allure.title("Test for UDP Upload 2.4 GHz")
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -194,6 +198,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3929", name="WIFI-3929")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Test for TCP Download 5 GHz")
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -215,6 +220,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3931", name="WIFI-3931")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Test for UDP Download 5 GHz")
     def test_client_wpa2_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -274,6 +280,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
     @pytest.mark.udp_upload
     @pytest.mark.wpa2_personal
+    @pytest.mark.performance
     @allure.title("Test for UDP Upload 5 GHz")
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -293,6 +300,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
 
     @pytest.mark.tcp_upload
     @pytest.mark.wpa2_personal
+    @pytest.mark.performance
     @allure.title("Test for TCP Upload 5 GHz")
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -347,6 +355,7 @@ class TestWifiCapacityBRIDGEModeDual(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3926", name="WIFI-3926")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_download
+    @pytest.mark.performance
     @allure.title("Test for TCP Download 2.4 GHz and 5 GHz")
     def test_client_wpa2_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
@@ -366,6 +375,7 @@ class TestWifiCapacityBRIDGEModeDual(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3927", name="WIFI-3927")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_download
+    @pytest.mark.performance
     @allure.title("Test for UDP Download 2.4 GHz and 5 GHz")
     def test_client_wpa2_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, max_stations):
@@ -425,6 +435,7 @@ class TestWifiCapacityBRIDGEModeDual(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7127", name="WIFI-7127")
     @pytest.mark.wpa2_personal
     @pytest.mark.tcp_upload
+    @pytest.mark.performance
     @allure.title("Test for TCP Upload 2.4 GHz and 5 GHz")
     def test_client_wpa2_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
@@ -445,6 +456,7 @@ class TestWifiCapacityBRIDGEModeDual(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-7128", name="WIFI-7128")
     @pytest.mark.wpa2_personal
     @pytest.mark.udp_upload
+    @pytest.mark.performance
     @allure.title("Test for UDP Upload 2.4 GHz and 5 GHz")
     def test_client_wpa2_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration,
