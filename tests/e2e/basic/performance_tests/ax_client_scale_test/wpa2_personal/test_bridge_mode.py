@@ -17,7 +17,26 @@ setup_params_general_2G = {
             {"ssid_name": "ssid_wpa2_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ]
     },
-    "rf": {},
+    "rf": {
+        "2G": {
+            "band": "2G",
+            "channel-width": 20,
+            "channel-mode": "HE",
+            "channel": 6
+        },
+        "5G": {
+            "band": "5G",
+            "channel-width": 80,
+            "channel-mode": "HE",
+            "channel": 36
+        },
+        "6G": {
+            "band": "6G",
+            "channel-width": 160,
+            "channel-mode": "HE",
+            "channel": 33
+        }
+    },
     "radius": False
 }
 
@@ -171,7 +190,26 @@ setup_params_general_5G = {
             {"ssid_name": "ssid_wpa2_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ]
     },
-    "rf": {},
+    "rf": {
+        "2G": {
+            "band": "2G",
+            "channel-width": 20,
+            "channel-mode": "HE",
+            "channel": 6
+        },
+        "5G": {
+            "band": "5G",
+            "channel-width": 80,
+            "channel-mode": "HE",
+            "channel": 36
+        },
+        "6G": {
+            "band": "6G",
+            "channel-width": 160,
+            "channel-mode": "HE",
+            "channel": 33
+        }
+    },
     "radius": False
 }
 
@@ -326,7 +364,26 @@ setup_params_general_dual = {
             {"ssid_name": "ssid_wpa2_dual_band", "appliedRadios": ["2G", "5G"], "security_key": "something"}
         ]
     },
-    "rf": {},
+    "rf": {
+        "2G": {
+            "band": "2G",
+            "channel-width": 20,
+            "channel-mode": "HE",
+            "channel": 6
+        },
+        "5G": {
+            "band": "5G",
+            "channel-width": 80,
+            "channel-mode": "HE",
+            "channel": 36
+        },
+        "6G": {
+            "band": "6G",
+            "channel-width": 160,
+            "channel-mode": "HE",
+            "channel": 33
+        }
+    },
     "radius": False
 }
 

@@ -19,9 +19,24 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
             ]},
     "rf": {
+        "2G": {
+            "band": "2G",
+            "channel-width": 20,
+            "channel-mode": "HE",
+            "channel": 6
+        },
+        "5G": {
+            "band": "5G",
+            "channel-width": 80,
+            "channel-mode": "HE",
+            "channel": 36
+        },
         "6G": {
-            'band': '6G',
-            'channel-width': 160}
+            "band": "6G",
+            "channel-width": 160,
+            "channel-mode": "HE",
+            "channel": 33
+        }
     },
     "radius": False
 }

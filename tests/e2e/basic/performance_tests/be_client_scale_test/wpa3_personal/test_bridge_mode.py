@@ -19,7 +19,26 @@ setup_params_general_6G = {
             {"ssid_name": "ssid_wpa3_6g", "appliedRadios": ["6G"], "security_key": "something"}
         ]
     },
-    "rf": {},
+    "rf": {
+        "2G": {
+            "band": "2G",
+            "channel-width": 40,
+            "channel-mode": "EHT",
+            "channel": 6
+        },
+        "5G": {
+            "band": "5G",
+            "channel-width": 80,
+            "channel-mode": "EHT",
+            "channel": 36
+        },
+        "6G": {
+            "band": "6G",
+            "channel-width": 320,
+            "channel-mode": "EHT",
+            "channel": 33
+        }
+    },
     "radius": False
 }
 
@@ -63,7 +82,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                        upload_rate="0Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": max_stations}, is_wifi7=True)
+                                       num_stations={"6G": max_stations}, is_wifi7=True, is_bw320=True)
         assert True
 
     # @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3659", name="WIFI-3659")
@@ -87,7 +106,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
                                        download_rate="1Gbps", batch_size="1,5,10,20,40,64,128,256",
                                        upload_rate="56Kbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": max_stations}, is_wifi7=True)
+                                       num_stations={"6G": max_stations}, is_wifi7=True, is_bw320=True)
         assert True
 
     @pytest.mark.wpa3_personal
@@ -110,7 +129,7 @@ class TestWifiCapacityBRIDGEMode6G(object):
                                        download_rate="100Kbps", batch_size="1,5,10,20,40,64,128,256",
                                        upload_rate="1Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": max_stations}, is_wifi7=True)
+                                       num_stations={"6G": max_stations}, is_wifi7=True, is_bw320=True)
         assert True
 
     @pytest.mark.wpa3_personal
@@ -133,5 +152,5 @@ class TestWifiCapacityBRIDGEMode6G(object):
                                        download_rate="100Kbps", batch_size="1,5,10,20,40,64,128,256",
                                        upload_rate="1Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": max_stations}, is_wifi7=True)
+                                       num_stations={"6G": max_stations}, is_wifi7=True, is_bw320=True)
         assert True

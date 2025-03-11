@@ -19,10 +19,24 @@ setup_params_general = {
             {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
             ]},
     "rf": {
+        "2G": {
+            "band": "2G",
+            "channel-width": 40,
+            "channel-mode": "EHT",
+            "channel": 6
+        },
+        "5G": {
+            "band": "5G",
+            "channel-width": 80,
+            "channel-mode": "EHT",
+            "channel": 36
+        },
         "6G": {
-            'band': '6G',
-            'channel-width': 160,
-            "channel-mode": "EHT"}
+            "band": "6G",
+            "channel-width": 320,
+            "channel-mode": "EHT",
+            "channel": 33
+        }
     },
     "radius": False
 }
@@ -47,7 +61,7 @@ class TestWifiCapacityNATMode6G(object):
     @pytest.mark.tcp_download
     @pytest.mark.sixg
     @pytest.mark.performance
-    @allure.title("Single BE client TCP Download wifi capacity")
+    @allure.title("Single BE client TCP Download wifi capacity 320Mhz Bw")
     def test_be_client_wpa3_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single BE client Wifi Capacity Test nat mode
@@ -60,14 +74,14 @@ class TestWifiCapacityNATMode6G(object):
                                        download_rate="10Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1}, pass_fail_criteria=True)
+                                       num_stations={"6G": 1}, pass_fail_criteria=True, is_wifi7=True, is_bw320=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14446", name="WIFI-14446")
     @pytest.mark.udp_download
     @pytest.mark.sixg
     @pytest.mark.performance
-    @allure.title("Single BE client UDP Download wifi capacity 160Mhz Bw")
+    @allure.title("Single BE client UDP Download wifi capacity 320Mhz Bw")
     def test_be_client_wpa3_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single client Wifi Capacity Test nat mode
@@ -80,14 +94,14 @@ class TestWifiCapacityNATMode6G(object):
                                        download_rate="10Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1}, pass_fail_criteria=True)
+                                       num_stations={"6G": 1}, pass_fail_criteria=True, is_wifi7=True, is_bw320=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14446", name="WIFI-14446")
     @pytest.mark.tcp_upload
     @pytest.mark.sixg
     @pytest.mark.performance
-    @allure.title("Single BE client TCP Upload wifi capacity 160Mhz Bw")
+    @allure.title("Single BE client TCP Upload wifi capacity 320Mhz Bw")
     def test_be_client_wpa3_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single BE client Wifi Capacity Test nat mode
@@ -100,14 +114,14 @@ class TestWifiCapacityNATMode6G(object):
                                        download_rate="56Kbps", batch_size="1",
                                        upload_rate="10Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1}, pass_fail_criteria=True)
+                                       num_stations={"6G": 1}, pass_fail_criteria=True, is_wifi7=True, is_bw320=True)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14446", name="WIFI-14446")
     @pytest.mark.udp_upload
     @pytest.mark.sixg
     @pytest.mark.performance
-    @allure.title("Single BE client UDP Upload wifi capacity 160Mhz Bw")
+    @allure.title("Single BE client UDP Upload wifi capacity 320Mhz Bw")
     def test_be_client_wpa3_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single client Wifi Capacity Test nat mode
@@ -120,5 +134,5 @@ class TestWifiCapacityNATMode6G(object):
                                        download_rate="56Kbps", batch_size="1",
                                        upload_rate="10Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1}, pass_fail_criteria=True)
+                                       num_stations={"6G": 1}, pass_fail_criteria=True, is_wifi7=True, is_bw320=True)
         assert True

@@ -14,11 +14,23 @@ setup_params_general_5G = {
         ]
     },
     "rf": {
+        "2G": {
+            "band": "2G",
+            "channel-width": 40,
+            "channel-mode": "EHT",
+            "channel": 6
+        },
         "5G": {
             "band": "5G",
             "channel-width": 80,
             "channel-mode": "EHT",
             "channel": 36
+        },
+        "6G": {
+            "band": "6G",
+            "channel-width": 320,
+            "channel-mode": "EHT",
+            "channel": 33
         }
     },
     "radius": False
@@ -157,9 +169,21 @@ setup_params_general_2G = {
     "rf": {
         "2G": {
             "band": "2G",
-            "channel-width": 20,
+            "channel-width": 40,
             "channel-mode": "EHT",
             "channel": 6
+        },
+        "5G": {
+            "band": "5G",
+            "channel-width": 80,
+            "channel-mode": "EHT",
+            "channel": 36
+        },
+        "6G": {
+            "band": "6G",
+            "channel-width": 320,
+            "channel-mode": "EHT",
+            "channel": 33
         }
     },
     "radius": False
