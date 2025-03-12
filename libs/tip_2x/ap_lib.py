@@ -478,7 +478,7 @@ class APLIBS:
             if status_count == 1:
                 cmd = "cd && cd /sys/kernel/debug/ieee80211/phy0/ && cd ath12k_hw1 && echo 1 > dfs_simulate_radar"
             else:
-                cmd = f'cd  && cd /sys/kernel/debug/ath12k/ && cd qcn* && cd mac1 && ls && echo 1 > dfs_simulate_radar'
+                cmd = "cd && cd /sys/kernel/debug/ieee80211/phy00/ && cd ath12k_hw1 && echo 1 > dfs_simulate_radar"
         output = self.run_generic_command(cmd=cmd, idx=idx,
                                           print_log=print_log,
                                           attach_allure=attach_allure,
@@ -547,7 +547,7 @@ class APLIBS:
             if output.__contains__("False"):
                 cmd = f'cd && cd /sys/kernel/debug/ieee80211/phy0/ath12k_hw1/ && logread | grep DFS'
             else:
-                cmd = f'cd  && cd /sys/kernel/debug/ath12k/ && cd qcn* && cd mac1 && logread | grep DFS'
+                cmd = f'cd && cd /sys/kernel/debug/ieee80211/phy00/ath12k_hw1/ && logread | grep DFS'
 
         try:
             output = self.run_generic_command(cmd=cmd, idx=idx,
