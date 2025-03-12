@@ -1,11 +1,11 @@
 """
     Performance Test: BE Capacity Test : BRIDGE Mode
-    pytest -m "be_capacity_tests and wpa2_personal and bridge"
+    pytest -m "wifi_capacity_be_tests and wpa2_personal and bridge"
 """
 import pytest
 import allure
 
-pytestmark = [pytest.mark.bridge, pytest.mark.be_capacity_tests, pytest.mark.wpa2_personal]
+pytestmark = [pytest.mark.bridge, pytest.mark.wifi_capacity_be_tests, pytest.mark.wpa2_personal]
 setup_params_general_5G = {
     "mode": "BRIDGE",
     "ssid_modes": {
@@ -65,7 +65,7 @@ class TestWifiCapacityBRIDGEModeBE5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        be_capacity_tests and wpa2_personal and bridge and fiveg and tcp_download
+        wifi_capacity_be_tests and wpa2_personal and bridge and fiveg and tcp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -91,7 +91,7 @@ class TestWifiCapacityBRIDGEModeBE5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        be_capacity_tests and wpa2_personal and bridge and fiveg and udp_download
+        wifi_capacity_be_tests and wpa2_personal and bridge and fiveg and udp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -117,7 +117,7 @@ class TestWifiCapacityBRIDGEModeBE5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        be_capacity_tests and wpa2_personal and bridge and fiveg and tcp_upload
+        wifi_capacity_be_tests and wpa2_personal and bridge and fiveg and tcp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -145,7 +145,7 @@ class TestWifiCapacityBRIDGEModeBE5G(object):
         The 5Ghz station is configured for 80Mhz bandwidth and two spatial streams.
 
         Markers:
-        be_capacity_tests and wpa2_personal and bridge and fiveg and udp_upload
+        wifi_capacity_be_tests and wpa2_personal and bridge and fiveg and udp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -218,7 +218,7 @@ class TestWifiCapacityBRIDGEModeBE2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        be_capacity_tests and wpa2_personal and bridge and twog and tcp_download
+        wifi_capacity_be_tests and wpa2_personal and bridge and twog and tcp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -245,7 +245,7 @@ class TestWifiCapacityBRIDGEModeBE2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        be_capacity_tests and wpa2_personal and bridge and twog and udp_download
+        wifi_capacity_be_tests and wpa2_personal and bridge and twog and udp_download
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -273,7 +273,7 @@ class TestWifiCapacityBRIDGEModeBE2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        be_capacity_tests and wpa2_personal and bridge and twog and tcp_upload
+        wifi_capacity_be_tests and wpa2_personal and bridge and twog and tcp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
@@ -300,7 +300,7 @@ class TestWifiCapacityBRIDGEModeBE2G(object):
         The 2.4Ghz station is configured for 20Mhz bandwidth and two spatial streams.
 
         Markers:
-        be_capacity_tests and wpa2_personal and bridge and twog and udp_upload
+        wifi_capacity_be_tests and wpa2_personal and bridge and twog and udp_upload
 
         Note:
         Please refer to the PDF report for detailed observations and analysis of the test results.
