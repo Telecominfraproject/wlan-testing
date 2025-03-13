@@ -1,6 +1,11 @@
 {
   "AP Models": {
     "edgecore_eap101":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -21,8 +26,13 @@
         "TCP": null,
         "UDP": null
       }
-    },
+    }},
     "edgecore_eap102":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -43,8 +53,13 @@
         "TCP": null,
         "UDP": null
       }
-    },
+    }},
     "edgecore_eap104":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -65,8 +80,13 @@
         "TCP": 1600,
         "UDP": 1800
       }
-    },
+    }},
     "edgecore_oap101-6e":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -95,8 +115,13 @@
         "TCP": null,
         "UDP": null
       }
-    },
+    }},
     "cig_wf188n":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -117,8 +142,13 @@
         "TCP": null,
         "UDP": null
       }
-    },
+    }},
     "cig_wf196":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -147,8 +177,13 @@
         "TCP": 3200,
         "UDP": 3600
       }
-    },
+    }},
     "cig_wf186w":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -169,8 +204,13 @@
         "TCP": 1600,
         "UDP": 1800
       }
-    },
+    }},
     "cig_wf186h":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -191,8 +231,13 @@
         "TCP": 1600,
         "UDP": 1800
       }
-    },
+    }},
     "hfcl_ion4xe":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -213,8 +258,13 @@
         "TCP": null,
         "UDP": null
       }
-    },
+    }},
     "yuncore_fap655":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -235,8 +285,13 @@
         "TCP": null,
         "UDP": null
       }
-    },
+    }},
     "yuncore_ax820":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -257,8 +312,13 @@
         "TCP": null,
         "UDP": null
       }
-    },
+    }},
     "edgecore_eap105":{
+      "AX":{
+      "2G 2x2 40MHz": {
+      "TCP": 400,
+      "UDP": 400
+     },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -287,8 +347,149 @@
         "TCP": null,
         "UDP": null
       }
+    },
+     "BE":{
+       "2G 2x2 40MHz": {
+        "TCP": 480,
+        "UDP": 480
+      },
+       "2G 2x2 20MHz": {
+        "TCP": 240,
+        "UDP": 240
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 1000,
+        "UDP": 1000
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": 2000,
+        "UDP": 2000
+      },
+      "6G 2x2 320MHz": {
+        "TCP": 3000,
+        "UDP": 3000
+      },
+      "6G 4x4 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+     }
     },
     "sercomm_ap72tip":{
+      "AX":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "6G 2x2 160MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      },
+      "6G 4x4 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    }},
+    "cig_wf189":{
+      "AX":{
+      "2G 2x2 20MHz": {
+        "TCP": 200,
+        "UDP": 220
+      },
+      "2G 2x2 40MHz": {
+      "TCP": 400,
+      "UDP": 400
+     },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 800,
+        "UDP": 900
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "6G 2x2 160MHz": {
+        "TCP": 1600,
+        "UDP": 1800
+      },
+      "6G 4x4 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+    },
+    "BE":{
+       "2G 2x2 40MHz": {
+        "TCP": 480,
+        "UDP": 480
+      },
+       "2G 2x2 20MHz": {
+        "TCP": 240,
+        "UDP": 240
+      },
+      "2G 4x4 20MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 80MHz": {
+        "TCP": 1000,
+        "UDP": 1000
+      },
+      "5G 4x4 80MHz": {
+        "TCP": null,
+        "UDP": null
+      },
+      "5G 2x2 160MHz": {
+        "TCP": 2000,
+        "UDP": 2000
+      },
+      "6G 2x2 320MHz": {
+        "TCP": 3000,
+        "UDP": 3000
+      },
+      "6G 4x4 160MHz": {
+        "TCP": null,
+        "UDP": null
+      }
+     }
+    },
+    "sonicfi_rap7110c-341x":{
+      "AX":{
+      "2G 2x2 40MHz": {
+      "TCP": 400,
+      "UDP": 400
+     },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -318,37 +519,47 @@
         "UDP": null
       }
     },
-    "cig_wf189":{
-      "2G 2x2 20MHz": {
-        "TCP": 200,
-        "UDP": 220
+    "BE":{
+       "2G 2x2 40MHz": {
+        "TCP": 480,
+        "UDP": 480
+      },
+       "2G 2x2 20MHz": {
+        "TCP": 240,
+        "UDP": 240
       },
       "2G 4x4 20MHz": {
         "TCP": null,
         "UDP": null
       },
       "5G 2x2 80MHz": {
-        "TCP": 800,
-        "UDP": 900
+        "TCP": 1000,
+        "UDP": 1000
       },
       "5G 4x4 80MHz": {
         "TCP": null,
         "UDP": null
       },
       "5G 2x2 160MHz": {
-        "TCP": null,
-        "UDP": null
+        "TCP": 2000,
+        "UDP": 2000
       },
-      "6G 2x2 160MHz": {
-        "TCP": 1600,
-        "UDP": 1800
+      "6G 2x2 320MHz": {
+        "TCP": 3000,
+        "UDP": 3000
       },
       "6G 4x4 160MHz": {
         "TCP": null,
         "UDP": null
       }
+     }
     },
     "udaya_a6-id2":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -369,8 +580,13 @@
         "TCP": null,
         "UDP": null
       }
-    },
+    }},
     "edgecore_eap111":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -399,8 +615,13 @@
         "TCP": 2400,
         "UDP": 2700
     }
-  },
+  }},
     "sonicfi_rap630c-311g":{
+      "AX":{
+      "2G 2x2 40MHz": {
+        "TCP": 400,
+        "UDP": 400
+      },
       "2G 2x2 20MHz": {
         "TCP": 200,
         "UDP": 220
@@ -423,4 +644,5 @@
       }
     }
   }
+}
 }
