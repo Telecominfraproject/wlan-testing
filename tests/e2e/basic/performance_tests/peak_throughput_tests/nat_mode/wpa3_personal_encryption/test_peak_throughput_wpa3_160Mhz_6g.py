@@ -65,6 +65,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     @allure.suite("6 GHz Band")
     @allure.sub_suite("NAT Mode")
     @pytest.mark.performance
+    @pytest.mark.wifi_capacity_ax_tests
     @allure.title("Single client TCP Download wifi capacity 160Mhz Bw")
     def test_client_wpa3_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
@@ -89,6 +90,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     @allure.suite("6 GHz Band")
     @allure.sub_suite("NAT Mode")
     @pytest.mark.performance
+    @pytest.mark.wifi_capacity_ax_tests
     @allure.title("Single client UDP Download wifi capacity 160Mhz Bw")
     def test_client_wpa3_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
@@ -151,6 +153,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     @allure.suite("6 GHz Band")
     @allure.sub_suite("NAT Mode")
     @pytest.mark.performance
+    @pytest.mark.wifi_capacity_ax_tests
     @allure.title("Single client TCP Upload wifi capacity 160Mhz Bw")
     def test_client_wpa3_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
@@ -175,6 +178,7 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
     @allure.suite("6 GHz Band")
     @allure.sub_suite("NAT Mode")
     @pytest.mark.performance
+    @pytest.mark.wifi_capacity_ax_tests
     @allure.title("Single client UDP Upload wifi capacity 160Mhz Bw")
     def test_client_wpa3_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration):
