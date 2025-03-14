@@ -8,7 +8,7 @@
 import allure
 import pytest
 
-pytestmark = [pytest.mark.be_capacity_tests, pytest.mark.nat, pytest.mark.sixg,
+pytestmark = [pytest.mark.wifi_capacity_be_tests, pytest.mark.nat, pytest.mark.sixg,
               pytest.mark.wpa3_personal]
 
 setup_params_general = {
@@ -65,7 +65,7 @@ class TestWifiCapacityNATMode6G(object):
     def test_be_client_wpa3_nat_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single BE client Wifi Capacity Test nat mode
-            pytest -m "be_capacity_tests and sixg and tcp_download and nat"
+            pytest -m "wifi_capacity_be_tests and sixg and tcp_download and nat"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -85,7 +85,7 @@ class TestWifiCapacityNATMode6G(object):
     def test_be_client_wpa3_nat_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single client Wifi Capacity Test nat mode
-            pytest -m "be_capacity_tests and sixg and udp_download and nat"
+            pytest -m "wifi_capacity_be_tests and sixg and udp_download and nat"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -105,7 +105,7 @@ class TestWifiCapacityNATMode6G(object):
     def test_be_client_wpa3_nat_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single BE client Wifi Capacity Test nat mode
-            pytest -m "be_capacity_tests and sixg and tcp_upload and nat"
+            pytest -m "wifi_capacity_be_tests and sixg and tcp_upload and nat"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -125,7 +125,7 @@ class TestWifiCapacityNATMode6G(object):
     def test_be_client_wpa3_nat_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single client Wifi Capacity Test nat mode
-            pytest -m "be_capacity_tests and sixg and udp_upload and nat"
+            pytest -m "wifi_capacity_be_tests and sixg and udp_upload and nat"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]

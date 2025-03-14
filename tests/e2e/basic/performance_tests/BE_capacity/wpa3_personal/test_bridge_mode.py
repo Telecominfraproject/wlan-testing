@@ -1,7 +1,7 @@
 """
 
     Performance Test: Single BE client Wifi capacity with Channel and Channel-width Test: Bridge Mode
-    pytest -m "be_capacity_tests and bridge"
+    pytest -m "wifi_capacity_be_tests and bridge"
 
 """
 import logging
@@ -9,7 +9,7 @@ import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.be_capacity_tests, pytest.mark.bridge, pytest.mark.sixg,
+pytestmark = [pytest.mark.wifi_capacity_be_tests, pytest.mark.bridge, pytest.mark.sixg,
               pytest.mark.wpa3_personal]
 
 setup_params_general = {
@@ -68,7 +68,7 @@ class TestWifiCapacityBRIDGEModeBE6G(object):
     def test_be_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single BE client Capacity Test BRIDGE mode
-            pytest -m "be_capacity_tests and sixg and tcp_download and bridge"
+            pytest -m "wifi_capacity_be_tests and sixg and tcp_download and bridge"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -88,7 +88,7 @@ class TestWifiCapacityBRIDGEModeBE6G(object):
     def test_be_client_wpa3_bridge_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single BE client Capacity Test BRIDGE mode
-            pytest -m "be_capacity_tests and sixg and udp_download and bridge"
+            pytest -m "wifi_capacity_be_tests and sixg and udp_download and bridge"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -108,7 +108,7 @@ class TestWifiCapacityBRIDGEModeBE6G(object):
     def test_be_client_wpa3_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single BE client Capacity Test BRIDGE mode
-            pytest -m "be_capacity_tests and sixg and tcp_upload and bridge"
+            pytest -m "wifi_capacity_be_tests and sixg and tcp_upload and bridge"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -129,7 +129,7 @@ class TestWifiCapacityBRIDGEModeBE6G(object):
     def test_be_client_wpa3_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
         """ Single BE client Capacity Test BRIDGE mode
-            pytest -m "be_capacity_tests and sixg and udp_upload and bridge"
+            pytest -m "wifi_capacity_be_tests and sixg and udp_upload and bridge"
         """
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
