@@ -1,6 +1,6 @@
 """
        Multi Band Performance Test : BRIDGE Mode
-       pytest -m "performance multi_band_tests and bridge"
+       pytest -m "performance and multi_band_tests and bridge"
 
 
 """
@@ -111,7 +111,7 @@ def initialize_testbed(request):
     assert testbed_details_global is not None, "Testbed details should not be None"
     print(f"Initialized Testbed Details: {testbed_details_global}")
 
-    # ✅ Extract 'mode' from the first device in 'device_under_tests'
+    # Extract 'mode' from the first device in 'device_under_tests'
     ap_mode = testbed_details_global["device_under_tests"][0].get("mode", "")
 
     # Assign setup_params_general based on mode
