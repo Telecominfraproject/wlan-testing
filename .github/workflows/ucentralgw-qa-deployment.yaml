@@ -42,7 +42,7 @@ env:
       "owanalytics_version": "main",
       "owsub_version": "main",
       "owrrm_version": "main",
-      "owgwui_version": "main",
+      "owgwui_version": "v3.2.1",
       "owprovui_version": "main"
     }
   ]'
