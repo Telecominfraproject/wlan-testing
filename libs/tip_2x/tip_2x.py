@@ -393,8 +393,8 @@ class tip_2x:
             logging.info("resp: " + str(resp))
             uuid = resp["details"]["uuid"]
             logging.info("uuid from resp: " + str(uuid))
-            logging.info("Waiting for 60 sec after config push")
-            time.sleep(60)
+            logging.info("Waiting for 45 sec after config push")
+            time.sleep(45)
             r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
             latest_uuid_after_apply = r_data["latest"]
             active_uuid_after_apply = r_data["active"]
