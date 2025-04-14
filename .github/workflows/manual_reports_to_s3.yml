@@ -1,0 +1,152 @@
+name: Manual reports to s3
+
+on:
+  workflow_dispatch:
+    inputs:
+      drive_link:
+        description: 'Google Drive link to Allure .zip'
+        required: true
+      user_name:
+        description: 'User name'
+        required: true
+        default: 'Jitendra'
+      test_type:
+        description: 'Test type (sanity/regression/performance/custom_tests)'
+        required: true
+        default: 'sanity'
+      AP_model:
+        description: 'AP model'
+        default: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111"
+        required: true
+
+env:
+  AWS_S3_BUCKET_NAME: openwifi-allure-reports
+  AWS_ACCOUNT_ID: "289708231103"
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_DEFAULT_OUTPUT: json
+  # Approved users list
+  APPROVED_USERS: "Jitendra"
+  # Valid test types
+  VALID_TEST_TYPES: "sanity,regression,performance,custom_tests"
+  # Approved AP models list
+  APPROVED_AP_MODELS: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111"
+
+jobs:
+  upload-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate user
+        shell: bash
+        run: |
+          # Convert comma-separated list to array
+          IFS=',' read -ra VALID_USERS <<< "$APPROVED_USERS"
+          
+          # Check if input user exists in approved list
+          USER="${{ inputs.user_name }}"
+          if [[ ! " ${VALID_USERS[@]} " =~ " ${USER} " ]]; then
+            echo "::error::User '$USER' not approved. Valid options: $APPROVED_USERS"
+            exit 1
+          fi
+          echo "✅ Approved user: $USER"
+
+      - name: Validate test type
+        shell: bash
+        run: |
+          # Convert comma-separated list to array
+          IFS=',' read -ra VALID_TYPES <<< "$VALID_TEST_TYPES"
+          
+          # Check if input test type is valid
+          TEST_TYPE="${{ inputs.test_type }}"
+          if [[ ! " ${VALID_TYPES[@]} " =~ " ${TEST_TYPE} " ]]; then
+            echo "::error::Test type '$TEST_TYPE' not valid. Valid options: $VALID_TEST_TYPES"
+            exit 1
+          fi
+          echo "✅ Valid test type: $TEST_TYPE"
+
+      - name: Validate AP model
+        shell: bash
+        run: |
+          # Convert comma-separated list to array
+          IFS=',' read -ra VALID_AP_MODELS <<< "$APPROVED_AP_MODELS"
+          
+          # Check if input AP model exists in approved list
+          AP_MODEL="${{ inputs.AP_model }}"
+          if [[ ! " ${VALID_AP_MODELS[@]} " =~ " ${AP_MODEL} " ]]; then
+            echo "::error::AP model '$AP_MODEL' not approved. Valid options: $APPROVED_AP_MODELS"
+            exit 1
+          fi
+          echo "✅ Approved AP model: $AP_MODEL"
+
+      - name: Download report
+        if: success()
+        run: |
+          sudo apt-get install -y wget unzip file
+          FILE_ID=$(echo "${{ inputs.drive_link }}" | grep -oP '/d/\K[^/]+')
+          wget --no-check-certificate "https://drive.google.com/uc?export=download&id=$FILE_ID" -O report.zip
+          
+          # Validate the downloaded file is a ZIP file
+          file_type=$(file -b --mime-type report.zip)
+          if [[ "$file_type" != "application/zip" ]]; then
+            echo "::error::Downloaded file is not a valid ZIP file (detected type: $file_type)"
+            exit 1
+          fi
+          
+          # Additional check with unzip -t
+          if ! unzip -t report.zip >/dev/null 2>&1; then
+            echo "::error::Downloaded file is not a valid ZIP archive (failed integrity check)"
+            exit 1
+          fi
+          echo "✅ Valid ZIP file downloaded"
+
+      - name: Extract report
+        if: success()
+        run: |
+          unzip report.zip -d allure-report
+          if [ $? -ne 0 ]; then
+            echo "::error::Failed to extract the ZIP file"
+            exit 1
+          fi
+
+      - name: Upload Allure report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ inputs.AP_model }}
+          path: allure-report
+
+      - name: Configure AWS
+        if: success()
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set region $AWS_DEFAULT_REGION
+
+      - name: Upload to S3
+        if: success()
+        run: |
+          # Upload files (creates manual-reports/ automatically if not exists)
+          aws s3 sync ./allure-report/ \
+            "s3://$AWS_S3_BUCKET_NAME/manual-reports/${{ inputs.user_name }}/${{ inputs.test_type }}/${{ inputs.AP_model }}/run-${{ github.run_number }}/" \
+            --acl public-read
+
+          # Create HTML redirect
+          echo '<html><meta http-equiv="refresh" content="0; url=./index.html"></html>' | \
+            aws s3 cp - "s3://$AWS_S3_BUCKET_NAME/manual-reports/${{ inputs.user_name }}/${{ inputs.test_type }}/${{ inputs.AP_model }}/run-${{ github.run_number }}/" \
+            --content-type "text/html"
+
+      - name: Update latest pointer
+        if: success()
+        run: |
+          aws s3 cp \
+            "s3://$AWS_S3_BUCKET_NAME/manual-reports/${{ inputs.user_name }}/${{ inputs.test_type }}/${{ inputs.AP_model }}/run-${{ github.run_number }}/index.html" \
+            "s3://$AWS_S3_BUCKET_NAME/manual-reports/${{ inputs.user_name }}/${{ inputs.test_type }}/${{ inputs.AP_model }}/latest/index.html" \
+            --metadata "latest_run=${{ github.run_number }}" \
+            --acl public-read
+
+      - name: Show report URL
+        if: success()
+        run: |
+          echo "::notice title=Report Uploaded::Access at:"
+          echo "https://$AWS_S3_BUCKET_NAME.s3.$AWS_DEFAULT_REGION.amazonaws.com/manual-reports/${{ inputs.user_name }}/${{ inputs.test_type }}/${{ inputs.AP_model }}/run-${{ github.run_number }}/"
