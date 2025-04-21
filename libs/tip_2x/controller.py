@@ -695,8 +695,8 @@ class Controller(ConfigureController):
         self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
-    def get_device_statistics(self, serial_number):
-        uri = self.build_uri("device/" + serial_number + "/statistics")
+    def get_device_statistics(self, serial_number, query="?lastOnly=true"):
+        uri = self.build_uri("device/" + serial_number + "/statistics" + query)
         logging.info("Sending Command: " + "\n" +
                      "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                      "URI: " + str(uri) + "\n" +
