@@ -30,12 +30,12 @@
         "Group: 1": {"Radios": ["1.1.10 wiphy4", "1.1.11 wiphy5", "1.1.12 wiphy6", "1.1.13 wiphy7"],
           "2.4Ghz RSSI 0 Atten": [-25, -25, -25, -25],
           "5Ghz RSSI 0 Atten": [-30, -30, -30, -30],
-          "Attenuator Modules": ["1.1.3315.2", "1.1.3315.3", "", ""]
+          "Attenuator Modules": ["1.1.3319.0", "1.1.3319.1", "", ""]
         },
         "Group: 2": {"Radios": ["1.1.14 wiphy8", "1.1.15 wiphy9", "1.1.6 wiphy10", "1.1.7 wiphy11"],
           "2.4Ghz RSSI 0 Atten": [-23, -23, -23, -23],
           "5Ghz RSSI 0 Atten": [-40, -40, -40, -40],
-          "Attenuator Modules": ["1.1.3319.0", "1.1.3319.1", "", ""]
+          "Attenuator Modules": ["1.1.3315.2", "1.1.3315.3", "", ""]
         },
         "Group: 3": {"Radios": ["1.2.2 wiphy0", "1.2.14 wiphy2", "1.2.3 wiphy1", "1.2.19 wiphy3"],
           "2.4Ghz RSSI 0 Atten": [-25, -25],
