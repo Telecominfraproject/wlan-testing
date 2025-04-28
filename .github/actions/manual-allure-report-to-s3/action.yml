@@ -1,0 +1,72 @@
+name: upload report to S3
+description: upload an Allure report to AWS S3 and update the latest reference
+
+inputs:
+  test_type:
+    description: test type of the report
+    required: true
+  testbed:
+    description: "AP model name (cig_wf186h,edgecore_eap104,cig_wf196,etc)"
+    required: true
+  report_path:
+    description: path to the Allure report folder
+    required: true
+  s3_access_key_id:
+    description: AWS access key ID to access S3 bucket
+    required: true
+  s3_access_key_secret:
+    description: AWS access key secret to access S3 bucket
+    required: true
+  username:
+    description: "User who uploaded the report"
+    required: true
+    default: "Jitendra"
+
+runs:
+  using: "composite"
+  steps:
+    - name: install AWS cli
+      uses: unfor19/install-aws-cli-action@v1
+
+    - name: upload report to AWS S3
+      env:
+        AWS_S3_BUCKET_NAME: openwifi-allure-reports
+        AWS_ACCOUNT_ID: "289708231103"
+        AWS_ACCESS_KEY_ID: ${{ inputs.s3_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.s3_access_key_secret }}
+        AWS_DEFAULT_REGION: us-east-1
+        AWS_DEFAULT_OUTPUT: json
+      shell: bash
+      run: |
+        S3_PATH="manual-tests/${{ inputs.username }}/${{ inputs.test_type }}/${{ inputs.testbed }}/${{ github.run_number }}"
+        aws s3 cp --acl public-read --recursive ${{ inputs.report_path }} s3://${AWS_S3_BUCKET_NAME}/${S3_PATH}
+
+    - name: set annotation
+      shell: bash
+      env:
+        AWS_S3_BUCKET_WEBSITE_BASE_URL: http://openwifi-allure-reports.s3-website-us-east-1.amazonaws.com
+      run: |
+        echo "::notice title=Report uploaded::The test report has been uploaded to ${AWS_S3_BUCKET_WEBSITE_BASE_URL}/manual-tests/${{ inputs.username }}/${{ inputs.test_type }}/${{ inputs.testbed }}/${{ github.run_number }}/"
+
+    - name: update reference to latest report
+      env:
+        AWS_S3_BUCKET_NAME: openwifi-allure-reports
+        AWS_ACCOUNT_ID: "289708231103"
+        AWS_ACCESS_KEY_ID: ${{ inputs.s3_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.s3_access_key_secret }}
+        AWS_DEFAULT_REGION: us-east-1
+        AWS_DEFAULT_OUTPUT: json
+      shell: bash
+      run: |
+        cat <<EOF > index.html
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="0; url=../${{ github.run_number }}/" />
+        </head>
+        </html>
+        EOF
+
+        LATEST_PATH="manual-tests/${{ inputs.username }}/${{ inputs.test_type }}/${{ inputs.testbed }}/latest"
+        aws s3 cp --acl public-read --metadata latest=${{ github.run_number }} --content-type text/html index.html s3://${AWS_S3_BUCKET_NAME}/${LATEST_PATH}/index.html
