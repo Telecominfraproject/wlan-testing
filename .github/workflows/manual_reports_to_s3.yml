@@ -70,11 +70,33 @@ jobs:
 
       - name: Download report
         run: |
-          FILE_ID=$(echo "${{ inputs.drive_link }}" | sed -n -e 's/^.*d\/\([^\/]*\)\/.*$/\1/p')
-          curl -L -o allure-report.zip "https://drive.google.com/uc?export=download&id=${FILE_ID}" || {
-            echo "::error::Failed to download from Drive"
-            exit 1
-          }
+          # Handle Google Drive links
+          if [[ "${{ inputs.drive_link }}" == *"drive.google.com"* ]]; then
+            FILE_ID=$(echo "${{ inputs.drive_link }}" | sed -n -e 's/^.*d\/\([^\/]*\)\/.*$/\1/p')
+            curl -L -o allure-report.zip "https://drive.google.com/uc?export=download&id=${FILE_ID}" || {
+              echo "::error::Failed to download from Google Drive"
+              exit 1
+            }
+          # Handle OneDrive/SharePoint links
+          elif [[ "${{ inputs.drive_link }}" == *"onedrive.live.com"* ]] || [[ "${{ inputs.drive_link }}" == *"sharepoint.com"* ]]; then
+            curl -L -o allure-report.zip "${{ inputs.drive_link }}" | sed 's/.*\(https:\/\/[^"]*\).*/\1/' | head -1 | xargs curl -L -o allure-report.zip || {
+              echo "::error::Failed to download from OneDrive/SharePoint"
+              exit 1
+            }
+          # Handle Dropbox links
+          elif [[ "${{ inputs.drive_link }}" == *"dropbox.com"* ]]; then
+            curl -L -o allure-report.zip "${url%?dl=0}?dl=1" || {
+              echo "::error::Failed to download from Dropbox"
+              exit 1
+            }
+          # Handle other direct download links
+          else
+            curl -L -o allure-report.zip "${{ inputs.drive_link }}" || {
+              echo "::error::Failed to download from provided URL"
+              exit 1
+            }
+          fi
+
           unzip -t allure-report.zip || {
             echo "::error::Invalid ZIP file"
             exit 1
