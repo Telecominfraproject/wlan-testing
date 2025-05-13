@@ -1,7 +1,7 @@
 {
     "sanity": {
         "OVERVIEW_TITLE": "'OpenWifi sanity results'",
-        "OVERVIEW_TESTBEDS": ["cig_wf186h","edgecore_eap104","cig_wf196","udaya_a6-id2","yuncore_fap655","edgecore_eap101","edgecore_eap111","cig_wf189","edgecore_eap105","hfcl_ion4xe","sonicfi_rap630c-311g","sonicfi_rap7110c-341x","yuncore_ax820","edgecore_eap102"]
+        "OVERVIEW_TESTBEDS": ["cig_wf186h","edgecore_eap104","yuncore_fap655","sonicfi_rap630c-311g","edgecore_oap103","hfcl_ion4xe","edgecore_eap112","edgecore_eap105","cig_wf189","sonicfi_rap7110c-341x","edgecore_eap101","edgecore_eap111","yuncore_ax820","edgecore_eap102","sercomm_ap72tip","cig_wf196","udaya_a6-id2"]
     },
     "interop": {
         "OVERVIEW_TITLE": "'OpenWifi interop results'",
@@ -15,6 +15,6 @@
 
     "performance": {
         "OVERVIEW_TITLE": "'OpenWifi performance results'",
-        "OVERVIEW_TESTBEDS": ["cig_wf186h","edgecore_eap104","cig_wf196","udaya_a6-id2","yuncore_fap655","edgecore_eap101","edgecore_eap111","cig_wf189","edgecore_eap105","hfcl_ion4xe","sonicfi_rap630c-311g","sonicfi_rap7110c-341x","yuncore_ax820","edgecore_eap102"]
+        "OVERVIEW_TESTBEDS": ["cig_wf186h","edgecore_eap104","yuncore_fap655","sonicfi_rap630c-311g","edgecore_oap103","hfcl_ion4xe","edgecore_eap112","edgecore_eap105","cig_wf189","sonicfi_rap7110c-341x","edgecore_eap101","edgecore_eap111","yuncore_ax820","edgecore_eap102","sercomm_ap72tip","cig_wf196","udaya_a6-id2"]
     }
 }
