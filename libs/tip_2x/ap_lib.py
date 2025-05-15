@@ -548,7 +548,19 @@ class APLIBS:
                     if status_count_1 == 1:
                         cmd = f'cd  && cd //sys/kernel/debug/ieee80211/phy1/mt76/ && logread | grep DFS'
                     else:
-                        cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
+                        # cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
+                        cmd1 = '[ -f  //sys/kernel/debug/ieee80211/phy2/mt76/radar_trigger ] && echo "True" || echo "False"'
+                        output = self.run_generic_command(cmd=cmd1, idx=idx,
+                                                          print_log=print_log,
+                                                          attach_allure=attach_allure,
+                                                          expected_attachment_type=allure.attachment_type.JSON)
+                        ret = output.split("\n")
+                        status_count_1 = int(ret.count("True"))
+                        logging.info("Status count: " + str(status_count_1))
+                        if status_count_1 == 1:
+                            cmd = f'cd  && cd //sys/kernel/debug/ieee80211/phy2/mt76/ && logread | grep DFS'
+                        else:
+                            cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && logread | grep DFS'
         elif type_.lower() == "wifi7":
             cmd1 = '[ -f /sys/kernel/debug/ieee80211/phy0/ath12k_hw1/dfs_simulate_radar ] && echo "True" || echo "False"'
             output = self.run_generic_command(cmd=cmd1, idx=idx,
