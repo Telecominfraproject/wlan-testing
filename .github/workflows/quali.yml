@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf186h,edgecore_eap104,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111,edgecore_oap103,edgecore_eap112cig_wf189h"
+        default: "cig_wf186h,edgecore_eap104,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111,edgecore_oap103,edgecore_eap112,cig_wf189h"
         description: "the AP models to test"
       ap_version:
         required: true
