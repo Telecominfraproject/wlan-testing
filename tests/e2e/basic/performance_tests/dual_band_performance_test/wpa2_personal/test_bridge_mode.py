@@ -9,7 +9,7 @@ import allure
 import pytest
 import time
 
-pytestmark = [pytest.mark.performance, pytest.mark.dual_band_tests, pytest.mark.bridge,
+pytestmark = [pytest.mark.dual_band_tests, pytest.mark.bridge,
               pytest.mark.single_station_dual_band_throughput]
 
 setup_params_general = {
