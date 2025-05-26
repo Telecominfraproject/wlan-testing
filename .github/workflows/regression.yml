@@ -3910,7 +3910,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_with_radius_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-rate-limiting-radius
+          namespace: ${{ steps.namespace.outputs.name }}-rate-limit-rad
           testbed: basic-4a
           marker_expression: "ow_regression_lf and rate_limiting_with_radius_tests"
           configuration_file: "./lab_info.json"
@@ -3924,13 +3924,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limiting-radius --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limiting-radius $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-rate-limit-rad --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-rate-limit-rad $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limiting-radius
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-rate-limit-rad
 
       - name: run dynamic_vlan tests
         uses: ./.github/actions/run-tests
