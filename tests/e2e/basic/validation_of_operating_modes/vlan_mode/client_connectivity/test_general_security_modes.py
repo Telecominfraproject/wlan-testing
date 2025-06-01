@@ -232,7 +232,13 @@ setup_params_general_two_vlan = {
             {"ssid_name": "ssid_wpa_wpa2_p_m_5g_vlan", "appliedRadios": ["5G"], "security_key": "something",
              "vlan": 100}]
     },
-    "rf": {},
+    "rf": {
+        "6G": {
+            "band": "6G",
+            "channel-mode": "EHT",
+            "channel-width": 80,
+        }
+    },
     "radius": False
 }
 
