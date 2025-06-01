@@ -231,6 +231,12 @@ class tip_2x:
                                   requested_combination=None, open_roaming=False):
         f_conf = self.setup_configuration_data(configuration=configuration,
                                                requested_combination=requested_combination)
+
+        # fetch ap_mode from DUT data (ap_mode can be wifii6 or wifi6e or wifi7)
+        for i in range(0, len(self.device_under_tests_info)):
+            ap_mode = self.device_under_tests_info[i]["mode"]
+            logging.info(f"ap_mode:{ap_mode}")
+
         if open_roaming:
             logging.info("Selected Configuration of open roaming: " + str(json.dumps(f_conf, indent=2)))
             final_configuration = f_conf.copy()
@@ -243,10 +249,11 @@ class tip_2x:
 
             # Setup Radio Scenario
             if final_configuration["rf"] != {}:
-                profile_object.set_radio_config(radio_config=final_configuration["rf"], open_roaming=open_roaming)
+                profile_object.set_radio_config(radio_config=final_configuration["rf"], open_roaming=open_roaming,
+                                                ap_mode=ap_mode)
             else:
                 final_configuration["rf"] = {"2G": {}, "5G": {}, "6G": {}}
-                profile_object.set_radio_config(open_roaming=open_roaming)
+                profile_object.set_radio_config(open_roaming=open_roaming, ap_mode=ap_mode)
             for ssid in final_configuration["ssid_modes"]:
                 for ssid_data in final_configuration["ssid_modes"][ssid]:
                     if final_configuration["radius"]:
@@ -276,10 +283,10 @@ class tip_2x:
 
             # Setup Radio Scenario
             if final_configuration["rf"] != {}:
-                profile_object.set_radio_config(radio_config=final_configuration["rf"])
+                profile_object.set_radio_config(radio_config=final_configuration["rf"], ap_mode=ap_mode)
             else:
                 final_configuration["rf"] = {"2G": {}, "5G": {}, "6G": {}}
-                profile_object.set_radio_config()
+                profile_object.set_radio_config(ap_mode=ap_mode)
             for ssid in final_configuration["ssid_modes"]:
                 for ssid_data in final_configuration["ssid_modes"][ssid]:
                     if final_configuration["radius"]:

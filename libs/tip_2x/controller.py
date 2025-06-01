@@ -2611,7 +2611,7 @@ class UProfileUtility:
                         ssid_info.append(temp)
         return ssid_info
 
-    def set_radio_config(self, radio_config={}, open_roaming=False):
+    def set_radio_config(self, radio_config={}, open_roaming=False, ap_mode="wifi6"):
         if open_roaming:
             base_radio_config_2g = {
                 "band": "2G",
@@ -2627,6 +2627,13 @@ class UProfileUtility:
                 "channel-width": 80,
                 "channel": "auto"
             }
+            if ap_mode == "wifi6" or ap_mode =="wifi6e":
+                base_radio_config_2g["channel-mode"] = "HE"
+                base_radio_config_5g["channel-mode"] = "HE"
+            if ap_mode == "wifi7":
+                logging.info("yes it's wifi7 AP and open_roaming")
+                base_radio_config_2g["channel-mode"] = "EHT"
+                base_radio_config_5g["channel-mode"] = "EHT"
 
             for band in radio_config:
                 if band == "2G" and radio_config[band] is not None:
@@ -2657,6 +2664,17 @@ class UProfileUtility:
                 "channel-mode": "EHT",
                 "channel": "auto"
             }
+
+            if ap_mode == "wifi6" or ap_mode =="wifi6e":
+                base_radio_config_2g["channel-mode"] = "HE"
+                base_radio_config_5g["channel-mode"] = "HE"
+                base_radio_config_6g["channel-mode"] = "HE"
+            if ap_mode == "wifi7":
+                logging.info("yes it's wifi7 AP")
+                base_radio_config_2g["channel-mode"] = "EHT"
+                base_radio_config_5g["channel-mode"] = "EHT"
+                base_radio_config_6g["channel-mode"] = "EHT"
+
             for band in radio_config:
                 if band == "2G" and radio_config[band] is not None:
                     for keys in radio_config[band]:
@@ -2671,6 +2689,8 @@ class UProfileUtility:
             self.base_profile_config["radios"].append(base_radio_config_2g)
             self.base_profile_config["radios"].append(base_radio_config_5g)
             self.base_profile_config["radios"].append(base_radio_config_6g)
+
+        logging.info(f"base_profile_config:{self.base_profile_config}")
         self.vlan_section["ssids"] = []
         self.vlan_ids = []
 
