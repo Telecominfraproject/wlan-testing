@@ -64,6 +64,7 @@ class TestWifiCapacityBRIDGEModeBE6G(object):
     @pytest.mark.sixg
     @pytest.mark.tcp_download
     @pytest.mark.performance
+    @pytest.mark.ow_sanity_lf
     @allure.title("Single BE client TCP Download wifi capacity 320Mhz Bw")
     def test_be_client_wpa3_bridge_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                        get_test_device_logs, num_stations, setup_configuration, get_lab_info, selected_testbed, check_connectivity):
