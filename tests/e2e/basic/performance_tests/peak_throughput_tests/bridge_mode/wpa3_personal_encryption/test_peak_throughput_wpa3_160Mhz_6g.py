@@ -76,11 +76,12 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        sets = [["UDP-Burst", "1"], ["UDP-GRO", "1"], ["Multiple Endpoints:", "10"]]
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_download", mode=mode,
                                        download_rate="10Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1}, pass_fail_criteria=True)
+                                       num_stations={"6G": 1}, pass_fail_criteria=True, sets_=sets)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12395", name="WIFI-12395")
@@ -101,11 +102,12 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        sets = [["UDP-Burst", "1"], ["UDP-GRO", "1"], ["Multiple Endpoints:", "10"]]
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_dl", mode=mode,
                                        download_rate="10Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1}, pass_fail_criteria=True)
+                                       num_stations={"6G": 1}, pass_fail_criteria=True, sets_=sets)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12397", name="WIFI-12397")
@@ -164,11 +166,12 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        sets = [["UDP-Burst", "1"], ["UDP-GRO", "1"], ["Multiple Endpoints:", "10"]]
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_tcp_ul", mode=mode,
                                        download_rate="56Kbps", batch_size="1",
                                        upload_rate="10Gbps", protocol="TCP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1}, pass_fail_criteria=True)
+                                       num_stations={"6G": 1}, pass_fail_criteria=True, sets_=sets)
         assert True
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12392", name="WIFI-12392")
@@ -189,9 +192,10 @@ class Test160Mhz6GChannelautoPeakThroughput(object):
         profile_data = {"ssid_name": "ssid_wpa3_6g_channel_auto", "appliedRadios": ["6G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
+        sets = [["UDP-Burst", "1"], ["UDP-GRO", "1"], ["Multiple Endpoints:", "10"]]
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_bridge_udp_ul", mode=mode,
                                        download_rate="56Kbps", batch_size="1",
                                        upload_rate="10Gbps", protocol="UDP", duration="60000",
                                        move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
-                                       num_stations={"6G": 1}, pass_fail_criteria=True)
+                                       num_stations={"6G": 1}, pass_fail_criteria=True, sets_=sets)
         assert True
