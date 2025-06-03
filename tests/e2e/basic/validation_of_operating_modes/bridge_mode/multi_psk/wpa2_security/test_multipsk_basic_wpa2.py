@@ -13,7 +13,6 @@ import pytest
 import requests
 
 pytestmark = [pytest.mark.multi_psk_tests,
-              pytest.mark.ow_regression_lf,
               pytest.mark.bridge,
               pytest.mark.wpa2_personal,
               pytest.mark.twog]
@@ -52,6 +51,7 @@ setup_params_general = {
 @allure.parent_suite("MultiPsk Test")
 @allure.suite("BRIDGE Mode")
 @allure.sub_suite("WPA2 Security")
+@pytest.mark.ow_regression_lf
 @pytest.mark.usefixtures("setup_configuration")
 class TestMultipskBridgeWPA2(object):
 
