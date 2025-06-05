@@ -452,7 +452,7 @@ class APLIBS:
                     cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd qcn6122_2 && cd mac0 && ls && echo 1 > dfs_simulate_radar'
                 else:
                     #cmd = f'cd  && cd /sys/kernel/debug/ath11k/ && cd ipq* && cd mac0 && ls && echo 1 > dfs_simulate_radar'
-                    cmd1 = '[ -f  //sys/kernel/debug/ieee80211/phy1/mt76/radar_trigger ] && echo "True" || echo "False"'
+                    cmd1 = '[ -f  /sys/kernel/debug/ieee80211/phy1/mt76/radar_trigger ] && echo "True" || echo "False"'
                     output = self.run_generic_command(cmd=cmd1, idx=idx,
                                                       print_log=print_log,
                                                       attach_allure=attach_allure,
@@ -569,9 +569,9 @@ class APLIBS:
                                               expected_attachment_type=allure.attachment_type.JSON)
             logging.info("DFS logread output: " + str(output))
             if output.__contains__("False"):
-                cmd = f'cd && cd /sys/kernel/debug/ieee80211/phy0/ath12k_hw1/ && logread | grep DFS'
-            else:
                 cmd = f'cd && cd /sys/kernel/debug/ieee80211/phy00/ath12k_hw1/ && logread | grep DFS'
+            else:
+                cmd = f'cd && cd /sys/kernel/debug/ieee80211/phy0/ath12k_hw1/ && logread | grep DFS'
 
         try:
             output = self.run_generic_command(cmd=cmd, idx=idx,
