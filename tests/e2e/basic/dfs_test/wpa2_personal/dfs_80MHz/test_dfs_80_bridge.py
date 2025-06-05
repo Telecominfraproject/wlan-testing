@@ -21,7 +21,7 @@ setup_params_general1 = {
             "band": "5G",
             "country": "US",
             "allow-dfs": True,
-            "channel-mode": "VHT",
+            "channel-mode": "EHT",
             "channel-width": 80,
             "channel": 52
         }
@@ -78,7 +78,7 @@ setup_params_general2 = {
             "band": "5G",
             "country": "US",
             "allow-dfs": True,
-            "channel-mode": "VHT",
+            "channel-mode": "EHT",
             "channel-width": 80,
             "channel": 100
         }
@@ -135,7 +135,7 @@ setup_params_general11 = {
             "band": "5G",
             "country": "US",
             "allow-dfs": True,
-            "channel-mode": "VHT",
+            "channel-mode": "EHT",
             "channel-width": 80,
             "channel": 132
         }
