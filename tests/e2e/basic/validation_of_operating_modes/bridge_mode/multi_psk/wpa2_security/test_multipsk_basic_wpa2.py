@@ -139,7 +139,7 @@ setup_params_general = {
     "ssid_modes": {
         "wpa2_personal": [
             {"ssid_name": "OpenWifi-roam",
-             "appliedRadios": ["2G"],
+             "appliedRadios": ["2G", "5G"],
              "security": "psk2",
              "security_key": "OpenWifi",
              "multi-psk": [
@@ -151,40 +151,88 @@ setup_params_general = {
             "reduced-neighbor-reporting": True
                     }
              }
+        ],
+        "wpa3_personal": [
+            {"ssid_name": "OpenWifi-roam",
+             "appliedRadios": ["6G"],
+             "security": "sae",
+             "security_key": "OpenWifi",
+            "roaming": True,
+            "rrm": {
+            "reduced-neighbor-reporting": True
+                    }
+             }
         ]
     },
-    "rf": {},
+    "rf": {
+        "2G": {
+            "band": "2G",
+            "channel-width": 20,
+            "channel-mode": "EHT",
+            "channel": "auto"
+        },
+        "5G": {
+            "band": "5G",
+            "channel-width": 80,
+            "channel-mode": "EHT",
+            "channel": 36
+        },
+        "6G": {
+            "band": "6G",
+            "channel-width": 320,
+            "channel-mode": "EHT",
+            "channel": 33
+        }
+    },
     "radius": False
 }
+
+testbed_details_global = None
+dut_data = {}
+
+@pytest.fixture(scope="class")
+def setup_initial_configuration(request):
+    """Calls setup_testbed automatically before tests"""
+    global setup_params_general
+    global dut_data
+    logging.info(f"Setup Params Assigned: {setup_params_general}")
+
+    requested_combination = [['2G', 'wpa2_personal'], ['5G', 'wpa2_personal'], ['6G', 'wpa3_personal']]
+
+    logging.info(f"requested_combination:::{requested_combination}")
+    get_target_obj = request.getfixturevalue("get_target_object")
+    logging.info("ready to start setup_basic_configuration")
+    logging.info(f"setup_params_general value before start:{setup_params_general}")
+    dut_data = get_target_obj.setup_basic_configuration(configuration=setup_params_general,
+                                                       requested_combination=requested_combination)
+
+    logging.info(f"setup_basic_configuration dut data:{dut_data}")
+
 @allure.feature("MultiPsk Test")
-@pytest.mark.parametrize(
-    'setup_configuration',
-    [setup_params_general],
-    indirect=True,
-    scope="class"
-)
 @allure.parent_suite("MultiPsk Test")
 @allure.suite("BRIDGE Mode")
 @allure.sub_suite("WPA2 Security")
-@pytest.mark.usefixtures("setup_configuration")
 class TestEmpsk6GBridgeWPA2(object):
 
-    @pytest.mark.wpa2
-    @pytest.mark.wpa3
+    @pytest.mark.wpa3_personal
+    @pytest.mark.wpa2_personal
     @pytest.mark.sixg
+    @pytest.mark.twog
+    @pytest.mark.fiveg
+    @pytest.mark.empsk
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14423", name="WIFI-14423")
     @allure.title("Test E-MPSK with WPA2 to WPA3 on 6GHz")
-    def test_client_wpa2_wpa3_6g_empsk(self, get_test_library,get_target_object,
-                                        setup_configuration, check_connectivity, get_testbed_details):
+    def test_client_wpa2_wpa3_6g_empsk(self, setup_initial_configuration, get_test_library,get_target_object,
+                                     check_connectivity, get_testbed_details):
         """
         Verify E-MPSK working in BRIDGE mode:
-        - Client connects on 2.4/5GHz (WPA2)
-        - Encryption is changed from WPA2 to WPA3
+        - Client connects on 2.4/5GHz (WPA2 and WPA3)
+        - Encryption is changed from WPA2 to WPA3 (disable WPA2)
         - Verify client successfully get an IP and associate to AP
         """
         profile_data = {
             "ssid_name": "OpenWifi-roam",
-            "appliedRadios": ["2G", "5G"],
+            "appliedRadios": ["2G"],
             "security": "psk2",
             "security_key": "OpenWifi",
             "multi-psk": [
@@ -193,171 +241,14 @@ class TestEmpsk6GBridgeWPA2(object):
             ]
         }
         ssid = profile_data["ssid_name"]
-        security_key = profile_data["security_key"]
         security = "wpa2"
         mode = "BRIDGE"
         band = "twog"
         num_sta = 1
-
-        device_name = get_testbed_details['device_under_tests'][0]['identifier']
-
-        empsk_config = {
-    "interfaces": [
-        {
-            "ethernet": [
-                {
-                    "select-ports": [
-                        "WAN*"
-                    ]
-                }
-            ],
-            "ipv4": {
-                "addressing": "dynamic"
-            },
-            "name": "WAN",
-            "role": "upstream",
-            "services": [
-                "lldp"
-            ],
-            "ssids": [
-                {
-                    "bss-mode": "ap",
-                    "encryption": {
-                        "ieee80211w": "optional",
-                        "key": "OpenWifi",
-                        "proto": "psk2"
-                    },
-                    "multi-psk": [
-                        {
-                            "key": "aaaaaaaa"
-                        },
-                        {
-                            "key": "bbbbbbbb"
-                        }
-                    ],
-                    "name": "OpenWifi-roam",
-                    "roaming": True,
-                    "rrm": {
-                        "reduced-neighbor-reporting": True
-                    },
-                    "wifi-bands": [
-                        "2G",
-                        "5G"
-                    ]
-                },
-                {
-                    "bss-mode": "ap",
-                    "encryption": {
-                        "ieee80211w": "required",
-                        "key": "OpenWifi",
-                        "proto": "sae"
-                    },
-                    "name": "OpenWifi-roam",
-                    "roaming": True,
-                    "rrm": {
-                        "reduced-neighbor-reporting": True
-                    },
-                    "wifi-bands": [
-                        "6G"
-                    ]
-                }
-            ]
-        },
-        {
-            "ethernet": [
-                {
-                    "select-ports": [
-                        "LAN*"
-                    ]
-                }
-            ],
-            "ipv4": {
-                "addressing": "static",
-                "dhcp": {
-                    "lease-count": 100,
-                    "lease-first": 10,
-                    "lease-time": "6h"
-                },
-                "subnet": "192.168.1.1/24"
-            },
-            "name": "LAN",
-            "role": "downstream",
-            "services": [
-                "ssh",
-                "lldp"
-            ]
-        }
-    ],
-    "metrics": {
-        "health": {
-            "interval": 120
-        },
-        "statistics": {
-            "interval": 120,
-            "types": [
-                "ssids",
-                "lldp",
-                "clients"
-            ]
-        }
-    },
-    "radios": [
-        {
-            "band": "2G",
-            "channel": "auto",
-            "channel-mode": "EHT",
-            "channel-width": 20,
-            "country": "US"
-        },
-        {
-            "band": "5G",
-            "channel": 36,
-            "channel-mode": "EHT",
-            "channel-width": 80,
-            "country": "US"
-        },
-        {
-            "band": "6G",
-            "channel": 33,
-            "channel-mode": "EHT",
-            "channel-width": 320,
-            "country": "US"
-        }
-    ],
-    "services": {
-        "lldp": {
-            "describe": "uCentral",
-            "location": "universe"
-        },
-        "ssh": {
-            "port": 22
-        }
-    },
-    "uuid": 1739265165
-}
-        payload = {"configuration": json.dumps(empsk_config), "serialNumber": device_name, "UUID": 2}
-
-        path = "device/" + device_name + "/configure"
-        uri = get_target_object.controller_library_object.build_uri(path)
-        logging.info(f"uri::{uri}")
-        resp = requests.post(uri, data=json.dumps(payload, indent=2),
-                             headers=get_target_object.controller_library_object.make_headers(), verify=False,
-                             timeout=120)
-
-        logging.info(f"response:,{resp}")
-        if resp.status_code == 200:
-            logging.info("Empsk configuration applied successfully")
-            allure.attach(name=f"Response for Reconfiguration - {resp.status_code} {resp.reason}",
-                          body=str(resp.json()))
-        else:
-            allure.attach(name=f"Response for Reconfiguration - {resp.status_code} {resp.reason}",
-                          body=f"TEST FAILED, Reconfiguration is not successful {str(resp.json())}")
-
-
+        security_key = profile_data["multi-psk"][0]["key"]
         sta_data = get_test_library.empsk_test(ssid=ssid, passkey=security_key, security=security,
                                                    mode=mode, band=band, pre_cleanup=False, num_sta=num_sta,
-                                                   scan_ssid=True,
-                                                   station_data=["ip", "alias", "mac","channel", "port type","security", "ap", "parent dev"],
-                                                   allure_attach=True, allure_name="station data for 2G band", dut_data=setup_configuration)
+                                                   scan_ssid=True, dut_data=dut_data, extra_securities = ["wpa3"],
+                                                   allure_attach=True, allure_name="station data for 2G band")
 
         logging.info(f"sta_data{sta_data}")
