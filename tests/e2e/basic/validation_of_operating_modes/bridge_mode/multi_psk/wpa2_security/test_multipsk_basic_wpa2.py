@@ -246,7 +246,7 @@ class TestEmpsk6GBridgeWPA2(object):
         band = "twog"
         num_sta = 1
         security_key = profile_data["multi-psk"][0]["key"]
-        sta_data = get_test_library.empsk_test(ssid=ssid, passkey=security_key, security=security,
+        sta_data = get_test_library.empsk_test(ssid=ssid, passkey=security_key, security=security, is_bw320=True,
                                                    mode=mode, band=band, pre_cleanup=False, num_sta=num_sta,
                                                    scan_ssid=True, dut_data=dut_data, extra_securities = ["wpa3"],
                                                    allure_attach=True, allure_name="station data for 2G band")
