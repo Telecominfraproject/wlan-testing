@@ -1,14 +1,14 @@
 """
 
-    Performance Test: Client Scale Test : BRIDGE Mode
-    pytest -m "client_scale_test and BRIDGE"
+    Performance Test: AX Client Scale Test : BRIDGE Mode
+    pytest -m "ax_client_scale_tests and BRIDGE"
 
 """
 import logging
 import allure
 import pytest
 
-pytestmark = [pytest.mark.bridge, pytest.mark.client_scale_tests]
+pytestmark = [pytest.mark.bridge, pytest.mark.ax_client_scale_tests]
 
 setup_params_general_2G = {
     "mode": "BRIDGE",
@@ -22,8 +22,8 @@ setup_params_general_2G = {
 }
 
 
-@allure.feature("Client Scale Tests")
-@allure.parent_suite("Client Scale Tests")
+@allure.feature("AX Client Scale Tests")
+@allure.parent_suite("AX Client Scale Tests")
 @allure.suite(suite_name="WPA Personal Security")
 @allure.sub_suite(sub_suite_name="BRIDGE Mode")
 @pytest.mark.parametrize(
@@ -37,8 +37,8 @@ setup_params_general_2G = {
 @pytest.mark.twog
 @pytest.mark.twog_band
 class TestWifiCapacityBRIDGEMode2G(object):
-    """ Client Scale Test BRIDGE mode
-        pytest -m "client_scale_tests and bridge and wpa_personal and twog"
+    """ AX Client Scale Test BRIDGE mode
+        pytest -m "ax_client_scale_tests and bridge and wpa_personal and twog"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3650", name="WIFI-3650")
@@ -47,8 +47,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.title("Test for TCP Download 2.4 GHz")
     def test_client_wpa_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and twog and tcp_download"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and twog and tcp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -66,8 +66,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
     @allure.title("Test for UDP Download 2.4 GHz")
     def test_client_wpa_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, num_stations, setup_configuration, max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and twog and udp_download"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and twog and udp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -86,8 +86,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
     def test_client_wpa_BRIDGE_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                  get_test_device_logs, num_stations, setup_configuration,
                                                  max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and twog and tcp_bidirectional"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and twog and tcp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -106,8 +106,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
     def test_client_wpa_BRIDGE_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                  get_test_device_logs, num_stations, setup_configuration,
                                                  max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and twog and udp_bidirectional"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and twog and udp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -125,8 +125,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
     def test_client_wpa_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, num_stations, setup_configuration,
                                       max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and twog and tcp_upload"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and twog and tcp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -144,8 +144,8 @@ class TestWifiCapacityBRIDGEMode2G(object):
     def test_client_wpa_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, num_stations, setup_configuration,
                                       max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and twog and udp_upload"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and twog and udp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa_2g", "appliedRadios": ["2G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -170,8 +170,8 @@ setup_params_general_5G = {
 }
 
 
-@allure.feature("Client Scale Tests")
-@allure.parent_suite("Client Scale Tests")
+@allure.feature("AX Client Scale Tests")
+@allure.parent_suite("AX Client Scale Tests")
 @allure.suite(suite_name="wpa Personal Security")
 @allure.sub_suite(sub_suite_name="BRIDGE Mode")
 @pytest.mark.parametrize(
@@ -185,8 +185,8 @@ setup_params_general_5G = {
 @pytest.mark.fiveg
 @pytest.mark.fiveg_band
 class TestWifiCapacityBRIDGEMode5G(object):
-    """ Client Scale Test BRIDGE mode
-        pytest -m "client_scale_tests and bridge and wpa_personal and fiveg"
+    """ AX Client Scale Test BRIDGE mode
+        pytest -m "ax_client_scale_tests and bridge and wpa_personal and fiveg"
     """
 
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3652", name="WIFI-3652")
@@ -196,8 +196,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa_BRIDGE_tcp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, num_stations, setup_configuration,
                                       max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and fiveg and tcp_download"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and fiveg and tcp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -217,8 +217,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa_BRIDGE_udp_dl(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, num_stations, setup_configuration,
                                       max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and fiveg and udp_download"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and fiveg and udp_download"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -237,8 +237,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa_BRIDGE_tcp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                  get_test_device_logs, num_stations, setup_configuration,
                                                  max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and fiveg and tcp_bidirectional"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and fiveg and tcp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -257,8 +257,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa_BRIDGE_udp_bidirectional(self, get_test_library, get_dut_logs_per_test_case,
                                                  get_test_device_logs, num_stations, setup_configuration,
                                                  max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and fiveg and udp_bidirectional"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and fiveg and udp_bidirectional"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -276,8 +276,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa_bridge_udp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, num_stations, setup_configuration,
                                       max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and fiveg and udp_upload"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and fiveg and udp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]
@@ -295,8 +295,8 @@ class TestWifiCapacityBRIDGEMode5G(object):
     def test_client_wpa_bridge_tcp_ul(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs, num_stations, setup_configuration,
                                       max_stations):
-        """ Client Scale Test BRIDGE mode
-            pytest -m "client_scale_tests and bridge and wpa_personal and fiveg and tcp_upload"
+        """ AX Client Scale Test BRIDGE mode
+            pytest -m "ax_client_scale_tests and bridge and wpa_personal and fiveg and tcp_upload"
         """
         profile_data = {"ssid_name": "ssid_wpa_5g", "appliedRadios": ["5G"], "security_key": "something"}
         ssid_name = profile_data["ssid_name"]

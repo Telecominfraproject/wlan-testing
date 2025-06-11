@@ -36,8 +36,8 @@ setup_params_general = {
              "appliedRadios": ["2G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 10,
-                 "egress-rate": 10
+                 "ingress-rate": 20,
+                 "egress-rate": 20
              },
              "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
              "radius_acc_data": RATE_LIMITING_RADIUS_ACCOUNTING_DATA
@@ -47,8 +47,8 @@ setup_params_general = {
              "appliedRadios": ["5G"],
              "security_key": "something",
              "rate-limit": {
-                 "ingress-rate": 10,
-                 "egress-rate": 10
+                 "ingress-rate": 20,
+                 "egress-rate": 20
              },
              "radius_auth_data": RATE_LIMITING_RADIUS_SERVER_DATA,
              "radius_acc_data": RATE_LIMITING_RADIUS_ACCOUNTING_DATA
@@ -75,7 +75,6 @@ class TestRateLimitingWithRadiusBridge(object):
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.twog
-    @pytest.mark.ow_sanity_lf
     @pytest.mark.twog_upload_per_ssid
     @allure.title("Test for Upload per SSID 2.4 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5849", name="WIFI-5849")
@@ -130,7 +129,7 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.twog
     @pytest.mark.twog_download_perssid_persta
     @pytest.mark.ow_sanity_lf
-    @allure.title("Test for Download per SSID per Station 2.4GHz")
+    @allure.title("Test for TCP Download per SSID per Station 2.4GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5850", name="WIFI-5850")
     def test_radius_server_2g_download_perssid_persta(self, get_test_library, get_dut_logs_per_test_case,
                                                       get_test_device_logs,
@@ -314,7 +313,8 @@ class TestRateLimitingWithRadiusBridge(object):
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
     @pytest.mark.fiveg_upload_per_ssid
-    @allure.title("Test for Upload per SSID 5 GHz")
+    @pytest.mark.ow_sanity_lf
+    @allure.title("Test for UDP Upload per SSID 5 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-5854", name="WIFI-5854")
     def test_radius_server_fiveg_per_ssid_upload(self, get_test_library, get_dut_logs_per_test_case,
                                                  get_test_device_logs,
@@ -334,7 +334,8 @@ class TestRateLimitingWithRadiusBridge(object):
         band = "fiveg"
         eap = "TTLS"
         ttls_passwd = "password"
-        identity = "bandwidth10m"
+        identity = "user"
+        configured = 5
         allure.attach(name="ssid-rates", body=str(profile_data["rate-limit"]))
         get_test_library.pre_cleanup()
         passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
@@ -347,13 +348,19 @@ class TestRateLimitingWithRadiusBridge(object):
             assert passes == "PASS", result
         if passes == "PASS":
             raw_lines = [["dl_rate_sel: Total Download Rate:"], ["ul_rate_sel:  Per-Station Download Rate:"]]
-            get_test_library.wifi_capacity(instance_name="Test_Radius_5g_up_per_ssid", mode=mode,
+            obj = get_test_library.wifi_capacity(instance_name="Test_Radius_5g_up_per_ssid", mode=mode,
                                            download_rate="0Gbps", batch_size="1",
-                                           upload_rate="1Gbps", protocol="TCP", duration="60000",
+                                           upload_rate="1Gbps", protocol="UDP", duration="60000",
                                            move_to_influx=False, dut_data=setup_configuration, ssid_name=ssid_name,
                                            add_stations=False, raw_lines=raw_lines)
+            report_name = obj[0].report_name[0]['LAST']["response"].split(":::")[1].split("/")[-1] + "/"
+            kpi_data = get_test_library.read_kpi_file(column_name=["numeric-score"], dir_name=report_name)
+            achieved = float("{:.2f}".format(kpi_data[1][0]))
+            if achieved <= configured:
+                assert True
+            else:
+                assert False, f"Expected Throughput should be less than {configured} Mbps"
 
-        assert True
 
     @pytest.mark.wpa2_enterprise
     @pytest.mark.fiveg
@@ -797,8 +804,8 @@ class TestRateLimitingWithRadiusBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 10,
-                            "egress-rate": 10
+                            "ingress-rate": 20,
+                            "egress-rate": 30
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -860,8 +867,8 @@ class TestRateLimitingWithRadiusBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 10,
-                            "egress-rate": 10
+                            "ingress-rate": 60,
+                            "egress-rate": 50
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -923,8 +930,8 @@ class TestRateLimitingWithRadiusBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 10,
-                            "egress-rate": 10
+                            "ingress-rate": 60,
+                            "egress-rate": 50
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -986,7 +993,7 @@ class TestRateLimitingWithRadiusBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 10,
+                            "ingress-rate": 50,
                             "egress-rate": 10
                         }}
         ssid_name = profile_data["ssid_name"]
@@ -1048,7 +1055,7 @@ class TestRateLimitingWithRadiusBridge(object):
                         "appliedRadios": ["2G"],
                         "security_key": "something",
                         "rate-limit": {
-                            "ingress-rate": 10,
+                            "ingress-rate": 50,
                             "egress-rate": 10
                         }}
         ssid_name = profile_data["ssid_name"]
@@ -1112,7 +1119,7 @@ class TestRateLimitingWithRadiusBridge(object):
                         "security_key": "something",
                         "rate-limit": {
                             "ingress-rate": 10,
-                            "egress-rate": 10
+                            "egress-rate": 50
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -1175,7 +1182,7 @@ class TestRateLimitingWithRadiusBridge(object):
                         "security_key": "something",
                         "rate-limit": {
                             "ingress-rate": 10,
-                            "egress-rate": 10
+                            "egress-rate": 50
                         }}
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
@@ -1274,6 +1281,7 @@ class TestRateLimitingWithRadiusBridgeSixg(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.sixg
     @pytest.mark.sixg_upload_per_ssid
+    @pytest.mark.ow_sanity_lf
     @allure.title("Test for UDP Upload per SSID 6 GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14366", name="WIFI-14366")
     def test_radius_server_6g_upload_per_ssid(self, get_test_library, get_dut_logs_per_test_case,
@@ -1326,6 +1334,7 @@ class TestRateLimitingWithRadiusBridgeSixg(object):
     @pytest.mark.wpa3_enterprise
     @pytest.mark.sixg
     @pytest.mark.sixg_download_perssid_persta
+    @pytest.mark.ow_sanity_lf
     @allure.title("Test for TCP Download per Station 6GHz")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14365", name="WIFI-14365")
     def test_radius_server_6g_download_persta(self, get_test_library, get_dut_logs_per_test_case,
