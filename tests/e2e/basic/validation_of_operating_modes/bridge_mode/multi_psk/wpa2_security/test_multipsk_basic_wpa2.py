@@ -15,8 +15,7 @@ import requests
 pytestmark = [pytest.mark.multi_psk_tests,
               pytest.mark.bridge,
               pytest.mark.wpa2_personal,
-              pytest.mark.twog,
-              pytest.mark.ow_sanity_lf]
+              pytest.mark.twog]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -58,6 +57,7 @@ class TestMultipskBridgeWPA2(object):
 
     @pytest.mark.vlan1
     @pytest.mark.wpa2
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     @allure.title("Test for Client Connect with 1 VLAN")
     def test_client_wpa2_2g_vlan1(self, get_test_library, get_dut_logs_per_test_case,
@@ -95,6 +95,7 @@ class TestMultipskBridgeWPA2(object):
         assert True
 
     @pytest.mark.vlan2
+    @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10657", name="WIFI-10657")
     @allure.title("Test for Client Connect with 2 VLAN's")
     def test_client_wpa2_2g_vlan2(self, get_test_library, get_dut_logs_per_test_case,
