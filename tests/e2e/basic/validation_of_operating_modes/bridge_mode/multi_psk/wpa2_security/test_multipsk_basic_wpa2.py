@@ -15,7 +15,8 @@ import requests
 pytestmark = [pytest.mark.multi_psk_tests,
               pytest.mark.bridge,
               pytest.mark.wpa2_personal,
-              pytest.mark.twog]
+              pytest.mark.twog,
+              pytest.mark.ow_sanity_lf]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -57,7 +58,6 @@ class TestMultipskBridgeWPA2(object):
 
     @pytest.mark.vlan1
     @pytest.mark.wpa2
-    @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-3493", name="WIFI-3493")
     @allure.title("Test for Client Connect with 1 VLAN")
     def test_client_wpa2_2g_vlan1(self, get_test_library, get_dut_logs_per_test_case,
@@ -95,7 +95,6 @@ class TestMultipskBridgeWPA2(object):
         assert True
 
     @pytest.mark.vlan2
-    @pytest.mark.ow_sanity_lf
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10657", name="WIFI-10657")
     @allure.title("Test for Client Connect with 2 VLAN's")
     def test_client_wpa2_2g_vlan2(self, get_test_library, get_dut_logs_per_test_case,
@@ -214,11 +213,11 @@ def setup_initial_configuration(request):
 @allure.sub_suite("WPA2 Security")
 class TestEmpsk6GBridgeWPA2(object):
 
-    @pytest.mark.wpa3_personal
-    @pytest.mark.wpa2_personal
-    @pytest.mark.sixg
-    @pytest.mark.twog
-    @pytest.mark.fiveg
+    # @pytest.mark.wpa3_personal
+    # @pytest.mark.wpa2_personal
+    # @pytest.mark.sixg
+    # @pytest.mark.twog
+    # @pytest.mark.fiveg
     @pytest.mark.empsk
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-14423", name="WIFI-14423")
     @allure.title("Test E-MPSK with WPA2 to WPA3 on 6GHz")
@@ -247,8 +246,8 @@ class TestEmpsk6GBridgeWPA2(object):
         num_sta = 1
         security_key = profile_data["multi-psk"][0]["key"]
         sta_data = get_test_library.empsk_test(ssid=ssid, passkey=security_key, security=security, is_bw320=True,
-                                                   mode=mode, band=band, pre_cleanup=False, num_sta=num_sta,
+                                                   mode=mode, band=band, pre_cleanup=True, num_sta=num_sta,
                                                    scan_ssid=True, dut_data=dut_data, extra_securities = ["wpa3"],
-                                                   allure_attach=True, allure_name="station data for 2G band")
+                                                   allure_attach=True)
 
         logging.info(f"sta_data{sta_data}")
