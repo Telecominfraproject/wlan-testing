@@ -2755,6 +2755,11 @@ class UProfileUtility:
                     ssid_info[options] = ssid_data[options]
                 if options == "captive":
                     ssid_info[options] = ssid_data[options]
+                if options == "wifi-steering":
+                    ssid_info[options] = ssid_data[options]
+                    ssid_info["services"] = ["wifi-steering"]
+                if options == "roaming" and ssid_data[options] == True:
+                    ssid_info[options] = ssid_data[options]
             for i in ssid_data["appliedRadios"]:
                 ssid_info["wifi-bands"].append(i)
             ssid_info['encryption'] = {}
@@ -2798,6 +2803,13 @@ class UProfileUtility:
                 if options == "captive":
                     ssid_info[options] = ssid_data[options]
                     ssid_info["services"] = ["captive"]
+                if options == "wifi-steering":
+                    ssid_info[options] = ssid_data[options]
+                    ssid_info["services"] = ["wifi-steering"]
+                if options == "roaming" and ssid_data[options] == True:
+                    ssid_info[options] = ssid_data[options]
+
+
             for i in ssid_data["appliedRadios"]:
                 ssid_info["wifi-bands"].append(i)
             ssid_info['encryption'] = {}
@@ -2819,6 +2831,7 @@ class UProfileUtility:
                     "port": radius_accounting_data["port"],
                     "secret": radius_accounting_data["secret"]
                 }
+
         if self.mode == "NAT":
             self.base_profile_config['interfaces'][1]['ssids'].append(ssid_info)
             if open_roaming is True:
