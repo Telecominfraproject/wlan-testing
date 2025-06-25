@@ -101,7 +101,7 @@ setup_params_general = None
 dut_data = {}
 
 @pytest.fixture(scope="class")
-def initialize_testbed(request):
+def setup_initial_configuration(request):
     """Calls setup_testbed automatically before tests"""
     global testbed_details_global
     global setup_params_general
@@ -164,7 +164,8 @@ class TestWpa3MultibandPerformanceNat(object):
     @pytest.mark.fiveg
     @pytest.mark.sixg
     @allure.title("Test Multi Band with ApAuto test of NAT mode")
-    def test_client_wpa3_personal_nat(self, initialize_testbed, get_test_library, check_connectivity):
+    def test_client_wpa3_personal_nat(self, setup_initial_configuration, get_test_library, check_connectivity,
+                                      get_dut_logs_per_test_case, get_test_device_logs, get_target_object):
         """
                             Multi Band Test with wpa3_personal encryption
                             pytest -m "multi_band_tests and wpa3_personal"
