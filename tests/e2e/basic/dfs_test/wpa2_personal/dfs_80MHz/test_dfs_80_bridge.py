@@ -52,13 +52,15 @@ class TestDFSChannel52Bw80(object):
         To verify that a 5G client operating on channel 52 shifts to a non-DFS channel if radar is detected
         Unique Marker: pytest -m "bandwidth_80MHz and ow_sanity_lf and dfs_channel_52_bw_80"
         """
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        get_test_library.dfs_test(ssid=ssid_name, security=security,
+        print("channel:",channel)
+        get_test_library.dfs_test(ssid=ssid_name, security=security, channel=channel,
                                   passkey=security_key, mode=mode, band=band,
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
@@ -108,13 +110,14 @@ class TestDFSChannel100Bw80(object):
         To verify that a 5G client operating on channel 100 shifts to a non-DFS channel if radar is detected
         Unique Marker: pytest -m "bandwidth_80MHz and ow_sanity_lf and dfs_channel_100_bw_80"
         """
+        channel = setup_params_general2["rf"]["5G"]["channel"]
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        get_test_library.dfs_test(ssid=ssid_name, security=security,
+        get_test_library.dfs_test(ssid=ssid_name, security=security, channel=channel,
                                   passkey=security_key, mode=mode, band=band,
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
@@ -165,13 +168,14 @@ class TestDFSChannel132Bw80(object):
         Unique Marker: pytest -m "bandwidth_80MHz and ow_sanity_lf and dfs_channel_132_bw_80"
 
         """
+        channel = setup_params_general11["rf"]["5G"]["channel"]
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        get_test_library.dfs_test(ssid=ssid_name, security=security,
+        get_test_library.dfs_test(ssid=ssid_name, security=security, channel=channel,
                                   passkey=security_key, mode=mode, band=band,
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
