@@ -64,7 +64,8 @@ class tip_2x:
                             "wpa3_enterprise",
                             "wpa_wpa2_enterprise_mixed",
                             "wpa3_enterprise_mixed",
-                            "wpa3_enterprise_192"
+                            "wpa3_enterprise_192",
+                            "owe"
                             ]
     tip_2x_specific_encryption_translation = {"open": "none",
                                               "wpa": "psk",
@@ -77,7 +78,8 @@ class tip_2x:
                                               "wpa3_enterprise": "wpa3",
                                               "wpa_wpa2_enterprise_mixed": "wpa-mixed",
                                               "wpa3_enterprise_mixed": "wpa3-mixed",
-                                              "wpa3_enterprise_192": "wpa3-192"
+                                              "wpa3_enterprise_192": "wpa3-192",
+                                              "owe":"owe"
                                               }
 
     def __init__(self, controller_data=None, target=None, configuration=None,
@@ -231,6 +233,12 @@ class tip_2x:
                                   requested_combination=None, open_roaming=False):
         f_conf = self.setup_configuration_data(configuration=configuration,
                                                requested_combination=requested_combination)
+
+        # fetch ap_mode from DUT data (ap_mode can be wifii6 or wifi6e or wifi7)
+        for i in range(0, len(self.device_under_tests_info)):
+            ap_mode = self.device_under_tests_info[i]["mode"]
+            logging.info(f"ap_mode:{ap_mode}")
+
         if open_roaming:
             logging.info("Selected Configuration of open roaming: " + str(json.dumps(f_conf, indent=2)))
             final_configuration = f_conf.copy()
@@ -243,10 +251,11 @@ class tip_2x:
 
             # Setup Radio Scenario
             if final_configuration["rf"] != {}:
-                profile_object.set_radio_config(radio_config=final_configuration["rf"], open_roaming=open_roaming)
+                profile_object.set_radio_config(radio_config=final_configuration["rf"], open_roaming=open_roaming,
+                                                ap_mode=ap_mode)
             else:
                 final_configuration["rf"] = {"2G": {}, "5G": {}, "6G": {}}
-                profile_object.set_radio_config(open_roaming=open_roaming)
+                profile_object.set_radio_config(open_roaming=open_roaming, ap_mode=ap_mode)
             for ssid in final_configuration["ssid_modes"]:
                 for ssid_data in final_configuration["ssid_modes"][ssid]:
                     if final_configuration["radius"]:
@@ -276,10 +285,10 @@ class tip_2x:
 
             # Setup Radio Scenario
             if final_configuration["rf"] != {}:
-                profile_object.set_radio_config(radio_config=final_configuration["rf"])
+                profile_object.set_radio_config(radio_config=final_configuration["rf"], ap_mode=ap_mode)
             else:
                 final_configuration["rf"] = {"2G": {}, "5G": {}, "6G": {}}
-                profile_object.set_radio_config()
+                profile_object.set_radio_config(ap_mode=ap_mode)
             for ssid in final_configuration["ssid_modes"]:
                 for ssid_data in final_configuration["ssid_modes"][ssid]:
                     if final_configuration["radius"]:
@@ -393,8 +402,8 @@ class tip_2x:
             logging.info("resp: " + str(resp))
             uuid = resp["details"]["uuid"]
             logging.info("uuid from resp: " + str(uuid))
-            logging.info("Waiting for 30 sec after config push")
-            time.sleep(30)
+            logging.info("Waiting for 45 sec after config push")
+            time.sleep(45)
             r_data = self.dut_library_object.ubus_call_ucentral_status(idx=i, print_log=True, attach_allure=False)
             latest_uuid_after_apply = r_data["latest"]
             active_uuid_after_apply = r_data["active"]
@@ -425,9 +434,9 @@ class tip_2x:
                     pytest.fail("Config is not Properly Applied on AP")
 
             self.dut_library_object.get_active_config(idx=i, print_log=True, attach_allure=False)
-            logging.info("Waiting for 30 Seconds for All interfaces to come up")
+            logging.info("Waiting for 45 Seconds for All interfaces to come up")
             # wait time interfaces to come up
-            time.sleep(30)
+            time.sleep(45)
 
             # x = 0
             # while uuid_before_apply == uuid_after_apply:
@@ -502,15 +511,30 @@ class tip_2x:
             n = len(temp_data[dut])
             lst = list(range(0, n))
             ret_val[dut]["ssid_data"] = dict.fromkeys(lst)
+            fields = ["SSID", "Encryption", "Password", "Band", "BSSID"]
             for j in ret_val[dut]["ssid_data"]:
-                a = temp_data[dut][j].copy()
-                a = dict.fromkeys(["ssid", "encryption", "password", "band", "bssid"])
-                a["ssid"] = temp_data[dut][j][0]
-                a["encryption"] = temp_data[dut][j][1]
-                a["password"] = temp_data[dut][j][2]
-                a["band"] = temp_data[dut][j][3]
-                a["bssid"] = temp_data[dut][j][4]
-                ret_val[dut]["ssid_data"][j] = a
+                ssid_entry = temp_data[dut][j]
+                expected_length = 5
+                if len(ssid_entry) < expected_length:
+                    missing_fields = []
+                    # Check each field for its presence
+                    for index, field in enumerate(fields):
+                        if len(ssid_entry) <= index:
+                            missing_fields.append(field)
+                    if missing_fields:
+                        logging.error(
+                            f"Error: Missing field(s) {', '.join(missing_fields)} for SSID entry '{ssid_entry[0]}' in {ssid_entry}. Please check iwinfo")
+                        pytest.fail(
+                            f"Error: Missing field(s) {', '.join(missing_fields)} for SSID entry '{ssid_entry[0]}' in {ssid_entry}. Please check iwinfo")
+                else:
+                    a = temp_data[dut][j].copy()
+                    a = dict.fromkeys(["ssid", "encryption", "password", "band", "bssid"])
+                    a["ssid"] = temp_data[dut][j][0]
+                    a["encryption"] = temp_data[dut][j][1]
+                    a["password"] = temp_data[dut][j][2]
+                    a["band"] = temp_data[dut][j][3]
+                    a["bssid"] = temp_data[dut][j][4]
+                    ret_val[dut]["ssid_data"][j] = a
             temp = ret_val[dut]["radio_data"].copy()
             logging.info(f"temp:{temp}")
             for j in temp:
@@ -660,14 +684,19 @@ class tip_2x:
                     band = "2G"
                 elif o[i + 9].__contains__("5."):
                     band = "5G"
+                elif "unknown" in o[i + 9]:
+                    logging.info(f"Error: {o[i - 1]} has an unknown channel frequency from iwinfo")
+                    pytest.fail(f"Error: {o[i - 1]} has an unknown channel frequency from iwinfo")
                 else:
                     band = "6G"
                 iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
+        logging.info(f"iwinfo_bssid_data:{iwinfo_bssid_data}")
         for p in iwinfo_bssid_data:
             for q in ssid_info_sdk:
                 if iwinfo_bssid_data[p][0] == q[0] and iwinfo_bssid_data[p][2] == q[3]:
                     q.append(iwinfo_bssid_data[p][1])
         ssid_info_sdk.append(channel_info)
+        logging.info(f"ssid_info_sdk:{ssid_info_sdk}")
         return ssid_info_sdk
 
     def get_dut_version(self):

@@ -15,8 +15,7 @@ setup_params_enterprise = {
             {"ssid_name": "tls_ssid_wpa2_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}],
         "wpa3_enterprise": [
             {"ssid_name": "tls_ssid_wpa3_eap_2g", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "tls_ssid_wpa3_eap_6g", "appliedRadios": ["6G"], "security_key": "something"}]},
+            {"ssid_name": "tls_ssid_wpa3_eap_5g", "appliedRadios": ["5G"], "security_key": "something"}]},
 
     "rf": {},
     "radius": True
@@ -155,7 +154,7 @@ class TestBridgeModeEnterpriseTLSSuiteA(object):
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """
-        To verify that a client created on 5G radio connects to AP in Bridge mode with WAP2 enterprise TLS security
+        To verify that a client created on 5G radio connects to AP in Bridge mode with WPA2 enterprise TLS security
         Unique Marker: pytest -m "client_connectivity_tests and enterprise and wpa2_enterprise and ow_sanity_lf and tls and bridge and fiveg"
                 """
 
@@ -283,14 +282,14 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.twog
-    @allure.title("Bridge Mode Client Connectivity Test with WAP-WPA2-Enterprise-TLS in 2.4GHz Band")
+    @allure.title("Bridge Mode Client Connectivity Test with WPA-WPA2-Enterprise-TLS in 2.4GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10589", name="WIFI-10589")
     def test_wpa_wpa2_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """
-        To verify that a client created on 2G radio connects to AP in Bridge mode with WAP-WPA2-Enterprise  TLS security
+        To verify that a client created on 2G radio connects to AP in Bridge mode with WPA-WPA2-Enterprise  TLS security
           Unique Marker:  pytest -m "client_connectivity_tests and wpa_wpa2_enterprise_mixed and enterprise and ow_sanity_lf and tls and bridge and twog"
         """
         profile_data = {"ssid_name": "tls_ssid_wpa_wpa2_eap_2g", "appliedRadios": ["2G"]}
@@ -314,14 +313,14 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa_wpa2_enterprise_mixed
     @pytest.mark.fiveg
-    @allure.title("Bridge Mode Client Connectivity Test with WAP-WPA2-Enterprise-TLS in 5GHz Band")
+    @allure.title("Bridge Mode Client Connectivity Test with WPA-WPA2-Enterprise-TLS in 5GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10590", name="WIFI-10590")
     def test_wpa_wpa2_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case,
                                     get_test_device_logs,
                                     get_target_object,
                                     num_stations, setup_configuration, check_connectivity, radius_info):
         """
-               To verify that a client created on 5G radio connects to AP in Bridge mode with WAP-WPA2-Enterprise  TLS security
+               To verify that a client created on 5G radio connects to AP in Bridge mode with WPA-WPA2-Enterprise  TLS security
                  Unique Marker:  pytest -m "client_connectivity_tests and wpa_wpa2_enterprise_mixed and enterprise and ow_sanity_lf and tls and bridge and fiveg"
                """
         profile_data = {"ssid_name": "tls_ssid_wpa_wpa2_eap_5g", "appliedRadios": ["5G"]}
@@ -345,14 +344,14 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.twog
-    @allure.title("Bridge Mode Client Connectivity Test with WAP3-Enterprise-Mixed-TLS in 2.4GHz Band")
+    @allure.title("Bridge Mode Client Connectivity Test with WPA3-Enterprise-Mixed-TLS in 2.4GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10591", name="WIFI-10591")
     def test_wpa3_enterprise_mixed_2g(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs,
                                       get_target_object,
                                       num_stations, setup_configuration, check_connectivity, radius_info):
         """
-                       To verify that a client created on 2G radio connects to AP in Bridge mode with WAP3-Enterprise-Mixed  TLS security
+                       To verify that a client created on 2G radio connects to AP in Bridge mode with WPA3-Enterprise-Mixed  TLS security
                          Unique Marker: pytest -m "client_connectivity_tests and wpa3_enterprise_mixed and enterprise and ow_sanity_lf and tls and bridge and twog"
                        """
         profile_data = {"ssid_name": "tls_ssid_wpa3_mixed_eap_2g", "appliedRadios": ["2G"]}
@@ -374,14 +373,14 @@ class TestBridgeModeEnterpriseTLSSuiteTwo(object):
 
     @pytest.mark.wpa3_enterprise_mixed
     @pytest.mark.fiveg
-    @allure.title("Bridge Mode Client Connectivity Test with WAP3-Enterprise-Mixed-TLS in 5GHz Band")
+    @allure.title("Bridge Mode Client Connectivity Test with WPA3-Enterprise-Mixed-TLS in 5GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-10592", name="WIFI-10592")
     def test_wpa3_enterprise_mixed_5g(self, get_test_library, get_dut_logs_per_test_case,
                                       get_test_device_logs,
                                       get_target_object,
                                       num_stations, setup_configuration, check_connectivity, radius_info):
         """
-         To verify that a client created on 5G radio connects to AP in Bridge mode with WAP3-Enterprise-Mixed  TLS security
+         To verify that a client created on 5G radio connects to AP in Bridge mode with WPA3-Enterprise-Mixed  TLS security
          Unique Marker: pytest -m "client_connectivity_tests and wpa3_enterprise_mixed and enterprise and ow_sanity_lf and tls and bridge and fiveg"
                               """
         profile_data = {"ssid_name": "tls_ssid_wpa3_mixed_eap_5g", "appliedRadios": ["5G"]}

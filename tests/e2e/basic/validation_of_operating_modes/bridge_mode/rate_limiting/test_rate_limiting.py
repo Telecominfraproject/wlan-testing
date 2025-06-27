@@ -820,6 +820,7 @@ class TestRateLimitingBridgeSixg(object):
     @pytest.mark.sixg
     @pytest.mark.upload_download
     @pytest.mark.batch_size_125
+    @pytest.mark.ow_sanity_lf
     @pytest.mark.rate_limiting_tests
     @pytest.mark.bridge
     @allure.testcase(name="WIFI-14364",
