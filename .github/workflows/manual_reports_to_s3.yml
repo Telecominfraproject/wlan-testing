@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
     inputs:
       drive_link:
-        description: 'Drive link to Allure .zip'
+        description: 'Drive link to Allure report .zip'
         required: true
       user_name:
         description: 'User name'
@@ -28,7 +28,7 @@ on:
         required: true
         default: 'sanity'
       AP_model:
-        description: 'AP model from approved list'
+        description: 'AP model'
         required: true
         default: "cig_wf196"
 
