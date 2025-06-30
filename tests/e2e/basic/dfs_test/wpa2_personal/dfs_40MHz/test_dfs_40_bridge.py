@@ -20,7 +20,6 @@ setup_params_general1 = {
             "band": "5G",
             "country": "US",
             "allow-dfs": True,
-            "channel-mode": "VHT",
             "channel-width": 40,
             "channel": 52
         }
@@ -48,13 +47,14 @@ class TestDFSChannel52Bw40(object):
     @allure.title("Test for Channel 52 and bandwidth 40")
     def test_dfs_channel_52_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                   num_stations, setup_configuration, check_connectivity, get_target_object):
+        channel = setup_params_general1["rf"]["5G"]["channel"]
         profile_data = setup_params_general1["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        get_test_library.dfs_test(ssid=ssid_name, security=security,
+        get_test_library.dfs_test(ssid=ssid_name, security=security, channel=channel,
                                   passkey=security_key, mode=mode, band=band,
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
@@ -73,7 +73,6 @@ setup_params_general2 = {
             "band": "5G",
             "country": "US",
             "allow-dfs": True,
-            "channel-mode": "VHT",
             "channel-width": 40,
             "channel": 100
         }
@@ -101,6 +100,7 @@ class TestDFSChannel100Bw40(object):
     @allure.title("Test for Channel 100 and bandwidth 40")
     def test_dfs_channel_100_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                    num_stations, setup_configuration, check_connectivity, get_target_object):
+        channel = setup_params_general2["rf"]["5G"]["channel"]
         profile_data = setup_params_general2["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -108,7 +108,7 @@ class TestDFSChannel100Bw40(object):
         band = "fiveg"
         mode = "BRIDGE"
         vlan = 1
-        get_test_library.dfs_test(ssid=ssid_name, security=security,
+        get_test_library.dfs_test(ssid=ssid_name, security=security, channel=channel,
                                   passkey=security_key, mode=mode, band=band,
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
@@ -127,7 +127,6 @@ setup_params_general5 = {
             "band": "5G",
             "country": "US",
             "allow-dfs": True,
-            "channel-mode": "VHT",
             "channel-width": 40,
             "channel": 60
         }
@@ -155,13 +154,14 @@ class TestDFSChannel60Bw40(object):
     @allure.title("Test for Channel 60 and bandwidth 40")
     def test_dfs_channel_60_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                   num_stations, setup_configuration, check_connectivity, get_target_object):
+        channel = setup_params_general5["rf"]["5G"]["channel"]
         profile_data = setup_params_general5["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        get_test_library.dfs_test(ssid=ssid_name, security=security,
+        get_test_library.dfs_test(ssid=ssid_name, security=security, channel=channel,
                                   passkey=security_key, mode=mode, band=band,
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
@@ -180,7 +180,6 @@ setup_params_general7 = {
             "band": "5G",
             "country": "US",
             "allow-dfs": True,
-            "channel-mode": "VHT",
             "channel-width": 40,
             "channel": 108
         }
@@ -208,6 +207,7 @@ class TestDFSChannel108Bw40(object):
     @allure.title("Test for Channel 108 and bandwidth 40")
     def test_dfs_channel_108_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                    num_stations, setup_configuration, check_connectivity, get_target_object):
+        channel = setup_params_general7["rf"]["5G"]["channel"]
         profile_data = setup_params_general7["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
@@ -215,7 +215,7 @@ class TestDFSChannel108Bw40(object):
         band = "fiveg"
         mode = "BRIDGE"
         get_test_library.dfs_test(ssid=ssid_name, security=security,
-                                  passkey=security_key, mode=mode, band=band,
+                                  passkey=security_key, mode=mode, band=band, channel=channel,
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
         time.sleep(200)
@@ -233,7 +233,6 @@ setup_params_general11 = {
             "band": "5G",
             "country": "US",
             "allow-dfs": True,
-            "channel-mode": "VHT",
             "channel-width": 40,
             "channel": 132
         }
@@ -262,13 +261,14 @@ class TestDFSChannel132Bw40(object):
     @allure.title("Test for Channel 132 and bandwidth 40")
     def test_dfs_channel_132_bw_40(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                    num_stations, setup_configuration, check_connectivity, get_target_object):
+        channel = setup_params_general11["rf"]["5G"]["channel"]
         profile_data = setup_params_general11["ssid_modes"]["wpa2_personal"][0]
         ssid_name = profile_data["ssid_name"]
         security_key = profile_data["security_key"]
         security = "wpa2"
         band = "fiveg"
         mode = "BRIDGE"
-        get_test_library.dfs_test(ssid=ssid_name, security=security,
+        get_test_library.dfs_test(ssid=ssid_name, security=security, channel=channel,
                                   passkey=security_key, mode=mode, band=band,
                                   num_sta=1, dut_data=setup_configuration, tip_2x_obj=get_target_object)
         get_target_object.reboot()
