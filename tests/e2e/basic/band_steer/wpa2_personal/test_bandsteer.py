@@ -31,19 +31,17 @@ setup_params_general = {
     "rf": {
         "2G": {
             "band": "2G",
-            "country": "CA",
-            "channel-width": 80,
-            "channel-mode": "HE"
+            "country": "US",
+            "channel-width": 80
         },
         "5G": {
             "band": "5G",
-            "country": "CA",
-            "channel-width": 80,
-            "channel-mode": "HE"
+            "country": "US",
+            "channel-width": 80
         },
         "6G": {
             "band": "6G",
-            "channel-mode": "HE"
+            "country": "US",
         }
     },
     "radius": False
