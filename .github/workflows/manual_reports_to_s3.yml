@@ -104,8 +104,11 @@ jobs:
 
       - name: Extract report
         run: |
-          unzip -q allure-report.zip -d allure-report
-          rm allure-report.zip
+          unzip -q allure-report.zip -d temp
+          mkdir -p allure-report
+          shopt -s dotglob  # include hidden files like .js
+          mv temp/* allure-report/
+          rm -rf temp allure-report.zip
 
       - name: Verify report structure
         run: |
