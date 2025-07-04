@@ -104,8 +104,12 @@ jobs:
 
       - name: Extract report
         run: |
-          unzip -q allure-report.zip -d allure-report
-          rm allure-report.zip
+          unzip -q allure-report.zip -d temp
+          mkdir -p allure-report
+          shopt -s dotglob  # Include hidden files
+          inner_dir=$(find temp -mindepth 1 -maxdepth 1 -type d | head -n 1)
+          mv "$inner_dir"/* allure-report/
+          rm -rf temp allure-report.zip
 
       - name: Verify report structure
         run: |
