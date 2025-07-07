@@ -829,10 +829,13 @@ class tip_2x:
             # If specified as URL
             try:
                 response = requests.get(self.device_under_tests_info[ap]['firmware_version'])
+                logging.info(f"first response:{response}")
                 logging.info("URL is valid and exists on the internet")
                 allure.attach(name="firmware url: ", body=str(self.device_under_tests_info[ap]['firmware_version']))
                 target_revision_commit = self.device_under_tests_info[ap]['firmware_version'].split("-")[-2]
                 ap_version = self.dut_library_object.get_ap_version(idx=ap)
+
+                logging.info(f"ap_version:1{ap_version}")
                 current_version_commit = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
 
                 # if AP is already in target Version then skip upgrade unless force upgrade is specified
@@ -845,6 +848,7 @@ class tip_2x:
                 items = list(range(0, 300))
                 l = len(items)
                 ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                logging.info(f"ap_version:2{ap_version}")
                 current_version_commit = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
                 if target_revision_commit in current_version_commit:
                     upgrade_status.append([self.device_under_tests_info[ap]['identifier'], target_revision_commit,
@@ -860,12 +864,17 @@ class tip_2x:
             # else Specified as "branch-commit_id" / "branch-latest"
             firmware_url = ""
             ap_version = self.dut_library_object.get_ap_version(idx=ap)
+            logging.info(f"ap_version:3{ap_version}")
             response = self.firmware_library_object.get_latest_fw(model=self.device_under_tests_info[ap]['model'])
+            logging.info(f"response to get latest firmware::{response}")
             # if the target version specified is "branch-latest"
             if self.device_under_tests_info[ap]['firmware_version'].split('-')[1] == "latest":
+                logging.info(f"entered into latest if ")
                 # get the latest branch
                 firmware_list = self.firmware_library_object.get_firmwares(
                     model=self.device_under_tests_info[ap]['model'], branch="", commit_id='')
+
+                logging.info(f"firmware_lista{firmware_list}")
                 # firmware_list.reverse()
                 # Firmware list from newer to older image
                 image_date = []
@@ -881,13 +890,17 @@ class tip_2x:
                 firmware_list = ordered_list_firmware
                 for firmware in firmware_list:
                     if firmware['image'] == "":
+                        logging.info(f"continuee....")
                         continue
                     if str(firmware['image']).__contains__("upgrade.bin"):
+                        logging.info(f"yes upgrade.bin in image")
                         temp = firmware['image'].split("-")
                         temp.pop(-1)
                         temp = "-".join(temp)
                         firmware['image'] = temp
+                    logging.info(f"self.device_under_tests_info[ap]['firmware_version']:;{self.device_under_tests_info[ap]['firmware_version']}")
                     if self.device_under_tests_info[ap]['firmware_version'].split('-')[0] == 'release':
+                        logging.info(f"entered into latest if of release")
                         if firmware['revision'].split("/")[1].replace(" ", "").split('-')[1][0] == "v":
                             logging.info("Target Firmware: \n" + str(firmware))
                             allure.attach(name="Target firmware : ", body=str(firmware))
@@ -896,6 +909,7 @@ class tip_2x:
                             # check the current AP Revision before upgrade
 
                             ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                            logging.info(f"ap_version4:{ap_version}")
                             current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
 
                             # print and report the firmware versions before upgrade
@@ -919,10 +933,11 @@ class tip_2x:
                                 url=str(firmware['uri']))
                             # wait for 300 seconds after firmware upgrade
                             logging.info("waiting for 300 Sec for Firmware Upgrade")
-                            time.sleep(300)
+                            time.sleep(420)
 
                             # check the current AP Revision again
                             ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                            logging.info(f"ap_version:4{ap_version}")
                             current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
                             # print and report the Firmware versions after upgrade
                             allure.attach(name="After Firmware Upgrade Request: ",
@@ -938,6 +953,9 @@ class tip_2x:
                                     [self.device_under_tests_info[ap]['identifier'], target_revision, current_version])
                                 logging.info("firmware upgraded failed: " + target_revision)
                             break
+
+                    logging.info(f"2 split::{firmware['image']}")
+                    logging.info(f"print before if {self.device_under_tests_info[ap]['firmware_version']}")
                     if firmware['image'].split("-")[-2] == \
                             self.device_under_tests_info[ap]['firmware_version'].split('-')[0]:
                         logging.info("Target Firmware: \n" + str(firmware))
@@ -947,6 +965,7 @@ class tip_2x:
 
                         # check the current AP Revision before upgrade
                         ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                        logging.info(f"ap_version:5{ap_version}")
                         current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
 
                         # print and report the firmware versions before upgrade
@@ -966,11 +985,12 @@ class tip_2x:
                         self.firmware_library_object.upgrade_firmware(
                             serial=self.device_under_tests_info[ap]['identifier'], url=str(firmware['uri']))
                         # wait for 300 seconds after firmware upgrade
-                        logging.info("waiting for 300 Sec for Firmware Upgrade")
+                        logging.info("waiting for 420 Sec for Firmware Upgrade")
                         time.sleep(500)
 
                         # check the current AP Revision again
                         ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                        logging.info(f"ap_version:6{ap_version}")
                         current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
                         # print and report the Firmware versions after upgrade
                         allure.attach(name="After Firmware Upgrade Request: ",
@@ -987,16 +1007,19 @@ class tip_2x:
                         break
             # if branch-commit is specified
             else:
+                logging.info(f"entered in else")
                 firmware_list = self.firmware_library_object.get_firmwares(
                     model=self.device_under_tests_info[ap]['model'],
                     branch="", commit_id='')
+                logging.info(f"get firmware_list:{firmware_list}")
                 fw_list = []
                 # getting the list of firmwares in fw_list that has the commit id specified as an input
                 for firmware in firmware_list:
                     if firmware['revision'].split("/")[1].replace(" ", "").split('-')[-1] == \
                             self.device_under_tests_info[ap]['firmware_version'].split('-')[1]:
                         fw_list.append(firmware)
-
+                        logging.info(f"checking revision and fm version")
+                logging.info(f"fw_list::{fw_list}")
                 # If there is only 1 commit ID in fw_list
                 if len(fw_list) == 1:
 
@@ -1008,6 +1031,7 @@ class tip_2x:
 
                     # check the current AP Revision before upgrade
                     ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                    logging.info(f"ap_version:7{ap_version}")
                     current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
 
                     # print and report the firmware versions before upgrade
@@ -1031,10 +1055,11 @@ class tip_2x:
 
                         # wait for 300 seconds after firmware upgrade
                         logging.info("waiting for 300 Sec for Firmware Upgrade")
-                        time.sleep(300)
+                        time.sleep(420)
 
                         # check the current AP Revision again
                         ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                        logging.info(f"ap_version:8{ap_version}")
                         current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
                         # print and report the Firmware versions after upgrade
                         allure.attach(name="After Firmware Upgrade Request: ",
@@ -1053,6 +1078,7 @@ class tip_2x:
 
                 # if there are 1+ firmware images in fw_list then check for branch
                 else:
+                    logging.info("entered into another else")
                     target_fw = ""
                     for firmware in fw_list:
                         if self.device_under_tests_info[ap]['firmware_version'].split('-')[0] == 'release':
@@ -1071,6 +1097,7 @@ class tip_2x:
 
                     # check the current AP Revision before upgrade
                     ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                    logging.info(f"ap_version:9{ap_version}")
                     current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
 
                     # print and report the firmware versions before upgrade
@@ -1091,10 +1118,11 @@ class tip_2x:
                     # wait for 300 seconds after firmware upgrade
 
                     logging.info("waiting for 300 Sec for Firmware Upgrade")
-                    time.sleep(300)
+                    time.sleep(420)
 
                     # check the current AP Revision again
                     ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                    logging.info(f"ap_version3:{ap_version}")
                     current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
                     # print and report the Firmware versions after upgrade
                     allure.attach(name="After Firmware Upgrade Request: ",
