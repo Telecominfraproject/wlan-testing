@@ -933,7 +933,7 @@ class tip_2x:
                                 url=str(firmware['uri']))
                             # wait for 300 seconds after firmware upgrade
                             logging.info("waiting for 300 Sec for Firmware Upgrade")
-                            time.sleep(420)
+                            time.sleep(300)
 
                             # check the current AP Revision again
                             ap_version = self.dut_library_object.get_ap_version(idx=ap)
@@ -985,12 +985,23 @@ class tip_2x:
                         self.firmware_library_object.upgrade_firmware(
                             serial=self.device_under_tests_info[ap]['identifier'], url=str(firmware['uri']))
                         # wait for 300 seconds after firmware upgrade
-                        logging.info("waiting for 420 Sec for Firmware Upgrade")
-                        time.sleep(500)
+                        logging.info("waiting for 300 Sec for Firmware Upgrade")
+                        time.sleep(300)
 
                         # check the current AP Revision again
-                        ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                        try:
+                            ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                        except IndexError as e:
+                            logging.warning(f"First attempt failed with error: {e}. Retrying after short delay...")
+                            time.sleep(60)  # allow time for AP to finish booting
+                            try:
+                                ap_version = self.dut_library_object.get_ap_version(idx=ap)
+                            except Exception as e:
+                                logging.error(f"Second attempt to get AP version failed: {e}")
+                                ap_version = "UNKNOWN"
+
                         logging.info(f"ap_version:6{ap_version}")
+
                         current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
                         # print and report the Firmware versions after upgrade
                         allure.attach(name="After Firmware Upgrade Request: ",
@@ -1055,7 +1066,7 @@ class tip_2x:
 
                         # wait for 300 seconds after firmware upgrade
                         logging.info("waiting for 300 Sec for Firmware Upgrade")
-                        time.sleep(420)
+                        time.sleep(300)
 
                         # check the current AP Revision again
                         ap_version = self.dut_library_object.get_ap_version(idx=ap)
@@ -1118,7 +1129,7 @@ class tip_2x:
                     # wait for 300 seconds after firmware upgrade
 
                     logging.info("waiting for 300 Sec for Firmware Upgrade")
-                    time.sleep(420)
+                    time.sleep(300)
 
                     # check the current AP Revision again
                     ap_version = self.dut_library_object.get_ap_version(idx=ap)
