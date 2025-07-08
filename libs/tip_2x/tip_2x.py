@@ -990,6 +990,7 @@ class tip_2x:
 
                         # check the current AP Revision again
                         try:
+                            logging.info(f"trying to get_ap_version for the first time")
                             ap_version = self.dut_library_object.get_ap_version(idx=ap)
                         except IndexError as e:
                             logging.warning(f"First attempt failed with error: {e}. Retrying after short delay...")
