@@ -84,6 +84,8 @@ class TestStatsComparisonSuite(object):
             "stats_comparison and bridge and wap3_personal"
         """
 
+        # check for the AP band support
+        get_test_library.check_band_ap(band="sixg")
         ssid_names = []
         bands = ["twog","fiveg","sixg"]
         for i in range(0,3):
