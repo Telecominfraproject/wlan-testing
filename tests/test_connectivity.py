@@ -182,8 +182,29 @@ class TestResources(object):
         uci_data = []
         for i in range(0, len(get_target_object.device_under_tests_info)):
             ret_val = get_target_object.get_dut_library_object().get_uci_show(idx=i, param="ucentral.config.server")
-            ret_val = str(ret_val).split("=")[1]
-            uci_data.append(ret_val)
+
+            logging.info(f"ret_val from get_uci_show:{ret_val}")
+            if "ucentral.config.server" in ret_val:
+                ret_val = str(ret_val).split("=")[1]
+                uci_data.append(ret_val)
+            else:
+                ret_val_dict = json.loads(ret_val)
+                if not ret_val_dict.get("valid") or "server" not in ret_val_dict:
+                    logging.warning(
+                        "First attempt to fetch 'server' from gateway.json failed. Retrying in 5 seconds...")
+                    time.sleep(5)
+                    # Retry
+                    ret_val = get_target_object.get_dut_library_object().get_uci_show(idx=i,
+                                                                                      param="ucentral.config.server")
+                    ret_val_dict = json.loads(ret_val)
+
+                    if not ret_val_dict.get("valid") or "server" not in ret_val_dict:
+                        logging.error("Invalid or missing 'server' after retry. Exiting test.")
+                        pytest.exit("No valid 'server' value found in gateway.json after retry")
+
+                uci_data.append(ret_val_dict["server"])
+
+            logging.info(f"uci_data::{uci_data}")
         gw_host = get_target_object.controller_library_object.gw_host.hostname
         expected_host = True
         for j in uci_data:

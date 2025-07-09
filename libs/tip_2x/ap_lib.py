@@ -107,12 +107,30 @@ class APLIBS:
             pytest.fail("up0v0 interface is failed to have connectivity!!!")
 
     def get_uci_show(self, param="ucentral", idx=0, print_log=True, attach_allure=True):
-        output = self.run_generic_command(cmd="uci show " + param, idx=idx,
-                                          print_log=print_log,
-                                          attach_allure=attach_allure,
-                                          expected_attachment_type=allure.attachment_type.TEXT)
-
+        command = "uci show " + param
+        if "server" in param:
+            output = self.run_generic_command(cmd=command, idx=idx,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
+                                              expected_attachment_type=allure.attachment_type.TEXT)
+            ret_val = str(output).split("=")[1]
+            if "cicd.lab.wlan.tip.build" in ret_val:
+                logging.info(f"we are fetching server url with the command: {command}")
+            else:
+                command = "cat /etc/ucentral/gateway.json"
+                logging.info(f"we are fetching server url with the command: {command}")
+                output = self.run_generic_command(cmd=command, idx=idx,
+                                                  print_log=print_log,
+                                                  attach_allure=attach_allure,
+                                                  expected_attachment_type=allure.attachment_type.TEXT)
+        else:
+            logging.info(f"command:{command}")
+            output = self.run_generic_command(cmd=command, idx=idx,
+                                              print_log=print_log,
+                                              attach_allure=attach_allure,
+                                              expected_attachment_type=allure.attachment_type.TEXT)
         return output
+
 
     def restart_ucentral_service(self, idx=0, print_log=True, attach_allure=True):
         output = self.run_generic_command(cmd="/etc/init.d/ucentral restart", idx=idx,
