@@ -989,17 +989,18 @@ class tip_2x:
                         time.sleep(300)
 
                         # check the current AP Revision again
+                        ap_version = self.dut_library_object.get_ap_version(idx=ap)
                         try:
-                            logging.info(f"trying to get_ap_version for the first time")
+                            current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                        except (IndexError, AttributeError) as e:
+                            logging.warning(f"First attempt failed: {e}. Retrying after 10s...")
+                            time.sleep(10)
                             ap_version = self.dut_library_object.get_ap_version(idx=ap)
-                        except IndexError as e:
-                            logging.warning(f"First attempt failed with error: {e}. Retrying after short delay...")
-                            time.sleep(60)  # allow time for AP to finish booting
                             try:
-                                ap_version = self.dut_library_object.get_ap_version(idx=ap)
-                            except Exception as e:
-                                logging.error(f"Second attempt to get AP version failed: {e}")
-                                ap_version = "UNKNOWN"
+                                current_version = str(ap_version).split("/")[1].replace(" ", "").splitlines()[0]
+                            except (IndexError, AttributeError) as e:
+                                logging.error(f"Second attempt failed: {e}")
+                                current_version = "UNKNOWN"
 
                         logging.info(f"ap_version:6{ap_version}")
 
