@@ -413,7 +413,18 @@ class TestFirmwareUpgrade(object):
     @pytest.mark.firmware_upgrade
     def test_firmware_upgrade_request(self, get_target_object, get_dut_logs_per_test_case, check_connectivity):
         for update in get_target_object.setup_firmware():
+            logging.info(f"update from setup firmware::{update}")
             allure.attach(name='serial: ' + update[0], body="")
+            if len(update) == 3:
+                if update[1] == update[2]:
+                    logging.info(f"Yes, current and target firmware versions are same after firmware upgrade")
+                else:
+                    logging.info(f"No, current and target firmware versions are not same")
+                    pytest.fail(f"No, current and target firmware versions are not same")
+            else:
+                logging.info(f"upgrade_status list doesn't have firmware versions to compare: {update}")
+                pytest.fail(f"upgrade_status list doesn't have firmware versions to compare: {update})")
+
         assert True
 
     @pytest.mark.test_firmware_gw
