@@ -415,9 +415,9 @@ class TestFirmwareUpgrade(object):
         for update in get_target_object.setup_firmware():
             logging.info(f"update from setup firmware::{update}")
             allure.attach(name='serial: ' + update[0], body="")
-            if len(update) == 3:
+            if len(update) >= 3:
                 if update[1] == update[2]:
-                    logging.info(f"Yes, current and target firmware versions are same after firmware upgrade")
+                    logging.info(f"Yes, current and target firmware versions are same")
                 else:
                     logging.info(f"No, current and target firmware versions are not same")
                     pytest.fail(f"No, current and target firmware versions are not same")
