@@ -22,12 +22,12 @@ with open(file_path, 'r') as file:
     config_data_1 = json.loads(json_string)
 
 file_path2 = os.path.join(test_file_dir, 'master-config-2.json')
-with open(file_path, 'r') as file:
+with open(file_path2, 'r') as file:
     json_string = file.read()
     config_data_2 = json.loads(json_string)
 
 file_path3 = os.path.join(test_file_dir, 'master-config-3.json')
-with open(file_path, 'r') as file:
+with open(file_path3, 'r') as file:
     json_string = file.read()
     config_data_3 = json.loads(json_string)
 
@@ -172,7 +172,7 @@ def validate_schema_through_github(commit_id, path):
     return
 
 
-def validate_state_message_through_ap(test_object, target_object, config_data):
+def validate_state_message_through_ap(test_object, target_object, config_data, ssid=None):
     def get_type_of_message(message):
         type_of_message = "unknown"
         if isinstance(message, dict):
@@ -316,8 +316,9 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
                 radio_5g = dict_all_radios_5g[radio][0]
                 break
 
+        logging.info(f"ssid:{ssid}")
         test_object.pre_cleanup()
-        fiveg_sta_got_ip = test_object.client_connect_using_radio(ssid="captive-credential-4",
+        fiveg_sta_got_ip = test_object.client_connect_using_radio(ssid=ssid,
                                                                        passkey="OpenWifi",
                                                                        security="wpa2", radio=radio_5g,
                                                                        station_name=["station-5G"],
@@ -526,7 +527,8 @@ class TestSchemaValidationThroughAPTerminal(object):
         Unique Marker:
         schema_validation and through_ap_terminal and master_config_1
         """
-        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_1)
+        ssid = "captive-credential-4"
+        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_1, ssid=ssid)
 
     @pytest.mark.master_config_2
     @allure.title("Pushing master config-2")
@@ -543,7 +545,8 @@ class TestSchemaValidationThroughAPTerminal(object):
         Unique Marker:
         schema_validation and through_ap_terminal and master_config_2
         """
-        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_2)
+        ssid = "captive-uam-8"
+        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_2, ssid=ssid)
 
     @pytest.mark.master_config_3
     @allure.title("Pushing master config-3")
@@ -560,4 +563,5 @@ class TestSchemaValidationThroughAPTerminal(object):
         Unique Marker:
         schema_validation and through_ap_terminal and master_config_3
         """
-        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_3)
+        ssid = "Uchannel-ds-4"
+        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_3, ssid=ssid)
