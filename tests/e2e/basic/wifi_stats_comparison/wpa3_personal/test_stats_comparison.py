@@ -11,8 +11,7 @@ import time
 import allure
 import pytest
 
-
-pytestmark = [pytest.mark.ow_sanity_lf, pytest.mark.stats_comparison, pytest.mark.bridge, pytest.mark.wap3_personal]
+pytestmark = [pytest.mark.ow_sanity_lf, pytest.mark.wifi_stats_comparison, pytest.mark.bridge, pytest.mark.wap3_personal]
 
 setup_params_general = {
     "mode": "BRIDGE",
@@ -25,28 +24,24 @@ setup_params_general = {
         "2G": {
             "band": "2G",
             "channel-width": 20,
-            "channel-mode": "EHT",
             "channel": 6,
             "country": "US"
         },
         "5G": {
             "band": "5G",
             "channel-width": 80,
-            "channel-mode": "HE",
             "channel": 36,
             "country": "US"
         },
         "6G": {
             "band": "6G",
             "channel-width": 320,
-            "channel-mode": "EHT",
             "channel": 33,
             "country": "US"
         }
     },
     "radius": False
 }
-
 
 @allure.feature("Wifi_stats_comparison")
 @allure.parent_suite("Wifi_stats_comparison")
@@ -79,16 +74,17 @@ class TestStatsComparisonSuite(object):
                                               client_type):
         """
             Test Description: The iwinfo command on the AP side displays key wireless parameters such as configured SSIDs, BSSIDs, operating channels, channel bandwidth, frequency, encryption, etc. Verify that these parameters shown in iwinfo accurately reflect in the controller’s stats.
-
             Marker:
             "stats_comparison and bridge and wap3_personal"
         """
+        ap_mode = get_testbed_details["device_under_tests"][0].get("mode", "")
+        if ap_mode == "wifi6e" or ap_mode == "wifi7":
+            bands = ["twog", "fiveg", "sixg"]
+        else:
+            bands = ["twog", "fiveg"]
 
-        # check for the AP band support
-        get_test_library.check_band_ap(band="sixg")
         ssid_names = []
-        bands = ["twog","fiveg","sixg"]
-        for i in range(0,3):
+        for i in range(0,len(bands)):
             ssid_names.append(setup_params_general["ssid_modes"]["wpa3_personal"][i]["ssid_name"])
         #     bands.append(setup_params_general["ssid_modes"]["wpa3_personal"][i]["appliedRadios"][0])
         # logging.info(f"ssid_names:{ssid_names} and bands: {bands}")
@@ -96,7 +92,6 @@ class TestStatsComparisonSuite(object):
         security_key = "OpenWifi"
         security = "wpa3"
         mode = "BRIDGE"
-
         get_test_library.wifi_stats_comparison(ssid_list=ssid_names, bands=bands, security=security,
                                                                  dut_data=setup_configuration,passkey=security_key,
                                                                  mode=mode, num_sta=num_stations,
