@@ -1052,10 +1052,11 @@ class TestUcentralGatewayService(object):
             "deferred": True,
             "uri": ""
         }
-        resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        resp = get_target_object.controller_library_object.check_restrictions(device_name)
         if not resp:
             logging.info("AP is in not restricted and we can trigger script")
             uuid = get_target_object.controller_library_object.asb_script(device_name, payload)
+            logging.info(f"uuid:{uuid}")
             resp = get_target_object.controller_library_object.get_file(device_name, uuid)
             assert resp.status_code == 200
         else:
@@ -1100,6 +1101,7 @@ class TestUcentralGatewayService(object):
         if resp:
             logging.info("From GW it's confirmed that AP is restricted now")
             uuid = get_target_object.controller_library_object.asb_script(device_name, payload)
+            logging.info(f"uuid:{uuid}")
             resp = get_target_object.controller_library_object.get_file(device_name, uuid)
             assert resp.status_code == 200
         else:

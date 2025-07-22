@@ -955,7 +955,17 @@ class Controller(ConfigureController):
         payload = json.dumps(payload)
         resp = requests.post(uri, data=payload, headers=self.make_headers(), verify=False, timeout=120)
         logging.info("resp:- " + str(resp))
-        resp = resp.json()
+        # Check if response status is OK (200)
+        if resp.status_code != 200:
+            pytest.fail(f"Request to {uri} failed with status code {resp.status_code}: {resp.text}")
+        # Try parsing JSON
+        try:
+            resp = resp.json()
+        except ValueError:
+            pytest.fail(f"Response from {uri} is not valid JSON: {resp.text}")
+        if 'UUID' not in resp:
+            pytest.fail(f"'UUID' not found in response JSON from {uri}: {resp}")
+
         resp = resp['UUID']
         return resp
 
