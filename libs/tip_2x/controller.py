@@ -2504,6 +2504,13 @@ class UProfileUtility:
                     "describe": "TIP OpenWiFi",
                     "location": "QA"
                 },
+                "log": {
+                    "host": "dev1.dev.kinsights.io",
+                    "port": 5140,
+                    "priority": 7,
+                    "proto": "udp",
+                    "size": 2000
+                },
                 "ssh": {
                     "port": 22
                 }
@@ -2818,6 +2825,8 @@ class UProfileUtility:
                 if options == "captive":
                     ssid_info[options] = ssid_data[options]
                     ssid_info["services"] = ["captive"]
+
+
             for i in ssid_data["appliedRadios"]:
                 ssid_info["wifi-bands"].append(i)
             ssid_info['encryption'] = {}
