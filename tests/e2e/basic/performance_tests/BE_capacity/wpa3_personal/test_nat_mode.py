@@ -7,6 +7,7 @@
 
 import allure
 import pytest
+import logging
 
 pytestmark = [pytest.mark.wifi_capacity_be_tests, pytest.mark.nat, pytest.mark.sixg,
               pytest.mark.wpa3_personal]
@@ -71,6 +72,11 @@ class TestWifiCapacityNATMode6G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         sets = [["UDP-Burst", "1"], ["UDP-GRO", "1"], ["Multiple Endpoints:", "10"]]
+        dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
+            logging.info("AP does not support BE mode, so skipping this test.")
+            pytest.skip("AP does not support BE mode, so skipping this test")
+
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_download", mode=mode,
                                        download_rate="10Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="TCP", duration="60000",
@@ -93,6 +99,11 @@ class TestWifiCapacityNATMode6G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         sets = [["UDP-Burst", "1"], ["UDP-GRO", "1"], ["Multiple Endpoints:", "10"]]
+        dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
+            logging.info("AP does not support BE mode, so skipping this test.")
+            pytest.skip("AP does not support BE mode, so skipping this test")
+
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_dl", mode=mode,
                                        download_rate="10Gbps", batch_size="1",
                                        upload_rate="56Kbps", protocol="UDP", duration="60000",
@@ -115,6 +126,11 @@ class TestWifiCapacityNATMode6G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         sets = [["UDP-Burst", "1"], ["UDP-GRO", "1"], ["Multiple Endpoints:", "10"]]
+        dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
+            logging.info("AP does not support BE mode, so skipping this test.")
+            pytest.skip("AP does not support BE mode, so skipping this test")
+
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_tcp_ul", mode=mode,
                                        download_rate="56Kbps", batch_size="1",
                                        upload_rate="10Gbps", protocol="TCP", duration="60000",
@@ -137,6 +153,11 @@ class TestWifiCapacityNATMode6G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "NAT-WAN"
         sets = [["UDP-Burst", "1"], ["UDP-GRO", "1"], ["Multiple Endpoints:", "10"]]
+        dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
+            logging.info("AP does not support BE mode, so skipping this test.")
+            pytest.skip("AP does not support BE mode, so skipping this test")
+
         get_test_library.wifi_capacity(instance_name="test_client_wpa3_nat_udp_ul", mode=mode,
                                        download_rate="56Kbps", batch_size="1",
                                        upload_rate="10Gbps", protocol="UDP", duration="60000",

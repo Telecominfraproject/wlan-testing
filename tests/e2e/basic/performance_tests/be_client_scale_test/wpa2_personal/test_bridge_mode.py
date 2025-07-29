@@ -74,7 +74,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_tcp_dl", mode=mode,
@@ -97,7 +97,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_udp_dl", mode=mode,
@@ -121,7 +121,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_tcp_ul", mode=mode,
@@ -145,7 +145,7 @@ class TestWifiCapacityBRIDGEMode2G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_udp_ul", mode=mode,
@@ -221,7 +221,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_tcp_dl", mode=mode,
@@ -246,7 +246,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_udp_dl", mode=mode,
@@ -269,7 +269,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_udp_ul", mode=mode,
@@ -292,7 +292,7 @@ class TestWifiCapacityBRIDGEMode5G(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_tcp_ul", mode=mode,
@@ -368,7 +368,7 @@ class TestWifiCapacityBRIDGEModeDual(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_tcp_dl", mode=mode,
@@ -391,7 +391,7 @@ class TestWifiCapacityBRIDGEModeDual(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_udp_dl", mode=mode,
@@ -415,7 +415,7 @@ class TestWifiCapacityBRIDGEModeDual(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_tcp_ul", mode=mode,
@@ -439,7 +439,7 @@ class TestWifiCapacityBRIDGEModeDual(object):
         ssid_name = profile_data["ssid_name"]
         mode = "BRIDGE"
         dut_mode = get_lab_info.CONFIGURATION[selected_testbed]["device_under_tests"][0]["mode"]
-        if dut_mode.lower() == "wifi6":
+        if dut_mode.lower() == "wifi6" or dut_mode.lower() == "wifi6e":
             logging.info("AP does not support BE mode, so skipping this test.")
             pytest.skip("AP does not support BE mode, so skipping this test")
         get_test_library.wifi_capacity(instance_name="test_be_client_wpa2_BRIDGE_udp_ul", mode=mode,
