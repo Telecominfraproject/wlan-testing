@@ -21,7 +21,7 @@ on:
         description: 'revision of the Open Wifi Helm chart'
       ap_models:
         required: true
-        default: 'edgecore_eap104,edgecore_eap101,edgecore_eap111,cig_wf189,edgecore_eap105,sercomm_ap72tip,cig_wf196,yuncore_ax820,yuncore_fap655'
+        default: 'edgecore_eap104,edgecore_eap101,edgecore_eap111,cig_wf189,edgecore_eap105,sercomm_ap72tip,cig_wf196,yuncore_ax820,yuncore_fap655,edgecore_eap112'
         description: 'the AP models to test'
       ap_version:
         required: true
@@ -62,7 +62,7 @@ jobs:
         id: vars
         run: |
           echo "openwifi=$(echo ${{ github.event.inputs.openwifi_revision || 'main' }})" >> $GITHUB_OUTPUT
-          echo "ap_models=$(echo ${{ github.event.inputs.ap_models || 'edgecore_eap104,edgecore_eap101,cig_wf196' }})" >> $GITHUB_OUTPUT
+          echo "ap_models=$(echo ${{ github.event.inputs.ap_models || 'edgecore_eap104,edgecore_eap101,cig_wf196,edgecore_eap112' }})" >> $GITHUB_OUTPUT
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'advance' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
@@ -73,7 +73,7 @@ jobs:
           echo "Current slot is $SLOT"
           if [[ "$SLOT" -eq "0" ]]; then
             echo "Choosing first slot since $SLOT == 0"
-            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,edgecore_eap101,cig_wf196' }}"
+            AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,edgecore_eap101,cig_wf196,edgecore_eap112' }}"
           else
             echo "Choosing second slot since $SLOT != 0"
             AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap101-6e,edgecore_eap102,cig_wf186h' }}"
@@ -107,13 +107,13 @@ jobs:
         registry_user: ${{ secrets.DOCKER_USER_NAME }}
         registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
-  test-edgecore-eap104:
+  test-edgecore-eap112:
     runs-on: [ self-hosted, small ]
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
-    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap112')"
     env:
-      AP_MODEL: edgecore_eap104
+      AP_MODEL: edgecore_eap112
     steps:
     - name: Set AP model output
       id: ap_model
@@ -973,7 +973,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [ vars, test-edgecore-eap104, test-edgecore-eap101, test-edgecore-eap111, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-cig-wf196, test-yuncore-ax820, test-yuncore-fap655 ]
+    needs: [ vars, test-edgecore-eap104, test-edgecore-eap101, test-edgecore-eap111, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-cig-wf196, test-yuncore-ax820, test-yuncore-fap655, test-edgecore-eap112 ]
     strategy:
       fail-fast: false
       matrix:
@@ -1024,7 +1024,7 @@ jobs:
         s3_access_key_secret: ${{ secrets.ALLURE_S3_ACCESS_KEY_SECRET }}
 
   cleanup:
-    needs: [ test-edgecore-eap104, test-edgecore-eap101, test-edgecore-eap111, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-cig-wf196, test-yuncore-ax820, test-yuncore-fap655 ]
+    needs: [ test-edgecore-eap104, test-edgecore-eap101, test-edgecore-eap111, test-cig-wf189, test-edgecore-eap105, test-sercomm-ap72tip, test-cig-wf196, test-yuncore-ax820, test-yuncore-fap655, test-edgecore-eap112 ]
     runs-on: ubuntu-latest
     if: always()
     steps:
