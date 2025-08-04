@@ -50,7 +50,6 @@ def get_github_file(url, path=None, commit_id=None):
                     "wlan-ucentral-schema repo.")
     return response.text
 
-
 def validate_schema_through_github(commit_id, path):
     def get_commit_id(owner, repo, path="", headers=None):
         if headers is None:
@@ -124,6 +123,15 @@ def validate_schema_through_github(commit_id, path):
                                                                     json.loads(updated_schema_pretty_json))
             return added_keys, removed_keys, changed_items
 
+    def convert_changed_items_to_vertical_table(changed_items):
+        formatted_rows = []
+        for path, old, new in changed_items:
+            formatted_rows.append(["Key Path", path])
+            formatted_rows.append(["Old Value", old])
+            formatted_rows.append(["New Value", new])
+            formatted_rows.append(["", ""])  # Add blank line between entries
+        return tabulate(formatted_rows, headers=["Field", "Content"], tablefmt="fancy_grid")
+
     if commit_id is None:
         logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ucentral-schema repo. Skipping the test.")
         pytest.skip("Use --commit-id to the pass an old commit-id of tip/wlan-ucentral-schema repo. Skipping the test.")
@@ -164,8 +172,10 @@ def validate_schema_through_github(commit_id, path):
         if changed_items:
             changed_items = [list(key) for key in changed_items]
             changed_items = sorted(changed_items)
-            message = ("Note: The value at these key paths have been modified.\n\n"
-                       + tabulate(changed_items, headers=['Key Paths', 'Old Value', 'New Value'], tablefmt='fancy_grid'))
+            message = (
+                    "Note: The following key paths have modified values:\n\n"
+                    + convert_changed_items_to_vertical_table(changed_items)
+            )
             logging.info("\nChanged Items:\n" + message + "\n")
             allure.attach(message, name="Changed items:")
         pytest.fail(f"Differences found in the schema, check Test Body for Added/Removed/Changed items")
