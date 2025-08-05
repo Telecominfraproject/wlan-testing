@@ -115,7 +115,8 @@ def validate_schema_through_github(commit_id, path):
         allure.attach(updated_schema_pretty_json, name=f"NEW {path}:")
 
         if updated_schema_pretty_json == previous_schema_pretty_json:
-            logging.info(f"No changes found at {path}. Exiting.")
+            logging.info(f"No changes were found at {path}. Exiting.")
+            allure.attach(name=f"No changes found at {path}", body=f"No changes were found at {path}. Exiting the test.")
             return None, None, None
         else:
             logging.info(f"Changes found at {path}. Proceeding with the comparison.")
