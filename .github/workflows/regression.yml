@@ -30,7 +30,7 @@ on:
         description: "revision of firmware to flash on AP, <branch>-<commit>"
       marker_expressions:
         required: true
-        default: "dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,strict_forwarding_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests"
+        default: "dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,strict_forwarding_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests,schema_validation_tests"
         description: "Marker expressions to select tests to execute"
       additional_args:
         default: ""
@@ -72,7 +72,7 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
 
-          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,strict_forwarding_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests' }}"
+          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,strict_forwarding_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests,schema_validation_tests' }}"
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "additional_arguments=$(echo ${{ github.event.inputs.additional_arguments || ''}})" >> $GITHUB_OUTPUT
           cat >> $GITHUB_OUTPUT << EOF
@@ -205,15 +205,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-3a
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -563,15 +563,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-1
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -922,15 +922,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-6
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1281,15 +1281,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-2
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1640,15 +1640,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-5a
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1998,15 +1998,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-1a
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2357,15 +2357,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-2a
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2715,15 +2715,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-4
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3068,15 +3068,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-6a
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3426,15 +3426,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-3
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3784,15 +3784,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-5
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -4142,15 +4142,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-4a
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -4500,15 +4500,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-3
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -4858,15 +4858,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-1
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -5216,15 +5216,15 @@ jobs:
 
       - name: run schema_validation tests
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
           testbed: basic-4
-          marker_expression: "ow_regression_lf and schema_validation"
+          marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
