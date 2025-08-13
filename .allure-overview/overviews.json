@@ -10,7 +10,7 @@
 
     "advanced": {
         "OVERVIEW_TITLE": "'OpenWifi advanced results'",
-        "OVERVIEW_TESTBEDS": ["edgecore_eap104","edgecore_eap101","edgecore_eap111","hfcl_ion4xe","cig_wf189","edgecore_eap105","sonicfi_rap7110c-341x","cig_wf196","yuncore_fap655","udaya_a6-id2","sonicfi_rap630c-311g"]
+        "OVERVIEW_TESTBEDS": ["edgecore_eap104","edgecore_eap101","edgecore_eap111","hfcl_ion4xe","cig_wf189","edgecore_eap105","sonicfi_rap7110c-341x","cig_wf189h","cig_wf196","yuncore_fap655","udaya_a6-id2","sonicfi_rap630c-311g","edgecore_eap112"]
     },
 
     "performance": {
