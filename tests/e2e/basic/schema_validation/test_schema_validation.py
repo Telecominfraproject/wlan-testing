@@ -9,7 +9,7 @@ import time
 from tabulate import tabulate
 from datetime import datetime
 
-pytestmark = [pytest.mark.schema_validation]
+pytestmark = [pytest.mark.schema_validation_tests, pytest.mark.ow_regression_lf]
 
 
 # Get the directory of the current test config file
@@ -22,12 +22,12 @@ with open(file_path, 'r') as file:
     config_data_1 = json.loads(json_string)
 
 file_path2 = os.path.join(test_file_dir, 'master-config-2.json')
-with open(file_path, 'r') as file:
+with open(file_path2, 'r') as file:
     json_string = file.read()
     config_data_2 = json.loads(json_string)
 
 file_path3 = os.path.join(test_file_dir, 'master-config-3.json')
-with open(file_path, 'r') as file:
+with open(file_path3, 'r') as file:
     json_string = file.read()
     config_data_3 = json.loads(json_string)
 
@@ -49,7 +49,6 @@ def get_github_file(url, path=None, commit_id=None):
         pytest.skip("Failed to fetch the schema file from GitHub. Make sure the commit-id is one from "
                     "wlan-ucentral-schema repo.")
     return response.text
-
 
 def validate_schema_through_github(commit_id, path):
     def get_commit_id(owner, repo, path="", headers=None):
@@ -116,13 +115,23 @@ def validate_schema_through_github(commit_id, path):
         allure.attach(updated_schema_pretty_json, name=f"NEW {path}:")
 
         if updated_schema_pretty_json == previous_schema_pretty_json:
-            logging.info(f"No changes found at {path}. Exiting.")
+            logging.info(f"No changes were found at {path}. Exiting.")
+            allure.attach(name=f"No changes found at {path}", body=f"No changes were found at {path}. Exiting the test.")
             return None, None, None
         else:
             logging.info(f"Changes found at {path}. Proceeding with the comparison.")
             added_keys, removed_keys, changed_items = compare_dicts(json.loads(previous_schema_pretty_json),
                                                                     json.loads(updated_schema_pretty_json))
             return added_keys, removed_keys, changed_items
+
+    def convert_changed_items_to_vertical_table(changed_items):
+        formatted_rows = []
+        for path, old, new in changed_items:
+            formatted_rows.append(["Key Path", path])
+            formatted_rows.append(["Old Value", old])
+            formatted_rows.append(["New Value", new])
+            formatted_rows.append(["", ""])  # Add blank line between entries
+        return tabulate(formatted_rows, headers=["Field", "Content"], tablefmt="fancy_grid")
 
     if commit_id is None:
         logging.info("Use --commit-id to the pass an old commit-id of tip/wlan-ucentral-schema repo. Skipping the test.")
@@ -164,15 +173,17 @@ def validate_schema_through_github(commit_id, path):
         if changed_items:
             changed_items = [list(key) for key in changed_items]
             changed_items = sorted(changed_items)
-            message = ("Note: The value at these key paths have been modified.\n\n"
-                       + tabulate(changed_items, headers=['Key Paths', 'Old Value', 'New Value'], tablefmt='fancy_grid'))
+            message = (
+                    "Note: The following key paths have modified values:\n\n"
+                    + convert_changed_items_to_vertical_table(changed_items)
+            )
             logging.info("\nChanged Items:\n" + message + "\n")
             allure.attach(message, name="Changed items:")
         pytest.fail(f"Differences found in the schema, check Test Body for Added/Removed/Changed items")
     return
 
 
-def validate_state_message_through_ap(test_object, target_object, config_data):
+def validate_state_message_through_ap(test_object, target_object, config_data, ssid=None):
     def get_type_of_message(message):
         type_of_message = "unknown"
         if isinstance(message, dict):
@@ -316,8 +327,9 @@ def validate_state_message_through_ap(test_object, target_object, config_data):
                 radio_5g = dict_all_radios_5g[radio][0]
                 break
 
+        logging.info(f"ssid:{ssid}")
         test_object.pre_cleanup()
-        fiveg_sta_got_ip = test_object.client_connect_using_radio(ssid="captive-credential-4",
+        fiveg_sta_got_ip = test_object.client_connect_using_radio(ssid=ssid,
                                                                        passkey="OpenWifi",
                                                                        security="wpa2", radio=radio_5g,
                                                                        station_name=["station-5G"],
@@ -448,7 +460,7 @@ class TestSchemaValidationThroughGitHub(object):
         Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.json.
 
         Unique Marker:
-        schema_validation and through_github and schema_json
+        schema_validation_tests and through_github and schema_json
         """
         validate_schema_through_github(commit_id, "/ucentral.schema.json")
 
@@ -466,7 +478,7 @@ class TestSchemaValidationThroughGitHub(object):
         Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.full.json.
 
         Unique Marker:
-        schema_validation and through_github and schema_full_json
+        schema_validation_tests and through_github and schema_full_json
         """
         validate_schema_through_github(commit_id, "/ucentral.schema.full.json")
 
@@ -483,7 +495,7 @@ class TestSchemaValidationThroughGitHub(object):
         Objective is to identify any modifications, additions, or removals in the file: ucentral.schema.pretty.json.
 
         Unique Marker:
-        schema_validation and through_github and schema_pretty_json
+        schema_validation_tests and through_github and schema_pretty_json
         """
         validate_schema_through_github(commit_id, "/ucentral.schema.pretty.json")
 
@@ -500,7 +512,7 @@ class TestSchemaValidationThroughGitHub(object):
         Objective is to identify any modifications, additions, or removals in the file: ucentral.state.pretty.json.
 
         Unique Marker:
-        schema_validation and through_github and state_pretty_json
+        schema_validation_tests and through_github and state_pretty_json
         """
         validate_schema_through_github(commit_id, "/ucentral.state.pretty.json")
 
@@ -524,9 +536,10 @@ class TestSchemaValidationThroughAPTerminal(object):
         Objective is to detect discrepancies in data types (e.g., string to integer) and object structures.
 
         Unique Marker:
-        schema_validation and through_ap_terminal and master_config_1
+        schema_validation_tests and through_ap_terminal and master_config_1
         """
-        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_1)
+        ssid = "captive-credential-4"
+        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_1, ssid=ssid)
 
     @pytest.mark.master_config_2
     @allure.title("Pushing master config-2")
@@ -541,9 +554,10 @@ class TestSchemaValidationThroughAPTerminal(object):
         Objective is to detect discrepancies in data types (e.g., string to integer) and object structures.
 
         Unique Marker:
-        schema_validation and through_ap_terminal and master_config_2
+        schema_validation_tests and through_ap_terminal and master_config_2
         """
-        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_2)
+        ssid = "captive-uam-8"
+        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_2, ssid=ssid)
 
     @pytest.mark.master_config_3
     @allure.title("Pushing master config-3")
@@ -558,6 +572,7 @@ class TestSchemaValidationThroughAPTerminal(object):
         Objective is to detect discrepancies in data types (e.g., string to integer) and object structures.
 
         Unique Marker:
-        schema_validation and through_ap_terminal and master_config_3
+        schema_validation_tests and through_ap_terminal and master_config_3
         """
-        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_3)
+        ssid = "Uchannel-ds-4"
+        validate_state_message_through_ap(get_test_library, get_target_object, config_data=config_data_3, ssid=ssid)
