@@ -386,7 +386,7 @@ class TestDynamicVlan2GWpa2SuiteB(object):
         security = "wpa2"
         extra_secu = []
         band = "twog"
-        vlan = [100]
+        vlan = [300]
         ttls_passwd = "passwordvlannotsentuser"
         eap = "TTLS"
         identity = "vlannotsentuser"
@@ -501,7 +501,7 @@ class TestDynamicVlan2GWpa2SuiteB(object):
         security = "wpa2"
         extra_secu = []
         band = "twog"
-        vlan = [100]
+        vlan = [300]
         ttls_passwd = "passwordvlannotsentuser"
         eap = "TTLS"
         identity = "vlannotsentuser"

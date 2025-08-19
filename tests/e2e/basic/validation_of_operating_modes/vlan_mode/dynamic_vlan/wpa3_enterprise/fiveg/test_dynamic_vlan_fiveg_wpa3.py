@@ -375,7 +375,7 @@ class TestDynamicVlan5GWpa3SuiteB(object):
         extra_secu = []
         band = "fiveg"
         mode = "VLAN"
-        vlan = [100]
+        vlan = [300]
         ttls_passwd = "passwordvlannotsentuser"
         eap = "TTLS"
         identity = "vlannotsentuser"
@@ -430,7 +430,7 @@ class TestDynamicVlan5GWpa3SuiteB(object):
         extra_secu = []
         band = "fiveg"
         mode = "VLAN"
-        vlan = [100]
+        vlan = [300]
         ttls_passwd = "passwordinvalidvlanuser"
         eap = "TTLS"
         identity = "invalidvlanuser"
@@ -484,7 +484,7 @@ class TestDynamicVlan5GWpa3SuiteB(object):
         extra_secu = []
         band = "fiveg"
         mode = "VLAN"
-        vlan = [100]
+        vlan = [300]
         ttls_passwd = "passwordvlannotsentuser"
         eap = "TTLS"
         identity = "vlannotsentuser"
