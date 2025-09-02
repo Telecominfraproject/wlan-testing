@@ -710,7 +710,7 @@ class tip_2x:
         version_info["ow_fms"] = self.controller_library_object.get_sdk_version_fms()
         version_info["ow_gw"] = self.controller_library_object.get_sdk_version_gw()
         version_info["ow_sec"] = self.controller_library_object.get_sdk_version_sec()
-        version_info["ow_prov"] = self.controller_library_object.get_sdk_version_prov()
+        #version_info["ow_prov"] = self.controller_library_object.get_sdk_version_prov()
         # version_info["ow_rrm"] = self.controller_library_object.get_sdk_version_owrrm()
         # version_info["ow_analytics"] = self.controller_library_object.get_sdk_version_ow_analytics()
         # version_info["ow_sub"] = self.controller_library_object.get_sdk_version_owsub()

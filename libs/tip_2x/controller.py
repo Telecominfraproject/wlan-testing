@@ -36,12 +36,12 @@ class ConfigureController:
         self.gw_host, self.fms_host, \
             self.prov_host, self.owrrm_host, \
             self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
-        if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
+        if self.gw_host == "" or self.fms_host == "":
             time.sleep(60)
             self.gw_host, self.fms_host, \
                 self.prov_host, self.owrrm_host, \
                 self.owanalytics_host, self.owsub_host = self.get_gw_endpoint()
-            if self.gw_host == "" or self.fms_host == "" or self.prov_host == "":
+            if self.gw_host == "" or self.fms_host == "":
                 self.logout()
                 logging.info(self.gw_host, self.fms_host + self.prov_host)
                 pytest.exit("All Endpoints not available in Controller Service")
@@ -164,11 +164,11 @@ class ConfigureController:
                 owanalytics_host = urlparse(service["uri"])
             if service['type'] == "owsub":
                 owsub_host = urlparse(service["uri"])
-        if (gw_host is None) or (fms_host is None) or (prov_host is None) or (owrrm_host is None) or (
-                owanalytics_host is None) or (
-                owsub_host is None):
-            logging.error("Not All Microservices available:" + str(
-                json.dumps(services['endpoints'], indent=2)))
+        # if (gw_host is None) or (fms_host is None) or (prov_host is None) or (owrrm_host is None) or (
+        #         owanalytics_host is None) or (
+        #         owsub_host is None):
+        #     logging.error("Not All Microservices available:" + str(
+        #         json.dumps(services['endpoints'], indent=2)))
         return gw_host, fms_host, prov_host, owrrm_host, owanalytics_host, owsub_host
 
     def logout(self):
