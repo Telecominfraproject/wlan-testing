@@ -314,10 +314,19 @@ class APLIBS:
             logging.info(cmd + " Timestamp: " + str(timestamp))
             stdin, stdout, stderr = client.exec_command(cmd)
             output = stdout.read()
+            # Read outputs
+            out = stdout.read().decode("utf-8")
+            err = stderr.read().decode("utf-8")
+
+            logging.info(f"stdout::: {out}")
+            logging.info(f"stderr::: {err}")
+
             # data = dict(json.loads(output.replace("\n\t", "").replace("\n", "")))
             final_output = str(output)
             if not output.__contains__(b"BOOTLOADER-CONSOLE-IPQ6018#"):
+                logging.info(f"entered in if_______")
                 status = output.decode('utf-8').splitlines()
+                logging.info(f"status let see:{status}")
                 status.pop(0)
                 final_output = '\n'.join(status)
                 if print_log:
@@ -633,20 +642,54 @@ class APLIBS:
                                           expected_attachment_type=allure.attachment_type.TEXT)
         return output
 
+    # def wait_for_ucentral(self, idx=0, timeout=3600, interval=30):
+    #     """Wait until uCentral is alive, log how long it took."""
+    #     start = time.time()
+    #     while time.time() - start < timeout:
+    #         try:
+    #             out = self.run_generic_command(cmd="ubus call ucentral status", idx=idx, print_log=True)
+    #             if out:
+    #                 # Ensure output is a string
+    #                 if isinstance(out, bytes):
+    #                     out = out.decode(errors="ignore")
+    #                 if "version" in out:
+    #                     elapsed = time.time() - start
+    #                     minutes = int(elapsed // 60)
+    #                     seconds = int(elapsed % 60)
+    #                     logging.info(f"✅ uCentral became ready after {minutes}m {seconds}s")
+    #                     return True
+    #         except Exception as e:
+    #             logging.info(f"Still waiting for uCentral: {e}")
+    #         time.sleep(interval)
+    #
+    #     elapsed = time.time() - start
+    #     logging.error(f"❌ Timeout: waited {elapsed / 60:.1f} minutes, uCentral not ready")
+    #     return False
+
     def add_restrictions(self, restrictions_file, developer_mode):
-        self.factory_reset(print_log=False)
-        time.sleep(200)
+        self.factory_reset(print_log=True)
+        #time.sleep(200)
+        logging.info(f"waiting 300 secs after factory reset")
+        time.sleep(300)
+
+        # if not self.wait_for_ucentral():
+        #     pytest.fail("AP never became ready after reset (uCentral not responding)")
+
+        logging.info(f"done first time factory reset before adding restrictions")
         output = self.run_generic_command(cmd=developer_mode,
                                           idx=0,
                                           print_log=True,
-                                          attach_allure=False,
+                                          attach_allure=True,
                                           expected_attachment_type=allure.attachment_type.TEXT)
+        logging.info(f"developer mode on to add restrcyt, output:{output}")
         output = self.run_generic_command(cmd=restrictions_file,
                                           idx=0,
                                           print_log=True,
-                                          attach_allure=False,
+                                          attach_allure=True,
                                           expected_attachment_type=allure.attachment_type.TEXT,
                                           restrictions=True)
+        logging.info(f"adding restrictions_file outout: {output}")
+        logging.info("ready to start factory reset after adding restrictions")
         self.factory_reset(print_log=False)
         time.sleep(300)
         return output

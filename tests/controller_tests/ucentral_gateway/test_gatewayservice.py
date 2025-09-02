@@ -1094,15 +1094,21 @@ class TestUcentralGatewayService(object):
                             '\\"vendor\\": \\"dummy\\",\\"algo\\": \\"static\\"}}\" > /certificates/restrictions.json ' \
                             '&& echo \"True\"'
         developer_mode = "fw_setenv developer 0"
+        logging.info(f"ready to add restrictions")
         output = get_target_object.get_dut_library_object().add_restrictions(restrictions_file=restrictions_file,
                                                                              developer_mode=developer_mode)
-        resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        logging.info(f"output from add_restrictions restrict::{output}")
+
+        resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        logging.info(f"resp from check restrict::{resp}")
         if resp:
             logging.info("From GW it's confirmed that AP is restricted now")
             uuid = get_target_object.controller_library_object.asb_script(device_name, payload)
             resp = get_target_object.controller_library_object.get_file(device_name, uuid)
             assert resp.status_code == 200
         else:
+            logging.info("Unable to add restrictions to the AP")
+            pytest.fail(f"Unable to add restrictions to the AP")
             assert False
         output = get_target_object.get_dut_library_object().remove_restrictions()
         resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
