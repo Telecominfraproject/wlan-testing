@@ -69,8 +69,8 @@
         "UDP": null
       },
       "5G 2x2 80MHz": {
-        "TCP": 800,
-        "UDP": 900
+        "TCP": 600,
+        "UDP": 700
       },
       "5G 4x4 80MHz": {
         "TCP": null,
