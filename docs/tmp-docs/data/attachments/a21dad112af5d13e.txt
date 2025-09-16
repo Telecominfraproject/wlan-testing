@@ -1,0 +1,1 @@
+2025-09-16 06:40:35 INFO Use --commit-id to the pass an old commit-id of tip/wlan-ucentral-schema repo. Skipping the test.
