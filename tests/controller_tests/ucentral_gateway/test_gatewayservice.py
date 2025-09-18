@@ -1041,6 +1041,7 @@ class TestUcentralGatewayService(object):
     @pytest.mark.asb_tests
     def test_asb_on_non_restricted_ap(self, get_target_object, get_testbed_details):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        ap_model = get_testbed_details['device_under_tests'][0]['model']
         payload = {
             "serialNumber": device_name,
             "timeout": 30,
@@ -1060,7 +1061,7 @@ class TestUcentralGatewayService(object):
             assert resp.status_code == 200
         else:
             logging.info("AP is restricted, Removing Restrictions")
-            output = get_target_object.get_dut_library_object().remove_restrictions()
+            output = get_target_object.get_dut_library_object().remove_restrictions(ap_model=ap_model)
             resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
             if not resp:
                 logging.info("Removed Restrictions")
@@ -1078,6 +1079,7 @@ class TestUcentralGatewayService(object):
     @pytest.mark.asb_tests
     def test_asb_on_restricted_ap(self, get_target_object, get_testbed_details):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        ap_model = get_testbed_details['device_under_tests'][0]['model']
         payload = {
             "serialNumber": device_name,
             "timeout": 30,
@@ -1094,18 +1096,23 @@ class TestUcentralGatewayService(object):
                             '\\"vendor\\": \\"dummy\\",\\"algo\\": \\"static\\"}}\" > /certificates/restrictions.json ' \
                             '&& echo \"True\"'
         developer_mode = "fw_setenv developer 0"
+
+
         output = get_target_object.get_dut_library_object().add_restrictions(restrictions_file=restrictions_file,
-                                                                             developer_mode=developer_mode)
-        resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+                                                                             developer_mode=developer_mode, ap_model=ap_model)
+        logging.info(f"output of adding restrictions:{output}")
+        resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        logging.info(f"response of check_restrictions:{resp} ")
         if resp:
             logging.info("From GW it's confirmed that AP is restricted now")
             uuid = get_target_object.controller_library_object.asb_script(device_name, payload)
             resp = get_target_object.controller_library_object.get_file(device_name, uuid)
             assert resp.status_code == 200
         else:
+            logging.info("Unable to add restrictions to the AP")
             assert False
-        output = get_target_object.get_dut_library_object().remove_restrictions()
-        resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
+        output = get_target_object.get_dut_library_object().remove_restrictions(ap_model=ap_model)
+        resp = get_target_object.controller_library_object.check_restrictions(device_name)
         if resp:
             logging.info("Unable to remove restrictions in the AP")
             assert False

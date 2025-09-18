@@ -617,13 +617,83 @@ class APLIBS:
         # Please wait 1min after doing factory reset
         return output
 
-    def remove_restrictions(self):
-        self.run_generic_command(cmd="rm /certificates/restrictions.json",
-                                 idx=0, print_log=True,
-                                 attach_allure=False)
-        self.run_generic_command(cmd="rm /etc/ucentral/restrictions.json",
-                                 idx=0, print_log=True,
-                                 attach_allure=False)
+    def remove_restrictions(self, ap_model):
+        if "sonicfi_rap" in ap_model:
+            logging.info(f"yes it is cybertan AP:")
+            output = self.run_generic_command(cmd="cd /certificates && fw_setenv cert_part 0",
+                                     idx=0, print_log=True,
+                                     attach_allure=False)
+            logging.info(f"output of fw_setenv cert_part 0: {output}")
+            output = self.run_generic_command(cmd="rm -f /certificates/restrictions.json",
+                                     idx=0, print_log=True,
+                                     attach_allure=False)
+            logging.info(f"output of removing restrictions: {output}")
+            output = self.run_generic_command(cmd="fw_setenv store_certs_disabled 0",
+                                              idx=0, print_log=True,
+                                              attach_allure=False)
+            logging.info(f"output of fw_setenv store_certs_disabled 0: {output}")
+            output = self.run_generic_command(cmd="cd /certificates && store_certs",
+                                              idx=0, print_log=True,
+                                              attach_allure=False)
+            logging.info(f"output of store_certs: {output}")
+
+            output = self.run_generic_command(cmd="cd /certificates && fw_setenv cert_part 1",
+                                              idx=0, print_log=True,
+                                              attach_allure=False)
+            logging.info(f"output of fw_setenv cert_part 0: {output}")
+            output = self.run_generic_command(cmd="rm -f /certificates/restrictions.json",
+                                     idx=0, print_log=True,
+                                     attach_allure=False)
+            logging.info(f"output of removing restrictions: {output}")
+            output = self.run_generic_command(cmd="fw_setenv store_certs_disabled 0",
+                                              idx=0, print_log=True,
+                                              attach_allure=False)
+            logging.info(f"output of fw_setenv store_certs_disabled 0: {output}")
+            output = self.run_generic_command(cmd="cd /certificates && store_certs",
+                                              idx=0, print_log=True,
+                                              attach_allure=False)
+            logging.info(f"output of store_certs: {output}")
+
+            # Verify the restriction file is removed from both partitions
+            output = self.run_generic_command(cmd="cd /certificates && fw_setenv cert_part 0",
+                                              idx=0, print_log=True,
+                                              attach_allure=False)
+            logging.info(f"output of fw_setenv cert_part 0: {output}")
+            output = self.run_generic_command(
+                cmd='[ -f /certificates/restrictions.json ] && echo "True" || echo "False"',
+                idx=0,
+                print_log=True,
+                attach_allure=False,
+                expected_attachment_type=allure.attachment_type.TEXT)
+            logging.info(f"Check for restrictions file in partition 0: {output}")
+            if output:
+                logging.info("Unable to remove restrictions file from partition 0")
+                #pytest.fail("Unable to remove restrictions file from partition 0")
+
+            output = self.run_generic_command(cmd="cd /certificates && fw_setenv cert_part 1",
+                                              idx=0, print_log=True,
+                                              attach_allure=False)
+            logging.info(f"output of fw_setenv cert_part 0: {output}")
+            output = self.run_generic_command(
+                cmd='[ -f /certificates/restrictions.json ] && echo "True" || echo "False"',
+                idx=0,
+                print_log=True,
+                attach_allure=False,
+                expected_attachment_type=allure.attachment_type.TEXT)
+            logging.info(f"Check for restrictions file in partition 1: {output}")
+            if output:
+                logging.info("Unable to remove restrictions file from partition 1")
+                #pytest.fail("Unable to remove restrictions file from partition 1")
+
+        else:
+            self.run_generic_command(cmd="rm /certificates/restrictions.json",
+                                     idx=0, print_log=True,
+                                     attach_allure=False)
+            self.run_generic_command(cmd="rm /etc/ucentral/restrictions.json",
+                                     idx=0, print_log=True,
+                                     attach_allure=False)
+
+
         self.factory_reset(print_log=False)
         time.sleep(120)
         output = self.run_generic_command(cmd='[ -f /etc/ucentral/restrictions.json ] && echo "True" || echo "False"',
@@ -633,20 +703,92 @@ class APLIBS:
                                           expected_attachment_type=allure.attachment_type.TEXT)
         return output
 
-    def add_restrictions(self, restrictions_file, developer_mode):
+    def add_restrictions(self, restrictions_file, developer_mode, ap_model):
         self.factory_reset(print_log=False)
         time.sleep(200)
-        output = self.run_generic_command(cmd=developer_mode,
-                                          idx=0,
-                                          print_log=True,
-                                          attach_allure=False,
-                                          expected_attachment_type=allure.attachment_type.TEXT)
-        output = self.run_generic_command(cmd=restrictions_file,
-                                          idx=0,
-                                          print_log=True,
-                                          attach_allure=False,
-                                          expected_attachment_type=allure.attachment_type.TEXT,
-                                          restrictions=True)
+
+        if "sonicfi_rap" in ap_model:
+            logging.info(f"yes it is cybertan AP:")
+            restrictions_file = 'echo \"{\\"country\\":[\\"US\\", \\"CA\\"],\\"dfs\\": true,\\"rtty\\": true,\\"tty\\": ' \
+                                'true,\\"developer\\": true,\\"sysupgrade\\": true,\\"commands\\": true,\\"key_info\\": {' \
+                                '\\"vendor\\": \\"dummy\\",\\"algo\\": \\"static\\"}}\" > /certificates/restrictions.json ' \
+                                '&& echo "Partition 0 done"'
+            restrictions_file1 = 'echo \"{\\"country\\":[\\"US\\", \\"CA\\"],\\"dfs\\": true,\\"rtty\\": true,\\"tty\\": ' \
+                                'true,\\"developer\\": true,\\"sysupgrade\\": true,\\"commands\\": true,\\"key_info\\": {' \
+                                '\\"vendor\\": \\"dummy\\",\\"algo\\": \\"static\\"}}\" > /certificates/restrictions.json ' \
+                                '&& echo "Partition 1 done"'
+            output = self.run_generic_command(cmd=developer_mode,
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT)
+            logging.info(f"output of developer_mode::{output}")
+            output = self.run_generic_command(cmd="fw_setenv cert_part 0",
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT)
+            logging.info(f"output of fw_setenv cert_part 0::{output}")
+            output = self.run_generic_command(cmd=restrictions_file,
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT,
+                                              restrictions=True)
+            logging.info(f"output of adding restrictions_file::{output}")
+            output = self.run_generic_command(cmd="fw_setenv store_certs_disabled 0",
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT)
+            logging.info(f"output of fw_setenv store_certs_disabled 0::{output}")
+            cmd_output = self.run_generic_command(cmd="cd /certificates && store_certs",
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT,
+                                              restrictions=True)
+            logging.info(f"output of store_certs::{cmd_output}")
+            output = self.run_generic_command(cmd="fw_setenv cert_part 1",
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT)
+            logging.info(f"output of fw_setenv cert_part 1::{output}")
+            output = self.run_generic_command(cmd=restrictions_file1,
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT,
+                                              restrictions=True)
+            logging.info(f"output of adding restrictions_file1::{output}")
+            cmd_output = self.run_generic_command(cmd="fw_setenv store_certs_disabled 0",
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT)
+            logging.info(f"output of fw_setenv store_certs_disabled 0::{cmd_output}")
+            cmd_output = self.run_generic_command(cmd="cd /certificates && store_certs",
+                                                  idx=0,
+                                                  print_log=True,
+                                                  attach_allure=False,
+                                                  expected_attachment_type=allure.attachment_type.TEXT,
+                                                  restrictions=True)
+            logging.info(f"output of store_certs::{cmd_output}")
+
+        else:
+            output = self.run_generic_command(cmd=developer_mode,
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT)
+            output = self.run_generic_command(cmd=restrictions_file,
+                                              idx=0,
+                                              print_log=True,
+                                              attach_allure=False,
+                                              expected_attachment_type=allure.attachment_type.TEXT,
+                                              restrictions=True)
+
         self.factory_reset(print_log=False)
         time.sleep(300)
         return output
