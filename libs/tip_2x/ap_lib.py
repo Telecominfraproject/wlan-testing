@@ -619,7 +619,7 @@ class APLIBS:
 
     def remove_restrictions(self, ap_model):
         if "sonicfi_rap" in ap_model:
-            logging.info(f"yes it is cybertan AP:")
+            logging.info(f"Yes it is cybertan AP:")
             output = self.run_generic_command(cmd="cd /certificates && fw_setenv cert_part 0",
                                      idx=0, print_log=True,
                                      attach_allure=False)
@@ -666,7 +666,8 @@ class APLIBS:
                 attach_allure=False,
                 expected_attachment_type=allure.attachment_type.TEXT)
             logging.info(f"Check for restrictions file in partition 0: {output}")
-            if output:
+            result = output.strip().splitlines()[-1]
+            if result == "True":
                 logging.info("Unable to remove restrictions file from partition 0")
                 #pytest.fail("Unable to remove restrictions file from partition 0")
 
@@ -681,7 +682,8 @@ class APLIBS:
                 attach_allure=False,
                 expected_attachment_type=allure.attachment_type.TEXT)
             logging.info(f"Check for restrictions file in partition 1: {output}")
-            if output:
+            result = output.strip().splitlines()[-1]
+            if result == "True" :
                 logging.info("Unable to remove restrictions file from partition 1")
                 #pytest.fail("Unable to remove restrictions file from partition 1")
 
@@ -708,7 +710,7 @@ class APLIBS:
         time.sleep(200)
 
         if "sonicfi_rap" in ap_model:
-            logging.info(f"yes it is cybertan AP:")
+            logging.info(f"Yes it is cybertan AP:")
             restrictions_file = 'echo \"{\\"country\\":[\\"US\\", \\"CA\\"],\\"dfs\\": true,\\"rtty\\": true,\\"tty\\": ' \
                                 'true,\\"developer\\": true,\\"sysupgrade\\": true,\\"commands\\": true,\\"key_info\\": {' \
                                 '\\"vendor\\": \\"dummy\\",\\"algo\\": \\"static\\"}}\" > /certificates/restrictions.json ' \
