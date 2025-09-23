@@ -182,8 +182,29 @@ class TestResources(object):
         uci_data = []
         for i in range(0, len(get_target_object.device_under_tests_info)):
             ret_val = get_target_object.get_dut_library_object().get_uci_show(idx=i, param="ucentral.config.server")
-            ret_val = str(ret_val).split("=")[1]
-            uci_data.append(ret_val)
+
+            logging.info(f"ret_val from get_uci_show:{ret_val}")
+            if "ucentral.config.server" in ret_val:
+                ret_val = str(ret_val).split("=")[1]
+                uci_data.append(ret_val)
+            else:
+                ret_val_dict = json.loads(ret_val)
+                if not ret_val_dict.get("valid") or "server" not in ret_val_dict:
+                    logging.warning(
+                        "First attempt to fetch 'server' from gateway.json failed. Retrying in 5 seconds...")
+                    time.sleep(5)
+                    # Retry
+                    ret_val = get_target_object.get_dut_library_object().get_uci_show(idx=i,
+                                                                                      param="ucentral.config.server")
+                    ret_val_dict = json.loads(ret_val)
+
+                    if not ret_val_dict.get("valid") or "server" not in ret_val_dict:
+                        logging.error("Invalid or missing 'server' after retry. Exiting test.")
+                        pytest.exit("No valid 'server' value found in gateway.json after retry")
+
+                uci_data.append(ret_val_dict["server"])
+
+            logging.info(f"uci_data::{uci_data}")
         gw_host = get_target_object.controller_library_object.gw_host.hostname
         expected_host = True
         for j in uci_data:
@@ -392,7 +413,18 @@ class TestFirmwareUpgrade(object):
     @pytest.mark.firmware_upgrade
     def test_firmware_upgrade_request(self, get_target_object, get_dut_logs_per_test_case, check_connectivity):
         for update in get_target_object.setup_firmware():
+            logging.info(f"update from setup firmware::{update}")
             allure.attach(name='serial: ' + update[0], body="")
+            if len(update) >= 3:
+                if update[1] == update[2]:
+                    logging.info(f"Yes, current and target firmware versions are same")
+                else:
+                    logging.info(f"No, current and target firmware versions are not same")
+                    pytest.fail(f"No, current and target firmware versions are not same")
+            else:
+                logging.info(f"upgrade_status list doesn't have firmware versions to compare: {update}")
+                pytest.fail(f"upgrade_status list doesn't have firmware versions to compare: {update})")
+
         assert True
 
     @pytest.mark.test_firmware_gw
