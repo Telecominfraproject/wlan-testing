@@ -34,7 +34,7 @@ env:
     {
       "namespace": "dev01",
       "deploy_method": "git",
-      "chart_version": "v3.2.1",
+      "chart_version": "main",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
@@ -180,4 +180,3 @@ jobs:
       if: failure()
       run: |
         helm rollback tip-openwifi --namespace openwifi-${{ matrix.namespace }} --wait --timeout 20m
-
