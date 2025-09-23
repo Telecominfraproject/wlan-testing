@@ -13,8 +13,8 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
 
   # DigiCert certs
-  WEBSOCKET_CERT: ${{ secrets.INSTA_CERT }}
-  WEBSOCKET_KEY: ${{ secrets.INSTA_KEY }}
+  WEBSOCKET_CERT: ${{ secrets.INSTA_WEBSOCKET_CERT }}
+  WEBSOCKET_KEY: ${{ secrets.INSTA_WEBSOCKET_KEY }}
 
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   # Required object fiels per environment:
@@ -110,7 +110,7 @@ jobs:
         export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
         export OWSUB_VERSION=${{ matrix.owsub_version }}
         export OWRRM_VERSION=${{ matrix.owrrm_version }}
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa-insta.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
