@@ -180,4 +180,3 @@ jobs:
       if: failure()
       run: |
         helm rollback tip-openwifi --namespace openwifi-${{ matrix.namespace }} --wait --timeout 20m
-

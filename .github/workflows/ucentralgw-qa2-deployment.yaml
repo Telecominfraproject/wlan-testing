@@ -13,8 +13,8 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
 
   # DigiCert certs
-  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
-  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
+  WEBSOCKET_CERT: ${{ secrets.INSTA_WEBSOCKET_CERT }}
+  WEBSOCKET_KEY: ${{ secrets.INSTA_WEBSOCKET_KEY }}
 
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   # Required object fiels per environment:
@@ -35,7 +35,7 @@ env:
       "namespace": "qa02",
       "deploy_method": "git",
       "chart_version": "main",
-      "owgw_version": "v3.0.2-RC1",
+      "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
       "owprov_version": "main",
@@ -83,8 +83,8 @@ jobs:
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
-        echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
-        echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
+        echo "${{ env.WEBSOCKET_CERT }}" | base64 -d > cert.pem
+        echo "${{ env.WEBSOCKET_KEY }}" | base64 -d > key.pem
 
     - name: Fetch kubeconfig
       run: |
@@ -110,7 +110,7 @@ jobs:
         export OWANALYTICS_VERSION=${{ matrix.owanalytics_version }}
         export OWSUB_VERSION=${{ matrix.owsub_version }}
         export OWRRM_VERSION=${{ matrix.owrrm_version }}
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa-insta.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
         export RTTY_TOKEN=${{ secrets.RTTY_TOKEN }}
         export OWGW_AUTH_USERNAME=${{ secrets.UCENTRALGW_AUTH_USERNAME }}
         export OWGW_AUTH_PASSWORD=${{ secrets.UCENTRALGW_AUTH_PASSWORD }}
