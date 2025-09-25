@@ -886,6 +886,7 @@ class TestRoamOTD(object):
     @pytest.mark.twog
     @pytest.mark.otd
     @pytest.mark.same_channel
+    @pytest.mark.enterprise
     @pytest.mark.wpa2_enterprise
     def test_roam_2g_to_2g_wpa2eap_sc(self, get_target_object, get_test_library, get_lab_info, selected_testbed, radius_info):
         """
@@ -1024,6 +1025,7 @@ class TestRoamOTD(object):
     @pytest.mark.fiveg
     @pytest.mark.otd
     @pytest.mark.same_channel
+    @pytest.mark.enterprise
     @pytest.mark.wpa2_enterprise
     def test_roam_5g_to_5g_wpa2eap_sc(self, get_target_object, get_test_library, get_lab_info, selected_testbed, radius_info):
         """
@@ -1162,6 +1164,7 @@ class TestRoamOTD(object):
     @pytest.mark.twog
     @pytest.mark.otd
     @pytest.mark.same_channel
+    @pytest.mark.enterprise
     @pytest.mark.wpa3_enterprise
     def test_roam_2g_to_2g_wpa3eap_sc(self, get_target_object, get_test_library, get_lab_info, selected_testbed, radius_info):
         """
@@ -1283,7 +1286,7 @@ class TestRoamOTD(object):
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="11", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -1296,11 +1299,11 @@ class TestRoamOTD(object):
         else:
             assert True
 
-
     @pytest.mark.roam
     @pytest.mark.fiveg
     @pytest.mark.otd
     @pytest.mark.same_channel
+    @pytest.mark.enterprise
     @pytest.mark.wpa3_enterprise
     def test_roam_5g_to_5g_wpa3eap_sc(self, get_target_object, get_test_library, get_lab_info, selected_testbed, radius_info):
         """
@@ -1422,7 +1425,7 @@ class TestRoamOTD(object):
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="11", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
