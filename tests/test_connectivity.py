@@ -275,13 +275,14 @@ class TestResources(object):
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-12318", name="12318")
     def test_check_restrictions(self, get_target_object, get_testbed_details):
         device_name = get_testbed_details['device_under_tests'][0]['identifier']
+        ap_model = get_testbed_details['device_under_tests'][0]['model']
         resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
         if not resp:
             logging.info("AP is not restricted")
             assert True, "AP is not in restricted mode we can continue testing"
         else:
             logging.info("AP is restricted, Removing Restrictions")
-            output = get_target_object.get_dut_library_object().remove_restrictions()
+            output = get_target_object.get_dut_library_object().remove_restrictions(ap_model=ap_model)
             resp = resp = get_target_object.controller_library_object.check_restrictions(device_name)
             if not resp:
                 logging.info("Removed Restrictions")
