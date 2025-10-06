@@ -337,7 +337,7 @@ setup_params_general = {
              "security_key": "something",
              "radius_auth_data": DYNAMIC_VLAN_RADIUS_SERVER_DATA,
              "radius_acc_data": DYNAMIC_VLAN_RADIUS_ACCOUNTING_DATA,
-             "vlan": 300
+             "vlan": 100
              }]},
     "rf": {},
     "radius": True
@@ -375,7 +375,7 @@ class TestDynamicVlan5GWpa3SuiteB(object):
         extra_secu = []
         band = "fiveg"
         mode = "VLAN"
-        vlan = [300]
+        vlan = [100]
         ttls_passwd = "passwordvlannotsentuser"
         eap = "TTLS"
         identity = "vlannotsentuser"
@@ -430,7 +430,7 @@ class TestDynamicVlan5GWpa3SuiteB(object):
         extra_secu = []
         band = "fiveg"
         mode = "VLAN"
-        vlan = [300]
+        vlan = [100]
         ttls_passwd = "passwordinvalidvlanuser"
         eap = "TTLS"
         identity = "invalidvlanuser"
@@ -484,7 +484,7 @@ class TestDynamicVlan5GWpa3SuiteB(object):
         extra_secu = []
         band = "fiveg"
         mode = "VLAN"
-        vlan = [300]
+        vlan = [100]
         ttls_passwd = "passwordvlannotsentuser"
         eap = "TTLS"
         identity = "vlannotsentuser"
