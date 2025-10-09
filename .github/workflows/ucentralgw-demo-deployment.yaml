@@ -12,9 +12,8 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
 
-  # DigiCert certs
-  DIGICERT_CERT: ${{ secrets.DIGICERT_CERT }}
-  DIGICERT_KEY: ${{ secrets.DIGICERT_KEY }}
+  WEBSOCKET_CERT: ${{ secrets.INSTA_WEBSOCKET_CERT }}
+  WEBSOCKET_KEY: ${{ secrets.INSTA_WEBSOCKET_KEY }}
 
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   # Required object fiels per environment:
@@ -102,8 +101,8 @@ jobs:
     - name: Prepare certificates from secrets
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
-        echo "${{ env.DIGICERT_CERT }}" | base64 -d > cert.pem
-        echo "${{ env.DIGICERT_KEY }}" | base64 -d > key.pem
+        echo "${{ env.WEBSOCKET_CERT }}" | base64 -d > cert.pem
+        echo "${{ env.WEBSOCKET_KEY }}" | base64 -d > key.pem
 
     - name: Fetch kubeconfig
       run: |
@@ -129,7 +128,7 @@ jobs:
         export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
         export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
         export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
-        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
+        export VALUES_FILE_LOCATION=values.openwifi-qa-insta.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
         if [[ "${{ github.event.inputs.force_latest }}" == "false" ]]; then
           export DEPLOY_METHOD=${{ matrix.deploy_method }}
           export CHART_VERSION=${{ matrix.chart_version }}
