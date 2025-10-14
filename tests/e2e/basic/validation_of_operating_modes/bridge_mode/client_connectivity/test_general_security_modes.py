@@ -417,3 +417,132 @@ class TestBridgeModeConnectivitySuiteTwo(object):
                                                                    num_sta=num_stations, client_type=client_type)
 
         assert passes == "PASS", result
+
+
+
+setup_params_owe_br = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "owe": [
+            {"ssid_name": "ssid_owe_2g_br", "appliedRadios": ["2G"], "security_key": "something", "ieee80211w": "required"}
+        ]
+    },
+    "rf": {},
+    "radius": False
+}
+
+@allure.feature("Client Connectivity")
+@allure.parent_suite("Client Connectivity Tests")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="OWE security mode Client Connectivity")
+@pytest.mark.parametrize(
+    'setup_configuration',
+    [setup_params_owe_br],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
+class TestBridgeModeConnectivityOWE(object):
+    """
+        Bridge Client Connectivity (OWE) (twog)
+        pytest -m "client_connectivity_tests and bridge and owe"
+    """
+
+    @pytest.mark.owe
+    @pytest.mark.twog
+    @allure.story('OWE 2.4 GHZ Band')
+    @allure.title("BRIDGE Mode Client Connectivity Test with OWE encryption 2.4 GHz Band")
+    def test_bridge_owe_2g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case,
+                                               get_test_device_logs, num_stations, check_connectivity,
+                                               setup_configuration, client_type):
+        profile_data = {"ssid_name": "ssid_owe_2g_br", "appliedRadios": ["2G"], "security_key": ""}
+        ssid_name = profile_data["ssid_name"]
+        security_key = "[BLANK]"
+        security = "owe"
+        mode = "BRIDGE"
+        band = "twog"
+
+        passes, result = get_test_library.client_connectivity_test(
+            ssid=ssid_name, security=security,
+            dut_data=setup_configuration,
+            passkey=security_key, mode=mode, band=band,
+            num_sta=num_stations, client_type=client_type
+        )
+        assert passes == "PASS", result
+
+# Add to your file: wlan-testing/tests/e2e/basic/validation_of_operating_modes/bridge_mode/client_connectivity/test_general_security_modes.py
+
+setup_params_owe_transition_br = {
+    "mode": "BRIDGE",
+    "ssid_modes": {
+        "owe_transition": [
+            {"ssid_name": "ssid_owe_transition_2g_br", "appliedRadios": ["2G"], "security_key": "something", "ieee80211w": "required"}
+        ]
+    },
+    "rf": {},
+    "radius": False
+}
+
+@allure.feature("Client Connectivity")
+@allure.parent_suite("Client Connectivity Tests")
+@allure.suite(suite_name="BRIDGE Mode")
+@allure.sub_suite(sub_suite_name="OWE-Transition security mode Client Connectivity")
+@pytest.mark.parametrize(
+    'setup_configuration',
+    [setup_params_owe_transition_br],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
+class TestBridgeModeConnectivityOWETransition(object):
+    """
+        Bridge Client Connectivity (OWE-Transition) (2G)
+        pytest -m "client_connectivity_tests and bridge and owe_transition"
+    """
+
+    @pytest.mark.owe_transition
+    @pytest.mark.twog
+    @allure.story('OWE-Transition 2.4 GHZ Band - OWE Client')
+    @allure.title("BRIDGE Mode OWE-Transition: OWE client connects to hidden SSID")
+    def test_bridge_owe_transition_2g_owe_client(self, get_test_library, get_dut_logs_per_test_case,
+                                                 get_test_device_logs, num_stations, check_connectivity,
+                                                 setup_configuration, client_type):
+        profile_data = {"ssid_name": "ssid_owe_transition_2g_br", "appliedRadios": ["2G"], "security_key": ""}
+        ssid_name = profile_data["ssid_name"]
+        security_key = "[BLANK]"
+        security = "owe"
+        mode = "BRIDGE"
+        band = "twog"
+
+        passes, result = get_test_library.client_connectivity_test(
+            ssid=ssid_name, security=security,
+            dut_data=setup_configuration,
+            passkey=security_key, mode=mode, band=band,
+            num_sta=num_stations, client_type=client_type
+        )
+        assert passes == "PASS", result
+
+    @pytest.mark.owe_transition
+    @pytest.mark.twog
+    @allure.story('OWE-Transition 2.4 GHZ Band - Non-OWE Client')
+    @allure.title("BRIDGE Mode OWE-Transition: Non-OWE client connects to SSID in open mode")
+    def test_bridge_owe_transition_2g_non_owe_client(self, get_test_library, get_dut_logs_per_test_case,
+                                                     get_test_device_logs, num_stations, check_connectivity,
+                                                     setup_configuration, client_type):
+        profile_data = {"ssid_name": "ssid_owe_transition_2g_br", "appliedRadios": ["2G"], "security_key": ""}
+        ssid_name = profile_data["ssid_name"]
+        security_key = "[BLANK]"
+        security = "open"
+        mode = "BRIDGE"
+        band = "twog"
+
+        passes, result = get_test_library.client_connectivity_test(
+            ssid=ssid_name, security=security,
+            dut_data=setup_configuration,
+            passkey=security_key, mode=mode, band=band,
+            num_sta=num_stations, client_type="non_owe_supported"
+        )
+        assert passes == "PASS", result
+
+
+
