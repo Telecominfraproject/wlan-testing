@@ -252,7 +252,7 @@ def get_security_flags():
     security = ["open", "wpa", "wep", "wpa2_personal", "wpa3_personal", "wpa3_personal_mixed",
                 "wpa_wpa2_enterprise_mixed", "wpa2_eap", "wpa2_only_eap",
                 "wpa_wpa2_personal_mixed", "wpa_enterprise", "wpa2_enterprise", "wpa3_enterprise_mixed",
-                "wpa3_enterprise", "twog", "fiveg", "sixg", "fiveg_lower", "fiveg_upper", "radius", "owe"]
+                "wpa3_enterprise", "twog", "fiveg", "sixg", "fiveg_lower", "fiveg_upper", "radius", "owe", "owe_transition"]
     yield security
 
 
