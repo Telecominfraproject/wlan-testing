@@ -452,6 +452,7 @@ class TestBridgeModeConnectivityOWE(object):
     @pytest.mark.twog
     @allure.story('OWE 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with OWE encryption 2.4 GHz Band")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13669", name="WIFI-13669")
     def test_bridge_owe_2g_client_connectivity(self, get_test_library, get_dut_logs_per_test_case,
                                                get_test_device_logs, num_stations, check_connectivity,
                                                setup_configuration, client_type):
@@ -504,6 +505,7 @@ class TestBridgeModeConnectivityOWETransition(object):
     @pytest.mark.twog
     @allure.story('OWE-Transition 2.4 GHZ Band - OWE Client')
     @allure.title("BRIDGE Mode OWE-Transition: OWE client connects to hidden SSID")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13674", name="WIFI-13674")
     def test_bridge_owe_transition_2g_owe_client(self, get_test_library, get_dut_logs_per_test_case,
                                                  get_test_device_logs, num_stations, check_connectivity,
                                                  setup_configuration, client_type):
@@ -526,6 +528,7 @@ class TestBridgeModeConnectivityOWETransition(object):
     @pytest.mark.twog
     @allure.story('OWE-Transition 2.4 GHZ Band - Non-OWE Client')
     @allure.title("BRIDGE Mode OWE-Transition: Non-OWE client connects to SSID in open mode")
+    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13673", name="WIFI-13673")
     def test_bridge_owe_transition_2g_non_owe_client(self, get_test_library, get_dut_logs_per_test_case,
                                                      get_test_device_logs, num_stations, check_connectivity,
                                                      setup_configuration, client_type):
