@@ -179,7 +179,6 @@ class TestBridgeModeExternalCaptivePortal(object):
 
         for dut in get_test_library.dut_data:
             get_test_library.pre_cleanup()
-
             radio_port_name = list(get_test_library.get_radio_availabilities(num_stations_2g=1)[0].keys())[0]
             security = "open"
             station = 'sta_ecp'
@@ -382,7 +381,7 @@ class TestBridgeModeExternalCaptivePortal(object):
         for dut in get_test_library.dut_data:
             get_test_library.pre_cleanup()
 
-            radio_port_name = list(get_test_library.get_radio_availabilities(num_stations_5g=1)[1].keys())[0]
+            radio_port_name = list(get_test_library.get_radio_availabilities(num_stations_5g=1)[0].keys())[0]
             security = "open"
             station = 'sta_ecp'
             desired_band = "5G"
@@ -584,8 +583,7 @@ class TestBridgeModeExternalCaptivePortal(object):
 
         for dut in get_test_library.dut_data:
             get_test_library.pre_cleanup()
-
-            radio_port_name = list(get_test_library.get_radio_availabilities(num_stations_6g=1).keys())[0]
+            radio_port_name = list(get_test_library.get_radio_availabilities(num_stations_6g=1)[0].keys())[0]
             station = 'sta_ecp'
             desired_band = "6G"
             ssid_list = setup_params_general["ssid_modes"]["owe"]
