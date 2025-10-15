@@ -100,15 +100,6 @@
     }
   },
   "services": {
-    "wifi-steering": {
-      "mode": "local",
-      "network": "upstream",
-      "assoc-steering": true,
-      "required-snr": -85,
-      "required-probe-snr": -80,
-      "required-roam-snr": -80,
-      "load-kick-threshold": 90
-    },
     "ssh": {
       "port": 22
     }
