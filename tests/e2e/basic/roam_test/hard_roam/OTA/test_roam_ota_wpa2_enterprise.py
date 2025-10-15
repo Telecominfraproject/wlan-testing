@@ -185,7 +185,7 @@ class TestRoamOTA(object):
                                        radius_info):
         """
             Test Roaming between two APs, Same channel, 5G, WPA2 Enterprise
-            pytest -m "hard_roam_ota and fiveg and same_channel and wpa2_enterprise"
+            pytest -m "hard_roam_ota and fiveg and same_channel and wpa2_enterprise and tls"
         """
         ap_data = dict()
         dut_names = list()
@@ -333,7 +333,7 @@ class TestRoamOTA(object):
                                     radius_info):
         """
             Test Roaming between two APs, 2G & 5G, WPA2 Enterprise
-            pytest -m "hard_roam_ota and fiveg and twog and wpa2_enterprise"
+            pytest -m "hard_roam_ota and fiveg and twog and wpa2_enterprise and tls"
         """
         ap_data = dict()
         dut_names = list()
@@ -636,7 +636,7 @@ class TestRoamOTA(object):
                                        radius_info):
         """
             Test Roaming between two APs, Same channel, 5G, WPA2 Enterprise
-            pytest -m "hard_roam_ota and fiveg and same_channel and wpa2_enterprise"
+            pytest -m "hard_roam_ota and fiveg and same_channel and wpa2_enterprise and ttls"
         """
         ap_data = dict()
         dut_names = list()
@@ -762,6 +762,7 @@ class TestRoamOTA(object):
                                                             groupwise_cipher="DEFAULT   ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
+                                                            private_key="NA", ca_cert="NA",
                                                             pk_passwd=radius_info["pk_password"], sta_type="11r-eap",
                                                             iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
@@ -784,7 +785,7 @@ class TestRoamOTA(object):
                                      radius_info):
         """
             Test Roaming between two APs, 2G & 5G, WPA2 Enterprise
-            pytest -m "hard_roam_ota and fiveg and twog and wpa2_enterprise"
+            pytest -m "hard_roam_ota and fiveg and twog and wpa2_enterprise and ttls"
         """
         ap_data = dict()
         dut_names = list()
@@ -915,6 +916,7 @@ class TestRoamOTA(object):
                                                             groupwise_cipher="DEFAULT   ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
+                                                            private_key="NA", ca_cert="NA",
                                                             pk_passwd=radius_info["pk_password"], sta_type="11r-eap",
                                                             iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")

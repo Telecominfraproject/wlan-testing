@@ -31,11 +31,12 @@ with open(file_path, 'r') as file:
 class TestRoamOTD(object):
     @pytest.mark.twog
     @pytest.mark.same_channel
+    @pytest.mark.tls
     def test_roam_2g_to_2g_sc_wpa2_eap_tls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                       radius_info):
         """
             Test Roaming between two APs, Same channel, 2G, WPA2 Enterprise
-            pytest -m "hard_roam_otd and twog and same_channel and wpa2_enterprise"
+            pytest -m "hard_roam_otd and twog and same_channel and wpa2_enterprise and tls"
         """
         get_test_library.check_band_ap("twog")
         ap_data = dict()
@@ -154,8 +155,8 @@ class TestRoamOTD(object):
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             band="twog", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",twog_radio=twog_radio,
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
-                                                            groupwise_cipher="CCMP        ",
+                                                            pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
@@ -175,11 +176,12 @@ class TestRoamOTD(object):
 
     @pytest.mark.fiveg
     @pytest.mark.same_channel
+    @pytest.mark.tls
     def test_roam_5g_to_5g_sc_wpa2_eap_tls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                       radius_info):
         """
             Test Roaming between two APs, Same channel, 5G, WPA2 Enterprise
-            pytest -m "hard_roam_otd and fiveg and same_channel and wpa2_enterprise"
+            pytest -m "hard_roam_otd and fiveg and same_channel and wpa2_enterprise and tls"
         """
         get_test_library.check_band_ap("fiveg")
         ap_data = dict()
@@ -298,8 +300,8 @@ class TestRoamOTD(object):
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             band="fiveg", num_sta=1, security="wpa2", ssid=ssid,
                                                             fiveg_radio=fiveg_radio, upstream="1.1.eth1",
-                                                            eap_method="TLS", pairwise_cipher="GCMP-256 (wpa3)",
-                                                            groupwise_cipher="CCMP        ",
+                                                            eap_method="TLS", pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
@@ -319,11 +321,12 @@ class TestRoamOTD(object):
 
     @pytest.mark.twog
     @pytest.mark.same_channel
+    @pytest.mark.ttls
     def test_roam_2g_to_2g_sc_wpa2_eap_ttls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                            radius_info):
         """
             Test Roaming between two APs, Same channel, 2G, WPA2 Enterprise
-            pytest -m "hard_roam_otd and twog and same_channel and wpa2_enterprise"
+            pytest -m "hard_roam_otd and twog and same_channel and wpa2_enterprise and ttls"
         """
         get_test_library.check_band_ap("twog")
         ap_data = dict()
@@ -444,10 +447,11 @@ class TestRoamOTD(object):
                                                             band="twog", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TTLS",
                                                             twog_radio=twog_radio,
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
-                                                            groupwise_cipher="CCMP        ",
+                                                            pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
+                                                            private_key="NA", ca_cert="NA",
                                                             pk_passwd=radius_info["pk_password"], sta_type="11r-eap",
                                                             iteration=1, channel="11", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp")
@@ -463,11 +467,12 @@ class TestRoamOTD(object):
 
     @pytest.mark.fiveg
     @pytest.mark.same_channel
+    @pytest.mark.ttls
     def test_roam_5g_to_5g_sc_wpa2_eap_ttls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                            radius_info):
         """
             Test Roaming between two APs, Same channel, 5G, WPA2 Enterprise
-            pytest -m "hard_roam_otd and fiveg and same_channel and wpa2_enterprise"
+            pytest -m "hard_roam_otd and fiveg and same_channel and wpa2_enterprise and ttls"
         """
         get_test_library.check_band_ap("fiveg")
         ap_data = dict()
@@ -587,10 +592,11 @@ class TestRoamOTD(object):
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             band="fiveg", num_sta=1, security="wpa2", ssid=ssid,
                                                             fiveg_radio=fiveg_radio, upstream="1.1.eth1",
-                                                            eap_method="TTLS", pairwise_cipher="GCMP-256 (wpa3)",
-                                                            groupwise_cipher="CCMP        ",
+                                                            eap_method="TTLS", pairwise_cipher="DEFAULT   ",
+                                                            groupwise_cipher="DEFAULT   ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
+                                                            private_key="NA", ca_cert="NA",
                                                             pk_passwd=radius_info["pk_password"], sta_type="11r-eap",
                                                             iteration=1, channel="11", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp")

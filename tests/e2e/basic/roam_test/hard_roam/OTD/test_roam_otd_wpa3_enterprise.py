@@ -31,11 +31,12 @@ with open(file_path, 'r') as file:
 class TestRoamOTD(object):
     @pytest.mark.twog
     @pytest.mark.same_channel
+    @pytest.mark.tls
     def test_roam_2g_to_2g_sc_wpa3_eap_tls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                       radius_info):
         """
             Test Roaming between two APs, Same channel, 2G, WPA3 Enterprise
-            pytest -m "hard_roam_otd and twog and same_channel and wpa3_enterprise"
+            pytest -m "hard_roam_otd and twog and same_channel and wpa3_enterprise and tls"
         """
         get_test_library.check_band_ap("twog")
         ap_data = dict()
@@ -176,11 +177,12 @@ class TestRoamOTD(object):
 
     @pytest.mark.fiveg
     @pytest.mark.same_channel
+    @pytest.mark.tls
     def test_roam_5g_to_5g_sc_wpa3_eap_tls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                       radius_info):
         """
             Test Roaming between two APs, Same channel, 5G, WPA3 Enterprise
-            pytest -m "hard_roam_otd and fiveg and same_channel and wpa3_enterprise"
+            pytest -m "hard_roam_otd and fiveg and same_channel and wpa3_enterprise and tls"
         """
         get_test_library.check_band_ap("fiveg")
         ap_data = dict()
@@ -320,11 +322,12 @@ class TestRoamOTD(object):
 
     @pytest.mark.twog
     @pytest.mark.same_channel
+    @pytest.mark.ttls
     def test_roam_2g_to_2g_sc_wpa3_eap_ttls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                            radius_info):
         """
             Test Roaming between two APs, Same channel, 2G, WPA3 Enterprise
-            pytest -m "hard_roam_otd and twog and same_channel and wpa3_enterprise"
+            pytest -m "hard_roam_otd and twog and same_channel and wpa3_enterprise and ttls"
         """
         get_test_library.check_band_ap("twog")
         ap_data = dict()
@@ -450,6 +453,7 @@ class TestRoamOTD(object):
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
+                                                            private_key="NA", ca_cert="NA",
                                                             pk_passwd=radius_info["pk_password"], sta_type="11r-eap-sha384",
                                                             iteration=1, channel="11", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp")
@@ -465,11 +469,12 @@ class TestRoamOTD(object):
 
     @pytest.mark.fiveg
     @pytest.mark.same_channel
+    @pytest.mark.ttls
     def test_roam_5g_to_5g_sc_wpa3_eap_ttls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                            radius_info):
         """
             Test Roaming between two APs, Same channel, 5G, WPA3 Enterprise
-            pytest -m "hard_roam_otd and fiveg and same_channel and wpa3_enterprise"
+            pytest -m "hard_roam_otd and fiveg and same_channel and wpa3_enterprise and ttls"
         """
         get_test_library.check_band_ap("fiveg")
         ap_data = dict()
@@ -594,6 +599,7 @@ class TestRoamOTD(object):
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
+                                                            private_key="NA", ca_cert="NA",
                                                             pk_passwd=radius_info["pk_password"], sta_type="11r-eap-sha384",
                                                             iteration=1, channel="11", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp")
