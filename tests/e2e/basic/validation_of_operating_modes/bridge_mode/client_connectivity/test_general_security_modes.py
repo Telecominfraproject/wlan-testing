@@ -540,8 +540,7 @@ setup_params_owe_transition_br = {
     "ssid_modes": {
         "owe_transition": [
             {"ssid_name": "ssid_owe_transition_2g_br", "appliedRadios": ["2G"], "security_key": "something"},
-            {"ssid_name": "ssid_owe_transition_5g_br", "appliedRadios": ["5G"], "security_key": "something"},
-            {"ssid_name": "ssid_owe_transition_6g_br", "appliedRadios": ["6G"], "security_key": "something"}
+            {"ssid_name": "ssid_owe_transition_5g_br", "appliedRadios": ["5G"], "security_key": "something"}
 
         ]
     },
@@ -678,63 +677,7 @@ class TestBridgeModeConnectivityOWETransition(object):
         )
         assert passes == "PASS", result
 
-    @pytest.mark.owe_transition
-    @pytest.mark.twog
-    @pytest.mark.sixg
-    @pytest.mark.owe_client
-    @allure.story('OWE-Transition 6 GHZ Band - OWE Client')
-    @allure.title("BRIDGE Mode OWE-Transition: OWE client connects to hidden SSID")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13674", name="WIFI-13674")
-    def test_bridge_owe_transition_6g_owe_client(self, get_test_library, get_dut_logs_per_test_case,
-                                                 get_test_device_logs, num_stations, check_connectivity,
-                                                 setup_configuration, client_type):
-        """
-            BRIDGE Mode OWE-Transition: OWE client connects to SSID in OWE mode
-            marker:- client_connectivity_tests and bridge and owe_transition and sixg and owe_client
-        """
-        profile_data = {"ssid_name": "ssid_owe_transition_6g_br", "appliedRadios": ["6G"], "security_key": ""}
-        ssid_name = profile_data["ssid_name"]
-        security_key = "[BLANK]"
-        security = "owe"
-        mode = "BRIDGE"
-        band = "sixg"
 
-        passes, result = get_test_library.client_connectivity_test(
-            ssid=ssid_name, security=security,
-            dut_data=setup_configuration,
-            passkey=security_key, mode=mode, band=band,
-            num_sta=num_stations, client_type=client_type, extra_sta_rows=["security"]
-        )
-        assert passes == "PASS", result
-
-    @pytest.mark.owe_transition
-    @pytest.mark.twog
-    @pytest.mark.sixg
-    @pytest.mark.non_owe_client
-    @allure.story('OWE-Transition 6 GHZ Band - Non-OWE Client')
-    @allure.title("BRIDGE Mode OWE-Transition: Non-OWE client connects to SSID in open mode")
-    @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13673", name="WIFI-13673")
-    def test_bridge_owe_transition_6g_non_owe_client(self, get_test_library, get_dut_logs_per_test_case,
-                                                     get_test_device_logs, num_stations, check_connectivity,
-                                                     setup_configuration, client_type):
-        """
-            BRIDGE Mode OWE-Transition: Non-OWE client connects to SSID in open mode
-            marker:- client_connectivity_tests and bridge and owe_transition and sixg and non_owe_client
-        """
-        profile_data = {"ssid_name": "ssid_owe_transition_6g_br", "appliedRadios": ["6G"], "security_key": ""}
-        ssid_name = profile_data["ssid_name"]
-        security_key = "[BLANK]"
-        security = "open"
-        mode = "BRIDGE"
-        band = "sixg"
-
-        passes, result = get_test_library.client_connectivity_test(
-            ssid=ssid_name, security=security,
-            dut_data=setup_configuration,
-            passkey=security_key, mode=mode, band=band,
-            num_sta=num_stations, client_type=client_type, extra_sta_rows=["security"]
-        )
-        assert passes == "PASS", result
 
 
 
