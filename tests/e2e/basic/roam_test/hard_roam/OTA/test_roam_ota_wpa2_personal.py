@@ -134,7 +134,7 @@ class TestRoamOTA(object):
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         pass_fail, message = True, "Test Passed"
         twog_radio = list(get_test_library.get_radio_availabilities(num_stations_2g=1)[0].keys())[0]
-        logging.info(f"fiveg_radio from testcase:{twog_radio}")
+        logging.info(f"twog_radio from testcase:{twog_radio}")
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             scan_freq=freqs_,twog_radio=twog_radio,
@@ -261,7 +261,7 @@ class TestRoamOTA(object):
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
         twog_radio = list(get_test_library.get_radio_availabilities(num_stations_2g=1)[0].keys())[0]
-        logging.info(f"fiveg_radio from testcase:{twog_radio}")
+        logging.info(f"twog_radio from testcase:{twog_radio}")
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             scan_freq=freqs_, twog_radio=twog_radio,

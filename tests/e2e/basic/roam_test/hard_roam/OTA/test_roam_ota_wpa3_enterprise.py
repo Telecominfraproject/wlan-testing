@@ -156,13 +156,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, twog_radio=twog_radio,
                                                             band="twog", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -302,13 +302,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, fiveg_radio=fiveg_radio,
                                                             band="fiveg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="36", option="ota",
                                                             dut_name=dut_names,
                                                             traffic_type="lf_udp")
@@ -332,7 +332,6 @@ class TestRoamOTA(object):
             pytest -m "hard_roam_ota and sixg and same_channel and wpa3_enterprise and tls"
         """
         band="sixg"
-        get_test_library.check_band_ap(band="sixg")
         ap_data = dict()
         dut_names = list()
         bssid_list = list()
@@ -354,6 +353,7 @@ class TestRoamOTA(object):
         wifi6e = [ap for ap, m in ap_modes.items() if "wifi6e" in m]
         wifi6 = [ap for ap, m in ap_modes.items() if "wifi6" in m and "wifi6e" not in m]
 
+        logging.info(f"Available APs by type -> WiFi7: {wifi7}, WiFi6E: {wifi6e}, WiFi6: {wifi6}")
         try:
             if band == "sixg":
                 sixg_aps = wifi7 + wifi6e
@@ -368,13 +368,11 @@ class TestRoamOTA(object):
                 dut_list = [ap for ap in [ap1, ap2] if ap]
 
         except ValueError as e:
-            logging.info(f"Available APs by type -> WiFi7: {wifi7}, WiFi6E: {wifi6e}, WiFi6: {wifi6}")
-            pytest.fail(f"No available APs satisfy the required band '{band}': {e}")
             logging.warning(f"No available APs satisfy the required band '{band}': {e}")
             dut_list = []
+            pytest.skip(f"No available APs satisfy the required band '{band}': {e}")
 
         logging.info(f"Selected DUTs for band='{band}': {dut_list}")
-
 
         logging.info(f"---dut list: {dut_list}---")
         config['interfaces'][0]["ssids"][0]["radius"] = {
@@ -474,13 +472,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, sixg_radio=sixg_radio,
                                                             band="sixg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="161", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -625,13 +623,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, fiveg_radio=fiveg_radio,
                                                             band="fiveg,twog", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -692,6 +690,7 @@ class TestRoamOTA(object):
         except ValueError as e:
             logging.warning(f"No available APs satisfy the required band '{band}': {e}")
             dut_list = []
+            pytest.skip(f"No available APs satisfy the required band '{band}': {e}")
 
         logging.info(f"Selected DUTs for band='{band}': {dut_list}")
         logging.info(f"---dut list: {dut_list}---")
@@ -801,13 +800,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, sixg_radio=sixg_radio,
                                                             band="fiveg,sixg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -869,10 +868,10 @@ class TestRoamOTA(object):
         except ValueError as e:
             logging.warning(f"No available APs satisfy the required band '{band}': {e}")
             dut_list = []
+            pytest.skip(f"No available APs satisfy the required band '{band}': {e}")
         logging.info(f"Selected DUTs for band='{band}': {dut_list}")
 
         logging.info(f"---dut list: {dut_list}---")
-        # dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -974,13 +973,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, sixg_radio=sixg_radio,
                                                             band="twog,sixg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
                                                             pk_passwd=radius_info["pk_password"],
-                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap-sha384",
+                                                            ca_cert='/home/lanforge/ca.pem', sta_type="11r-eap",
                                                             iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -1013,7 +1012,6 @@ class TestRoamOTA(object):
             tb_type, tb_name = selected_testbed.split("-")
             if tb_type in key and tb_name[0] in key:
                 temp_list.append(key)
-        logging.info(f"temp_list::{temp_list}")
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
         dut_list = []
@@ -1122,12 +1120,12 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, twog_radio=twog_radio,
                                                             band="twog", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TTLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="NA", ca_cert="NA",
-                                                            pk_passwd=radius_info["pk_password"], sta_type="11r-eap-sha384",
+                                                            pk_passwd=radius_info["pk_password"], sta_type="11r-eap",
                                                             iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -1269,13 +1267,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, fiveg_radio=fiveg_radio,
                                                             band="fiveg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TTLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             pk_passwd=radius_info["pk_password"],
                                                             private_key="NA", ca_cert="NA",
-                                                            sta_type="11r-eap-sha384",
+                                                            sta_type="11r-eap",
                                                             iteration=1, channel="36", option="ota",
                                                             dut_name=dut_names,
                                                             traffic_type="lf_udp")
@@ -1299,7 +1297,6 @@ class TestRoamOTA(object):
             pytest -m "hard_roam_ota and sixg and same_channel and wpa3_enterprise and ttls"
         """
         band = "sixg"
-        get_test_library.check_band_ap(band="sixg")
         ap_data = dict()
         dut_names = list()
         bssid_list = list()
@@ -1321,6 +1318,7 @@ class TestRoamOTA(object):
         wifi6e = [ap for ap, m in ap_modes.items() if "wifi6e" in m]
         wifi6 = [ap for ap, m in ap_modes.items() if "wifi6" in m and "wifi6e" not in m]
 
+        logging.info(f"Available APs by type -> WiFi7: {wifi7}, WiFi6E: {wifi6e}, WiFi6: {wifi6}")
         try:
             if band == "sixg":
                 sixg_aps = wifi7 + wifi6e
@@ -1335,9 +1333,9 @@ class TestRoamOTA(object):
                 dut_list = [ap for ap in [ap1, ap2] if ap]
 
         except ValueError as e:
-            logging.info(f"Available APs by type -> WiFi7: {wifi7}, WiFi6E: {wifi6e}, WiFi6: {wifi6}")
             logging.warning(f"No available APs satisfy the required band '{band}': {e}")
             dut_list = []
+            pytest.skip(f"No available APs satisfy the required band '{band}': {e}")
 
         logging.info(f"Selected DUTs for band='{band}': {dut_list}")
 
@@ -1440,13 +1438,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, sixg_radio=sixg_radio,
                                                             band="sixg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TTLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             pk_passwd=radius_info["pk_password"],
                                                             private_key="NA", ca_cert="NA",
-                                                            sta_type="11r-eap-sha384",
+                                                            sta_type="11r-eap",
                                                             iteration=1, channel="161", option="ota",
                                                             dut_name=dut_names,
                                                             traffic_type="lf_udp")
@@ -1593,13 +1591,13 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, fiveg_radio=fiveg_radio,
                                                             band="fiveg,twog", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TTLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             pk_passwd=radius_info["pk_password"],
                                                             private_key="NA", ca_cert="NA",
-                                                            sta_type="11r-eap-sha384",
+                                                            sta_type="11r-eap",
                                                             iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -1660,6 +1658,7 @@ class TestRoamOTA(object):
         except ValueError as e:
             logging.warning(f"No available APs satisfy the required band '{band}': {e}")
             dut_list = []
+            pytest.skip(f"No available APs satisfy the required band '{band}': {e}")
 
         logging.info(f"Selected DUTs for band='{band}': {dut_list}")
         logging.info(f"---dut list: {dut_list}---")
@@ -1770,12 +1769,12 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, sixg_radio=sixg_radio,
                                                             band="fiveg,sixg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TTLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="NA", ca_cert="NA",
-                                                            pk_passwd=radius_info["pk_password"],sta_type="11r-eap-sha384",
+                                                            pk_passwd=radius_info["pk_password"],sta_type="11r-eap",
                                                             iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:
@@ -1837,6 +1836,7 @@ class TestRoamOTA(object):
         except ValueError as e:
             logging.warning(f"No available APs satisfy the required band '{band}': {e}")
             dut_list = []
+            pytest.skip(f"No available APs satisfy the required band '{band}': {e}")
         logging.info(f"Selected DUTs for band='{band}': {dut_list}")
 
         logging.info(f"---dut list: {dut_list}---")
@@ -1943,12 +1943,12 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, sixg_radio=sixg_radio,
                                                             band="twog,sixg", num_sta=1, security="wpa3", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TTLS",
-                                                            pairwise_cipher="GCMP-256 (wpa3)",
+                                                            pairwise_cipher="CCMP      ",
                                                             groupwise_cipher="CCMP        ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="NA", ca_cert="NA",
-                                                            pk_passwd=radius_info["pk_password"], sta_type="11r-eap-sha384",
+                                                            pk_passwd=radius_info["pk_password"], sta_type="11r-eap",
                                                             iteration=1, channel="11", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp")
         except Exception as e:

@@ -63,7 +63,6 @@ class TestRoamOTA(object):
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
             assert False, f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}"
 
-        # dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -207,7 +206,6 @@ class TestRoamOTA(object):
             dut_list.append(temp_list[idx + 1])
 
         logging.info(f"---dut list: {dut_list}---")
-        # dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -781,7 +779,7 @@ class TestRoamOTA(object):
     @pytest.mark.enterprise
     @pytest.mark.both
     @pytest.mark.ttls
-    def test_roam_5g_and_2g_wpa2_eap_ttls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
+    def test_roam_5g_to_2g_wpa2_eap_ttls(self, get_target_object, get_test_library, get_lab_info, selected_testbed,
                                      radius_info):
         """
             Test Roaming between two APs, 2G & 5G, WPA2 Enterprise
@@ -906,7 +904,7 @@ class TestRoamOTA(object):
         ssid = config['interfaces'][0]["ssids"][0]["name"]
         pass_fail, message = True, "Test Passed"
         fiveg_radio = list(get_test_library.get_radio_availabilities(num_stations_5g=1)[0].keys())[0]
-        logging.info(f"twog_radio from testcase:{fiveg_radio}")
+        logging.info(f"fiveg_radio from testcase:{fiveg_radio}")
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             scan_freq=freqs_, fiveg_radio=fiveg_radio,

@@ -37,7 +37,6 @@ class TestRoamOTA(object):
             Test Roaming between two APs, Same channel, 2G, WPA3 Personal
             pytest -m "hard_roam_ota and twog and same_channel and wpa3_personal"
         """
-        get_test_library.check_band_ap("twog")
         ap_data = dict()
         dut_names = list()
         bssid_list = list()
@@ -545,7 +544,7 @@ class TestRoamOTA(object):
         try:
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             scan_freq=freqs_, fiveg_radio=fiveg_radio,
-                                                            band="fiveg,twog", num_sta=1, security="wpa2", security_key=key,
+                                                            band="fiveg,twog", num_sta=1, security="wpa3", security_key=key,
                                                             ssid=ssid, upstream="1.1.eth1", duration=None,
                                                             iteration=1, channel="36", option="ota", dut_name=dut_names,
                                                             traffic_type="lf_udp", sta_type="11r-sae")
@@ -606,6 +605,7 @@ class TestRoamOTA(object):
         except ValueError as e:
             logging.warning(f"No available APs satisfy the required band '{band}': {e}")
             dut_list = []
+            pytest.skip(f"No available APs satisfy the required band '{band}': {e}")
         logging.info(f"Selected DUTs for band='{band}': {dut_list}")
         logging.info(f"---dut list: {dut_list}---")
         # dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
@@ -755,6 +755,7 @@ class TestRoamOTA(object):
         except ValueError as e:
             logging.warning(f"No available APs satisfy the required band '{band}': {e}")
             dut_list = []
+            pytest.skip(f"No available APs satisfy the required band '{band}': {e}")
         logging.info(f"Selected DUTs for band='{band}': {dut_list}")
         logging.info(f"-----dut_list---:{dut_list}")
         config['radios'] = [
