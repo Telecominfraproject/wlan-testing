@@ -36,7 +36,6 @@ class TestRoamOTD(object):
             Test Roaming between two APs, Same channel, 2G, WPA2 Personal
             pytest -m "hard_roam_otd and twog and same_channel and wpa2_personal"
         """
-        get_test_library.check_band_ap("twog")
         ap_data = dict()
         dut_names = list()
         bssid_list = list()
@@ -161,7 +160,6 @@ class TestRoamOTD(object):
             Test Roaming between two APs, Different channel, 2G, WPA2 Personal
             pytest -m "hard_roam_otd and twog and different_channel and wpa2_personal"
         """
-        get_test_library.check_band_ap("twog")
         ap_data = dict()
         dut_names = list()
         bssid_list = list()
@@ -288,7 +286,6 @@ class TestRoamOTD(object):
             Test Roaming between two APs, Same channel, 5G, WPA2 Personal
             pytest -m "hard_roam_otd and fiveg and same_channel and wpa2_personal"
         """
-        get_test_library.check_band_ap("fiveg")
         ap_data = dict()
         dut_names = list()
         bssid_list = list()
@@ -413,7 +410,6 @@ class TestRoamOTD(object):
             Test Roaming between two APs, Different channel, 5G, WPA2 Personal
             pytest -m "hard_roam_otd and fiveg and different_channel and wpa2_personal"
         """
-        get_test_library.check_band_ap("fiveg")
         ap_data = dict()
         dut_names = list()
         bssid_list = list()
@@ -521,6 +517,137 @@ class TestRoamOTD(object):
             pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
                                                             scan_freq=freqs_, fiveg_radio=fiveg_radio,
                                                             band="fiveg", num_sta=1, security="wpa2", security_key=key,
+                                                            ssid=ssid, upstream="1.1.eth1", duration=None,
+                                                            iteration=1, channel="36", option="otd", dut_name=dut_names,
+                                                            traffic_type="lf_udp", sta_type="11r")
+        except Exception as e:
+            logging.error(f"Exception in roam test : {e}")
+            pass_fail, message = False, e
+        finally:
+            get_target_object.dut_library_object.get_dut_logs(print_log=False)
+        if not pass_fail:
+            pytest.fail(f"Test failed with the following reasons: \n{message}")
+        else:
+            assert True
+
+    @pytest.mark.fiveg
+    @pytest.mark.twog
+    @pytest.mark.both
+    def test_roam_5g_to_2g_wpa2_psk(self, get_target_object, get_test_library, get_lab_info, selected_testbed):
+        """
+            Test Roaming between two APs, 2G & 5G, WPA2 Personal
+            pytest -m "hard_roam_ota and fiveg and twog and wpa2_personal"
+        """
+        ap_data = dict()
+        dut_names = list()
+        bssid_list = list()
+        freqs_ = ""
+        testbed_info = get_lab_info.CONFIGURATION
+        config = copy.deepcopy(config_data)
+        temp_list = list()
+        for key, val in testbed_info.items():
+            tb_type, tb_name = selected_testbed.split("-")
+            if tb_type in key and tb_name[0] in key:
+                temp_list.append(key)
+        temp_list.sort()
+        logging.info(f"temp_list;;{temp_list}")
+        dut_list = []
+        idx = temp_list.index(selected_testbed)
+        dut_list = [temp_list[idx]]
+        if idx + 1 < len(temp_list):
+            dut_list.append(temp_list[idx + 1])
+
+        config['radios'] = [
+            {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
+        config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
+        if len(dut_list) < 2:
+            logging.error(
+                f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
+            assert False, f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}"
+
+        logging.info(f"---dut list: {dut_list}---")
+
+        for ap in range(len(dut_list)):
+            serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
+            dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
+            if ap == 1:
+                config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
+                config['radios'] = [
+                    {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 20, "country": "CA"}]
+            logging.info(f"config:{config}")
+            payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
+            uri = get_target_object.controller_library_object.build_uri(
+                "device/" + serial_number + "/configure")
+            logging.info("Sending Command: " + "\n" + str(uri) + "\n" +
+                         "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                         "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
+                         "Headers: " + str(get_target_object.controller_library_object.make_headers()))
+            allure.attach(name=f"Push roam config on {serial_number}: ", body="Sending Command: " + str(uri) + "\n" +
+                                                                              "TimeStamp: " + str(
+                datetime.datetime.utcnow()) + "\n" +
+                                                                              "Data: " + str(payload) + "\n" +
+                                                                              "Headers: " + str(
+                get_target_object.controller_library_object.make_headers()))
+            resp = requests.post(uri, data=json.dumps(payload, indent=2),
+                                 headers=get_target_object.controller_library_object.make_headers(),
+                                 verify=False, timeout=120)
+            time.sleep(10)
+            logging.info(resp.json())
+            allure.attach(name=f"Response - {resp.status_code} {resp.reason}", body=str(resp.json()))
+            if resp.status_code != 200:
+                if resp.status_code == 400 and "Device is already executing a command. Please try later." in \
+                        resp.json()["ErrorDescription"]:
+                    time.sleep(30)
+                    resp = requests.post(uri, data=json.dumps(payload, indent=2),
+                                         headers=get_target_object.controller_library_object.make_headers(),
+                                         verify=False, timeout=120)
+                    time.sleep(10)
+                    logging.info(resp.json())
+                else:
+                    assert False, f"push configuration to {serial_number} got failed"
+            get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
+                "device_under_tests"]
+            ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
+            if str(ap_iwinfo) != "Error: pop from empty list":
+                include_essid = config['interfaces'][0]["ssids"][0]["name"]
+                re_obj = re.compile(
+                    rf'([a-zA-Z0-9-]+)\s+ESSID: "{re.escape(include_essid)}".*?\s+Access Point:\s+([0-9A-Fa-f:]+).*?Channel:\s+('
+                    r'\d+)\s+\(([\d.]+) GHz\)',
+                    re.DOTALL
+                )
+                # find all matches
+                interface_matches = re_obj.finditer(ap_iwinfo)
+                if interface_matches:
+                    for match in interface_matches:
+                        interface_name = match.group(1)
+                        access_point = match.group(2)
+                        channel = match.group(3)
+                        frequency = match.group(4).replace('.', '')
+                        ap_data.update(
+                            {serial_number: {'Access Point': access_point, 'Channel': channel, 'frequency': frequency}})
+                    logging.info(f"AP Data from iwinfo: {ap_data}")
+                else:
+                    logging.error("Failed to get iwinfo")
+                    pytest.exit("Failed to get iwinfo")
+            elif ap_iwinfo == {}:
+                pytest.fail("Empty iwinfo response from AP through minicom")
+            else:
+                pytest.fail("Failed to get iwinfo from minicom")
+        for serial in ap_data:
+            bssid_list.append(ap_data[serial]['Access Point'])
+            if not ap_data[serial]['frequency'].endswith(","):
+                freqs_ = freqs_ + ap_data[serial]['frequency'] + ","
+            else:
+                freqs_ = freqs_ + ap_data[serial]['frequency']
+        ssid = config['interfaces'][0]["ssids"][0]["name"]
+        key = config['interfaces'][0]["ssids"][0]["encryption"]["key"]
+        fiveg_radio = list(get_test_library.get_radio_availabilities(num_stations_5g=1)[0].keys())[0]
+        logging.info(f"fiveg_radio from testcase:{fiveg_radio}")
+        try:
+            pass_fail, message = get_test_library.roam_test(ap1_bssid=bssid_list[0], ap2_bssid=bssid_list[1],
+                                                            scan_freq=freqs_, fiveg_radio=fiveg_radio,
+                                                            band="fiveg,twog", num_sta=1, security="wpa2",
+                                                            security_key=key,
                                                             ssid=ssid, upstream="1.1.eth1", duration=None,
                                                             iteration=1, channel="36", option="otd", dut_name=dut_names,
                                                             traffic_type="lf_udp", sta_type="11r")
