@@ -158,8 +158,6 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, twog_radio=twog_radio,
                                                             band="twog", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="eth2", eap_method="TLS",
-                                                            pairwise_cipher="DEFAULT   ",
-                                                            groupwise_cipher="DEFAULT     ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="/home/lanforge/client.p12",
