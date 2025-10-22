@@ -10,7 +10,7 @@ import time
 import copy
 import requests
 
-pytestmark = [pytest.mark.roam_test, pytest.mark.bridge, pytest.mark.hard_roam_ota, pytest.mark.ow_regression_lf]
+pytestmark = [pytest.mark.roam_tests, pytest.mark.bridge, pytest.mark.hard_roam_ota, pytest.mark.ow_regression_lf]
 
 # Get the directory of the current test config file
 test_file_dir = os.path.dirname(os.path.abspath(__file__))
