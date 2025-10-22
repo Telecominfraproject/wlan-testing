@@ -900,8 +900,6 @@ class TestRoamOTA(object):
                                                             scan_freq=freqs_, fiveg_radio=fiveg_radio,
                                                             band="fiveg,twog", num_sta=1, security="wpa2", ssid=ssid,
                                                             upstream="1.1.eth1", eap_method="TTLS",
-                                                            pairwise_cipher="DEFAULT   ",
-                                                            groupwise_cipher="DEFAULT   ",
                                                             eap_identity=radius_info["user"],
                                                             eap_password=radius_info["password"],
                                                             private_key="NA", ca_cert="NA",
