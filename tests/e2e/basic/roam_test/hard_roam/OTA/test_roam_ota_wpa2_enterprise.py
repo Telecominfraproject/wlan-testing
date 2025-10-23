@@ -85,6 +85,7 @@ class TestRoamOTA(object):
 
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
+            ap_model = testbed_info[dut_list[ap]]["device_under_tests"][0]['model']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             logging.info(f"config:{config}")
             payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
@@ -94,7 +95,7 @@ class TestRoamOTA(object):
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
                          "Headers: " + str(get_target_object.controller_library_object.make_headers()))
-            allure.attach(name=f"Push roam config on AP{ap+1}:{serial_number}: ", body="Sending Command: " + str(uri) + "\n" +
+            allure.attach(name=f"Push roam config on AP{ap+1}: {ap_model} {serial_number}: ", body="Sending Command: " + str(uri) + "\n" +
                                                                               "TimeStamp: " + str(
                 datetime.datetime.utcnow()) + "\n" +
                                                                               "Data: " + str(payload) + "\n" +
@@ -229,6 +230,7 @@ class TestRoamOTA(object):
             assert False, f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}"
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
+            ap_model = testbed_info[dut_list[ap]]["device_under_tests"][0]['model']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             logging.info(f"config:{config}")
             payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
@@ -238,7 +240,7 @@ class TestRoamOTA(object):
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
                          "Headers: " + str(get_target_object.controller_library_object.make_headers()))
-            allure.attach(name=f"Push roam config on AP{ap+1}: {serial_number}: ", body="Sending Command: " + str(uri) + "\n" +
+            allure.attach(name=f"Push roam config on AP{ap+1}: {ap_model} {serial_number}: ", body="Sending Command: " + str(uri) + "\n" +
                                                                               "TimeStamp: " + str(
                 datetime.datetime.utcnow()) + "\n" +
                                                                               "Data: " + str(payload) + "\n" +
@@ -376,6 +378,7 @@ class TestRoamOTA(object):
             assert False, f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}"
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
+            ap_model = testbed_info[dut_list[ap]]["device_under_tests"][0]['model']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             if ap == 1:
                 config['radios'] = [
@@ -389,7 +392,7 @@ class TestRoamOTA(object):
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
                          "Headers: " + str(get_target_object.controller_library_object.make_headers()))
-            allure.attach(name=f"Push roam config on AP{ap+1}:{serial_number}: ", body="Sending Command: " + str(uri) + "\n" +
+            allure.attach(name=f"Push roam config on AP{ap+1}: {ap_model} {serial_number}: ", body="Sending Command: " + str(uri) + "\n" +
                                                                               "TimeStamp: " + str(
                 datetime.datetime.utcnow()) + "\n" +
                                                                               "Data: " + str(payload) + "\n" +
@@ -528,6 +531,7 @@ class TestRoamOTA(object):
 
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
+            ap_model = testbed_info[dut_list[ap]]["device_under_tests"][0]['model']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             logging.info(f"config:{config}")
             payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
@@ -537,7 +541,7 @@ class TestRoamOTA(object):
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
                          "Headers: " + str(get_target_object.controller_library_object.make_headers()))
-            allure.attach(name=f"Push roam config on AP{ap + 1}:{serial_number}: ",
+            allure.attach(name=f"Push roam config on AP{ap + 1}: {ap_model} {serial_number}: ",
                           body="Sending Command: " + str(uri) + "\n" +
                                "TimeStamp: " + str(
                               datetime.datetime.utcnow()) + "\n" +
@@ -674,6 +678,7 @@ class TestRoamOTA(object):
             assert False, f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}"
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
+            ap_model = testbed_info[dut_list[ap]]["device_under_tests"][0]['model']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             logging.info(f"config:{config}")
             payload = {"configuration": json.dumps(config), "serialNumber": serial_number, "UUID": 2}
@@ -683,7 +688,7 @@ class TestRoamOTA(object):
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
                          "Headers: " + str(get_target_object.controller_library_object.make_headers()))
-            allure.attach(name=f"Push roam config on AP{ap + 1}: {serial_number}: ",
+            allure.attach(name=f"Push roam config on AP{ap + 1}: {ap_model} {serial_number}: ",
                           body="Sending Command: " + str(uri) + "\n" +
                                "TimeStamp: " + str(
                               datetime.datetime.utcnow()) + "\n" +
@@ -822,6 +827,7 @@ class TestRoamOTA(object):
             assert False, f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}"
         for ap in range(len(dut_list)):
             serial_number = testbed_info[dut_list[ap]]["device_under_tests"][0]['identifier']
+            ap_model = testbed_info[dut_list[ap]]["device_under_tests"][0]['model']
             dut_names.append(testbed_info[dut_list[ap]]["device_under_tests"][0]['model'])
             if ap == 1:
                 config['radios'] = [
@@ -835,7 +841,7 @@ class TestRoamOTA(object):
                          "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
                          "Data: " + str(json.dumps(payload, indent=2)) + "\n" +
                          "Headers: " + str(get_target_object.controller_library_object.make_headers()))
-            allure.attach(name=f"Push roam config on AP{ap + 1}:{serial_number}: ",
+            allure.attach(name=f"Push roam config on AP{ap + 1}: {ap_model} {serial_number}: ",
                           body="Sending Command: " + str(uri) + "\n" +
                                "TimeStamp: " + str(
                               datetime.datetime.utcnow()) + "\n" +
