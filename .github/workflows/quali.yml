@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf186h,edgecore_eap104,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111,edgecore_oap103,edgecore_eap112,cig_wf189h"
+        default: "cig_wf186h,edgecore_eap104,sonicfi_rap630c-311g,hfcl_ion4xe,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111,edgecore_oap103,cig_wf189h,senao_iap4300m,udaya_a6-id2,cig_wf672"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -91,14 +91,14 @@ jobs:
           if [[ "$SLOT" -eq "1" ]]; then
             echo "Choosing first slot (5 PM IST)"
             if [[ "$DOW" -eq "1" || "$DOW" -eq "3" ]]; then
-              AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf186h,cig_wf196,yuncore_ax820' }}"
+              AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf186h,cig_wf196,yuncore_ax820,senao_iap4300m,udaya_a6-id2' }}"
             else
               AP_MODELS="${{ github.event.inputs.ap_models || 'yuncore_fap655,sercomm_ap72tip,edgecore_eap101' }}"
             fi
           elif [[ "$SLOT" -eq "2" ]]; then
             echo "Choosing second slot (11:30 PM IST)"
             if [[ "$DOW" -eq "1" || "$DOW" -eq "3" ]]; then
-              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,udaya_a6-id2,edgecore_eap102' }}"
+              AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_eap104,edgecore_eap102,cig_wf672' }}"
             else
               AP_MODELS="${{ github.event.inputs.ap_models || 'cig_wf189,edgecore_eap105,edgecore_eap111' }}"
             fi
@@ -761,6 +761,184 @@ jobs:
         if: failure()
         run: kubectl -n openwifi-qa01 logs deployment/owsec
 
+  test-senao-iap4300m:
+    needs: [ "vars", "build" ]
+    runs-on: ubuntu-latest
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'senao_iap4300m')"
+    env:
+      AP_MODEL: senao_iap4300m
+    steps:
+      - name: Set AP model output
+        id: ap_model
+        run: |
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+      - name: prepare namespace name
+        id: namespace
+        run: |
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
+
+      - name: prepare configuration
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
+
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}
+          testbed: basic-1
+          marker_expression: "${{ needs.vars.outputs.marker_expression }}"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }} --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }} $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
+
+      - name: show gw logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owgw
+
+      - name: show fms logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owfms
+
+      - name: show prov logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owprov
+
+      - name: show analytics logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owanalytics
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owsub
+
+      - name: show sec logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owsec
+
+  test-cig-wf672:
+    needs: [ "vars", "build" ]
+    runs-on: ubuntu-latest
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf672')"
+    env:
+      AP_MODEL: cig_wf672
+    steps:
+      - name: Set AP model output
+        id: ap_model
+        run: |
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+      - name: prepare namespace name
+        id: namespace
+        run: |
+          NAMESPACE="testing-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
+
+      - name: prepare configuration
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
+
+
+      - name: run tests
+        uses: ./.github/actions/run-tests
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}
+          testbed: basic-5a
+          marker_expression: "${{ needs.vars.outputs.marker_expression }}"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
+          allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }} --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }} $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}
+
+      - name: show gw logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owgw
+
+      - name: show fms logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owfms
+
+      - name: show prov logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owprov
+
+      - name: show analytics logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owanalytics
+
+      - name: show subscription (userportal) logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owsub
+
+      - name: show sec logs
+        if: failure()
+        run: kubectl -n openwifi-qa01 logs deployment/owsec
+
 
   test-edgecore-eap101:
     needs: ["vars", "build"]
@@ -1074,7 +1252,7 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           namespace: ${{ steps.namespace.outputs.name }}
-          testbed: basic-3
+          testbed: basic-2
           marker_expression: "${{ needs.vars.outputs.marker_expression }}"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1478,7 +1656,7 @@ jobs:
   report:
     if: "!cancelled()"
     runs-on: ubuntu-latest
-    needs: [vars, test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sonicfi-rap7110c-341x, test-edgecore-eap101, test-edgecore-eap111,test-edgecore-oap103,test-edgecore-eap112,test-cig-wf189h]
+    needs: [vars, test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sonicfi-rap7110c-341x, test-edgecore-eap101, test-edgecore-eap111,test-edgecore-oap103,test-edgecore-eap112,test-cig-wf189h,test-senao-iap4300m,test-cig-wf672]
     strategy:
       fail-fast: false
       matrix:
@@ -1529,7 +1707,7 @@ jobs:
 
   # Cleanup
   cleanup:
-    needs: [test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sonicfi-rap7110c-341x, test-edgecore-eap101, test-edgecore-eap111,test-edgecore-oap103,test-edgecore-eap112,test-cig-wf189h]
+    needs: [test-cig-wf186h, test-edgecore-eap104, test-cig-wf196, test-udaya-a6-id2, test-sonicfi-rap630c-311g, test-hfcl-ion4xe, test-yuncore-fap655, test-cig-wf189, test-edgecore-eap105, test-sonicfi-rap7110c-341x, test-edgecore-eap101, test-edgecore-eap111,test-edgecore-oap103,test-edgecore-eap112,test-cig-wf189h,test-senao-iap4300m,test-cig-wf672]
     runs-on: ubuntu-latest
     if: always()
     steps:
