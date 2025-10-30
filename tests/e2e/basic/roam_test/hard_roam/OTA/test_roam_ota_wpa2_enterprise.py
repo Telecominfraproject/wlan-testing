@@ -51,13 +51,9 @@ class TestRoamOTA(object):
                 temp_list.append(key)
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
-        dut_list = []
-        idx = temp_list.index(selected_testbed)
-        dut_list = [temp_list[idx]]
-        if idx + 1 < len(temp_list):
-            dut_list.append(temp_list[idx + 1])
-
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
+
         if len(dut_list) < 2:
             logging.error(
                 f"This test need two AP's but number of DUT's available in the selected testbed is {dut_list}")
@@ -809,15 +805,9 @@ class TestRoamOTA(object):
                 temp_list.append(key)
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
-        dut_list = []
-        idx = temp_list.index(selected_testbed)
-        dut_list = [temp_list[idx]]
-        if idx + 1 < len(temp_list):
-            dut_list.append(temp_list[idx + 1])
-
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
 
-        # dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
