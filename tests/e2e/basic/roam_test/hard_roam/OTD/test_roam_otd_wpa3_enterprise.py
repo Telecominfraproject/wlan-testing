@@ -51,14 +51,9 @@ class TestRoamOTD(object):
                 temp_list.append(key)
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
-        dut_list = []
-        idx = temp_list.index(selected_testbed)
-        dut_list = [temp_list[idx]]
-        if idx + 1 < len(temp_list):
-            dut_list.append(temp_list[idx + 1])
-
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
-        # dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
+
         config['radios'] = [
             {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
@@ -116,6 +111,13 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -197,13 +199,9 @@ class TestRoamOTD(object):
                 temp_list.append(key)
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
-        dut_list = []
-        idx = temp_list.index(selected_testbed)
-        dut_list = [temp_list[idx]]
-        if idx + 1 < len(temp_list):
-            dut_list.append(temp_list[idx + 1])
-
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
+
         config['radios'] = [
             {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
@@ -261,6 +259,12 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -430,6 +434,12 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -514,13 +524,9 @@ class TestRoamOTD(object):
                 temp_list.append(key)
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
-        dut_list = []
-        idx = temp_list.index(selected_testbed)
-        dut_list = [temp_list[idx]]
-        if idx + 1 < len(temp_list):
-            dut_list.append(temp_list[idx + 1])
-
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
+
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -584,6 +590,12 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -760,6 +772,12 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -845,14 +863,9 @@ class TestRoamOTD(object):
                 temp_list.append(key)
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
-        dut_list = []
-        idx = temp_list.index(selected_testbed)
-        dut_list = [temp_list[idx]]
-        if idx + 1 < len(temp_list):
-            dut_list.append(temp_list[idx + 1])
-
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
-        # dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
+
         config['radios'] = [
             {"band": "2G", "channel": 11, "channel-mode": "HE", "channel-width": 40, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["2G"]
@@ -911,6 +924,12 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -992,13 +1011,9 @@ class TestRoamOTD(object):
                 temp_list.append(key)
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
-        dut_list = []
-        idx = temp_list.index(selected_testbed)
-        dut_list = [temp_list[idx]]
-        if idx + 1 < len(temp_list):
-            dut_list.append(temp_list[idx + 1])
-
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
+
         config['radios'] = [
             {"band": "5G", "channel": 36, "channel-mode": "HE", "channel-width": 80, "country": "CA"}]
         config['interfaces'][0]["ssids"][0]["wifi-bands"] = ["5G"]
@@ -1057,6 +1072,12 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -1227,6 +1248,12 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -1311,13 +1338,9 @@ class TestRoamOTD(object):
                 temp_list.append(key)
         temp_list.sort()
         logging.info(f"temp_list:{temp_list}")
-        dut_list = []
-        idx = temp_list.index(selected_testbed)
-        dut_list = [temp_list[idx]]
-        if idx + 1 < len(temp_list):
-            dut_list.append(temp_list[idx + 1])
-
+        dut_list = [temp_list[idx] for idx in range(len(temp_list)) if idx <= 1]
         logging.info(f"---dut list: {dut_list}---")
+
         config['interfaces'][0]["ssids"][0]["radius"] = {
             "accounting": {
                 "host": radius_info["ip"],
@@ -1381,6 +1404,12 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
@@ -1557,6 +1586,13 @@ class TestRoamOTD(object):
                     logging.info(resp.json())
                 else:
                     assert False, f"push configuration to {serial_number} got failed"
+
+            output = get_target_object.dut_library_object.run_generic_command(cmd="ubus call ucentral status", idx=0,
+                                                                              print_log=True,
+                                                                              attach_allure=True,
+                                                                              expected_attachment_type=allure.attachment_type.JSON)
+            logging.info(f"output of ubus call ucentral status:{output}")
+
             get_target_object.dut_library_object.device_under_tests_data = testbed_info[dut_list[ap]][
                 "device_under_tests"]
             ap_iwinfo = get_target_object.dut_library_object.get_iwinfo(attach_allure=True)
