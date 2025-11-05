@@ -353,32 +353,27 @@ setup_params_enterprise= {
     "mode": "BRIDGE",
     "ssid_modes": {
         "wpa3_enterprise_192": [
-            {"ssid_name": "OpenWifi_wpa3192", "appliedRadios": ["2G"]},
-            {"ssid_name": "OpenWifi_wpa3192", "appliedRadios": ["5G"]},
-            {"ssid_name": "OpenWifi_wpa3192", "appliedRadios": ["6G"]}],
+            {"ssid_name": "OpenWifi_wpa3192_2g", "appliedRadios": ["2G"]},
+            {"ssid_name": "OpenWifi_wpa3192_5g", "appliedRadios": ["5G"]},
+            {"ssid_name": "OpenWifi_wpa3192_6g", "appliedRadios": ["6G"]}],
         },
-
     "rf": {
-    "2G": {
+        "2G": {
             "band": "2G",
             "channel": 6,
-            "channel-mode": "EHT",
-            "channel-width": 20      }
-    ,
-    "5G": {
+            "channel-width": 20 }
+        ,
+        "5G": {
             "band": "5G",
             "channel": 36,
-            "channel-mode": "EHT",
-            "channel-width": 80      }
-    ,
-    "6G": {
+            "channel-width": 80 }
+        ,
+        "6G": {
             "band": "6G",
             "channel": 33,
-            "channel-mode": "EHT",
-            "channel-width": 320      }
+            "channel-width": 320 }
     },
     "radius": True,
-
 }
 
 @allure.parent_suite("Client Connectivity Tests")
@@ -394,21 +389,20 @@ setup_params_enterprise= {
 @pytest.mark.uc_sanity
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa3_enterprise_192
-class TestBridgeModeEnterpriseTTLSSuiteC(object):
+class TestBridgeModeEnterpriseTTLSSuiteB(object):
     """ SuiteB Enterprise Test Cases
         pytest -m "client_connectivity_tests and bridge and enterprise and ttls and suiteB"
     """
-    @pytest.mark.wpa3_enterprise_192
     @pytest.mark.sixg
     @pytest.mark.twog
-    @allure.title("Test for wpa3 enterprise 6 GHz")
+    @allure.title("Test for wpa3-192 enterprise 6 GHz")
     def test_wpa3_enterprise_6g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3 enterprise 6g
             pytest -m "client_connectivity_tests and bridge and ttls and wpa3_enterprise_192 and sixg"
         """
-        profile_data = {"ssid_name": "OpenWifi_wpa3192", "appliedRadios": ["6G"]}
+        profile_data = {"ssid_name": "OpenWifi_wpa3192_6g", "appliedRadios": ["6G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         mode = "BRIDGE"
@@ -428,16 +422,15 @@ class TestBridgeModeEnterpriseTTLSSuiteC(object):
 
         assert passes == "PASS", result
 
-    @pytest.mark.wpa3_enterprise_192
     @pytest.mark.fiveg
-    @allure.title("Test for wpa3 enterprise 5 GHz")
+    @allure.title("Test for wpa3-192 enterprise 5 GHz")
     def test_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3 enterprise 5g
             pytest -m "client_connectivity_tests and bridge and ttls and wpa3_enterprise_192 and fiveg"
         """
-        profile_data = {"ssid_name": "OpenWifi_wpa3192", "appliedRadios": ["5G"]}
+        profile_data = {"ssid_name": "OpenWifi_wpa3192_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         mode = "BRIDGE"
@@ -457,16 +450,15 @@ class TestBridgeModeEnterpriseTTLSSuiteC(object):
 
         assert passes == "PASS", result
 
-    @pytest.mark.wpa3_enterprise_192
     @pytest.mark.twog
-    @allure.title("Test for wpa3 enterprise 2 GHz")
+    @allure.title("Test for wpa3-192 enterprise 2 GHz")
     def test_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3 enterprise 2g
             pytest -m "client_connectivity_tests and bridge and ttls and wpa3_enterprise_192 and twog and not sixg"
         """
-        profile_data = {"ssid_name": "OpenWifi_wpa3192", "appliedRadios": ["2G"]}
+        profile_data = {"ssid_name": "OpenWifi_wpa3192_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
         mode = "BRIDGE"
