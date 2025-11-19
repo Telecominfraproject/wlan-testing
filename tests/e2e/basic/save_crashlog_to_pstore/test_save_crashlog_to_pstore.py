@@ -11,7 +11,8 @@ import time
 import allure
 import pytest
 
-pytestmark = [pytest.mark.save_crashlog_to_pstore, pytest.mark.bridge, pytest.mark.wap2_personal]
+pytestmark = [pytest.mark.save_crashlog_to_pstore, pytest.mark.bridge, pytest.mark.wap2_personal,
+              pytest.mark.ow_regression_lf]
 
 setup_params_general = {
     "mode": "BRIDGE",
