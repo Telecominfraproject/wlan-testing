@@ -30,7 +30,7 @@ on:
         description: "revision of firmware to flash on AP, <branch>-<commit>"
       marker_expressions:
         required: true
-        default: "dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,strict_forwarding_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests,schema_validation_tests"
+        default: "dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests,schema_validation_tests,save_crashlog_to_pstore"
         description: "Marker expressions to select tests to execute"
       additional_args:
         default: ""
@@ -72,7 +72,7 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
 
-          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,strict_forwarding_tests,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests,schema_validation_tests' }}"
+          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'dfs_tests,multi_psk_tests,rate_limiting_tests,rate_limiting_with_radius_tests,dynamic_vlan_tests,multi_vlan_tests,save_crashlog_to_pstore,advanced_captive_portal_tests,firmware_upgrade_downgrade,asb_tests,schema_validation_tests' }}"
           MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           echo "additional_arguments=$(echo ${{ github.event.inputs.additional_arguments || ''}})" >> $GITHUB_OUTPUT
           cat >> $GITHUB_OUTPUT << EOF
@@ -359,17 +359,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-3a
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -377,13 +377,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -717,17 +717,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-1
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -735,13 +735,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -1076,17 +1076,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-6
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1094,13 +1094,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -1435,17 +1435,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-2
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1453,13 +1453,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -1794,17 +1794,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-5a
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -1812,13 +1812,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -2152,17 +2152,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-5a
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2170,13 +2170,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -2510,17 +2510,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-1a
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2528,13 +2528,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -2869,17 +2869,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-2a
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -2887,13 +2887,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -3222,17 +3222,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-4
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3240,13 +3240,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -3580,17 +3580,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-6a
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3598,13 +3598,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -3938,17 +3938,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-2
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -3956,13 +3956,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -4296,17 +4296,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-5
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -4314,13 +4314,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -4654,17 +4654,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-4a
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -4672,13 +4672,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -5012,17 +5012,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-3
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -5030,13 +5030,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -5370,17 +5370,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-1
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -5388,13 +5388,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -5728,17 +5728,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-1
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -5746,13 +5746,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
@@ -6086,17 +6086,17 @@ jobs:
         continue-on-error: true
         run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-multi-vlan
 
-      - name: run strict forwarding tests
+      - name: run save crashlog to pstore
         uses: ./.github/actions/run-tests
-        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'save_crashlog_to_pstore')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
+          namespace: ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
           testbed: basic-4
-          marker_expression: "ow_regression_lf and strict_forwarding_tests"
+          marker_expression: "ow_regression_lf and save_crashlog_to_pstore"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-strict_forwarding_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-save_crashlog_to_pstore
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -6104,13 +6104,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-strict-forwarding --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-strict-forwarding $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-crashlog-to-pstore $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-strict-forwarding
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-crashlog-to-pstore
 
       - name: run captive portal tests
         uses: ./.github/actions/run-tests
