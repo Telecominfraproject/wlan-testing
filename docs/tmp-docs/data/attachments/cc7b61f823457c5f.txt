@@ -1,0 +1,3 @@
+2025-11-19 09:47:08 INFO alluredir:- /allure-results
+2025-11-19 09:47:08 INFO os.path.isdir(alluredir):- True
+2025-11-19 09:47:08 INFO environment_properties:- {}
