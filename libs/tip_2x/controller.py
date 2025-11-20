@@ -667,6 +667,20 @@ class Controller(ConfigureController):
             self.check_response("GET", resp, self.make_headers(), "", uri)
         return resp
 
+    def delete_device_reboot_logs(self, serial_number="", query="?startDate=1726204413&endDate=1726206213&limit=30&logType=2&newest=true"):
+        uri = self.build_uri("device/" + serial_number + "/logs" + query)
+        logging.info("Sending Command: " + "\n" +
+                     "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                     "URI: " + str(uri) + "\n" +
+                     "Headers: " + str(self.make_headers()))
+        allure.attach(name="Sending Command:", body="Sending Command: " + "\n" +
+                                                    "TimeStamp: " + str(datetime.datetime.utcnow()) + "\n" +
+                                                    "URI: " + str(uri) + "\n" +
+                                                    "Headers: " + str(self.make_headers()))
+        resp = requests.delete(uri, headers=self.make_headers(), verify=False, timeout=120)
+        self.check_response("DELETE", resp, self.make_headers(), "", uri)
+        return resp
+
     def get_device_health_checks(self, serial_number):
         uri = self.build_uri("device/" + serial_number + "/healthchecks")
         logging.info("Sending Command: " + "\n" +
