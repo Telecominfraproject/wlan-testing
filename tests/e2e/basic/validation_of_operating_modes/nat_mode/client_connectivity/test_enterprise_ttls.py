@@ -410,3 +410,133 @@ class TestNATModeEnterpriseTTLSSuiteC(object):
                                                                               key_mgmt="WPA-EAP-SHA256")
 
         assert passes == "PASS", result
+
+
+# Wpa3-192
+setup_params_enterprise= {
+    "mode": "NAT",
+    "ssid_modes": {
+        "wpa3_enterprise_192": [
+            {"ssid_name": "OpenWifi_wpa3192_2g", "appliedRadios": ["2G"]},
+            {"ssid_name": "OpenWifi_wpa3192_5g", "appliedRadios": ["5G"]},
+            {"ssid_name": "OpenWifi_wpa3192_6g", "appliedRadios": ["6G"]}],
+        },
+    "rf": {
+        "2G": {
+            "band": "2G",
+            "channel": 6,
+            "channel-width": 20 }
+        ,
+        "5G": {
+            "band": "5G",
+            "channel": 36,
+            "channel-width": 80 }
+        ,
+        "6G": {
+            "band": "6G",
+            "channel": 33,
+            "channel-width": 320 }
+    },
+    "radius": True,
+}
+
+@allure.parent_suite("Client Connectivity Tests")
+@allure.feature("Client Connectivity")
+@allure.suite(suite_name="NAT Mode")
+@allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-C")
+@pytest.mark.parametrize(
+    'setup_configuration',
+    [setup_params_enterprise],
+    indirect=True,
+    scope="class"
+)
+@pytest.mark.usefixtures("setup_configuration")
+@pytest.mark.wpa3_enterprise_192
+class TestNATModeEnterpriseTTLSSuiteC(object):
+    """ SuiteC Enterprise Test Cases
+        pytest -m "client_connectivity_tests and nat and enterprise and ttls and suiteC"
+    """
+    @pytest.mark.sixg
+    @pytest.mark.twog
+    @allure.title("Test for wpa3-192 enterprise 6 GHz")
+    def test_wpa3_enterprise_6g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+            wpa3 enterprise 6g
+            pytest -m "client_connectivity_tests and nat and ttls and wpa3_enterprise_192 and sixg"
+        """
+        profile_data = {"ssid_name": "OpenWifi_wpa3192_6g", "appliedRadios": ["6G"]}
+        ssid_name = profile_data["ssid_name"]
+        security = "wpa3"
+        mode = "NAT"
+        band = "sixg"
+        ttls_passwd = radius_info["password"]
+        eap = "TTLS"
+        identity = radius_info['user']
+        key_mgmt = "WPA-EAP-SUITE-B-192"
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=ttls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration,
+                                                                              ieee80211w=2, pairwise="GCMP-256",
+                                                                              group="GCMP-256",
+                                                                              key_mgmt=key_mgmt)
+
+        assert passes == "PASS", result
+
+    @pytest.mark.fiveg
+    @allure.title("Test for wpa3-192 enterprise 5 GHz")
+    def test_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+            wpa3 enterprise 5g
+            pytest -m "client_connectivity_tests and nat and ttls and wpa3_enterprise_192 and fiveg"
+        """
+        profile_data = {"ssid_name": "OpenWifi_wpa3192_5g", "appliedRadios": ["5G"]}
+        ssid_name = profile_data["ssid_name"]
+        security = "wpa3"
+        mode = "NAT"
+        band = "fiveg"
+        ttls_passwd = radius_info["password"]
+        eap = "TTLS"
+        identity = radius_info['user']
+        key_mgmt = "WPA-EAP-SUITE-B-192"
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=ttls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration,
+                                                                              ieee80211w=2, pairwise="GCMP-256",
+                                                                              group="GCMP-256",
+                                                                              key_mgmt=key_mgmt)
+
+        assert passes == "PASS", result
+
+    @pytest.mark.twog
+    @allure.title("Test for wpa3-192 enterprise 2 GHz")
+    def test_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+                                get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
+        """
+            wpa3 enterprise 2g
+            pytest -m "client_connectivity_tests and nat and ttls and wpa3_enterprise_192 and twog and not sixg"
+        """
+        profile_data = {"ssid_name": "OpenWifi_wpa3192_2g", "appliedRadios": ["2G"]}
+        ssid_name = profile_data["ssid_name"]
+        security = "wpa3"
+        mode = "NAT"
+        band = "twog"
+        ttls_passwd = radius_info["password"]
+        eap = "TTLS"
+        identity = radius_info['user']
+        key_mgmt = "WPA-EAP-SUITE-B-192"
+        passes, result = get_test_library.enterprise_client_connectivity_test(ssid=ssid_name, security=security,
+                                                                              mode=mode, band=band, eap=eap,
+                                                                              ttls_passwd=ttls_passwd,
+                                                                              identity=identity, num_sta=num_stations,
+                                                                              dut_data=setup_configuration,
+                                                                              ieee80211w=2, pairwise="GCMP-256",
+                                                                              group="GCMP-256",
+                                                                              key_mgmt=key_mgmt)
+
+        assert passes == "PASS", result
