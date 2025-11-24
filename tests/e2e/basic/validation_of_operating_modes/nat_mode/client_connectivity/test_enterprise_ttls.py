@@ -468,7 +468,7 @@ class TestNATModeEnterpriseTTLSSuiteC(object):
         profile_data = {"ssid_name": "OpenWifi_wpa3192_6g", "appliedRadios": ["6G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        mode = "NAT"
+        mode = "NAT-WAN"
         band = "sixg"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -496,7 +496,7 @@ class TestNATModeEnterpriseTTLSSuiteC(object):
         profile_data = {"ssid_name": "OpenWifi_wpa3192_5g", "appliedRadios": ["5G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        mode = "NAT"
+        mode = "NAT-WAN"
         band = "fiveg"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
@@ -524,7 +524,7 @@ class TestNATModeEnterpriseTTLSSuiteC(object):
         profile_data = {"ssid_name": "OpenWifi_wpa3192_2g", "appliedRadios": ["2G"]}
         ssid_name = profile_data["ssid_name"]
         security = "wpa3"
-        mode = "NAT"
+        mode = "NAT-WAN"
         band = "twog"
         ttls_passwd = radius_info["password"]
         eap = "TTLS"
