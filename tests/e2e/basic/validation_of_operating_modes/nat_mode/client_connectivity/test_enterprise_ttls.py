@@ -233,7 +233,7 @@ setup_params_enterprise_two = {
     scope="class"
 )
 @pytest.mark.usefixtures("setup_configuration")
-class TestNATModeEnterpriseTTLSSuiteTwo(object):
+class TestNATModeEnterpriseTTLSSuiteOne(object):
     """ SuiteA Enterprise Test Cases
         pytest -m "client_connectivity_tests and nat and enterprise and ttls and suiteB"
     """
@@ -378,9 +378,9 @@ setup_params_enterprise_6G = {
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa3_enterprise
 @pytest.mark.twog
-class TestNATModeEnterpriseTTLSSuiteC(object):
+class TestNATModeEnterpriseTTLSSuiteTwo(object):
     """ SuiteC Enterprise Test Cases
-            pytest -m "client_connectivity_tests and nat and enterprise and ttls and suiteC"
+            pytest -m "client_connectivity_tests and nat and enterprise and ttls and suiteB"
     """
 
     @pytest.mark.wpa3_enterprise
@@ -410,7 +410,6 @@ class TestNATModeEnterpriseTTLSSuiteC(object):
                                                                               key_mgmt="WPA-EAP-SHA256")
 
         assert passes == "PASS", result
-
 
 # Wpa3-192
 setup_params_enterprise= {
@@ -459,7 +458,7 @@ class TestNATModeEnterpriseTTLSSuiteC(object):
     @pytest.mark.sixg
     @pytest.mark.twog
     @allure.title("Test for wpa3-192 enterprise 6 GHz")
-    def test_wpa3_enterprise_6g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+    def test_wpa3_192_enterprise_6g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3 enterprise 6g
@@ -487,7 +486,7 @@ class TestNATModeEnterpriseTTLSSuiteC(object):
 
     @pytest.mark.fiveg
     @allure.title("Test for wpa3-192 enterprise 5 GHz")
-    def test_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+    def test_wpa3_192_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3 enterprise 5g
@@ -515,7 +514,7 @@ class TestNATModeEnterpriseTTLSSuiteC(object):
 
     @pytest.mark.twog
     @allure.title("Test for wpa3-192 enterprise 2 GHz")
-    def test_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+    def test_wpa3_192_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3 enterprise 2g

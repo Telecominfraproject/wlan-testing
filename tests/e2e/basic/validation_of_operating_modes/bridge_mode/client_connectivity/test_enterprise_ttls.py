@@ -396,7 +396,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
     @pytest.mark.sixg
     @pytest.mark.twog
     @allure.title("Test for wpa3-192 enterprise 6 GHz")
-    def test_wpa3_enterprise_6g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+    def test_wpa3_192_enterprise_6g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3-192 enterprise 6g
@@ -424,7 +424,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.fiveg
     @allure.title("Test for wpa3-192 enterprise 5 GHz")
-    def test_wpa3_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+    def test_wpa3_192_enterprise_5g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3-192 enterprise 5g
@@ -452,7 +452,7 @@ class TestBridgeModeEnterpriseTTLSSuiteA(object):
 
     @pytest.mark.twog
     @allure.title("Test for wpa3-192 enterprise 2 GHz")
-    def test_wpa3_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
+    def test_wpa3_192_enterprise_2g(self, get_test_library, get_dut_logs_per_test_case, get_test_device_logs,
                                 get_target_object, num_stations, setup_configuration, check_connectivity, radius_info):
         """
             wpa3-192 enterprise 2g
