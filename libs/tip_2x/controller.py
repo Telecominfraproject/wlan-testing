@@ -2587,7 +2587,8 @@ class UProfileUtility:
             "wpa2": "eap",
             "wpa3": "eap",
             "wpa-mixed": "eap",
-            "wpa3-mixed": "sae"
+            "wpa3-mixed": "sae",
+            "wpa3-192": "eap"
         }
         if encryption in encryption_mapping.keys():
             return encryption_mapping[encryption]
