@@ -30,7 +30,7 @@ on:
         description: "revision of firmware to flash on AP, <branch>-<commit>"
       marker_expressions:
         required: true
-        default: "schema_validation_tests and through_github"
+        default: "schema_validation_tests"
         description: "Marker expressions to select tests to execute"
       additional_args:
         default: ""
@@ -42,10 +42,8 @@ on:
         description: "Use an existing cloud controller, e.g. like qa01 instead of dynamic one"
       tests_release:
         required: false
-        default: ""
+        default: "WIFI-15250"
         description: "Tests release branch to use (i.e. 'release/v2.8.0' or 'master'). If left empty, latest release branch is used"
-  schedule:
-    - cron: "30 6 * * *"  # 06:30 UTC = 12:00 PM IST
 
 jobs:
   # Set vars
@@ -72,21 +70,21 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'next-latest' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
 
-          # For testing: use our two test APs and only schema validation tests
-          AP_MODELS="edgecore_oap103,hfcl_ion4xe"
-          ALL_MARKERS="schema_validation_tests"
+          # Use the provided AP models or default to our test APs
+          AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap103,hfcl_ion4xe' }}"
+          MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'schema_validation_tests' }}"
           
-          echo "additional_arguments=$(echo ${{ github.event.inputs.additional_arguments || ''}})" >> $GITHUB_OUTPUT
+          echo "additional_arguments=$(echo ${{ github.event.inputs.additional_args || ''}})" >> $GITHUB_OUTPUT
           
-          ALL_MARKERS=$(echo $ALL_MARKERS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+          MARKER_EXPRESSIONS=$(echo $MARKER_EXPRESSIONS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           AP_MODELS=$(echo $AP_MODELS | sed "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
           
           cat >> $GITHUB_OUTPUT << EOF
-          marker_expressions=${ALL_MARKERS}
+          marker_expressions=${MARKER_EXPRESSIONS}
           ap_models=${AP_MODELS}
           EOF
           
-          # use WIFI-15250 branch for testing
+          # Use WIFI-15250 branch for testing
           echo "tests_release=WIFI-15250" >> $GITHUB_OUTPUT
 
   # Build test image
@@ -151,7 +149,7 @@ jobs:
           ${{ secrets.LAB_INFO_JSON }}
           EOF
 
-      - name: run schema_validation tests
+      - name: run schema_validation and through_github tests
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
@@ -160,8 +158,8 @@ jobs:
           marker_expression: "ow_regression_lf and schema_validation_tests and through_github"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }} ${{ github.event.inputs.additional_args }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_through_github
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -233,7 +231,7 @@ jobs:
           marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
-          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }} ${{ github.event.inputs.additional_args }}"
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
           allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
 
