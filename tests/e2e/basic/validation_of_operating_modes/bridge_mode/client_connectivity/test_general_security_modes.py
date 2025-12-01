@@ -454,6 +454,7 @@ class TestBridgeModeConnectivityOWE(object):
     @pytest.mark.owe
     @pytest.mark.twog
     @pytest.mark.ow_regression_lf
+    @pytest.mark.owe_owe_transition
     @allure.story('OWE 2.4 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with OWE encryption 2.4 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13669", name="WIFI-13669")
@@ -482,6 +483,7 @@ class TestBridgeModeConnectivityOWE(object):
     @pytest.mark.owe
     @pytest.mark.fiveg
     @pytest.mark.ow_regression_lf
+    @pytest.mark.owe_owe_transition
     @allure.story('OWE 5 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with OWE encryption 5 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13669", name="WIFI-13669")
@@ -511,6 +513,7 @@ class TestBridgeModeConnectivityOWE(object):
     @pytest.mark.twog
     @pytest.mark.sixg
     @pytest.mark.ow_regression_lf
+    @pytest.mark.owe_owe_transition
     @allure.story('OWE 6 GHZ Band')
     @allure.title("BRIDGE Mode Client Connectivity Test with OWE encryption 6 GHz Band")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13669", name="WIFI-13669")
@@ -572,6 +575,7 @@ class TestBridgeModeConnectivityOWETransition(object):
     @pytest.mark.twog
     @pytest.mark.owe_client
     @pytest.mark.ow_regression_lf
+    @pytest.mark.owe_owe_transition
     @allure.story('OWE-Transition 2.4 GHZ Band - OWE Client')
     @allure.title("BRIDGE Mode OWE-Transition: OWE client connects to hidden SSID")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13674", name="WIFI-13674")
@@ -601,6 +605,7 @@ class TestBridgeModeConnectivityOWETransition(object):
     @pytest.mark.twog
     @pytest.mark.non_owe_client
     @pytest.mark.ow_regression_lf
+    @pytest.mark.owe_owe_transition
     @allure.story('OWE-Transition 2.4 GHZ Band - Non-OWE Client')
     @allure.title("BRIDGE Mode OWE-Transition: Non-OWE client connects to SSID in open mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13673", name="WIFI-13673")
@@ -630,6 +635,7 @@ class TestBridgeModeConnectivityOWETransition(object):
     @pytest.mark.fiveg
     @pytest.mark.owe_client
     @pytest.mark.ow_regression_lf
+    @pytest.mark.owe_owe_transition
     @allure.story('OWE-Transition 5 GHZ Band - OWE Client')
     @allure.title("BRIDGE Mode OWE-Transition: OWE client connects to hidden SSID")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13674", name="WIFI-13674")
@@ -659,6 +665,7 @@ class TestBridgeModeConnectivityOWETransition(object):
     @pytest.mark.fiveg
     @pytest.mark.non_owe_client
     @pytest.mark.ow_regression_lf
+    @pytest.mark.owe_owe_transition
     @allure.story('OWE-Transition 5 GHZ Band - Non-OWE Client')
     @allure.title("BRIDGE Mode OWE-Transition: Non-OWE client connects to SSID in open mode")
     @allure.testcase(url="https://telecominfraproject.atlassian.net/browse/WIFI-13673", name="WIFI-13673")
