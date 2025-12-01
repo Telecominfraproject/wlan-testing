@@ -386,7 +386,7 @@ setup_params_enterprise= {
     indirect=True,
     scope="class"
 )
-@pytest.mark.ow_sanity_lf
+@pytest.mark.ow_regression_lf
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa3_enterprise_192
 class TestBridgeModeEnterpriseTTLSSuiteA(object):

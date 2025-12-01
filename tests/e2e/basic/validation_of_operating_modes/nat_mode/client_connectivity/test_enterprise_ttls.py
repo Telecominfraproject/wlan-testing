@@ -8,7 +8,7 @@ import allure
 import pytest
 
 pytestmark = [pytest.mark.client_connectivity_tests, pytest.mark.nat, pytest.mark.enterprise, pytest.mark.ttls,
-              pytest.mark.ucentral, pytest.mark.sanity, pytest.mark.uc_sanity, pytest.mark.ow_sanity_lf]
+              pytest.mark.ucentral, pytest.mark.sanity, pytest.mark.uc_sanity]
 
 setup_params_enterprise = {
     "mode": "NAT",
@@ -27,7 +27,7 @@ setup_params_enterprise = {
     "radius": True
 }
 
-
+@pytest.mark.ow_sanity_lf
 @allure.parent_suite("Client Connectivity Tests")
 @allure.feature("Client Connectivity")
 @allure.suite(suite_name="NAT Mode")
@@ -221,7 +221,7 @@ setup_params_enterprise_two = {
     "radius": True
 }
 
-
+@pytest.mark.ow_sanity_lf
 @allure.parent_suite("Client Connectivity Tests")
 @allure.feature("Client Connectivity")
 @allure.suite(suite_name="NAT Mode")
@@ -365,6 +365,7 @@ setup_params_enterprise_6G = {
         },
         "radius": True
 }
+@pytest.mark.ow_sanity_lf
 @allure.parent_suite("Client Connectivity Tests")
 @allure.feature("Client Connectivity")
 @allure.suite(suite_name="NAT Mode")
@@ -439,10 +440,11 @@ setup_params_enterprise= {
     "radius": True,
 }
 
+@pytest.mark.ow_regression_lf
 @allure.parent_suite("Client Connectivity Tests")
 @allure.feature("Client Connectivity")
 @allure.suite(suite_name="NAT Mode")
-@allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-C")
+@allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-A")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise],
@@ -452,8 +454,8 @@ setup_params_enterprise= {
 @pytest.mark.usefixtures("setup_configuration")
 @pytest.mark.wpa3_enterprise_192
 class TestNATModeEnterpriseTTLSSuiteC(object):
-    """ SuiteC Enterprise Test Cases
-        pytest -m "client_connectivity_tests and nat and enterprise and ttls and suiteC"
+    """ SuiteA Enterprise Test Cases
+        pytest -m "client_connectivity_tests and nat and enterprise and ttls and suiteA"
     """
     @pytest.mark.sixg
     @pytest.mark.twog
