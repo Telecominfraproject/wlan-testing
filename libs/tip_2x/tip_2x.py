@@ -65,7 +65,8 @@ class tip_2x:
                             "wpa_wpa2_enterprise_mixed",
                             "wpa3_enterprise_mixed",
                             "wpa3_enterprise_192",
-                            "owe"
+                            "owe",
+                            "owe_transition"
                             ]
     tip_2x_specific_encryption_translation = {"open": "none",
                                               "wpa": "psk",
@@ -79,7 +80,8 @@ class tip_2x:
                                               "wpa_wpa2_enterprise_mixed": "wpa-mixed",
                                               "wpa3_enterprise_mixed": "wpa3-mixed",
                                               "wpa3_enterprise_192": "wpa3-192",
-                                              "owe":"owe"
+                                              "owe":"owe",
+                                              "owe_transition":"owe-transition"
                                               }
 
     def __init__(self, controller_data=None, target=None, configuration=None,
