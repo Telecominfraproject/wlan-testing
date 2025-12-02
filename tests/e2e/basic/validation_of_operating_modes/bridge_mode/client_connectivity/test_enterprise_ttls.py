@@ -379,7 +379,7 @@ setup_params_enterprise= {
 @allure.parent_suite("Client Connectivity Tests")
 @allure.feature("Client Connectivity")
 @allure.suite(suite_name="BRIDGE Mode")
-@allure.sub_suite(sub_suite_name="EAP TTLS Client Connectivity : Suite-A")
+@allure.sub_suite(sub_suite_name="WPA3-192 Enterprise Client Connectivity")
 @pytest.mark.parametrize(
     'setup_configuration',
     [setup_params_enterprise],
