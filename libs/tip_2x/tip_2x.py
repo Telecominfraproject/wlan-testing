@@ -65,7 +65,8 @@ class tip_2x:
                             "wpa_wpa2_enterprise_mixed",
                             "wpa3_enterprise_mixed",
                             "wpa3_enterprise_192",
-                            "owe"
+                            "owe",
+                            "owe_transition"
                             ]
     tip_2x_specific_encryption_translation = {"open": "none",
                                               "wpa": "psk",
@@ -79,7 +80,8 @@ class tip_2x:
                                               "wpa_wpa2_enterprise_mixed": "wpa-mixed",
                                               "wpa3_enterprise_mixed": "wpa3-mixed",
                                               "wpa3_enterprise_192": "wpa3-192",
-                                              "owe":"owe"
+                                              "owe":"owe",
+                                              "owe_transition":"owe-transition"
                                               }
 
     def __init__(self, controller_data=None, target=None, configuration=None,
@@ -672,24 +674,41 @@ class tip_2x:
             return None
         ssid_info_sdk = profile_object.get_ssid_info()
         logging.info(f"ssid_info_sdk:{ssid_info_sdk}")
-        ap_wifi_data = self.dut_library_object.get_iwinfo(idx=idx)
-        channel_info = self.get_dut_channel_data(idx=idx)
-        logging.info(f"channel_info:{channel_info}")
-        o = ap_wifi_data.split()
-        iwinfo_bssid_data = {}
-        print(o)
-        for i in range(len(o)):
-            if o[i].__contains__("ESSID"):
-                if o[i + 9].__contains__("2.4"):
-                    band = "2G"
-                elif o[i + 9].__contains__("5."):
-                    band = "5G"
-                elif "unknown" in o[i + 9]:
-                    logging.info(f"Error: {o[i - 1]} has an unknown channel frequency from iwinfo")
-                    pytest.fail(f"Error: {o[i - 1]} has an unknown channel frequency from iwinfo")
-                else:
-                    band = "6G"
-                iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
+
+        def parse_iwinfo():
+            ap_wifi_data = self.dut_library_object.get_iwinfo(idx=idx)
+            channel_info = self.get_dut_channel_data(idx=idx)
+            logging.info(f"channel_info:{channel_info}")
+            o = ap_wifi_data.split()
+            iwinfo_bssid_data = {}
+            logging.info(f"iwinfo raw split data: {o}")
+
+            for i in range(len(o)):
+                if "ESSID" in o[i]:
+                    if "2.4" in o[i + 9]:
+                        band = "2G"
+                    elif "5." in o[i + 9]:
+                        band = "5G"
+                    elif "unknown" in o[i + 9]:
+                        return None, channel_info, o[i - 1]  # return marker to trigger retry
+                    else:
+                        band = "6G"
+                    iwinfo_bssid_data[o[i - 1]] = [o[i + 1].replace('"', ''), o[i + 4], band]
+
+            return iwinfo_bssid_data, channel_info, None
+
+        iwinfo_bssid_data, channel_info, phy_name = parse_iwinfo()
+
+        if iwinfo_bssid_data is None:
+            logging.warning(
+                f"Initial iwinfo read shows unknown channel for {phy_name}, waiting 2 minutes before retry...")
+            time.sleep(120)  # wait 2 minutes
+            iwinfo_bssid_data, channel_info, phy_name = parse_iwinfo()
+
+            if iwinfo_bssid_data is None:
+                logging.info(f"Error: {phy_name} has an unknown channel frequency from iwinfo after retry")
+                pytest.fail(f"Error: {phy_name} has an unknown channel frequency from iwinfo after retry")
+
         logging.info(f"iwinfo_bssid_data:{iwinfo_bssid_data}")
         for p in iwinfo_bssid_data:
             for q in ssid_info_sdk:
