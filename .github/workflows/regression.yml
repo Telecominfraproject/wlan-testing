@@ -233,7 +233,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-3a
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -247,13 +247,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -617,7 +617,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-1
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -631,13 +631,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -1002,7 +1002,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-6
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -1016,13 +1016,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -1387,7 +1387,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-2
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -1401,13 +1401,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -1772,7 +1772,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-5a
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -1786,13 +1786,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -2156,7 +2156,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-5a
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -2170,13 +2170,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -2540,7 +2540,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-1a
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -2554,13 +2554,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -2925,7 +2925,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-2a
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -2939,13 +2939,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -3309,7 +3309,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-4
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -3323,13 +3323,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -3688,7 +3688,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-6a
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -3702,13 +3702,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -4072,7 +4072,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-2
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -4086,13 +4086,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -4456,7 +4456,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-5
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -4470,13 +4470,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -4840,7 +4840,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-4a
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -4854,13 +4854,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -5224,7 +5224,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-3
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -5238,13 +5238,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -5608,7 +5608,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-1
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -5622,13 +5622,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -5992,7 +5992,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-1
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -6006,13 +6006,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
@@ -6376,7 +6376,7 @@ jobs:
         uses: ./.github/actions/run-tests
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
-          namespace: ${{ steps.namespace.outputs.name }}-client-connectivity
+          namespace: ${{ steps.namespace.outputs.name }}-client-connect
           testbed: basic-4
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
@@ -6390,13 +6390,13 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client_connectivity --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
-          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client_connectivity $podname || true
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-client-connect --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-client-connect $podname || true
 
       - name: delete namespace
         if: always()
         continue-on-error: true
-        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client_connectivity
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-client-connect
 
       - name: run multipsk tests
         uses: ./.github/actions/run-tests
