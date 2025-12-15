@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "edgecore_oap103,hfcl_ion4xe"
+        default: "edgecore_oap103,hfcl_ion4xe,edgecore_eap104"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -71,7 +71,7 @@ jobs:
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
 
           # Use the provided AP models or default to our test APs
-          AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap103,hfcl_ion4xe' }}"
+          AP_MODELS="${{ github.event.inputs.ap_models || 'edgecore_oap103,hfcl_ion4xe,edgecore_eap104' }}"
           MARKER_EXPRESSIONS="${{ github.event.inputs.marker_expressions || 'schema_validation_tests' }}"
           
           echo "additional_arguments=$(echo ${{ github.event.inputs.additional_args || ''}})" >> $GITHUB_OUTPUT
@@ -187,11 +187,11 @@ jobs:
           echo "## Test Status for ${{ env.AP_MODEL }}" >> $GITHUB_STEP_SUMMARY
           if [ "${{ job.status }}" == "success" ]; then
             echo "✅ **PASSED** - All tests completed successfully" >> $GITHUB_STEP_SUMMARY
-            echo "📊 Report will be available at: http://openwifi-allure-reports.s3-website-us-east-1.amazonaws.com/regression/schema_validation_tests/${{ env.AP_MODEL }}/${{ github.run_id }}/" >> $GITHUB_STEP_SUMMARY
           else
-            echo " **FAILED** - Some tests failed" >> $GITHUB_STEP_SUMMARY
-            echo " Check logs above for details" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **FAILED** - Some tests failed" >> $GITHUB_STEP_SUMMARY
           fi
+
+          echo "📊 **Report available at:** http://openwifi-allure-reports.s3-website-us-east-1.amazonaws.com/regression/schema_validation_tests/${{ env.AP_MODEL }}/${{ github.run_id }}/" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
       # necessary because if conditionals in composite actions are currently not respected
@@ -291,11 +291,115 @@ jobs:
           echo "## Test Status for ${{ env.AP_MODEL }}" >> $GITHUB_STEP_SUMMARY
           if [ "${{ job.status }}" == "success" ]; then
             echo "✅ **PASSED** - All tests completed successfully" >> $GITHUB_STEP_SUMMARY
-            echo "📊 Report will be available at: http://openwifi-allure-reports.s3-website-us-east-1.amazonaws.com/regression/schema_validation_tests/${{ env.AP_MODEL }}/${{ github.run_id }}/" >> $GITHUB_STEP_SUMMARY
           else
-            echo " **FAILED** - Some tests failed" >> $GITHUB_STEP_SUMMARY
-            echo " Check logs above for details" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **FAILED** - Some tests failed" >> $GITHUB_STEP_SUMMARY
           fi
+
+          echo "📊 **Report available at:** http://openwifi-allure-reports.s3-website-us-east-1.amazonaws.com/regression/schema_validation_tests/${{ env.AP_MODEL }}/${{ github.run_id }}/" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+      # necessary because if conditionals in composite actions are currently not respected
+      - name: get tests logs
+        if: always()
+        continue-on-error: true
+        run: |
+          podname=$(kubectl get pods -n ${{ steps.namespace.outputs.name }}-schema-validation --no-headers -o custom-columns=":metadata.name" -l job-name=testing | sed "s/pod\///")
+          kubectl logs --timestamps -n ${{ steps.namespace.outputs.name }}-schema-validation $podname || true
+
+      - name: delete namespace
+        if: always()
+        continue-on-error: true
+        run: kubectl delete ns --ignore-not-found=true --wait ${{ steps.namespace.outputs.name }}-schema-validation
+
+  # Run tests on edgecore_eap104
+  test-edgecore-eap104:
+    needs: [ "vars", "build" ]
+    runs-on: [ self-hosted, small ]
+    timeout-minutes: 120
+    if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
+    env:
+      AP_MODEL: edgecore_eap104
+    steps:
+      - name: Set AP model output
+        id: ap_model
+        run: |
+          echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
+      - name: install kubectl
+        run: |
+          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: install aws CLI tool
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      - name: get EKS access credentials
+        run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+      - name: prepare namespace name
+        id: namespace
+        run: |
+          NAMESPACE="regression-${{ github.run_id }}-$(echo ${{ steps.ap_model.outputs.model }} | tr '[:upper:]' '[:lower:]' | tr '_' '-')"
+          echo "name=${NAMESPACE}" >> $GITHUB_OUTPUT
+
+      - name: prepare configuration
+        run: |
+          cat << EOF > lab_info.json
+          ${{ secrets.LAB_INFO_JSON }}
+          EOF
+
+      - name: run schema_validation tests
+        uses: ./.github/actions/run-tests
+        if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
+        with:
+          namespace: ${{ steps.namespace.outputs.name }}-schema-validation
+          testbed: basic-3a
+          marker_expression: "ow_regression_lf and schema_validation_tests"
+          configuration_file: "./lab_info.json"
+          testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
+          additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
+      - name: Check if Allure results exist
+        if: always()
+        id: check-allure
+        run: |
+          if [ -d "allure-results" ]; then
+            echo "allure-results-exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "allure-results-exist=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload Allure results as artifact
+        if: always() && steps.check-allure.outputs.allure-results-exist == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ env.AP_MODEL }}-${{ github.run_id }}
+          path: allure-results/
+          retention-days: 1
+
+      - name: Generate immediate test status
+        if: always()
+        run: |
+          echo "## Test Status for ${{ env.AP_MODEL }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ **PASSED** - All tests completed successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **FAILED** - Some tests failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "📊 **Report available at:** http://openwifi-allure-reports.s3-website-us-east-1.amazonaws.com/regression/schema_validation_tests/${{ env.AP_MODEL }}/${{ github.run_id }}/" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
       # necessary because if conditionals in composite actions are currently not respected
