@@ -363,13 +363,14 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
-          testbed: basic-3a
-          marker_expression: "ow_regression_lf and schema_validation_tests"
+          testbed: basic-3
+          marker_expression: "ow_regression_lf and schema_validation_tests and through_github"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: "-o firmware=${{ needs.vars.outputs.ap_version }} ${{ needs.vars.outputs.additional_arguments }}"
-          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_tests
+          allure_results_artifact_name: allure-results-${{ steps.ap_model.outputs.model }}-schema_validation_through_github
           dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+
 
       - name: Check if Allure results exist
         if: always()
