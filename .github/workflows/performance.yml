@@ -3620,7 +3620,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dataplane_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dtt
-          testbed: basic-1
+          testbed: basic-3
           marker_expression: "performance and dataplane_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3646,7 +3646,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_ax_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wca
-          testbed: basic-1
+          testbed: basic-3
           marker_expression: "performance and wifi_capacity_ax_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3672,7 +3672,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'wifi_capacity_be_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-ssdbt
-          testbed: basic-1
+          testbed: basic-3
           marker_expression: "performance and wifi_capacity_be_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3698,7 +3698,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'ax_client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-1
+          testbed: basic-3
           marker_expression: "performance and ax_client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3724,7 +3724,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'be_client_scale_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-1
+          testbed: basic-3
           marker_expression: "performance and be_client_scale_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -3750,7 +3750,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_band_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-wct
-          testbed: basic-1
+          testbed: basic-3
           marker_expression: "performance and multi_band_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
