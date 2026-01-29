@@ -354,9 +354,10 @@ class tip_2x:
 
             # attaching ap logs before config push
             timestamp = datetime.datetime.utcnow()
-            logging.info("AP Log Before config push Timestamp: " + str(timestamp))
-            ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-            allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs), name="AP Log Before config push: ")
+            logging.info(f"Skipping logread for a while")
+            #logging.info("AP Log Before config push Timestamp: " + str(timestamp))
+            #ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+            #allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs), name="AP Log Before config push: ")
             resp = object()
             # Apply the Config
             try:
@@ -365,8 +366,8 @@ class tip_2x:
             except Exception as e:
                 timestamp = datetime.datetime.utcnow()
                 logging.info("Failure while pushing Timestamp: " + str(timestamp))
-                ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
-                allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs), name="Failure while pushing- AP Logs: ")
+                #ap_logs = self.dut_library_object.get_dut_logs(idx=i, print_log=False, attach_allure=False)
+                #allure.attach(body="TimeStamp: " + str(timestamp) + "\n" + str(ap_logs), name="Failure while pushing- AP Logs: ")
                 allure.attach(body=str(e), name="Exception data after config push: ")
                 logging.info("Error in apply config" + str(e))
             logging.info("Response for Config apply: " + str(resp.status_code))
