@@ -497,11 +497,11 @@ class tip_2x:
                 self.get_dut_library_object().run_generic_command(
                     cmd="logger stop testcase: " + instance_name,
                     idx=i)
-                ap_logs = self.get_dut_library_object().get_logread(
-                    start_ref="start testcase: " + instance_name,
-                    stop_ref="stop testcase: " + instance_name)
-                allure.attach(name='Logs - ' + self.device_under_tests_info[i]["identifier"],
-                              body=str(ap_logs))
+                # ap_logs = self.get_dut_library_object().get_logread(
+                #     start_ref="start testcase: " + instance_name,
+                #     stop_ref="stop testcase: " + instance_name)
+                # allure.attach(name='Logs - ' + self.device_under_tests_info[i]["identifier"],
+                #               body=str(ap_logs))
 
             ret_val[self.device_under_tests_info[i]["identifier"]] = self.get_applied_ssid_info(idx=i,
                                                                                                 profile_object=profile_object)
