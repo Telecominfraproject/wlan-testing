@@ -106,25 +106,35 @@ def setup_initial_configuration(request):
     global setup_params_general
     global dut_data
     selected_tb = request.getfixturevalue("selected_testbed")
-    print(f"Selected Testbed: {selected_tb}")
+    logging.info(f"Selected Testbed: {selected_tb}")
     testbed_details_global = request.getfixturevalue("get_testbed_details")
     assert testbed_details_global is not None, "Testbed details should not be None"
-    print(f"Initialized Testbed Details: {testbed_details_global}")
+    logging.info(f"Initialized Testbed Details: {testbed_details_global}")
 
     # Extract 'mode' from the first device in 'device_under_tests'
     ap_mode = testbed_details_global["device_under_tests"][0].get("mode", "")
-
-    # Assign setup_params_general based on mode
+    supported_bands = testbed_details_global["device_under_tests"][0].get("supported_bands", [])
+    logging.info(f"supported_bands::{supported_bands}")
+    sixg_band = False
+    if "6G" in supported_bands:
+        sixg_band =True
+    logging.info(f"sixg_band:{sixg_band}")
+    logging.info(f'appliedRadios:{setup_params_general3["ssid_modes"]["wpa3_personal"][0]["appliedRadios"]}')
+    # Assign setup_params_general based on mode and supported_bands
     if ap_mode == "wifi6":
         setup_params_general = setup_params_general1
     elif ap_mode == "wifi6e":
         setup_params_general = setup_params_general2
-    elif ap_mode == "wifi7":
+    elif ap_mode == "wifi7" and sixg_band:
+        setup_params_general = setup_params_general3
+    elif ap_mode == "wifi7" and (not sixg_band):
+        # this is the case where the AP is WIFI7 AP but doesn't support 6g band.
+        setup_params_general3["ssid_modes"]["wpa3_personal"][0]["appliedRadios"] = ["2G", "5G"]
         setup_params_general = setup_params_general3
     else:
-        print(f"Unknown mode: {ap_mode}. Defaulting to None")
+        logging.info(f"Unknown mode: {ap_mode}. Defaulting to None")
 
-    print(f"Setup Params Assigned: {setup_params_general}")
+    logging.info(f"Setup Params Assigned: {setup_params_general}")
 
     get_marker = request.getfixturevalue("get_markers")
     requested_combination = []
