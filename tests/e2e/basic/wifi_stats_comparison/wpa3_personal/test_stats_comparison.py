@@ -78,10 +78,15 @@ class TestStatsComparisonSuite(object):
             "stats_comparison and bridge and wap3_personal"
         """
         ap_mode = get_testbed_details["device_under_tests"][0].get("mode", "")
-        if ap_mode == "wifi6e" or ap_mode == "wifi7":
-            bands = ["twog", "fiveg", "sixg"]
-        else:
-            bands = ["twog", "fiveg"]
+        supported_bands = get_testbed_details["device_under_tests"][0].get("supported_bands", [])
+        band_map = {
+            "2G": "twog",
+            "5G": "fiveg",
+            "6G": "sixg"
+        }
+        # convert supported bands to required format
+        bands = [band_map[b] for b in supported_bands if b in band_map]
+        logging.info(f"bands:{bands}")
 
         ssid_names = []
         for i in range(0,len(bands)):

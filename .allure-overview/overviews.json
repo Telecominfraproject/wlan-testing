@@ -1,7 +1,7 @@
 {
     "sanity": {
         "OVERVIEW_TITLE": "'OpenWifi sanity results'",
-        "OVERVIEW_TESTBEDS": ["senao_iap4300m","edgecore_eap104","udaya_a6-id2","sonicfi_rap630c-311g","edgecore_oap103","hfcl_ion4xe","cig_wf189h","sonicfi_rap7110c-341x","edgecore_eap105","cig_wf672","edgecore_eap101","edgecore_eap111","yuncore_ax820","edgecore_eap102","sercomm_ap72tip","cig_wf196","edgecore_eap112","yuncore_fap655","cig_wf189"]
+        "OVERVIEW_TESTBEDS": ["senao_iap4300m","cig_wf672","edgecore_eap104","udaya_a6-id2","sonicfi_rap630c-311g","edgecore_oap103","hfcl_ion4xe","cig_wf189h","sonicfi_rap7110c-341x","edgecore_eap105","edgecore_eap101","edgecore_eap111","yuncore_ax820","edgecore_eap102","sercomm_ap72tip","cig_wf196","edgecore_eap112","yuncore_fap655","cig_wf189"]
     },
     "interop": {
         "OVERVIEW_TITLE": "'OpenWifi interop results'",
@@ -10,11 +10,11 @@
 
     "advanced": {
         "OVERVIEW_TITLE": "'OpenWifi advanced results'",
-        "OVERVIEW_TESTBEDS": ["edgecore_eap104","edgecore_eap101","edgecore_eap111","edgecore_eap112","hfcl_ion4xe","cig_wf189","edgecore_eap105","sonicfi_rap7110c-341x","cig_wf189h","sonicfi_rap630c-311g","yuncore_fap655","edgecore_oap103","udaya_a6-id2","cig_wf196"]
+        "OVERVIEW_TESTBEDS": ["senao_iap4300m","cig_wf672","udaya_a6-id2","edgecore_eap104","edgecore_eap101","edgecore_eap111","hfcl_ion4xe","edgecore_eap105","sonicfi_rap7110c-341x","cig_wf189h","sonicfi_rap630c-311g","edgecore_oap103","edgecore_eap112","cig_wf189","yuncore_fap655","cig_wf196"]
     },
 
     "performance": {
         "OVERVIEW_TITLE": "'OpenWifi performance results'",
-        "OVERVIEW_TESTBEDS": ["senao_iap4300m","edgecore_eap104","udaya_a6-id2","sonicfi_rap630c-311g","edgecore_oap103","hfcl_ion4xe","cig_wf189h","sonicfi_rap7110c-341x","edgecore_eap105","cig_wf672","edgecore_eap101","edgecore_eap111","yuncore_ax820","edgecore_eap102","sercomm_ap72tip","cig_wf196","edgecore_eap112","yuncore_fap655","cig_wf189"]
+        "OVERVIEW_TESTBEDS": ["senao_iap4300m","cig_wf672","edgecore_eap104","udaya_a6-id2","sonicfi_rap630c-311g","edgecore_oap103","hfcl_ion4xe","cig_wf189h","sonicfi_rap7110c-341x","edgecore_eap105","edgecore_eap101","edgecore_eap111","yuncore_ax820","edgecore_eap102","sercomm_ap72tip","cig_wf196","edgecore_eap112","yuncore_fap655","cig_wf189"]
     }
 }
