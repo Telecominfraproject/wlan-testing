@@ -33,7 +33,7 @@ env:
     {
       "namespace": "dev01",
       "deploy_method": "git",
-      "chart_version": "v4.1.0",
+      "chart_version": "${{ github.event.inputs.chart_version }}",
       "owgw_version": "master",
       "owsec_version": "main",
       "owfms_version": "main",
@@ -49,6 +49,10 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      chart_version:
+        description: 'Chart version to deploy eg: v4.1.0, if force latest not set'
+        required: true
+        default: 'main'
       force_latest:
         default: 'false'
         description: 'Force deployment of the latest versions of all microservices ignoring matrix versions'
@@ -128,7 +132,8 @@ jobs:
         export MAILER_USERNAME=${{ secrets.MAILER_USERNAME }}
         export MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}
         export IPTOCOUNTRY_IPINFO_TOKEN=${{ secrets.IPTOCOUNTRY_IPINFO_TOKEN }}
-        export VALUES_FILE_LOCATION=values.openwifi-qa-insta.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
+        # use insta + digicert chaincerts here
+        export VALUES_FILE_LOCATION=values.openwifi-qa.yaml,values.openwifi-qa.single-external-db.yaml,values.openwifi-qa.separate-lbs.yaml
         if [[ "${{ github.event.inputs.force_latest }}" == "false" ]]; then
           export DEPLOY_METHOD=${{ matrix.deploy_method }}
           export CHART_VERSION=${{ matrix.chart_version }}
