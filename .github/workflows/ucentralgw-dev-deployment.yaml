@@ -12,8 +12,12 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
 
-  WEBSOCKET_CERT: ${{ secrets.INSTA_WEBSOCKET_CERT }}
-  WEBSOCKET_KEY: ${{ secrets.INSTA_WEBSOCKET_KEY }}
+  # Insta certs:
+  #WEBSOCKET_CERT: ${{ secrets.INSTA_WEBSOCKET_CERT }}
+  #WEBSOCKET_KEY: ${{ secrets.INSTA_WEBSOCKET_KEY }}
+  # DigiCert certs:
+  WEBSOCKET_CERT: ${{ secrets.DIGICERT_CERT }}
+  WEBSOCKET_KEY: ${{ secrets.DIGICERT_KEY }}
 
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   # Required object fiels per environment:
