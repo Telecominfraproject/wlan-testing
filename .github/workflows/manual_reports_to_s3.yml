@@ -94,8 +94,10 @@ jobs:
 
           # Handle Dropbox links
           elif [[ "${{ inputs.drive_link }}" == *"dropbox.com"* ]]; then
-
-            curl -L -o allure-report.zip "${{ inputs.drive_link/\?dl=0/?dl=1 }}" || {
+          
+            DROPBOX_URL=$(echo "${{ inputs.drive_link }}" | sed 's/dl=0/dl=1/')
+          
+            curl -L -o allure-report.zip "$DROPBOX_URL" || {
               echo "::error::Failed to download from Dropbox"
               exit 1
             }
