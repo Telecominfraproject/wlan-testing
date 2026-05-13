@@ -79,7 +79,7 @@ jobs:
 
             echo "Downloading Google Drive file: $FILE_ID"
 
-            gdown --id "$FILE_ID" -O allure-report.zip || {
+            gdown "https://drive.google.com/uc?id=${FILE_ID}" -O allure-report.zip || {
               echo "::error::Failed to download from Google Drive"
               exit 1
             }
