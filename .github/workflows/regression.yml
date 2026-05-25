@@ -22,7 +22,7 @@ on:
         description: "revision of the Open Wifi Helm chart"
       ap_models:
         required: true
-        default: "cig_wf186h,edgecore_eap104,sonicfi_rap630c-311g,hfcl_ion4xe,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111,edgecore_oap103,cig_wf189h,senao_iap4300m,udaya_a6-id2,cig_wf672,emplus_wap588m,sonicfi_rap630w-211g"
+        default: "cig_wf186h,edgecore_eap104,sonicfi_rap630c-311g,hfcl_ion4xe,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111,edgecore_oap103,cig_wf189h,senao_iap4300m,udaya_a6-id2,cig_wf672,emplus_wap588m,sonicfi_rap630w-211g,cig_wf189"
         description: "the AP models to test"
       ap_version:
         required: true
@@ -1721,7 +1721,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dfs_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dfs
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and dfs_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1747,7 +1747,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'schema_validation_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-schema-validation
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and schema_validation_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1773,7 +1773,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'client_connectivity_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-client-connect
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and client_connectivity_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1799,7 +1799,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_psk_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multipsk
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and multi_psk_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1825,7 +1825,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and rate_limiting_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1851,7 +1851,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'rate_limiting_with_radius_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-rate-limiting-radius
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and rate_limiting_with_radius_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1877,7 +1877,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'dynamic_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-dynamic-vlan
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and dynamic_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1903,7 +1903,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'multi_vlan_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-multi-vlan
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and multi_vlan_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1929,7 +1929,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'strict_forwarding_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-strict-forwarding
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and strict_forwarding_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1955,7 +1955,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'advanced_captive_portal_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-captive-portal
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and advanced_captive_portal_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -1981,7 +1981,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'firmware_upgrade_downgrade')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-fwd
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and firmware_upgrade_downgrade"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
@@ -2007,7 +2007,7 @@ jobs:
         if: "!cancelled() && contains(fromJSON(needs.vars.outputs.marker_expressions), 'asb_tests')"
         with:
           namespace: ${{ steps.namespace.outputs.name }}-asb
-          testbed: basic-5a
+          testbed: basic-4
           marker_expression: "ow_regression_lf and asb_tests"
           configuration_file: "./lab_info.json"
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
