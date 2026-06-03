@@ -5,6 +5,9 @@ defaults:
     shell: bash
 
 env:
+  AWS_EKS_NAME: tip-openlan-lab
+  K8S_VERSION: "1.36.1"
+  HELMFILE_VERSION: "1.5.2"
   AWS_DEFAULT_OUTPUT: json
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
@@ -41,9 +44,8 @@ on:
         description: 'Namespace (normally openlan-CONFIGNAME)'
         required: false
       cluster:
-        default: "tip-wlan-main"
-        #other: "tip-wlan-qa"
-        description: "AWS cluster name: tip-wlan-main or tip-wlan-qa"
+        default: "tip-openlan-lab"
+        description: "AWS cluster name: tip-openlan-lab"
         required: false
       region:
         default: "ap-south-1"
@@ -115,13 +117,14 @@ jobs:
 
       - name: Install kubectl, helmfile and plugins
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.14/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-          curl -s -LO "https://github.com/helmfile/helmfile/releases/download/v0.165.0/helmfile_0.165.0_linux_amd64.tar.gz"
-          tar xvzf helmfile_0.165.0_linux_amd64.tar.gz helmfile
+          curl -s -LO \
+            "https://github.com/helmfile/helmfile/releases/download/v${{ env.HELMFILE_VERSION }}/helmfile_${{ env.HELMFILE_VERSION }}/helmfile_${{ env.HELMFILE_VERSION }}_linux_amd64.tar.gz"
+          tar xvzf helmfile_${{ env.HELMFILE_VERSION }}_linux_amd64.tar.gz helmfile
           sudo install -o root -g root -m 0755 helmfile /usr/local/bin/helmfile
-          helm plugin install https://github.com/aslafy-z/helm-git --version 0.16.0
-          helm plugin install https://github.com/databus23/helm-diff
+          helm plugin install https://github.com/aslafy-z/helm-git --version 1.5.2
+          helm plugin install https://github.com/databus23/helm-diff --version 3.15.7
 
       - name: Create certificate file
         working-directory: wlan-cloud-ucentral-deploy/cgw
