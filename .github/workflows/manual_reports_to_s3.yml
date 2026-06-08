@@ -1,7 +1,6 @@
 name: Manual reports to s3
 env:
   # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
