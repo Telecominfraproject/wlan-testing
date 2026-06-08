@@ -1,0 +1,41 @@
+name: Test new ARCv2 runners
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  AWS_EKS_NAME: tip-openlan-lab
+  K8S_VERSION: "1.36.1"
+  AWS_DEFAULT_OUTPUT: json
+  AWS_DEFAULT_REGION: ap-south-1
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        default: 'qa01'
+        description: 'In which environment OWGW must be restarted (qa01 will restart OWGW in openwifi-qa01)'
+        required: true
+
+jobs:
+  restart-owgw:
+    #runs-on: ubuntu-latest
+    runs-on: tip-openlan-lab-runners
+    steps:
+    - name: Fetch kubeconfig
+      run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
+
+    - name: Install kubectl
+      run: |
+        curl -s -LO "https://dl.k8s.io/release/${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Lists all pods
+      run: kubectl get pods -n openwifi-${{ github.event.inputs.environment }} -o wide
+
+    - name: Restart OWGW in defined namespace
+      run: echo kubectl delete pod -n openwifi-${{ github.event.inputs.environment }} -l app.kubernetes.io/name=owgw
