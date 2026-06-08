@@ -82,7 +82,7 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     needs: [build]
     timeout-minutes: 1440
 

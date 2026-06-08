@@ -108,7 +108,7 @@ jobs:
         registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test-edgecore-eap104:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
@@ -203,7 +203,7 @@ jobs:
       run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
   test-edgecore-eap101:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap101')"
@@ -299,7 +299,7 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
   test-edgecore-eap111:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap111')"
@@ -394,7 +394,7 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
   test-cig-wf189:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf189')"
@@ -490,7 +490,7 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
   test-edgecore-eap105:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap105')"
@@ -586,7 +586,7 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
   test-sercomm-ap72tip:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'sercomm_ap72tip')"
@@ -682,7 +682,7 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
   test-cig-wf196:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf196')"
@@ -778,7 +778,7 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
   test-yuncore-ax820:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'yuncore_ax820')"
@@ -874,7 +874,7 @@ jobs:
         run: kubectl -n openwifi-${{ needs.vars.outputs.existing_controller }} logs deployment/owsub
 
   test-yuncore-fap655:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ "vars", "build" ]
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'yuncore_fap655')"

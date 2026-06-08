@@ -135,7 +135,7 @@ jobs:
 
   test-hfcl-ion4xe:
     needs: ["vars", "build", "test-udaya-a6-id2" ]
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'hfcl_ion4xe')"
     env:
@@ -518,7 +518,7 @@ jobs:
 
   test-cig-wf186h:
     needs: [ "vars", "build"]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf186h')"
     env:
@@ -903,7 +903,7 @@ jobs:
 
   test-edgecore-eap101:
     needs: ["vars", "build"]
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap101')"
     env:
@@ -1288,7 +1288,7 @@ jobs:
 
   test-yuncore-fap655:
     needs: ["vars", "build"]
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'yuncore_fap655')"
     env:
@@ -1673,7 +1673,7 @@ jobs:
 
   test-cig-wf189:
     needs: ["vars", "build", "test-cig-wf196"]
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf189')"
     env:
@@ -2057,7 +2057,7 @@ jobs:
 
   test-cig-wf672:
     needs: [ "vars", "build" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf672')"
     env:
@@ -2441,7 +2441,7 @@ jobs:
 
   test-edgecore-eap104:
     needs: ["vars", "build", "test-cig-wf186h"]
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap104')"
     env:
@@ -2826,7 +2826,7 @@ jobs:
 
   test-sonicfi-rap630c-311g:
     needs: ["vars", "build", "test-yuncore-fap655" ]
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'sonicfi_rap630c-311g')"
     env:
@@ -3211,7 +3211,7 @@ jobs:
 
   test-cig-wf196:
     needs: [ "vars", "build" ]
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf196')"
     env:
@@ -3589,7 +3589,7 @@ jobs:
 
   test-edgecore-eap111:
     needs: [ "vars", "build", "test-edgecore-eap101" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap111')"
     env:
@@ -3973,7 +3973,7 @@ jobs:
 
   test-udaya-a6-id2:
     needs: [ "vars", "build" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'udaya_a6-id2')"
     env:
@@ -4357,7 +4357,7 @@ jobs:
 
   test-edgecore-eap105:
     needs: [ "vars", "build"]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap105')"
     env:
@@ -4741,7 +4741,7 @@ jobs:
 
   test-emplus-wap588m:
     needs: [ "vars", "build" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'emplus_wap588m')"
     env:
@@ -5125,7 +5125,7 @@ jobs:
 
   test-sonicfi-rap630w-211g:
     needs: [ "vars", "build", "test-yuncore-fap655" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'sonicfi_rap630w-211g')"
     env:
@@ -5509,7 +5509,7 @@ jobs:
 
   test-sonicfi-rap7110c-341x:
     needs: [ "vars", "build", "test-edgecore-eap105"]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'sonicfi_rap7110c-341x')"
     env:
@@ -5893,7 +5893,7 @@ jobs:
 
   test-edgecore-oap103:
     needs: [ "vars", "build" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_oap103')"
     env:
@@ -6277,7 +6277,7 @@ jobs:
 
   test-edgecore-eap112:
     needs: [ "vars", "build" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'edgecore_eap112')"
     env:
@@ -6661,7 +6661,7 @@ jobs:
 
   test-senao-iap4300m:
     needs: [ "vars", "build" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'senao_iap4300m')"
     env:
@@ -7045,7 +7045,7 @@ jobs:
 
   test-cig-wf189h:
     needs: [ "vars", "build" ]
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     timeout-minutes: 1440
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.ap_models), 'cig_wf189h')"
     env:
