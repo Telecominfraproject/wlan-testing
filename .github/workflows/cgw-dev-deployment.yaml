@@ -117,7 +117,7 @@ jobs:
 
       - name: Install kubectl, helmfile and plugins
         run: |
-          curl -s -LO "https://dl.k8s.io/release/${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
           curl -s -LO \
             "https://github.com/helmfile/helmfile/releases/download/v${{ env.HELMFILE_VERSION }}/helmfile_${{ env.HELMFILE_VERSION }}/helmfile_${{ env.HELMFILE_VERSION }}_linux_amd64.tar.gz"

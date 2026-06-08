@@ -22,16 +22,22 @@ on:
         required: true
 
 jobs:
-  restart-owgw:
+  test-runner:
     #runs-on: ubuntu-latest
     runs-on: tip-openlan-lab-runners
     steps:
+    - name: Install AWS CLI
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+        unzip -q awscliv2.zip
+        sudo ./aws/install
+
     - name: Fetch kubeconfig
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: Install kubectl
       run: |
-        curl -s -LO "https://dl.k8s.io/release/${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Lists all pods
