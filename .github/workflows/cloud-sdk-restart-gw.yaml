@@ -5,7 +5,8 @@ defaults:
     shell: bash
 
 env:
-  AWS_EKS_NAME: tip-wlan-main
+  AWS_EKS_NAME: tip-openlan-lab
+  K8S_VERSION: "1.36.1"
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -22,14 +23,15 @@ on:
 
 jobs:
   restart-owgw:
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: tip-openlan-lab-runners
     steps:
     - name: Fetch kubeconfig
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
 
     - name: Install kubectl
       run: |
-        curl -s -LO "https://dl.k8s.io/release/v1.27.14/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Restart OWGW in defined namespace

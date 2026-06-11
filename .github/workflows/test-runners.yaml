@@ -37,11 +37,8 @@ jobs:
 
     - name: Install kubectl
       run: |
-        curl -s -LO "https://dl.k8s.io/release/${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: Lists all pods
       run: kubectl get pods -n openwifi-${{ github.event.inputs.environment }} -o wide
-
-    - name: Restart OWGW in defined namespace
-      run: echo kubectl delete pod -n openwifi-${{ github.event.inputs.environment }} -l app.kubernetes.io/name=owgw

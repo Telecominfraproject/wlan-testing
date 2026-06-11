@@ -1,7 +1,11 @@
 name: manual pytest execution
 env:
   # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
+  AWS_EKS_NAME: tip-openlan-lab
+  K8S_VERSION: "1.36.1"
+  # switch to use these 2 for new cluster
+  #AWS_EKS_NAME: tip-openlan-lab
+  #K8S_VERSION: "1.36.1"
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -78,7 +82,7 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     needs: [build]
     timeout-minutes: 1440
 
@@ -100,8 +104,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          # TODO WIFI-7839 revert to using stable when issue is resolved on AWS CLI side
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: save time for logs gathering
@@ -113,7 +116,7 @@ jobs:
         run: |
           export NAMESPACE=manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}
           echo "Namespace name - $NAMESPACE"
-          echo "Link to related job in Kubernetes dashboard - https://k8s-dashboard.lab.wlan.tip.build/#/job/$NAMESPACE/testing?namespace=$NAMESPACE"
+          echo "Link to related job in Kubernetes dashboard - https://k8s-dashboard.lab.open-lan.org/#/job/$NAMESPACE/testing?namespace=$NAMESPACE"
           echo "In order to get logs, open the link above and press 'View logs' button in top right corner"
           echo "If you want to get logs auto-updated, choose this option in dropdown menu hidden behind three dots in top right corner of logs viewer"
 

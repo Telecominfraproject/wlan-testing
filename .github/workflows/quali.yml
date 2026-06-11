@@ -1,10 +1,12 @@
 name: sanity testing
 
 env:
-  # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
+  K8S_VERSION: "1.36.1"
+  LAB_DOMAIN: "lab.open-lan.org"
+  AWS_EKS_NAME: tip-openlan-lab
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
+  # AWS credentials
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -68,10 +70,10 @@ jobs:
           echo "ap_version=$(echo ${{ github.event.inputs.ap_version || 'main-latest' }})" >> $GITHUB_OUTPUT
           echo "marker_expression=$(echo ${{ github.event.inputs.marker_expression || 'ow_sanity_lf' }})" >> $GITHUB_OUTPUT
           echo "existing_controller=$(echo ${{ github.event.inputs.existing_controller || 'qa01' }})" >> $GITHUB_OUTPUT
-          
+
 
           # Schedule runs at - 12 PM UTC(5:30 PM IST), 6:00 PM UTC(11:30 PM IST)
-          
+
           DOW=$(date +%u)
           TOD=$(date +%H%M)
           SLOT=$(( 10#$TOD % 24))
@@ -156,10 +158,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -176,7 +177,7 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-     
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -188,7 +189,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -245,10 +246,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -265,7 +265,7 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-     
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -277,7 +277,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -334,10 +334,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -366,7 +365,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -423,10 +422,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -443,7 +441,7 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-     
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -455,7 +453,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -512,10 +510,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -544,7 +541,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -601,10 +598,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -621,7 +617,7 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-     
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -633,7 +629,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -690,10 +686,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -710,7 +705,7 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-    
+
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -722,7 +717,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -779,10 +774,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -811,7 +805,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -868,10 +862,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -900,7 +893,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -957,10 +950,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -989,7 +981,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1046,10 +1038,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1078,7 +1069,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1136,11 +1127,9 @@ jobs:
         with:
           python-version: "3.8"
 
-
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1169,7 +1158,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1226,10 +1215,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1258,7 +1246,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1315,10 +1303,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1347,7 +1334,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1404,10 +1391,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1436,7 +1422,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1493,10 +1479,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1525,7 +1510,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1582,10 +1567,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1614,7 +1598,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1671,10 +1655,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1703,7 +1686,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1760,10 +1743,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1792,7 +1774,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1849,10 +1831,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1881,7 +1862,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -1938,10 +1919,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1970,7 +1950,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
@@ -2027,10 +2007,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -2059,7 +2038,7 @@ jobs:
           testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
           additional_args: '-o firmware="${{ needs.vars.outputs.ap_version }}"'
           allure_results_artifact_name: "allure-results-${{ steps.ap_model.outputs.model }}"
-          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build gw-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build fms-${{ needs.vars.outputs.existing_controller }}.cicd.lab.wlan.tip.build"
+          dns_records_to_resolve: "sec-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} gw-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }} fms-${{ needs.vars.outputs.existing_controller }}.${{ env.LAB_DOMAIN }}"
 
       # necessary because if conditionals in composite actions are currently not respected
       - name: get tests logs
