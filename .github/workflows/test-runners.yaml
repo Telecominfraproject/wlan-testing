@@ -23,7 +23,6 @@ on:
 
 jobs:
   test-runner:
-    #runs-on: ubuntu-latest
     runs-on: tip-openlan-lab-runners
     steps:
     - name: Install AWS CLI
