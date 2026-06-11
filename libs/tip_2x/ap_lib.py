@@ -272,7 +272,8 @@ class APLIBS:
         pass
 
     def verify_certificates(self, idx=0, print_log=False, attach_allure=False):
-        cert_files_name = ["cas.pem", "dev-id", "key.pem", "cert.pem"]
+        # cert_files_name = ["cas.pem", "dev-id", "key.pem", "cert.pem"]
+        cert_files_name = ["cas.pem", "key.pem", "cert.pem"]
         for cert in cert_files_name:
             output = self.run_generic_command(cmd='[ -f /etc/ucentral/' + cert + ' ] && echo "True" || echo "False"',
                                               idx=idx,
@@ -280,9 +281,9 @@ class APLIBS:
                                               attach_allure=attach_allure,
                                               expected_attachment_type=allure.attachment_type.JSON)
             if output == "False":
-                logging.error("Certificate " + cert + "is missing from /etc/ucentral/ directory. "
+                logging.error("Certificate " + cert + " is missing from /etc/ucentral/ directory. "
                                                       "Please add valid certificates on AP")
-                pytest.exit("Certificate " + cert + "is missing from /etc/ucentral/ directory. "
+                pytest.exit("Certificate " + cert + " is missing from /etc/ucentral/ directory. "
                                                     "Please add valid certificates on AP")
 
     def run_generic_command(self, cmd="", idx=0, print_log=True, attach_allure=False,
