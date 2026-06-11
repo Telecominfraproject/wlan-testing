@@ -1,8 +1,8 @@
 name: manual pytest execution
 env:
   # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
-  K8S_VERSION: "1.27.6"
+  AWS_EKS_NAME: tip-openlan-lab
+  K8S_VERSION: "1.36.1"
   # switch to use these 2 for new cluster
   #AWS_EKS_NAME: tip-openlan-lab
   #K8S_VERSION: "1.36.1"
@@ -116,7 +116,7 @@ jobs:
         run: |
           export NAMESPACE=manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}
           echo "Namespace name - $NAMESPACE"
-          echo "Link to related job in Kubernetes dashboard - https://k8s-dashboard.lab.wlan.tip.build/#/job/$NAMESPACE/testing?namespace=$NAMESPACE"
+          echo "Link to related job in Kubernetes dashboard - https://k8s-dashboard.lab.open-lan.org/#/job/$NAMESPACE/testing?namespace=$NAMESPACE"
           echo "In order to get logs, open the link above and press 'View logs' button in top right corner"
           echo "If you want to get logs auto-updated, choose this option in dropdown menu hidden behind three dots in top right corner of logs viewer"
 

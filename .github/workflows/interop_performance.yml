@@ -1,10 +1,11 @@
 name: interop performance testing
 
 env:
-  # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
+  K8S_VERSION: "1.36.1"
+  LAB_DOMAIN: "lab.open-lan.org"
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
+  # AWS credentials
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -93,10 +94,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -134,10 +134,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -174,10 +173,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -215,10 +213,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -256,10 +253,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -296,10 +292,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -337,10 +332,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -377,10 +371,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -418,10 +411,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -459,10 +451,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -499,10 +490,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -540,10 +530,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -581,10 +570,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -621,10 +609,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -662,10 +649,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -702,10 +688,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -743,10 +728,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -784,10 +768,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -824,10 +807,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -865,10 +847,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -906,10 +887,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -946,10 +926,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -987,10 +966,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1027,10 +1005,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1068,10 +1045,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1109,10 +1085,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1149,10 +1124,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1190,10 +1164,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1231,10 +1204,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1271,10 +1243,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1312,10 +1283,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1352,10 +1322,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1393,10 +1362,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1434,10 +1402,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1474,10 +1441,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1515,10 +1481,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1556,10 +1521,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1596,10 +1560,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1637,10 +1600,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1677,10 +1639,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1718,10 +1679,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1759,10 +1719,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1799,10 +1758,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1840,10 +1798,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1881,10 +1838,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1921,10 +1877,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -1962,10 +1917,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2002,10 +1956,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2043,10 +1996,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2084,10 +2036,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2124,10 +2075,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2165,10 +2115,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2206,10 +2155,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2246,10 +2194,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2287,10 +2234,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2327,10 +2273,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2368,10 +2313,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2409,10 +2353,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2449,10 +2392,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2490,10 +2432,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2531,10 +2472,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2571,10 +2511,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2612,10 +2551,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2652,10 +2590,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2693,10 +2630,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2734,10 +2670,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2774,10 +2709,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2815,10 +2749,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2856,10 +2789,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2896,10 +2828,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2937,10 +2868,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
@@ -2977,10 +2907,9 @@ jobs:
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
 
-      # TODO WIFI-7839 delete when issue is resolved on AWS CLI side
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests

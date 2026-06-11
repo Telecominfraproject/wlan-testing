@@ -5,8 +5,8 @@ defaults:
     shell: bash
 
 env:
-  AWS_EKS_NAME: tip-openlan-lab
   K8S_VERSION: "1.36.1"
+  AWS_EKS_NAME: tip-openlan-lab
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
