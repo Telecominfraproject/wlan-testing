@@ -102,6 +102,9 @@ jobs:
         curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
+    - name: Clean helm repository cache
+      run: rm -rf ~/.cache/helm/repository/*
+
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values
       run: |
