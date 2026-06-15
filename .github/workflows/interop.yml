@@ -1,4 +1,4 @@
-name: interop testing
+name: Interop testing
 
 env:
   K8S_VERSION: "1.36.1"

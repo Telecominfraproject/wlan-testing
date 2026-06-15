@@ -1,4 +1,4 @@
-name: manual pytest execution against basic lab
+name: Manual pytest execution against basic lab
 
 env:
   # thirdparties

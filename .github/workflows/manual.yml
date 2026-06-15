@@ -1,4 +1,5 @@
-name: manual pytest execution
+name: Manual pytest execution
+
 env:
   # AWS credentials
   AWS_EKS_NAME: tip-openlan-lab

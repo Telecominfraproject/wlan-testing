@@ -1,4 +1,4 @@
-name: regression testing
+name: Regression testing
 
 env:
   K8S_VERSION: "1.27.14"

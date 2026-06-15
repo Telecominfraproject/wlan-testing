@@ -1,4 +1,4 @@
-name: sanity testing
+name: Sanity testing
 
 env:
   K8S_VERSION: "1.36.1"
