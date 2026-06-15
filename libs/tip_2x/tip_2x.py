@@ -1196,7 +1196,7 @@ if __name__ == '__main__':
     basic_shivam = {
         "target": "tip_2x",
         "controller": {
-            "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+            "url": "https://sec-qa01.lab.open-lan.org:16001",
             "username": "tip@ucentral.com",
             "password": "OpenWifi%123"
         },

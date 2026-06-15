@@ -456,7 +456,7 @@ if __name__ == '__main__':
             'basic-06': {
                 'target': 'dut_lib_template',
                 'controller': {
-                    'url': 'https://sec-qa01.cicd.lab.wlan.tip.build:16001',
+                    'url': 'https://sec-qa01.lab.open-lan.org:16001',
                     'username': 'tip@ucentral.com',
                     'password': 'OpenWifi%123'
                 },
@@ -526,7 +526,7 @@ if __name__ == '__main__':
             "advance-03": {
                 "target": "dut_lib_template",
                 "controller": {
-                    "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+                    "url": "https://sec-qa01.lab.open-lan.org:16001",
                     "username": "tip@ucentral.com",
                     "password": "OpenWifi%123"
                 },

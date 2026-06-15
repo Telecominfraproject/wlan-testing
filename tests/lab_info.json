@@ -3,7 +3,7 @@
     "basic-testbed": {
       "target": "tip_2x",
       "controller": {
-        "url": "https://sec-qa01.cicd.lab.wlan.tip.build:16001",
+        "url": "https://sec-qa01.lab.open-lan.org:16001",
         "username": "tip@ucentral.com",
         "password": "OpenWifi%123"
       },
@@ -204,19 +204,19 @@
     }
   },
   "RADIUS_SERVER_DATA": {
-    "ip": "10.28.3.100",
+    "ip": "10.28.3.21",
     "port": 1812,
     "secret": "testing123",
-    "user": "nolaradius",
-    "password": "nolastart",
+    "user": "user",
+    "password": "password",
     "pk_password": "whatever"
   },
   "RADIUS_ACCOUNTING_DATA": {
-    "ip": "10.28.3.100",
+    "ip": "10.28.3.21",
     "port": 1813,
     "secret": "testing123",
-    "user": "nolaradius",
-    "password": "nolastart",
+    "user": "user",
+    "password": "password",
     "pk_password": "whatever"
   },
   "DYNAMIC_VLAN_RADIUS_SERVER_DATA": {
