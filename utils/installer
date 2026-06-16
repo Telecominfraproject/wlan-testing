@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -f "awscliv2.zip" ]; then
+    unzip awscliv2.zip
+    sudo ./aws/install
+    echo "Installed AWS CLI"
+    which aws
+    aws --version
+fi
+if [ -f "kubectl.gz" ]; then
+    # this is version 1.36.1
+    gunzip kubectl.gz
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    echo "Installed kubectl"
+    which kubectl
+    /usr/local/bin/kubectl version --client=true
+fi
