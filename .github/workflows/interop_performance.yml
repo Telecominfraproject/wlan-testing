@@ -44,7 +44,7 @@ jobs:
       tests_release: ${{ steps.vars.outputs.tests_release }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: ["vars"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ needs.vars.outputs.tests_release }}
       - name: build and push Docker image
@@ -88,7 +88,7 @@ jobs:
     needs: [ vars, build ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -127,7 +127,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -165,7 +165,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -204,7 +204,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -243,7 +243,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -281,7 +281,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -320,7 +320,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -358,7 +358,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -397,7 +397,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -436,7 +436,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -474,7 +474,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -513,7 +513,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -552,7 +552,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -590,7 +590,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -629,7 +629,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -667,7 +667,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteA, test-iphone-xr-bridge-gen-suiteA, test-iphone-12-bridge-gen-suiteA, test-iphone-7-bridge-gen-suiteA, test-pixel-4-bridge-gen-suiteA, test-galaxy-s20-bridge-gen-suiteA, test-galaxy-s10-bridge-gen-suiteA, test-galaxy-s9-bridge-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -706,7 +706,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -745,7 +745,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -783,7 +783,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -822,7 +822,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -861,7 +861,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -899,7 +899,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -938,7 +938,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -976,7 +976,7 @@ jobs:
     needs: [ test-iphone-11-bridge-gen-suiteB, test-iphone-xr-bridge-gen-suiteB, test-iphone-12-bridge-gen-suiteB, test-iphone-7-bridge-gen-suiteB, test-pixel-4-bridge-gen-suiteB, test-galaxy-s20-bridge-gen-suiteB, test-galaxy-s10-bridge-gen-suiteB, test-galaxy-s9-bridge-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1015,7 +1015,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1054,7 +1054,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1092,7 +1092,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1131,7 +1131,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1170,7 +1170,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1208,7 +1208,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1247,7 +1247,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1285,7 +1285,7 @@ jobs:
     needs: [ test-iphone-11-bridge-eap-suiteA, test-iphone-xr-bridge-eap-suiteA, test-iphone-12-bridge-eap-suiteA, test-iphone-7-bridge-eap-suiteA, test-pixel-4-bridge-eap-suiteA, test-galaxy-s20-bridge-eap-suiteA, test-galaxy-s10-bridge-eap-suiteA, test-galaxy-s9-bridge-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1324,7 +1324,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1363,7 +1363,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1401,7 +1401,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1440,7 +1440,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1479,7 +1479,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1517,7 +1517,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1556,7 +1556,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1594,7 +1594,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteA, test-iphone-xr-nat-gen-suiteA, test-iphone-12-nat-gen-suiteA, test-iphone-7-nat-gen-suiteA, test-pixel-4-nat-gen-suiteA, test-galaxy-s20-nat-gen-suiteA, test-galaxy-s10-nat-gen-suiteA, test-galaxy-s9-nat-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1633,7 +1633,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1672,7 +1672,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1710,7 +1710,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1749,7 +1749,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1788,7 +1788,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1826,7 +1826,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1865,7 +1865,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1903,7 +1903,7 @@ jobs:
     needs: [ test-iphone-11-nat-gen-suiteB, test-iphone-xr-nat-gen-suiteB, test-iphone-12-nat-gen-suiteB, test-iphone-7-nat-gen-suiteB, test-pixel-4-nat-gen-suiteB, test-galaxy-s20-nat-gen-suiteB, test-galaxy-s10-nat-gen-suiteB, test-galaxy-s9-nat-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1942,7 +1942,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -1981,7 +1981,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2019,7 +2019,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2058,7 +2058,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2097,7 +2097,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2135,7 +2135,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2174,7 +2174,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2212,7 +2212,7 @@ jobs:
     needs: [ test-iphone-11-nat-eap-suiteA, test-iphone-xr-nat-eap-suiteA, test-iphone-12-nat-eap-suiteA, test-iphone-7-nat-eap-suiteA, test-pixel-4-nat-eap-suiteA, test-galaxy-s20-nat-eap-suiteA, test-galaxy-s10-nat-eap-suiteA, test-galaxy-s9-nat-eap-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2251,7 +2251,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2290,7 +2290,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2328,7 +2328,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2367,7 +2367,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2406,7 +2406,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2444,7 +2444,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2483,7 +2483,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2521,7 +2521,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteA, test-iphone-xr-vlan-gen-suiteA, test-iphone-12-vlan-gen-suiteA, test-iphone-7-vlan-gen-suiteA, test-pixel-4-vlan-gen-suiteA, test-galaxy-s20-vlan-gen-suiteA, test-galaxy-s10-vlan-gen-suiteA, test-galaxy-s9-vlan-gen-suiteA ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2560,7 +2560,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2599,7 +2599,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2637,7 +2637,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2676,7 +2676,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2715,7 +2715,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2753,7 +2753,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2792,7 +2792,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2830,7 +2830,7 @@ jobs:
     needs: [ test-iphone-11-vlan-gen-suiteB, test-iphone-xr-vlan-gen-suiteB, test-iphone-12-vlan-gen-suiteB, test-iphone-7-vlan-gen-suiteB, test-pixel-4-vlan-gen-suiteB, test-galaxy-s20-vlan-gen-suiteB, test-galaxy-s10-vlan-gen-suiteB, test-galaxy-s9-vlan-gen-suiteB ]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install needed tools - aws cli, kubectl
         working-directory: utils
@@ -2874,9 +2874,9 @@ jobs:
 
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: allure-results-${{ matrix.device }}-performance
           path: allure-results
@@ -2896,7 +2896,7 @@ jobs:
             Device=${{ matrix.device }}
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report-${{ matrix.device }}-performance
           path: allure-report
@@ -2920,7 +2920,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:

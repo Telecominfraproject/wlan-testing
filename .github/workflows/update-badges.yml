@@ -14,11 +14,11 @@ jobs:
     container: python:3.8
     steps:
     - name: Checkout testing repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: wlan-testing
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: badges
         path: wlan-testing/badges
@@ -44,7 +44,7 @@ jobs:
         wget https://img.shields.io/badge/advance_tests-$(pytest --collect-only -m "advance" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/advance-count.svg
         wget https://img.shields.io/badge/regression_tests-$(pytest --collect-only -m "ow_regression_lf" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/regression-count.svg
 #        wget https://img.shields.io/badge/interop_performance_tests-$(pytest --collect-only -m "interop_uc_sanity and client_connectivity" -q | tail -1 | cut  -d '/' -f 1)-green?style=flat-square -O ../badges/performance-interop-count.svg
-        
+
     - name: commit changes
       working-directory: wlan-testing/badges
       run: |

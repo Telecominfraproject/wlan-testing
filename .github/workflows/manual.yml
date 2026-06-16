@@ -48,7 +48,7 @@ jobs:
     outputs:
       tests_release: ${{ steps.vars.outputs.tests_release }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: ["vars"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ needs.vars.outputs.tests_release }}
 
@@ -85,7 +85,7 @@ jobs:
     timeout-minutes: 1440
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install JRE
         run: |
@@ -166,7 +166,7 @@ jobs:
     if: always()
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - uses: actions/download-artifact@v4
         with:
@@ -199,7 +199,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker

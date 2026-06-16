@@ -127,7 +127,7 @@ jobs:
 
     # Deploy CloudSDK with OWLS in K8s
     - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -193,7 +193,7 @@ jobs:
 
     # Run tests
     - name: Checkout OWLS for CLI tool
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
@@ -396,7 +396,7 @@ jobs:
 
     # Deploy CloudSDK with OWLS in K8s
     - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -462,7 +462,7 @@ jobs:
 
     # Run tests
     - name: Checkout OWLS for CLI tool
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
@@ -582,7 +582,7 @@ jobs:
       - docker-compose-psql
     steps:
     - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -655,7 +655,7 @@ jobs:
         ./deploy.sh
 
     - name: Checkout OWLS for CLI tool
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
@@ -749,7 +749,7 @@ jobs:
       - kubernetes-sqlite
     steps:
     - name: Checkout wlan-cloud-ucentral-deploy repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -822,7 +822,7 @@ jobs:
         ./deploy.sh
 
     - name: Checkout OWLS for CLI tool
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Telecominfraproject/wlan-cloud-owls
         path: wlan-cloud-owls
