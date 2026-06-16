@@ -1,7 +1,6 @@
 name: Performance testing
 
 env:
-  K8S_VERSION: "1.36.1"
   LAB_DOMAIN: "lab.open-lan.org"
   AWS_EKS_NAME: tip-openlan-lab
   AWS_DEFAULT_OUTPUT: json

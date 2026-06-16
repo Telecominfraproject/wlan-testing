@@ -1,11 +1,11 @@
 #!/bin/bash
 
 set +e
-which aws || true
 if command -v aws >/dev/null ; then
-    rm -f awscliv2.zip
-fi
-if [ -f "awscliv2.zip" ]; then
+    echo -n "AWS CLI is already installed -> "
+    which aws
+    aws --version
+elif [ -f "awscliv2.zip" ]; then
     unzip -q awscliv2.zip
     sudo ./aws/install
     echo -n "Installed AWS CLI -> "

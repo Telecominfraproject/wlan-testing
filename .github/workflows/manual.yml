@@ -2,7 +2,6 @@ name: Manual pytest execution
 
 env:
   AWS_EKS_NAME: tip-openlan-lab
-  K8S_VERSION: "1.36.1"
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
   # AWS credentials
@@ -72,6 +71,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ needs.vars.outputs.tests_release }}
+
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
@@ -86,6 +86,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: install JRE
         run: |
           sudo apt-get update
@@ -199,6 +200,7 @@ jobs:
     if: always()
     steps:
       - uses: actions/checkout@v3
+
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:

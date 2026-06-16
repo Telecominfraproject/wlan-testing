@@ -6,7 +6,6 @@ env:
   DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
   DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
   LAB_DOMAIN: "lab.open-lan.org"
-  K8S_VERSION: "1.36.1"
   AWS_EKS_NAME: tip-openlan-lab
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
@@ -100,6 +99,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -128,19 +128,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y default-jre
 
-    - name: install aws CLI tool
-      run: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        sudo ./aws/install
+    - name: install needed tools - aws cli, kubectl
+      working-directory: utils
+      run: ./installer
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-
-    - name: install kubectl
-      run: |
-        curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: prepare namespace
       id: namespace

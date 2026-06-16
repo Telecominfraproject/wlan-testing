@@ -1,7 +1,6 @@
 name: Advanced testing
 
 env:
-  K8S_VERSION: "1.36.1"
   LAB_DOMAIN: "lab.open-lan.org"
   AWS_EKS_NAME: tip-openlan-lab
   AWS_DEFAULT_OUTPUT: json
@@ -103,6 +102,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         ref: ${{ needs.vars.outputs.tests_release }}
+
     - name: build and push Docker image
       uses: ./.github/actions/build-and-push-docker
       with:
@@ -123,22 +123,15 @@ jobs:
       run: |
         echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
     - uses: actions/checkout@v3
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.8"
 
-    - uses: actions/checkout@v3
-    - name: install aws CLI tool
-      run: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        sudo ./aws/install
-
-    - name: install kubectl
-      run: |
-        curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -218,22 +211,15 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
          python-version: "3.8"
 
-      - uses: actions/checkout@v3
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -312,22 +298,15 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
-      - uses: actions/checkout@v3
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -407,22 +386,15 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
          python-version: "3.8"
 
-      - uses: actions/checkout@v3
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -502,22 +474,15 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
          python-version: "3.8"
 
-      - uses: actions/checkout@v3
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -597,22 +562,15 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
          python-version: "3.8"
 
-      - uses: actions/checkout@v3
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -692,22 +650,15 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
-      - uses: actions/checkout@v3
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -787,22 +738,15 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
-      - uses: actions/checkout@v3
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -882,22 +826,15 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
-      - uses: actions/checkout@v3
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
@@ -1023,6 +960,7 @@ jobs:
     if: always()
     steps:
     - uses: actions/checkout@v3
+
     - name: cleanup Docker image
       uses: ./.github/actions/cleanup-docker
       with:

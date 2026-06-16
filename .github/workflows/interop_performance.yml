@@ -1,7 +1,6 @@
 name: Interop performance testing
 
 env:
-  K8S_VERSION: "1.36.1"
   LAB_DOMAIN: "lab.open-lan.org"
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
@@ -91,13 +90,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -131,13 +129,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -170,13 +167,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -210,13 +206,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -250,13 +245,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -289,13 +283,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -329,13 +322,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -368,13 +360,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -408,13 +399,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -448,13 +438,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -487,13 +476,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -527,13 +515,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -567,13 +554,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -606,13 +592,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -646,13 +631,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -685,13 +669,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -725,13 +708,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -765,13 +747,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -804,13 +785,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -844,13 +824,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -884,13 +863,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -923,13 +901,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -963,13 +940,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1002,13 +978,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1042,13 +1017,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1082,13 +1056,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1121,13 +1094,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1161,13 +1133,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1201,13 +1172,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1240,13 +1210,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1280,13 +1249,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1319,13 +1287,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1359,13 +1326,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1399,13 +1365,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1438,13 +1403,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1478,13 +1442,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1518,13 +1481,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1557,13 +1519,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1597,13 +1558,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1636,13 +1596,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1676,13 +1635,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1716,13 +1674,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1755,13 +1712,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1795,13 +1751,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1835,13 +1790,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1874,13 +1828,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1914,13 +1867,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1953,13 +1905,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1993,13 +1944,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2033,13 +1983,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2072,13 +2021,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2112,13 +2060,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2152,13 +2099,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2191,13 +2137,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2231,13 +2176,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2270,13 +2214,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2310,13 +2253,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2350,13 +2292,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2389,13 +2330,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2429,13 +2369,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2469,13 +2408,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2508,13 +2446,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2548,13 +2485,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2587,13 +2523,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2627,13 +2562,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2667,13 +2601,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2706,13 +2639,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2746,13 +2678,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2786,13 +2717,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2825,13 +2755,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2865,13 +2794,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2904,13 +2832,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
+
       - name: get EKS access credentials
         run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: run tests
         uses: ./.github/actions/run-tests

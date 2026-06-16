@@ -23,7 +23,6 @@ on:
 
 jobs:
   restart-owgw:
-    #runs-on: ubuntu-latest
     runs-on: tip-openlan-lab-runners
     steps:
     - name: Fetch kubeconfig
