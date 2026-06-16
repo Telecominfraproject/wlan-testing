@@ -159,10 +159,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -247,10 +246,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -335,10 +333,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -423,10 +420,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -511,10 +507,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -599,10 +594,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -687,10 +681,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -775,10 +768,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -863,10 +855,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -951,10 +942,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1039,10 +1029,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1128,10 +1117,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1216,10 +1204,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1304,10 +1291,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1392,10 +1378,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1480,10 +1465,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1568,10 +1552,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1656,10 +1639,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1744,10 +1726,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1832,10 +1813,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -1920,10 +1900,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
@@ -2008,10 +1987,9 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: install kubectl
-        run: |
-          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
