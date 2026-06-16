@@ -1,14 +1,11 @@
 name: Manual pytest execution
 
 env:
-  # AWS credentials
   AWS_EKS_NAME: tip-openlan-lab
   K8S_VERSION: "1.36.1"
-  # switch to use these 2 for new cluster
-  #AWS_EKS_NAME: tip-openlan-lab
-  #K8S_VERSION: "1.36.1"
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
+  # AWS credentials
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -105,7 +102,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: save time for logs gathering

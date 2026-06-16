@@ -1,7 +1,6 @@
 name: Regression testing
 
 env:
-  K8S_VERSION: "1.27.14"
   LAB_DOMAIN: "lab.open-lan.org"
   K8S_VERSION: "1.36.1"
   AWS_EKS_NAME: tip-openlan-lab
@@ -153,7 +152,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -534,7 +533,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -557,7 +556,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -917,7 +915,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -940,7 +938,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -1300,7 +1297,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -1323,7 +1320,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -1683,7 +1679,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -1706,7 +1702,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -2065,7 +2060,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -2088,7 +2083,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -2447,7 +2441,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -2470,7 +2464,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -2830,7 +2823,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -2853,7 +2846,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -3213,7 +3205,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -3236,7 +3228,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -3589,7 +3580,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -3612,7 +3603,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -3971,7 +3961,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -3994,7 +3984,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -4353,7 +4342,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -4376,7 +4365,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -4735,7 +4723,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -4758,7 +4746,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -5117,7 +5104,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -5140,7 +5127,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -5499,7 +5485,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -5522,7 +5508,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -5881,7 +5866,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -5904,7 +5889,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -6263,7 +6247,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -6286,7 +6270,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -6645,7 +6628,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -6668,7 +6651,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests
@@ -7027,7 +7009,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: install aws CLI tool
@@ -7050,7 +7032,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run dfs tests
         uses: ./.github/actions/run-tests

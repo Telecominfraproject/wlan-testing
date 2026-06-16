@@ -153,6 +153,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -160,7 +161,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -177,7 +178,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -241,6 +241,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -248,7 +249,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -265,7 +266,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -329,6 +329,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -336,7 +337,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -353,7 +354,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -417,6 +417,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -424,7 +425,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -441,7 +442,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -505,6 +505,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -512,7 +513,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -529,7 +530,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -593,6 +593,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -600,7 +601,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -617,7 +618,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -681,6 +681,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -688,7 +689,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -705,7 +706,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -769,6 +769,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -776,7 +777,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -793,7 +794,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -857,6 +857,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -864,7 +865,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -881,7 +882,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -945,6 +945,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -952,7 +953,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -969,7 +970,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1033,6 +1033,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1040,7 +1041,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1057,7 +1058,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1122,6 +1122,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1129,7 +1130,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1146,7 +1147,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1210,6 +1210,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1217,7 +1218,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1234,7 +1235,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1298,6 +1298,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1305,7 +1306,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1322,7 +1323,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1386,6 +1386,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1393,7 +1394,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1410,7 +1411,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1474,6 +1474,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1481,7 +1482,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1498,7 +1499,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1562,6 +1562,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1569,7 +1570,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1586,7 +1587,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1650,6 +1650,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1657,7 +1658,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1674,7 +1675,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1738,6 +1738,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1745,7 +1746,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1762,7 +1763,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1826,6 +1826,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1833,7 +1834,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1850,7 +1851,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -1914,6 +1914,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -1921,7 +1922,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -1938,7 +1939,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
@@ -2002,6 +2002,7 @@ jobs:
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -2009,7 +2010,7 @@ jobs:
 
       - name: install kubectl
         run: |
-          curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+          curl --http1.1 -v -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: get EKS access credentials
@@ -2026,7 +2027,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests
         uses: ./.github/actions/run-tests
