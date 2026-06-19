@@ -81,7 +81,7 @@ jobs:
     steps:
 
     - name: Checkout repo with Helm values
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
