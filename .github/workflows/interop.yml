@@ -52,7 +52,7 @@ jobs:
       tests_release: ${{ steps.vars.outputs.tests_release }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -84,7 +84,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: ["vars"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.vars.outputs.tests_release }}
       - name: build and push Docker image
@@ -100,7 +100,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s9')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -189,7 +189,7 @@ jobs:
     needs: [vars, test-galaxy-s9]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-11')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -279,7 +279,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s10')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -367,7 +367,7 @@ jobs:
     needs: [vars, test-galaxy-s10]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-7')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -458,7 +458,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'galaxy-s20')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -545,7 +545,7 @@ jobs:
     needs: [vars, test-galaxy-s20]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-xr')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -634,7 +634,7 @@ jobs:
     needs: [vars, build]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'pixel-4')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -724,7 +724,7 @@ jobs:
     needs: [vars, test-pixel-4]
     if: "!cancelled() && contains(fromJSON(needs.vars.outputs.devices), 'iphone-12')"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: install dependencies
         run: |
@@ -818,9 +818,9 @@ jobs:
 
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: allure-results-${{ matrix.device }}
           path: allure-results
@@ -840,7 +840,7 @@ jobs:
             Device=${{ matrix.device }}
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: allure-report-${{ matrix.device }}
           path: allure-report
@@ -864,7 +864,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:

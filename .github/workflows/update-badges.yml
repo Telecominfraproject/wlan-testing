@@ -14,11 +14,11 @@ jobs:
     container: python:3.8
     steps:
     - name: Checkout testing repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         path: wlan-testing
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         ref: badges
         path: wlan-testing/badges

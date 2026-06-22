@@ -62,7 +62,7 @@ jobs:
       tests_release: ${{ steps.vars.outputs.tests_release }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: ["vars"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.vars.outputs.tests_release }}
       - name: build and push Docker image
@@ -144,7 +144,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -365,7 +365,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -390,7 +390,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -586,7 +585,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -611,7 +610,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -807,7 +805,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -832,7 +830,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -1028,7 +1025,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -1053,7 +1050,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -1249,7 +1245,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -1274,7 +1270,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -1470,7 +1465,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -1495,7 +1490,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -1690,7 +1684,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -1715,7 +1709,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -1911,7 +1904,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -1936,8 +1929,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -2133,7 +2124,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -2158,7 +2149,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -2353,7 +2343,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -2378,7 +2368,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -2573,7 +2562,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -2598,7 +2587,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -2793,7 +2781,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -2818,7 +2806,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -3013,7 +3000,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -3038,7 +3025,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -3233,7 +3219,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -3258,7 +3244,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -3453,7 +3438,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -3478,7 +3463,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -3673,7 +3657,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -3698,7 +3682,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -3893,7 +3876,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -3918,7 +3901,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -4114,7 +4096,7 @@ jobs:
         run: |
           echo "model=${AP_MODEL}" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -4139,7 +4121,6 @@ jobs:
           cat << EOF > lab_info.json
           ${{ secrets.LAB_INFO_JSON }}
           EOF
-
 
       - name: run tests dataplane_tests
         uses: ./.github/actions/run-tests
@@ -4332,34 +4313,34 @@ jobs:
 
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: allure-results-${{ matrix.model }}-dataplane_tests
           path: allure-results-dataplane_tests
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: allure-results-${{ matrix.model }}-wifi_capacity_ax_tests
           path: allure-results-wifi_capacity_ax_tests
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: allure-results-${{ matrix.model }}-wifi_capacity_be_tests
           path: allure-results-wifi_capacity_be_tests
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: allure-results-${{ matrix.model }}-ax_client_scale_tests
           path: allure-results-ax_client_scale_tests
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: allure-results-${{ matrix.model }}-be_client_scale_tests
           path: allure-results-be_client_scale_tests
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: allure-results-${{ matrix.model }}-multi_band_tests
           path: allure-results-multi_band_tests
@@ -4389,7 +4370,7 @@ jobs:
             Ap.Model=${{ matrix.model }}
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: allure-report-${{ matrix.model }}
           path: allure-report
@@ -4415,7 +4396,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker

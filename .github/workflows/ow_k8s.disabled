@@ -75,7 +75,7 @@ jobs:
       namespace: ${{ steps.namespace.outputs.value }}
     steps:
     - name: Checkout repo with Helm values
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -156,7 +156,7 @@ jobs:
       serial_number: ${{ steps.deploy-virtual-ap-instance.outputs.serial_number }}
       instance_id: ${{ steps.deploy-virtual-ap-instance.outputs.instance_id }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Use deploy-virtual-ap-instance composite action
         id: deploy-virtual-ap-instance

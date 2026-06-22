@@ -24,7 +24,7 @@ jobs:
   test-runner:
     runs-on: tip-openlan-lab-runners
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: install needed tools - aws cli, kubectl
       working-directory: utils
@@ -39,7 +39,7 @@ jobs:
   test-runner-ubuntu:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: install needed tools - aws cli, kubectl
       working-directory: utils

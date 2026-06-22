@@ -65,7 +65,7 @@ jobs:
     if: needs.validate-inputs.outputs.is_valid == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download report
         run: |
@@ -118,7 +118,7 @@ jobs:
           fi
 
       - name: Upload report as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: allure-report
           path: allure-report
