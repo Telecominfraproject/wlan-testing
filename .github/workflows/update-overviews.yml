@@ -10,13 +10,13 @@ jobs:
   update_overview:
     strategy:
       fail-fast: false
-      matrix: 
+      matrix:
         test_type: ['sanity', 'interop', 'advanced', 'performance']
 
     runs-on: ubuntu-latest
     container: python:3.8
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
 
     - name: generate overview page
       run: |
@@ -40,5 +40,3 @@ jobs:
         AWS_DEFAULT_REGION: us-east-1
         AWS_DEFAULT_OUTPUT: json
       run: aws s3 cp --acl public-read --content-type text/html index.html s3://${AWS_S3_BUCKET_NAME}/${{ matrix.test_type }}/overview/index.html
-
-

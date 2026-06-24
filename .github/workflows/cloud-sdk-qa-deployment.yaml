@@ -5,16 +5,18 @@ defaults:
     shell: bash
 
 env:
-  AWS_EKS_NAME: tip-openlan-lab
   K8S_VERSION: "1.36.1"
+  AWS_EKS_NAME: tip-openlan-lab
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
 
-  WEBSOCKET_CERT: ${{ secrets.INSTA_WEBSOCKET_CERT }}
-  WEBSOCKET_KEY: ${{ secrets.INSTA_WEBSOCKET_KEY }}
+  #WEBSOCKET_CERT: ${{ secrets.INSTA_WEBSOCKET_CERT }}
+  #WEBSOCKET_KEY: ${{ secrets.INSTA_WEBSOCKET_KEY }}
+  WEBSOCKET_CERT: ${{ secrets.INSTA_OPENLAN_WEBSOCKET_CERT }}
+  WEBSOCKET_KEY: ${{ secrets.INSTA_OPENLAN_WEBSOCKET_KEY }}
 
   # https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script
   # Required object fiels per environment:
@@ -79,7 +81,7 @@ jobs:
     steps:
 
     - name: Checkout repo with Helm values
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: Telecominfraproject/wlan-cloud-ucentral-deploy
         path: wlan-cloud-ucentral-deploy
@@ -97,8 +99,11 @@ jobs:
 
     - name: Install kubectl
       run: |
-        curl -s -LO "https://dl.k8s.io/release/${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
+        curl -s -LO "https://dl.k8s.io/release/v${{ env.K8S_VERSION }}/bin/linux/amd64/kubectl"
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+    - name: Clean helm repository cache
+      run: rm -rf ~/.cache/helm/repository/*
 
     - name: Deploy OpenWIFI Cloud SDK
       working-directory: wlan-cloud-ucentral-deploy/chart/environment-values

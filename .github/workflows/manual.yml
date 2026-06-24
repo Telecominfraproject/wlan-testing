@@ -1,9 +1,10 @@
-name: manual pytest execution
+name: Manual pytest execution
+
 env:
-  # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
+  AWS_EKS_NAME: tip-openlan-lab
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
+  # AWS credentials
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -12,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       testbed:
-        default: "basic-01"
+        default: "basic-1"
         description: "testbed to execute tests against"
         required: false
       firmware:
@@ -47,7 +48,7 @@ jobs:
     outputs:
       tests_release: ${{ steps.vars.outputs.tests_release }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -67,9 +68,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: ["vars"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.vars.outputs.tests_release }}
+
       - name: build and push Docker image
         uses: ./.github/actions/build-and-push-docker
         with:
@@ -78,31 +80,24 @@ jobs:
           registry_password: ${{ secrets.DOCKER_USER_PASSWORD }}
 
   test:
-    runs-on: [self-hosted, small]
+    runs-on: tip-openlan-lab-runners
     needs: [build]
     timeout-minutes: 1440
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
+
       - name: install JRE
         run: |
           sudo apt-get update
           sudo apt-get install -y default-jre
 
-      - name: install aws CLI tool
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
+      - name: install needed tools - aws cli, kubectl
+        working-directory: utils
+        run: ./installer
 
       - name: get EKS access credentials
         run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-
-      - name: install kubectl
-        run: |
-          # TODO WIFI-7839 revert to using stable when issue is resolved on AWS CLI side
-          curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: save time for logs gathering
         id: logs_start_time
@@ -113,7 +108,7 @@ jobs:
         run: |
           export NAMESPACE=manual-${{ github.run_id }}-${{ github.event.inputs.testbed }}
           echo "Namespace name - $NAMESPACE"
-          echo "Link to related job in Kubernetes dashboard - https://k8s-dashboard.lab.wlan.tip.build/#/job/$NAMESPACE/testing?namespace=$NAMESPACE"
+          echo "Link to related job in Kubernetes dashboard - https://k8s-dashboard.lab.open-lan.org/#/job/$NAMESPACE/testing?namespace=$NAMESPACE"
           echo "In order to get logs, open the link above and press 'View logs' button in top right corner"
           echo "If you want to get logs auto-updated, choose this option in dropdown menu hidden behind three dots in top right corner of logs viewer"
 
@@ -171,9 +166,9 @@ jobs:
     if: always()
     steps:
       - name: checkout testing repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: allure-results
           path: allure-results
@@ -184,7 +179,7 @@ jobs:
           results_path: ./allure-results
 
       - name: upload Allure report as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: allure-report
           path: allure-report
@@ -204,7 +199,8 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
+
       - name: cleanup Docker image
         uses: ./.github/actions/cleanup-docker
         with:

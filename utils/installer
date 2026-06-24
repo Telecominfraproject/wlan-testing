@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set +e
+if command -v aws >/dev/null ; then
+    echo -n "AWS CLI is already installed -> "
+    which aws
+    aws --version
+elif [ -f "awscliv2.zip" ]; then
+    unzip -q awscliv2.zip
+    sudo ./aws/install
+    echo -n "Installed AWS CLI -> "
+    which aws
+    aws --version
+fi
+if [ -f "kubectl.gz" ]; then
+    # this is version 1.36.1
+    gunzip kubectl.gz && \
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+        echo "Installed kubectl -> /usr/local/bin/kubectl"
+    /usr/local/bin/kubectl version --client=true
+fi

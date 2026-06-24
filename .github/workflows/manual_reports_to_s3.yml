@@ -1,7 +1,6 @@
 name: Manual reports to s3
 env:
   # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -66,7 +65,7 @@ jobs:
     if: needs.validate-inputs.outputs.is_valid == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Download report
         run: |
@@ -119,7 +118,7 @@ jobs:
           fi
 
       - name: Upload report as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: allure-report
           path: allure-report

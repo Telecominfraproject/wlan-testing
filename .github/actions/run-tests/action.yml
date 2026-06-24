@@ -115,33 +115,79 @@ runs:
           backoffLimit: 0
         EOF
         # wait for pod to spawn
-        sleep 1
+        sleep 2
 
-        podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" -l job-name="${{ steps.job.outputs.name }}" | sed "s/pod\///")
+        JOB_NAME="${{ steps.job.outputs.name }}"
+        MAX_POD_WAIT=$((1 * 60))  # wait max 1 minute for pod to exist
+        MAX_EXIT_WAIT=$((5 * 60))  # wait max 5 minutes for the pod to exit
+        MAX_RESULTS_WAIT=$((10 * 60 * 60))  # wait max 10 hours for results to be posted
+        WAIT_TIME=5  # wait 5 seconds between attempts to get results and exit status
 
-        kubectl wait "pod/$podname" --for condition=ready --timeout=600s
-
-        rm -f test_everything.xml
-        rm -rf allure-results
-        until [ -s test_everything.xml ]
-        do
-          sleep 10
-          kubectl cp $podname:/wlan-testing/tests/test_everything.xml test_everything.xml >/dev/null 2>&1
+        # Wait for the pod to exist (it may not be scheduled yet)
+        echo "waiting for pod from job '$JOB_NAME'..."
+        podname=""
+        for ((i = 0; i < MAX_POD_WAIT; i++)); do
+          podname=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" \
+              -l "job-name=${JOB_NAME}" 2>/dev/null \
+            | head -1 | tr -d '[:space:]'
+          )
+          if [[ -n "$podname" ]]; then
+            break
+          fi
+          sleep 1
         done
-        echo "tests completed"
-        echo "downloading allure results..."
-        echo "list files in the pod /tmp/allure-results directory"
-        kubectl exec $podname -- ls -la /tmp/allure-results
-        kubectl cp --v=10 --retries=3 $podname:/tmp/allure-results allure-results
-        echo "waiting for pod to exit"
-        kubectl logs -f $podname >/dev/null 2>&1
 
-        until [[ ! -z "$EXIT_CODE" ]]; do EXIT_CODE=$(kubectl get pod $podname --output="jsonpath={.status.containerStatuses[].state.terminated.exitCode}"); sleep 1; done;
-        exit $EXIT_CODE
+        echo "waiting for pod '$podname' to be ready"
+        if ! kubectl wait "pod/$podname" --for condition=ready --timeout=600s ; then
+          echo "ERROR: pod '$podname' failed to start"
+          exit 1
+        fi
+
+        rm -rf test_everything.xml allure-results
+        echo "waiting for test results..."
+        elapsed=0
+        until [ -s test_everything.xml ] ; do
+          if (( elapsed >= MAX_RESULTS_WAIT )); then
+            echo "ERROR: test_everything.xml not produced after ${MAX_RESULTS_WAIT}s"
+            exit 1
+          fi
+          sleep $WAIT_TIME
+          elapsed=$((elapsed + WAIT_TIME))
+          kubectl cp "$podname:/wlan-testing/tests/test_everything.xml" \
+            test_everything.xml >/dev/null 2>&1
+        done
+
+        echo "tests completed"
+
+        echo "list files in the pod /tmp/allure-results directory"
+        kubectl exec "$podname" -- ls -la /tmp/allure-results || true
+
+        echo "downloading allure results..."
+        if ! kubectl cp --retries=3 "$podname:/tmp/allure-results" allure-results ; then
+          echo "ERROR: failed to download allure results"
+          exit 1
+        fi
+
+        echo "waiting for pod to exit"
+        kubectl get pod "$podname" || true
+        exit_code=""
+        elapsed=0
+        while [[ -z "$exit_code" || "$exit_code" == "null" ]]; do
+          if (( elapsed >= MAX_EXIT_WAIT )); then
+            echo "ERROR: pod did not terminate after ${MAX_EXIT_WAIT}s"
+            exit 1
+          fi
+          sleep $WAIT_TIME
+          elapsed=$((elapsed + $WAIT_TIME))
+          exit_code=$(kubectl get pod "$podname" \
+            -o jsonpath='{.status.containerStatuses[0].state.terminated.exitCode}' 2>/dev/null) || true
+          echo "$podname exit code: $exit_code"
+        done
+        exit $exit_code
 
     - name: upload Allure results as artifact
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.allure_results_artifact_name }}
         path: allure-results

@@ -1,13 +1,15 @@
-name: manual pytest execution against basic lab
+name: Manual pytest execution against basic lab
+
 env:
   # thirdparties
   DOCKER_SERVER: tip-tip-wlan-cloud-docker-repo.jfrog.io
   DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
   DOCKER_USER_PASSWORD: ${{ secrets.DOCKER_USER_PASSWORD }}
-  # AWS credentials
-  AWS_EKS_NAME: tip-wlan-main
+  LAB_DOMAIN: "lab.open-lan.org"
+  AWS_EKS_NAME: tip-openlan-lab
   AWS_DEFAULT_OUTPUT: json
   AWS_DEFAULT_REGION: ap-south-1
+  # AWS credentials
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_CLIENT_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_CLIENT_KEY }}
@@ -44,7 +46,7 @@ jobs:
     outputs:
       tests_release: ${{ steps.vars.outputs.tests_release }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -66,13 +68,13 @@ jobs:
     steps:
     # checkout needed repositories
     - name: Checkout Testing repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
       with:
         path: wlan-testing
         ref: ${{ needs.vars.outputs.tests_release }}
 
     - name: Checkout LANforge scripts
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
       with:
         path: wlan-lanforge-scripts
         repository: Telecominfraproject/wlan-lanforge-scripts
@@ -91,12 +93,13 @@ jobs:
       run: docker push ${{ env.DOCKER_SERVER }}/cloud-sdk-nightly:${{ github.run_id }}
 
   test:
-    runs-on: [ self-hosted, small ]
+    runs-on: tip-openlan-lab-runners
     needs: [ build ]
     timeout-minutes: 1440
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -125,20 +128,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y default-jre
 
-    - name: install aws CLI tool
-      run: |
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        unzip awscliv2.zip
-        sudo ./aws/install
+    - name: install needed tools - aws cli, kubectl
+      working-directory: utils
+      run: ./installer
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig --name ${{ env.AWS_EKS_NAME }}
-
-    - name: install kubectl
-      run: |
-        # TODO WIFI-7839 revert to using stable when issue is resolved on AWS CLI side
-        curl -s -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
-        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
     - name: prepare namespace
       id: namespace
@@ -169,7 +164,7 @@ jobs:
         testing_docker_image: tip-tip-wlan-cloud-docker-repo.jfrog.io/cloud-sdk-nightly:${{ github.run_id }}
         additional_args: '-o firmware="${{ github.event.inputs.firmware }}"'
         allure_results_artifact_name: allure-results
-        dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build gw-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build fms-${{ steps.reservation.outputs.namespace }}.cicd.lab.wlan.tip.build"
+        dns_records_to_resolve: "sec-${{ steps.reservation.outputs.namespace }}.${{ env.LAB_DOMAIN }} gw-${{ steps.reservation.outputs.namespace }}.${{ env.LAB_DOMAIN }} fms-${{ steps.reservation.outputs.namespace }}.${{ env.LAB_DOMAIN }}"
 
     # necessary because if conditionals in composite actions are currently not respected
     - name: get tests logs
@@ -198,7 +193,7 @@ jobs:
         results_path: ./allure-results
 
     - name: upload Allure report as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v7
       with:
         name: allure-report
         path: allure-report
