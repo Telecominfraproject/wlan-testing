@@ -129,9 +129,9 @@ jobs:
       with:
         python-version: "3.8"
 
-      - name: install needed tools - aws cli, kubectl
-        working-directory: utils
-        run: ./installer
+    - name: install needed tools - aws cli, kubectl
+      working-directory: utils
+      run: ./installer
 
     - name: get EKS access credentials
       run: aws eks update-kubeconfig  --name ${{ env.AWS_EKS_NAME }}
