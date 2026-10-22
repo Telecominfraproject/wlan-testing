@@ -11,7 +11,7 @@ env:
   # Validation lists
   ALLOWED_USERS: "Jitendra,User2,User3"
   ALLOWED_TEST_TYPES: "sanity,regression,performance,custom_tests"
-  APPROVED_AP_MODELS: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111"
+  APPROVED_AP_MODELS: "cig_wf186h,edgecore_eap104,cig_wf196,udaya_a6-id2,sonicfi_rap630c-311g,hfcl_ion4xe,yuncore_fap655,cig_wf189,edgecore_eap105,sonicfi_rap7110c-341x,edgecore_eap101,edgecore_eap111,edgecore_eap112"
 
 on:
   workflow_dispatch:
